@@ -1,5 +1,9 @@
 (function () {
 
-    console.log("It's working")
+    const main = new Main({
+        element: document.querySelector(".game-container")
+    });
+
+    main.init();
     
 })();
