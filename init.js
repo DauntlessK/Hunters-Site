@@ -1,9 +1,8 @@
 (function () {
 
-    const main = new Main({
-        element: document.querySelector(".game-container")
-    });
+  const main = new Main({
+    element: document.querySelector(".game-container")
+  });
+  main.init();
 
-    main.init();
-    
 })();
