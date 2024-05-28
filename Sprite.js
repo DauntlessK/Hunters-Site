@@ -10,20 +10,23 @@ class Sprite{
 
         //configure animation & initial state
         this.animations = configure.animations || {
-            idle:[ [0,0] ]
+            idle: [0]
         }
         this.currentAnimation = config.currentAnimation || idle;
         this.currentAnimationFrame = 0;
+
+        //reference the game object
+        this.gameObject = config.gameObject;
 
         draw(ctx) {
             const x = this.gameObject.x;
             const y = this.gameObject.y;
 
-            ctx.drawImage(this.image,
+            this.isLoaded && ctx.drawImage(this.image,
                 0,0,
-                100,100,
+                config.width,config.height,
                 x,y,
-                100,100
+                config.width,config.height
             )
         }
     }
