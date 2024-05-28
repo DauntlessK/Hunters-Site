@@ -10,18 +10,18 @@ class Main{
       image.onload = () => {
           this.ctx.drawImage(image, 0, 0)
       };
-      image.src = "images/waterbgd2.gif";
+      image.src = "images/oceanbgd.png";
 
       const x = 0;
       const y = 0;
       
        //Place some Game Objects!
       const sub = new GameObject({
-        x: 5,
-        y: 6,
-        src: "images/ships/Uboat_VIIC.png",
-        width: 479,
-        height: 128
+        x: 200,
+        y: 200,
+        src: "images/ships/Uboat_VIIC_spritesheet.png",
+        width: 455,
+        height: 85
       })
 
       setTimeout(() => {
