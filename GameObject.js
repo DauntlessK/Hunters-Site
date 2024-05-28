@@ -5,9 +5,8 @@ class GameObject{
         this.sprite = new Sprite({
             gameObject: this,
             src: config.src,
-            width: 455,
-            height: 85
-
+            width: config.width,
+            height: config.width
         })
     }
 }

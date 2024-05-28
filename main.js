@@ -12,16 +12,34 @@ class Main{
         };
         image.src = "images/waterbgd2.gif";
 
+        const hero = new Image();
+        hero.onload = () => {
+            this.ctx.drawImage(
+                hero,
+                0,
+                0,
+                100,
+                100,
+                0,
+                0,
+                100,
+                100
+            )
+        }
+        hero.src = "images/ships/Uboat_VIIC.png"
+
         //Place some Game Objects
-        const sub = new GameObject({
+        /**const sub = new GameObject({
             x: 0,
             y: 0,
-            src: "images/ships/Uboat_VIIC_spritesheet.png"
+            src: "images/ships/Uboat_VIIC_spritesheet.png",
+            width: 455,
+            height: 85
         })
         
         setTimeout(() => {
             sub.sprite.draw(this.ctx);
-        }, 200)
+        }, 200)**/
 
     }
 }
