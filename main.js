@@ -19,6 +19,9 @@ class Main{
         object.sprite.draw(this.ctx);
       })
 
+      //Draw Upper Layer
+      this.map.drawUpperImage(this.ctx);
+
       requestAnimationFrame(() => {
         step();
       })

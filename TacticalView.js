@@ -13,13 +13,24 @@ class TacticalView{
 
         //bgd image must be same size: 640x360px
 
-        //this.upperImage = new Image();
-        //this.upperImage.src = config.upperSrc;
+        this.upperImage = new Image();
+        this.upperImage.src = config.upperSrc;
     }
 
     drawLowerImage(ctx){
         ctx.drawImage(this.lowerImage,
             this.currentFrame * 640, 0,
+            640, 360,
+            0, 0,
+            640, 360
+          )
+        //this.updateAnimationProgress();        
+
+    }
+
+    drawUpperImage(ctx){
+        ctx.drawImage(this.upperImage,
+            0, 0,
             640, 360,
             0, 0,
             640, 360
@@ -60,6 +71,7 @@ window.Scenes = {
     },
     Sunny: {
         lowerSrc: "images/scrollingwater_spritesheet.png",
+        upperSrc: "images/deepwater.png",
         bgdFrames: 49,
         gameObjects: {
             sub: new GameObject({
