@@ -9,6 +9,7 @@ class Sprite {
     }
     this.width = config.width;
     this.height = config.height;
+    this.frames = config.frames;
 
 
     //Configure Animation & Initial State
@@ -17,46 +18,50 @@ class Sprite {
       "cruise": 49
     }
     this.currentAnimation = "cruise";//config.currentAnimation || "idle";
-    this.currentAnimationFrame = 0;
+    this.currentFrame = 1;
 
-    this.animationFrameLimit = config.animationFrameLimit || 16;
-    this.animationFrameProgress = this.animiationFrameLimit;
+    this.animationFrameLimit = 8;
+    this.animationFrameProgress = 8;
+
+    //maximum variance of up/down animation float
+    this.maxUpandDown = 10;
+    this.currentTranslation = 0;
+    this.translationProgress = 10;
 
     //Reference the game object
     this.gameObject = config.gameObject;
   }
 
-  get frame() {
-    return 0;
-  }
-
   updateAnimationProgress(){
     //Downtick frame progress
-    if (this.animationFrameProgress > 0){
-      this.animationFrameProgress -= 1;
-      return;
-    }
+    this.animationFrameProgress -= 1;
+        //Check to see if frame limit is 0, if it is, roll to next frame
+        if (this.animationFrameProgress === 0 && this.currentAnimation === "cruise"){
+            this.currentFrame += 1;
+            if (this.currentFrame == this.frames -1){
+                this.currentFrame = 1;
+            }
+            this.animationFrameProgress = this.animationFrameLimit;
+        }
+        else if (this.currentAnimation === "idle"){
+          this.currentAnimationFrame = 0;
+        }
+  }
 
-    //Reset Counter
-    this.animationFrameProgress = this.animationFrameLimit;
-    this.currentAnimationFrame += 1;
-
-    if (this.frame === undefined) {
-      this.currentAnimationFrame = 0;
+  randomUpAndDown(){
+    if (this.currentTranslation === 0){
+      
     }
+    return translation;
   }
 
   //Draw sprite
   draw(ctx) {
     const x = this.gameObject.x;
-    const y = this.gameObject.y;
-
-    //const [frameX] = this.frame;
-    //console.log(1);
-    //console.log("wow")
+    const y = this.gameObject.y + this.randomUpAndDown();
 
     this.isLoaded && ctx.drawImage(this.image,
-      this.frame * this.width, 0,
+      this.currentFrame * this.width, 0,
       this.width, this.height,
       x, y,
       this.width, this.height

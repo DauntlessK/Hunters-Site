@@ -8,6 +8,8 @@ class TacticalView{
         this.lowerImage.src = config.lowerSrc;
         this.bgdFrames = config.bgdFrames;
         this.currentFrame = 0;
+        this.animationFrameLimit = 16;
+        this.animationFrameProgress = 16;
 
         //bgd image must be same size: 640x360px
 
@@ -16,22 +18,29 @@ class TacticalView{
     }
 
     drawLowerImage(ctx){
-        //ctx.drawImage(this.lowerImage, 0, 0)
         ctx.drawImage(this.lowerImage,
             this.currentFrame * 640, 0,
             640, 360,
             0, 0,
             640, 360
           )
-        this.currentFrame += 1;
-        if (this.currentFrame >= this.bgdFrames){
-            this.currentFrame = 0;
+        this.updateAnimationProgress();        
+
+    }
+
+    updateAnimationProgress(){
+        //Downtick frame progress
+        this.animationFrameProgress -= 1;
+        //Check to see if frame limit is 0, if it is, roll to next frame
+        if (this.animationFrameProgress === 0){
+            this.currentFrame += 1;
+            if (this.currentFrame == this.bgdFrames -1){
+                this.currentFrame = 0;
+            }
+            this.animationFrameProgress = this.animationFrameLimit;
         }
     }
 
-    /**drawUpperImage(ctx){
-        ctx.drawImage(this.drawUpperImage, 0, 0)
-    }**/
 
 }
 
@@ -50,7 +59,7 @@ window.Scenes = {
         }
     },
     Sunny: {
-        lowerSrc: "images/scrollingwater.gif",
+        lowerSrc: "images/scrollingwater_spritesheet.png",
         bgdFrames: 49,
         gameObjects: {
             sub: new GameObject({
