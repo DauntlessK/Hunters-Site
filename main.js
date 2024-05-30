@@ -10,14 +10,14 @@ class Main{
       image.onload = () => {
           this.ctx.drawImage(image, 0, 0)
       };
-      image.src = "images/oceanbgd.png";
+      image.src = "images/scrollingwater.gif";
 
       const x = 0;
       const y = 0;
       
        //Place some Game Objects!
       const sub = new GameObject({
-        x: 200,
+        x: 20,
         y: 200,
         src: "images/ships/Uboat_VIIC_spritesheet.png",
         width: 455,
