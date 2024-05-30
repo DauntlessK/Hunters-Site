@@ -9,28 +9,63 @@ class Sprite {
     }
     this.width = config.width;
     this.height = config.height;
+    this.frames = config.frames;
 
 
     //Configure Animation & Initial State
     this.animations = config.animations || {
-      idle: [0]
+      "idle": 0,
+      "cruise": 49
     }
-    this.currentAnimation = config.currentAnimation || "idle";
-    this.currentAnimationFrame = 0;
+    this.currentAnimation = "cruise";//config.currentAnimation || "idle";
+    this.currentFrame = 1;
+
+    this.animationFrameLimit = 8;
+    this.animationFrameProgress = 8;
+
+    //maximum variance of up/down animation float
+    this.maxUpandDown = 10;
+    this.currentTranslation = 0;
+    this.translationProgress = 10;
 
     //Reference the game object
     this.gameObject = config.gameObject;
   }
 
+  updateAnimationProgress(){
+    //Downtick frame progress
+    this.animationFrameProgress -= 1;
+        //Check to see if frame limit is 0, if it is, roll to next frame
+        if (this.animationFrameProgress === 0 && this.currentAnimation === "cruise"){
+            this.currentFrame += 1;
+            if (this.currentFrame == this.frames -1){
+                this.currentFrame = 1;
+            }
+            this.animationFrameProgress = this.animationFrameLimit;
+        }
+        else if (this.currentAnimation === "idle"){
+          this.currentAnimationFrame = 0;
+        }
+  }
+
+  randomUpAndDown(){
+    if (this.currentTranslation === 0){
+      
+    }
+    return translation;
+  }
+
+  //Draw sprite
   draw(ctx) {
     const x = this.gameObject.x;
-    const y = this.gameObject.y;
+    const y = this.gameObject.y + this.randomUpAndDown();
 
     this.isLoaded && ctx.drawImage(this.image,
-      0,0,
-      this.width,this.height,
-      x,y,
-      this.width,this.height
+      this.currentFrame * this.width, 0,
+      this.width, this.height,
+      x, y,
+      this.width, this.height
     )
+    this.updateAnimationProgress();
   }
 }
