@@ -6,7 +6,8 @@ class GameObject {
       gameObject: this,
       src: config.src,
       width: config.width,
-      height: config.height
+      height: config.height,
+      frames: config.frames
     });
   }
 }
