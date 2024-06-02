@@ -6,7 +6,6 @@ class Main{
       this.map = null;
       const rect = this.element.getBoundingClientRect();
       this.button = new Button({
-        rect: rect,
         x: 400,
         y: 20,
         width: 200,

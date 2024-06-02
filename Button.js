@@ -8,15 +8,14 @@ class Button {
         }
         this.width = config.width;
         this.height = config.height;
-        this.rect = config.rect;
         this.x = config.x;   //location drawn x
         this.y = config.y;   //location drawn y
 
         //Boundaries
-        this.xBoundMin = this.x*2;   //must multiply by 2 because canvas is scaled up 2x
-        this.xBoundMax = this.xBoundMin + this.width*2;
-        this.yBoundMin = this.y*2;
-        this.yBoundMax = this.yBoundMin + this.height*2;
+        this.xBoundMin = this.x;   //must multiply by 2 because canvas is scaled up 2x
+        this.xBoundMax = this.xBoundMin + this.width;
+        this.yBoundMin = this.y;
+        this.yBoundMax = this.yBoundMin + this.height;
 
         //states
         this.frames = config.frames;   //default 0= active, 1=pressed, 2=pressed, 3 disabled
@@ -25,8 +24,8 @@ class Button {
     }
 
     handleEvent(){
-        const xPos = event.clientX - this.rect.left;
-        const yPos = event.clientY - this.rect.top;
+        const xPos = event.offsetX;
+        const yPos = event.offsetY;
 
         if (event.type == "click"){
             if (this.withinBounds(xPos, yPos)) {
