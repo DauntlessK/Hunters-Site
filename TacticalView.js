@@ -15,6 +15,9 @@ class TacticalView{
 
         this.upperImage = new Image();
         this.upperImage.src = config.upperSrc;
+
+        this.buttonImage = new Image();
+        this.buttonImage.src = "images/buttontest.png";
     }
 
     drawLowerImage(ctx){
@@ -37,6 +40,15 @@ class TacticalView{
           )
         this.updateAnimationProgress();        
 
+    }
+
+    drawButton(ctx){
+        ctx.drawImage(this.buttonImage,
+            0, 0,
+            200, 100,
+            50, 50,
+            200, 100
+          )
     }
 
     updateAnimationProgress(){

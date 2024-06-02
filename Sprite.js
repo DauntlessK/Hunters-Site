@@ -58,7 +58,7 @@ class Sprite {
         return this.currentTranslation;
       }
       else{
-        this.nextTranslationTimer = Math.floor(Math.random() * (70 - 20)) + 20;
+        this.nextTranslationTimer = Math.floor(Math.random() * (120 - 50)) + 50;
         this.totalTranslation = Math.floor(Math.random() * (10 - -10)) + -10;
       }
     }
@@ -83,7 +83,6 @@ class Sprite {
   //Draw sprite
   draw(ctx) {
     const x = this.gameObject.x;
-    //const y = this.gameObject.y;
     const y = this.gameObject.y + this.randomUpAndDown();
 
     this.isLoaded && ctx.drawImage(this.image,
