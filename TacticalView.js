@@ -18,6 +18,11 @@ class TacticalView{
 
         this.buttonImage = new Image();
         this.buttonImage.src = "images/buttontest.png";
+
+        //UI
+        this.mainUI = new UI({
+            src: "images/ui/uibgd.png"
+        });
     }
 
     drawLowerImage(ctx){
@@ -27,8 +32,6 @@ class TacticalView{
             0, 0,
             640, 360
           )
-        //this.updateAnimationProgress();        
-
     }
 
     drawUpperImage(ctx){
@@ -49,6 +52,10 @@ class TacticalView{
             50, 50,
             200, 100
           )
+    }
+
+    drawUI(ctx){
+        this.mainUI.draw(ctx);
     }
 
     updateAnimationProgress(){
@@ -84,6 +91,7 @@ window.Scenes = {
     Sunny: {
         lowerSrc: "images/scrollingwater_spritesheet.png",
         upperSrc: "images/deepwater.png",
+        UI: this.mainUI,
         bgdFrames: 49,
         gameObjects: {
             sub: new GameObject({
