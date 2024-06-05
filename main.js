@@ -13,8 +13,10 @@ class Main{
 
       //Draw Lower Layer
       this.tv.drawLowerImage(this.ctx);
+      this.tv.drawLowerImage(this.ctx);
 
       //Draw Game Objects
+      Object.values(this.tv.gameObjects).forEach(object => {
       Object.values(this.tv.gameObjects).forEach(object => {
         object.sprite.draw(this.ctx);
       })
@@ -36,6 +38,7 @@ class Main{
   }
 
   init(){
+    this.tv = new TacticalView(window.Scenes.Sunny);
     this.tv = new TacticalView(window.Scenes.Sunny);
     this.startGameLoop();
     this.canvas.addEventListener('click', this.tv);

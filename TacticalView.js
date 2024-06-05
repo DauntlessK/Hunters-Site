@@ -16,17 +16,25 @@ class TacticalView{
         this.upperImage = new Image();
         this.upperImage.src = config.upperSrc;
 
+<<<<<<< HEAD
         //this.buttonImage = new Image();
         //this.buttonImage.src = "images/ui/torpbutton.png";
+=======
+        this.buttonImage = new Image();
+        this.buttonImage.src = "images/buttontest.png";
+>>>>>>> dcca909eeff1c994a6b9c6760834a82b481b53e9
 
         //UI
         this.mainUI = new UI({
             src: "images/ui/uibgd.png"
         });
+<<<<<<< HEAD
     }
 
     handleEvent(){
         this.mainUI.handleEvent(event);
+=======
+>>>>>>> dcca909eeff1c994a6b9c6760834a82b481b53e9
     }
 
     drawLowerImage(ctx){
@@ -37,6 +45,18 @@ class TacticalView{
             640, 360
           )
     }
+<<<<<<< HEAD
+=======
+
+    drawUpperImage(ctx){
+        ctx.drawImage(this.upperImage,
+            0, 0,
+            640, 360,
+            0, 0,
+            640, 360
+          )
+        this.updateAnimationProgress();        
+>>>>>>> dcca909eeff1c994a6b9c6760834a82b481b53e9
 
     drawUpperImage(ctx){
         ctx.drawImage(this.upperImage,
@@ -50,6 +70,19 @@ class TacticalView{
     drawUI(ctx){
         this.mainUI.draw(ctx);
         this.updateAnimationProgress();
+    }
+
+    drawButton(ctx){
+        ctx.drawImage(this.buttonImage,
+            0, 0,
+            200, 100,
+            50, 50,
+            200, 100
+          )
+    }
+
+    drawUI(ctx){
+        this.mainUI.draw(ctx);
     }
 
     updateAnimationProgress(){
