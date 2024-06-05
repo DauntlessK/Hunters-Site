@@ -1,9 +1,14 @@
 class Submarine{
-    constructor(config){
+    constructor(tv){
+
+        this.tv = tv;
+
         this.month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
         this.date_month = 0;
         this.date_year = 1939;
-        this.rank = ["Oberleutnant zur See", "Kapitän-leutnant", "Korvetten-kapitän", "Fregatten-kapitän",
+        this.rankLong = ["Oberleutnant zur See", "Kapitän-leutnant", "Korvetten-kapitän", "Fregatten-kapitän",
+        "Kapitän zur See"];
+        this.rank = ["OLt zS", "KptLt", "KKpt", "FFKpt",
         "Kapitän zur See"];
         this.awardName = ["", "Knight's Cross", "Knight's Cross with Oakleaves", "Knight's Cross with Oakleaves and Swords",
         "Knight's Cross with Oakleaves, Swords and Diamonds"];
@@ -50,5 +55,21 @@ class Submarine{
         this.hitsTaken = 0;
         this.randomEvents = 0;
         this.pastSubs = [];
+    }
+
+    startGame(name, num){
+        this.kmdt = name;
+        this.id = num;
+        this.tv.mainUI.subNum = this.getFullUboatID();
+        this.tv.mainUI.rank = this.rank[0] + " " + this.kmdt;
+        this.tv.mainUI.date = this.getFullDate();
+    }
+
+    getFullUboatID(){
+        return "U-" + this.id;
+    }
+
+    getFullDate(){
+        return this.month[this.date_month] + " - " + this.date_year;
     }
 }

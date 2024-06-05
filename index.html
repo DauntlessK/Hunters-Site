@@ -2,13 +2,18 @@
 <html>
   <head>
     <title>The Hunters: WWII Submarine Board Game</title>
-    <link href="styles.css" type="text/css" rel="stylesheet">
+    <link href="styles/styles.css" type="text/css" rel="stylesheet">
   </head>
   <body>
     <div class="game-container">
       <canvas class="game-canvas" width="1280" height="720"></canvas>
     </div>
-    <input type="text" id="Commander" placeholder="Enter Commander Name" maxlength="25">
+    <div class="input-container">
+      <input type="text" id="Commander" placeholder="Enter Commander Name" maxlength="25">
+      <input type="number" id="SubNum" placeholder="Enter sub #" maxlength="4">
+      <input type="button" id="StartButton" value="Start Game">
+    </div>
+
 
     <!-- Scripts -->
     <script src="Main.js"></script>
@@ -17,6 +22,7 @@
     <script src="TacticalView.js"></script>
     <script src="Button.js"></script>
     <script src="UI.js"></script>
+    <script src="Submarine.js"></script>
     <script src="init.js"></script>
 
   </body>

@@ -1,5 +1,4 @@
 
-
 body{
     background: #333;
     padding: 0;
@@ -20,4 +19,11 @@ body{
 
 .game-container canvas {
     image-rendering: pixelated;
+}
+
+.input-container {
+    position: relative;
+    padding-top: 30px;
+    margin: auto;
+    width: 50%;
 }

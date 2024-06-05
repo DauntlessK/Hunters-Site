@@ -1,10 +1,10 @@
 class UI{
     constructor(config){
         
-        this.subNum = "U-5901";
-        this.rank = "Kapitan";
-        this.date = "Sept - 1939";
-        this.orders = "Orders: Patrol Atlantic"
+        this.subNum = "";
+        this.rank = "";
+        this.date = "";
+        this.orders = "";
 
         this.bgdUI = new Image();
         this.src = config.src;
@@ -69,7 +69,7 @@ class UI{
         this.button4.handleEvent(event);
         this.button5.handleEvent(event);
     }
-
+        
     draw(ctx){
         this.drawBgd(ctx);
         this.button1.draw(ctx);
@@ -114,7 +114,7 @@ class UI{
     }
 }
 
-UI.elements = {
+/**UI.elements = {
     main: {
         bgdUIsrc: "images/ui/uibgd.png",
         buttons: {
@@ -136,4 +136,4 @@ UI.elements = {
             })
         }
     }
-}
+}*/
