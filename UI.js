@@ -9,8 +9,8 @@ class UI{
         this.bgdUI = new Image();
         this.src = config.src;
 
-        this.width = 480;
-        this.height = 360;
+        this.width = 1280;
+        this.height = 720;
 
         this.uiBgd = new Image();
         this.uiBgd.src = "images/ui/uibgd.png";
@@ -21,42 +21,42 @@ class UI{
 
         this.button1 = new Button({
             src: "images/ui/torpbutton.png",
-            x: 502,
-            y: 115,
-            width: 50,
-            height: 50,
+            x: 1007,
+            y: 245,
+            width: 100,
+            height: 100,
             frames: 4
           });
         this.button2 = new Button({
-            src: "images/ui/torpbutton.png",
-            x: 554,
-            y: 115,
-            width: 50,
-            height: 50,
+            src: "images/ui/TorpButton.png",
+            x: 1110,
+            y: 245,
+            width: 100,
+            height: 100,
             frames: 4
         });
         this.button3 = new Button({
             src: "images/ui/torpbutton.png",
-            x: 502,
-            y: 163,
-            width: 50,
-            height: 50,
+            x: 1007,
+            y: 341,
+            width: 100,
+            height: 100,
             frames: 4
           });
         this.button4 = new Button({
             src: "images/ui/torpbutton.png",
-            x: 554,
-            y: 163,
-            width: 50,
-            height: 50,
+            x: 1110,
+            y: 341,
+            width: 100,
+            height: 100,
             frames: 4
         });
         this.button5 = new Button({
             src: "images/ui/torpbutton.png",
-            x: 528,
-            y: 215,
-            width: 50,
-            height: 50,
+            x: 1057,
+            y: 449,
+            width: 100,
+            height: 100,
             frames: 4
         });
 
@@ -92,24 +92,25 @@ class UI{
 
     drawHeaderTxt(ctx){
         //Sub #
-        ctx.font = "bold 24px courier";
+        ctx.font = "bold 30px courier";
         ctx.fillStyle = "white";
         ctx.textAlign = "left";
-        ctx.fillText(this.subNum, 475, 24);
+        ctx.fillText(this.subNum, 945, 40);
 
         //Sub #
-        ctx.font = "italic 8px courier";
+        ctx.font = "italic 12px courier";
         ctx.fillStyle = "white";
         ctx.textAlign = "right";
-        ctx.fillText(this.rank, 630, 14);
+        ctx.fillText(this.rank, 1260, 24);
 
         //date
-        ctx.fillText(this.date, 630, 24);
+        ctx.fillText(this.date, 1260, 40);
 
         //orders
         ctx.fillStyle = "black";
         ctx.textAlign = "center";
-        ctx.fillText(this.orders, 554, 45);
+        ctx.font = "italic 14px courier";
+        ctx.fillText(this.orders, 1108, 85);
     }
 }
 

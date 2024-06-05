@@ -8,3 +8,4 @@ Long-term post-1.0 goals:
 -Damage on sub sprites
 -Damage on ship sprites
 -Animations for: sinking, depth charges, torpedo launches, diving deep, returning to port
+-Airplanes

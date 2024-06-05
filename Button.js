@@ -2,7 +2,7 @@ class Button {
     constructor(config){
         //Set up the image
         this.image = new Image();
-        this.image.src = "images/buttontest.png";//config.src;
+        this.image.src = config.src;
         this.image.onload = () => {
             this.isLoaded = true;
         }
@@ -12,7 +12,7 @@ class Button {
         this.y = config.y;   //location drawn y
 
         //Boundaries
-        this.xBoundMin = this.x;   //must multiply by 2 because canvas is scaled up 2x
+        this.xBoundMin = this.x;
         this.xBoundMax = this.xBoundMin + this.width;
         this.yBoundMin = this.y;
         this.yBoundMax = this.yBoundMin + this.height;
@@ -23,10 +23,9 @@ class Button {
 
     }
 
-    handleEvent(){
+    handleEvent(event){
         const xPos = event.offsetX;
         const yPos = event.offsetY;
-
         if (event.type == "click"){
             if (this.withinBounds(xPos, yPos)) {
                 this.clickedButton();
@@ -73,7 +72,6 @@ class Button {
 
     //Draw Button
     draw(ctx) {
-
         this.isLoaded && ctx.drawImage(
             this.image,
             this.currentFrame * this.width, 0,
