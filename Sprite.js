@@ -24,9 +24,10 @@ class Sprite {
     this.animationFrameProgress = 8;
 
     //maximum variance of up/down animation float
-    this.maxUpandDown = 10;
     this.currentTranslation = 0;
-    this.translationProgress = 10;
+    this.totalTranslation = 0;
+    this.translationProgress = 20;
+    this.nextTranslationTimer = 0;
 
     //Reference the game object
     this.gameObject = config.gameObject;
@@ -49,10 +50,34 @@ class Sprite {
   }
 
   randomUpAndDown(){
-    if (this.currentTranslation === 0){
-      
+    //currently uses hard-coded 10 and neg 10 as the Y min and max
+
+    if (this.currentTranslation === this.totalTranslation ){
+      if (this.nextTranslationTimer != 0){
+        this.nextTranslationTimer -= 1;
+        return this.currentTranslation;
+      }
+      else{
+        this.nextTranslationTimer = Math.floor(Math.random() * (250 - 100)) + 100;
+        this.totalTranslation = Math.floor(Math.random() * (10 - -10)) + -10;
+      }
     }
-    return translation;
+    else{
+        if (this.translationProgress != 0) {
+            this.translationProgress -= 1;
+        }
+        else{
+            //reset translation progress
+            this.translationProgress = 40;   //hard-coded limit in between moves
+            if (this.currentTranslation > this.totalTranslation){
+                this.currentTranslation -= 1;
+            }
+            else if (this.currentTranslation < this.totalTranslation) {
+                this.currentTranslation += 1;
+            }
+        }
+    }
+    return this.currentTranslation;
   }
 
   //Draw sprite

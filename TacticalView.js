@@ -13,8 +13,20 @@ class TacticalView{
 
         //bgd image must be same size: 640x360px
 
-        //this.upperImage = new Image();
-        //this.upperImage.src = config.upperSrc;
+        this.upperImage = new Image();
+        this.upperImage.src = config.upperSrc;
+
+        //this.buttonImage = new Image();
+        //this.buttonImage.src = "images/ui/torpbutton.png";
+
+        //UI
+        this.mainUI = new UI({
+            src: "images/ui/uibgd.png"
+        });
+    }
+
+    handleEvent(){
+        this.mainUI.handleEvent(event);
     }
 
     drawLowerImage(ctx){
@@ -24,8 +36,20 @@ class TacticalView{
             0, 0,
             640, 360
           )
-        this.updateAnimationProgress();        
+    }
 
+    drawUpperImage(ctx){
+        ctx.drawImage(this.upperImage,
+            0, 0,
+            640, 360,
+            0, 0,
+            640, 360
+          )   
+    }
+
+    drawUI(ctx){
+        this.mainUI.draw(ctx);
+        this.updateAnimationProgress();
     }
 
     updateAnimationProgress(){
@@ -49,7 +73,7 @@ window.Scenes = {
         lowerSrc: "images/scrollingwater.gif",
         gameObjects: {
             sub: new GameObject({
-                x: 20,
+                x: 15,
                 y: 200,
                 src: "images/ships/Uboat_VIIC_spritesheet.png",
                 width: 455,
@@ -60,10 +84,12 @@ window.Scenes = {
     },
     Sunny: {
         lowerSrc: "images/scrollingwater_spritesheet.png",
+        upperSrc: "images/deepwater.png",
+        UI: this.mainUI,
         bgdFrames: 49,
         gameObjects: {
             sub: new GameObject({
-                x: 5,
+                x: 0,
                 y: 230,
                 src: "images/ships/Uboat_VIIC_spritesheet.png",
                 width: 455,
