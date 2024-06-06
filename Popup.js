@@ -1,8 +1,9 @@
 class Popup{
-    constructor({text, onComplete}) {
+    constructor({text}) {
         this.text = text;
-        this.onComplete = onConplete;
+        //this.onComplete = onConplete;
         this.element = null;
+        console.log("created popup");
     }
 
 

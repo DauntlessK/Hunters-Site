@@ -63,6 +63,9 @@ class Submarine{
         this.tv.mainUI.subNum = this.getFullUboatID();
         this.tv.mainUI.rank = this.rank[0] + " " + this.kmdt;
         this.tv.mainUI.date = this.getFullDate();
+
+        const introPopup = new Popup("This is a test sentance!");
+        introPopup.init()
     }
 
     getFullUboatID(){

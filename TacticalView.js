@@ -16,9 +16,6 @@ class TacticalView{
         this.upperImage = new Image();
         this.upperImage.src = config.upperSrc;
 
-        //this.buttonImage = new Image();
-        //this.buttonImage.src = "images/ui/torpbutton.png";
-
         //UI
         this.mainUI = new UI({
             src: "images/ui/uibgd.png"

@@ -48,10 +48,10 @@ class Main{
         this.numField.style.backgroundColor = "red";
       }
       else{
-        this.submarine.startGame(this.kmdtTextField.value, this.numField.value);
         document.getElementById("Commander").style.visibility = "hidden";
         document.getElementById("SubNum").style.visibility = "hidden";
         document.getElementById("StartButton").style.visibility = "hidden";
+        this.submarine.startGame(this.kmdtTextField.value, this.numField.value);
       }
     }
   }
