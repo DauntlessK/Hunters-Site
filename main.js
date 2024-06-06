@@ -25,9 +25,6 @@ class Main{
         object.sprite.draw(this.ctx);
       })
 
-      //Draw Buttons
-      //this.button.draw(this.ctx);
-
       //Draw Upper Layer
       this.tv.drawUpperImage(this.ctx);
 

@@ -7,11 +7,10 @@ class Submarine{
         this.date_month = 0;
         this.date_year = 1939;
         this.rankLong = ["Oberleutnant zur See", "Kapitän-leutnant", "Korvetten-kapitän", "Fregatten-kapitän",
-        "Kapitän zur See"];
-        this.rank = ["OLt zS", "KptLt", "KKpt", "FFKpt",
-        "Kapitän zur See"];
+                            "Kapitän zur See"];
+        this.rank = ["OLt zS", "KptLt", "KKpt", "FFKpt", "Kapitän zur See"];
         this.awardName = ["", "Knight's Cross", "Knight's Cross with Oakleaves", "Knight's Cross with Oakleaves and Swords",
-        "Knight's Cross with Oakleaves, Swords and Diamonds"];
+                            "Knight's Cross with Oakleaves, Swords and Diamonds"];
         this.monthsSinceLastPromotionCheck = 0;     //how many months since last promotion roll
         this.shipsSunkSinceLastPromotionCheck= 0;
         this.knightsCrossSinceLastPromotionCheck = 0;
@@ -64,8 +63,8 @@ class Submarine{
         this.tv.mainUI.rank = this.rank[0] + " " + this.kmdt;
         this.tv.mainUI.date = this.getFullDate();
 
-        const introPopup = new Popup("This is a test sentance!");
-        introPopup.init()
+        const introPopup = new Popup("Choose your submarine / start date:", this.tv);
+        introPopup.init(document.querySelector(".game-container"));
     }
 
     getFullUboatID(){

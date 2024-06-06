@@ -1,10 +1,10 @@
 .TextMessage {
     position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 100px;
-    padding: 4px;
+    left: 50px;
+    right: 50px;
+    bottom: 260px;
+    height: 200px;
+    padding: 15px;
     background: var(--menu-background);
     border-top: 1px solid var (--menu-font-color);
     border-top: 1px solid var (--menu-border-color);
@@ -13,12 +13,13 @@
 
 .TextMessage_p {
     margin: 0;
-    font-size: 12px;
+    font-size: 16px;
+    font-family: courier;
 }
 
 .TextMessage_button {
     margin: 0;
-    font-size: 8px;
+    font-size: 12px;
     padding: 0;
     -webkit-appearance: none;
     background: none;
@@ -27,6 +28,6 @@
     cursor: pointer;
 
     position: absolute;
-    right: 2px;
-    bottom: 0;
+    right: 15px;
+    bottom: 15px;
 }

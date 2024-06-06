@@ -1,3 +1,13 @@
+:root {
+    --border-color: yellow;
+    --dialog-background: #bdbdbd;
+
+    --menu-background: #bdbdbd;
+    --menu-border-color: #A48465;
+    --menu-font-color: black;
+    --menu-selected-background: #7fc2ff;
+}
+
 
 body{
     background: #333;

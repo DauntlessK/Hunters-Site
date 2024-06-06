@@ -1,6 +1,8 @@
 class Sprite {
   constructor(config) {
 
+    this.tv = null;
+    
     //Set up the image
     this.image = new Image();
     this.image.src = config.src;
@@ -34,50 +36,57 @@ class Sprite {
   }
 
   updateAnimationProgress(){
-    //Downtick frame progress
-    this.animationFrameProgress -= 1;
-        //Check to see if frame limit is 0, if it is, roll to next frame
-        if (this.animationFrameProgress === 0 && this.currentAnimation === "cruise"){
-            this.currentFrame += 1;
-            if (this.currentFrame == this.frames -1){
-                this.currentFrame = 1;
-            }
-            this.animationFrameProgress = this.animationFrameLimit;
-        }
-        else if (this.currentAnimation === "idle"){
-          this.currentAnimationFrame = 0;
-        }
+    //Downtick frame progress if game is unpaused
+    if (this.tv.isUnpaused == true){
+      this.animationFrameProgress -= 1;
+      //Check to see if frame limit is 0, if it is, roll to next frame
+      if (this.animationFrameProgress === 0 && this.currentAnimation === "cruise"){
+          this.currentFrame += 1;
+          if (this.currentFrame == this.frames -1){
+              this.currentFrame = 1;
+          }
+          this.animationFrameProgress = this.animationFrameLimit;
+      }
+      else if (this.currentAnimation === "idle"){
+        this.currentAnimationFrame = 0;
+      }
+    }
   }
 
   randomUpAndDown(){
     //currently uses hard-coded 10 and neg 10 as the Y min and max
-
-    if (this.currentTranslation === this.totalTranslation ){
-      if (this.nextTranslationTimer != 0){
-        this.nextTranslationTimer -= 1;
-        return this.currentTranslation;
-      }
-      else{
-        this.nextTranslationTimer = Math.floor(Math.random() * (250 - 100)) + 100;
-        this.totalTranslation = Math.floor(Math.random() * (10 - -10)) + -10;
-      }
-    }
-    else{
-        if (this.translationProgress != 0) {
-            this.translationProgress -= 1;
+    if (this.tv.isUnpaused == true){
+      if (this.currentTranslation === this.totalTranslation ){
+        if (this.nextTranslationTimer != 0){
+          this.nextTranslationTimer -= 1;
+          return this.currentTranslation;
         }
         else{
-            //reset translation progress
-            this.translationProgress = 40;   //hard-coded limit in between moves
-            if (this.currentTranslation > this.totalTranslation){
-                this.currentTranslation -= 1;
-            }
-            else if (this.currentTranslation < this.totalTranslation) {
-                this.currentTranslation += 1;
-            }
+          this.nextTranslationTimer = Math.floor(Math.random() * (250 - 100)) + 100;
+          this.totalTranslation = Math.floor(Math.random() * (10 - -10)) + -10;
         }
+      }
+      else{
+          if (this.translationProgress != 0) {
+              this.translationProgress -= 1;
+          }
+          else{
+              //reset translation progress
+              this.translationProgress = 40;   //hard-coded limit in between moves
+              if (this.currentTranslation > this.totalTranslation){
+                  this.currentTranslation -= 1;
+              }
+              else if (this.currentTranslation < this.totalTranslation) {
+                  this.currentTranslation += 1;
+              }
+          }
+      }
     }
-    return this.currentTranslation;
+      return this.currentTranslation;
+  }
+
+  updateTV(tv){
+    this.tv = tv;
   }
 
   //Draw sprite

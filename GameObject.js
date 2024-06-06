@@ -7,7 +7,7 @@ class GameObject {
       src: config.src,
       width: config.width,
       height: config.height,
-      frames: config.frames
+      frames: config.frames,
     });
   }
 }

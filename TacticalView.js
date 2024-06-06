@@ -3,6 +3,7 @@
 class TacticalView{
     constructor(config){
         this.gameObjects = config.gameObjects;
+        this.isUnpaused = true;
 
         this.lowerImage = new Image();
         this.lowerImage.src = config.lowerSrc;
@@ -20,6 +21,19 @@ class TacticalView{
         this.mainUI = new UI({
             src: "images/ui/uibgd.png"
         });
+
+        //update tv on each sprite
+        Object.values(this.gameObjects).forEach(object => {
+            object.sprite.updateTV(this);
+        })
+    }
+
+    pauseGame(){
+        this.isUnpaused = false;
+    }
+
+    unpauseGame(){
+        this.isUnpaused = true;
     }
 
     handleEvent(){
@@ -50,19 +64,20 @@ class TacticalView{
     }
 
     updateAnimationProgress(){
-        //Downtick frame progress
-        this.animationFrameProgress -= 1;
-        //Check to see if frame limit is 0, if it is, roll to next frame
-        if (this.animationFrameProgress === 0){
-            this.currentFrame += 1;
-            if (this.currentFrame == this.bgdFrames -1){
-                this.currentFrame = 0;
+        //check to animate if the game is not in a paused state
+        if (this.isUnpaused == true) {
+            //Downtick frame progress
+            this.animationFrameProgress -= 1;
+            //Check to see if frame limit is 0, if it is, roll to next frame
+            if (this.animationFrameProgress === 0){
+                this.currentFrame += 1;
+                if (this.currentFrame == this.bgdFrames -1){
+                    this.currentFrame = 0;
+                }
+                this.animationFrameProgress = this.animationFrameLimit;
             }
-            this.animationFrameProgress = this.animationFrameLimit;
         }
     }
-
-
 }
 
 window.Scenes = {
@@ -75,14 +90,14 @@ window.Scenes = {
                 src: "images/ships/Uboat_VIIC_spritesheet.png",
                 width: 455,
                 height: 85,
-                frames: 48
+                frames: 48,
             })
         }
     },
     Sunny: {
         lowerSrc: "images/scrollingwater_spritesheet.png",
         upperSrc: "images/deepwater.png",
-        UI: this.mainUI,
+        //UI: this.mainUI,
         bgdFrames: 49,
         gameObjects: {
             sub: new GameObject({
@@ -91,7 +106,7 @@ window.Scenes = {
                 src: "images/ships/Uboat_VIIC_spritesheet.png",
                 width: 803,
                 height: 150,
-                frames: 48
+                frames: 48,
             })
         }
     }
