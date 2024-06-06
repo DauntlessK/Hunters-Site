@@ -1,5 +1,4 @@
 
-
 body{
     background: #333;
     padding: 0;
@@ -9,15 +8,22 @@ body{
 
 .game-container {
     position: relative;
-    width: 640px;
-    height: 360px;
+    width: 1280px;
+    height: 720px;
     margin: 0 auto;
     margin-top: 20px;
     outline: 1px solid #fff;
 
-    transform: scale(2) translateY(33%);
+    /*transform: scale(2) translateY(33%);*/
 }
 
 .game-container canvas {
     image-rendering: pixelated;
+}
+
+.input-container {
+    position: relative;
+    padding-top: 30px;
+    margin: auto;
+    width: 50%;
 }

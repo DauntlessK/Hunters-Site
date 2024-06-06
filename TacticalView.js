@@ -11,13 +11,10 @@ class TacticalView{
         this.animationFrameLimit = 16;
         this.animationFrameProgress = 16;
 
-        //bgd image must be same size: 640x360px
+        //bgd image must be same size: 1280x720px
 
         this.upperImage = new Image();
         this.upperImage.src = config.upperSrc;
-
-        this.buttonImage = new Image();
-        this.buttonImage.src = "images/buttontest.png";
 
         //UI
         this.mainUI = new UI({
@@ -25,37 +22,31 @@ class TacticalView{
         });
     }
 
+    handleEvent(){
+        this.mainUI.handleEvent(event);
+    }
+
     drawLowerImage(ctx){
         ctx.drawImage(this.lowerImage,
-            this.currentFrame * 640, 0,
-            640, 360,
+            this.currentFrame * 1280, 0,
+            1280, 720,
             0, 0,
-            640, 360
+            1280, 720
           )
     }
 
     drawUpperImage(ctx){
         ctx.drawImage(this.upperImage,
             0, 0,
-            640, 360,
+            1280, 720,
             0, 0,
-            640, 360
-          )
-        this.updateAnimationProgress();        
-
-    }
-
-    drawButton(ctx){
-        ctx.drawImage(this.buttonImage,
-            0, 0,
-            200, 100,
-            50, 50,
-            200, 100
-          )
+            1280, 720
+          )   
     }
 
     drawUI(ctx){
         this.mainUI.draw(ctx);
+        this.updateAnimationProgress();
     }
 
     updateAnimationProgress(){
@@ -79,7 +70,7 @@ window.Scenes = {
         lowerSrc: "images/scrollingwater.gif",
         gameObjects: {
             sub: new GameObject({
-                x: 20,
+                x: 15,
                 y: 200,
                 src: "images/ships/Uboat_VIIC_spritesheet.png",
                 width: 455,
@@ -95,11 +86,11 @@ window.Scenes = {
         bgdFrames: 49,
         gameObjects: {
             sub: new GameObject({
-                x: 5,
-                y: 230,
+                x: 0,
+                y: 460,
                 src: "images/ships/Uboat_VIIC_spritesheet.png",
-                width: 455,
-                height: 85,
+                width: 803,
+                height: 150,
                 frames: 48
             })
         }

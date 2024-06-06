@@ -26,7 +26,7 @@ class Sprite {
     //maximum variance of up/down animation float
     this.currentTranslation = 0;
     this.totalTranslation = 0;
-    this.translationProgress = 10;
+    this.translationProgress = 20;
     this.nextTranslationTimer = 0;
 
     //Reference the game object
@@ -58,7 +58,7 @@ class Sprite {
         return this.currentTranslation;
       }
       else{
-        this.nextTranslationTimer = Math.floor(Math.random() * (120 - 50)) + 50;
+        this.nextTranslationTimer = Math.floor(Math.random() * (250 - 100)) + 100;
         this.totalTranslation = Math.floor(Math.random() * (10 - -10)) + -10;
       }
     }
@@ -68,7 +68,7 @@ class Sprite {
         }
         else{
             //reset translation progress
-            this.translationProgress = this.animationFrameLimit;
+            this.translationProgress = 40;   //hard-coded limit in between moves
             if (this.currentTranslation > this.totalTranslation){
                 this.currentTranslation -= 1;
             }
