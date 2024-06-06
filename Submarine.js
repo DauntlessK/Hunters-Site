@@ -63,8 +63,10 @@ class Submarine{
         this.tv.mainUI.rank = this.rank[0] + " " + this.kmdt;
         this.tv.mainUI.date = this.getFullDate();
 
-        const introPopup = new Popup("Choose your submarine / start date:", this.tv);
-        introPopup.init(document.querySelector(".game-container"));
+        const popup2 = new Popup("startGameText", this.tv, this);
+        const introPopup = new Popup("subSelect", this.tv, this);
+        //setTimeout(function(){console.log("waited");}, 2000);
+        
     }
 
     getFullUboatID(){
@@ -73,5 +75,9 @@ class Submarine{
 
     getFullDate(){
         return this.month[this.date_month] + " - " + this.date_year;
+    }
+
+    getRankAndName(){
+        return this.rankLong[0] + " " + this.kmdt;
     }
 }
