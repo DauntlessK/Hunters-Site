@@ -4,6 +4,7 @@ class GameManager{
     constructor(tv){
 
         this.tv = tv;
+        this.sub = null;
 
         this.kmdt = "";
         this.id = "";
@@ -94,8 +95,8 @@ class GameManager{
 
     setSub(subChosen){
         //takes input from what user selected and adjusts parameters for submarine
-        this.subType = subChosen;
-        switch (subType){
+        this.sub = new Uboat(subChosen);
+        switch (subChosen){
             case "VIIA":
                 this.date_month = 8;
                 this.date_year = 1939;
