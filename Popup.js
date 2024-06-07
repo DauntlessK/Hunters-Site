@@ -1,9 +1,9 @@
 class Popup{
-    constructor(message, tv, sub) {
+    constructor(message, tv, gm) {
         this.message = message;
         //this.onComplete = onConplete;
         this.tv = tv;
-        this.sub = sub;
+        this.gm = gm;
         this.tv.pauseGame();
 
         const container = document.querySelector(".game-container");
@@ -33,35 +33,39 @@ class Popup{
         this.element.innerHTML = (`
             <h3 class="HeaderMessage_h3">Hunters: German U-Boats at War
             <p class="TextMessage_p">Choose your U-Boat / start date:<br>
-            <button class="Option_button">Type VIIA    •   Sept - 39</button><br>
-            <button class="Option_button">Type VIIB   •   Sept - 39</button><br>
+            <button class="Option_button" id="VIIC">Type VIIA    •   Sept - 39</button><br>
+            <button class="Option_button" id="VIIB">Type VIIB   •   Sept - 39</button><br>
             <button class="Option_button" id="IXA">Type IXA    •   Sept - 39</button><br>
-            <button class="Option_button">Type IXB • Apr - 40</button><br>
-            <button class="Option_button">Type VIIC • Oct - 40</button><br>
-            <button class="Option_button">Type VIID • Jan - 42</button>
+            <button class="Option_button" id="IXB">Type IXB • Apr - 40</button><br>
+            <button class="Option_button" id="VIIC">Type VIIC • Oct - 40</button><br>
+            <button class="Option_button" id="VIID">Type VIID • Jan - 42</button>
             </p>
         `)
 
-        console.log(document.getElementById("IXA"));
-
-        this.element.querySelector("button").addEventListener("click", ()=> {
+        this.element.addEventListener("click", ()=> {
+            //determine which button was clicked
+            this.gm.setSub(event.target.id);
+            
             //close popup
-            this.done();
-        })
+            this.done()
+            this.gm.getStartingRank();
+            const popup2 = new Popup("startGameText", this.tv, this.gm);
+        });
+
     }
 
     startGameTextElement() {
         //Message to announce starting rank, sub, date, etc
 
+        //new div to add
         this.element.innerHTML = (`
             <h3 class="HeaderMessage_h3">Hunters: German U-Boats at War
-            <p class="TextMessage_p">Welcome, ${this.sub.getRankAndName()}. Report to ${this.sub.getFullUboatID()} immediately.</p>
+            <p class="TextMessage_p">Welcome, ${this.gm.getRankAndName()}. Report to ${this.gm.getFullUboatID()} immediately.</p>
             <button class="TextMessage_button">Next</button>
         `)
 
         this.element.querySelector("button").addEventListener("click", ()=> {
             //close popup
-            console.log(event);
             this.done();
         })
     }

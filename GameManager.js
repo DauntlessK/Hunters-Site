@@ -1,10 +1,14 @@
-class Submarine{
+//import { d6Roll, d6Rollx2 } from "./util";
+
+class GameManager{
     constructor(tv){
 
         this.tv = tv;
 
+        this.kmdt = "";
+        this.id = "";
         this.month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
-        this.date_month = 0;
+        this.date_month = 8;
         this.date_year = 1939;
         this.rankLong = ["Oberleutnant zur See", "Kapitän-leutnant", "Korvetten-kapitän", "Fregatten-kapitän",
                             "Kapitän zur See"];
@@ -63,8 +67,11 @@ class Submarine{
         this.tv.mainUI.rank = this.rank[0] + " " + this.kmdt;
         this.tv.mainUI.date = this.getFullDate();
 
-        const popup2 = new Popup("startGameText", this.tv, this);
+        //Popup to select sub
+        //const popup2 = new Popup("startGameText", this.tv, this);
         const introPopup = new Popup("subSelect", this.tv, this);
+        //this.getStartingRank();
+
         //setTimeout(function(){console.log("waited");}, 2000);
         
     }
@@ -79,5 +86,41 @@ class Submarine{
 
     getRankAndName(){
         return this.rankLong[0] + " " + this.kmdt;
+    }
+
+    getStartingRank(){
+        console.log("yes");
+    }
+
+    setSub(subChosen){
+        //takes input from what user selected and adjusts parameters for submarine
+        this.subType = subChosen;
+        switch (subType){
+            case "VIIA":
+                this.date_month = 8;
+                this.date_year = 1939;
+                break;
+            case "VIIB":
+                this.date_month = 8;
+                this.date_year = 1939;
+                break;
+            case "IXA":
+                this.date_month = 8;
+                this.date_year = 1939;
+                break;
+            case "IXB":
+                this.date_month = 3;
+                this.date_year = 1940;
+                break;
+            case "VIIC":
+                this.date_month = 9;
+                this.date_year = 1940;
+                this.francePost = true;
+                break;
+            case "VIID":
+                this.date_month = 0;
+                this.date_year = 1942;
+                break;
+        }
     }
 }

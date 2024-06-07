@@ -3,6 +3,7 @@
 class TacticalView{
     constructor(config){
         this.gameObjects = config.gameObjects;
+        this.gm = new GameManager(this);
         this.isUnpaused = true;
 
         this.lowerImage = new Image();
@@ -19,8 +20,10 @@ class TacticalView{
 
         //UI
         this.mainUI = new UI({
-            src: "images/ui/uibgd.png"
+            src: "images/ui/uibgd.png",
+            gm: this.gm
         });
+
 
         //update tv on each sprite
         Object.values(this.gameObjects).forEach(object => {
@@ -38,6 +41,10 @@ class TacticalView{
 
     handleEvent(){
         this.mainUI.handleEvent(event);
+    }
+
+    startGame(kmdtTextField, numField){
+        this.gm.startGame(kmdtTextField, numField);
     }
 
     drawLowerImage(ctx){

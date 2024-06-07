@@ -48,7 +48,7 @@ class Main{
         document.getElementById("Commander").style.visibility = "hidden";
         document.getElementById("SubNum").style.visibility = "hidden";
         document.getElementById("StartButton").style.visibility = "hidden";
-        this.submarine.startGame(this.kmdtTextField.value, this.numField.value);
+        this.tv.startGame(this.kmdtTextField.value, this.numField.value);
       }
     }
   }
@@ -60,6 +60,5 @@ class Main{
     this.canvas.addEventListener('mousemove', this.tv);
     this.button.addEventListener('click', this);
 
-    this.submarine = new Submarine(this.tv);
   }
 }

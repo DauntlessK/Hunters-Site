@@ -1,10 +1,6 @@
 class UI{
     constructor(config){
-        
-        this.subNum = "";
-        this.rank = "";
-        this.date = "";
-        this.orders = "";
+        this.gm = config.gm;
 
         this.bgdUI = new Image();
         this.src = config.src;
@@ -95,16 +91,16 @@ class UI{
         ctx.font = "bold 30px courier";
         ctx.fillStyle = "white";
         ctx.textAlign = "left";
-        ctx.fillText(this.subNum, 945, 40);
+        ctx.fillText(this.gm.getFullUboatID(), 945, 40);
 
-        //Sub #
+        //Rank and Name
         ctx.font = "italic 12px courier";
         ctx.fillStyle = "white";
         ctx.textAlign = "right";
-        ctx.fillText(this.rank, 1260, 24);
+        ctx.fillText(this.gm.getRankAndName(), 1260, 24);
 
         //date
-        ctx.fillText(this.date, 1260, 40);
+        ctx.fillText(this.gm.getFullDate(), 1260, 40);
 
         //orders
         ctx.fillStyle = "black";
