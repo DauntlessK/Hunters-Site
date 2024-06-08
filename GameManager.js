@@ -1,5 +1,3 @@
-//import { d6Roll, d6Rollx2 } from "./util";
-
 class GameManager{
     constructor(tv){
 
@@ -69,11 +67,7 @@ class GameManager{
         this.tv.mainUI.date = this.getFullDate();
 
         //Popup to select sub
-        //const popup2 = new Popup("startGameText", this.tv, this);
         const introPopup = new Popup("subSelect", this.tv, this);
-        //this.getStartingRank();
-
-        //setTimeout(function(){console.log("waited");}, 2000);
         
     }
 
@@ -85,12 +79,22 @@ class GameManager{
         return this.month[this.date_month] + " - " + this.date_year;
     }
 
-    getRankAndName(){
+    getLRankAndName(){
         return this.rankLong[0] + " " + this.kmdt;
     }
 
+    getRankAndName(){
+        return this.rank[0] + " " + this.kmdt;
+    }
+
     getStartingRank(){
-        console.log("yes");
+        //Determines the starting rank of the player
+        if (this.sub.getType() == "IXA" || this.sub.getType() == "IXB"){
+            this.sub.crew_levels["Kommandant"] = 1;
+        }
+        else{
+            console.log(d6Roll());
+        }
     }
 
     setSub(subChosen){

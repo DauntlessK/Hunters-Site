@@ -39,6 +39,7 @@ class Uboat{
                 this.systems["3.7 Flak"] = -1;               // large (3.7) flak (-1 means not present)
                 break;
             case "VIIB":
+            case "VIIC":
                 this.patrol_length = 4;  
                 this.hull_hp = 8;  
                 this.flooding_hp = 8; 
@@ -52,7 +53,49 @@ class Uboat{
                 this.reserves_aft = 1;
                 this.systems["3.7 Flak"] = -1;
                 break;
-        }
+            case "IXA":
+                this.patrol_length = 5;  
+                this.hull_hp = 8;  
+                this.flooding_hp = 8; 
+                this.G7aStarting = 12; 
+                this.G7eStarting = 10;  
+                this.forward_tubes = 4;  
+                this.aft_tubes = 2;
+                this.torpedo_type_spread = 4;
+                this.deck_gun_ammo = 5;
+                this.deck_gun_cap = 5;
+                this.reserves_aft = 2;
+                this.systems["3.7 Flak"] = 0;
+                break;
+            case "IXB":
+                this.patrol_length = 6;  
+                this.hull_hp = 8;  
+                this.flooding_hp = 9; 
+                this.G7aStarting = 12; 
+                this.G7eStarting = 10;  
+                this.forward_tubes = 4;  
+                this.aft_tubes = 2;
+                this.torpedo_type_spread = 4;
+                this.deck_gun_ammo = 5;
+                this.deck_gun_cap = 5;
+                this.reserves_aft = 2;
+                this.systems["3.7 Flak"] = 0;
+                break;
+            case "VIID":
+                this.patrol_length = 5;  
+                this.hull_hp = 8;  
+                this.flooding_hp = 8; 
+                this.G7aStarting = 8; 
+                this.G7eStarting = 6;  
+                this.forward_tubes = 4;  
+                this.aft_tubes = 1;
+                this.torpedo_type_spread = 3;
+                this.deck_gun_ammo = 10;
+                this.deck_gun_cap = 10;
+                this.reserves_aft = 1;
+                this.systems["3.7 Flak"] = -1;
+                break;
+            }
 
         this.g7a = 0;
         this.g7e = 0;
