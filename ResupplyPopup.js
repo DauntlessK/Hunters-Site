@@ -10,7 +10,6 @@ class ResupplyPopup{
         this.minG7e = this.gm.sub.G7eStarting - this.gm.sub.torpedo_type_spread;
         this.current_aftG7a = current_aftG7a;
         this.current_aftG7e = current_aftG7e;
-        console.log(this.current_aftG7a);
 
         this.tv.pauseGame();
 
@@ -36,15 +35,14 @@ class ResupplyPopup{
             <span class="G7e">G7e: </span><button class="Option_button" id="DecG7e"><---</button><span class="G7e"> ${this.currentG7e} </span><button class="Option_button" id="IncG7e">---></button><br>
             <br>
             Fore Reserves:<br>
-            Aft Reserves (${this.gm.sub.reserves_aft}): <button class="option_button" id="IncG7aAFT"><span class="G7a">${this.current_aftG7a}</span></button>
-              <button class="option_button" id="IncG7eAFT"><span class="G7e">${this.current_aftG7e}</span></button>
+            Aft Reserves (${this.gm.sub.reserves_aft}): <button class="option_button" id="IncG7aAFT"><span class="G7a" id="IncG7aAFT">${this.current_aftG7a}</span></button>
+              <button class="option_button" id="IncG7eAFT"><span class="G7e" id="IncG7eAFT">${this.current_aftG7e}</span></button>
             </p>
             <button class="TextMessage_button" id="done">Done</button>
         `)
 
         this.element.addEventListener("click", ()=> {
             //determine which button was clicked
-            console.log(event.target.id);
             if (event.target.id == "DecG7a" && this.currentG7a !== this.minG7a){
                 this.currentG7a--;
                 this.currentG7e++;
@@ -62,14 +60,12 @@ class ResupplyPopup{
                 this.currentG7e++;
             }
             else if (event.target.id == "IncG7aAFT"){
-                console.log("Inc a Aft");
                 if (this.current_aftG7e > 0){
                     this.current_aftG7a++;
                     this.current_aftG7e--;
                 }
             }
             else if (event.target.id == "IncG7eAFT"){
-                console.log("Inc e Aft");
                 if (this.current_aftG7a > 0){
                     this.current_aftG7a--;
                     this.current_aftG7e++;
@@ -80,6 +76,10 @@ class ResupplyPopup{
                 this.done();
                 this.gm.sub.G7a = this.currentG7a;
                 this.gm.sub.G7e = this.currentG7e;
+                this.gm.sub.reloads_forward_G7a = this.currentG7a - this.current_aftG7a;
+                this.gm.sub.reloads_forward_G7e = this.currentG7e - this.current_aftG7e;
+                this.gm.sub.reloads_aft_G7a = this.current_aftG7a;
+                this.gm.sub.reloads_aft_G7e = this.current_aftG7e;
                 return;
             }
             const subResupply = new ResupplyPopup(this.tv, this.gm, this.currentG7a, this.currentG7e, this.current_aftG7a, this.current_aftG7e);
