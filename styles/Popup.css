@@ -20,12 +20,12 @@
 }
 
 .Option_button {
-    width: 150px;
+    width: 100px;
 }
 
 .TextMessage_button {
     margin: 0;
-    font-size: 12px;
+    font-size: 16px;
     padding: 0;
     -webkit-appearance: none;
     background: none;
@@ -36,4 +36,16 @@
     position: absolute;
     right: 15px;
     bottom: 15px;
+}
+
+.G7a{
+    color: navy;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 700;
+}
+
+.G7e{
+    color: red;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 700;
 }

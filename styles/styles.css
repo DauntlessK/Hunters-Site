@@ -14,6 +14,9 @@ body{
     padding: 0;
     margin: 0;
     overflow: hidden;
+    font-family: Courier;
+    font-style: normal;
+    color: white;
 }
 
 .game-container {
@@ -35,5 +38,13 @@ body{
     position: relative;
     padding-top: 30px;
     margin: auto;
-    width: 50%;
+    width: 70%;
+}
+
+table{
+    width: 100%;
+}
+
+td{
+    padding: 5px;
 }

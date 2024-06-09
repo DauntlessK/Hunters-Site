@@ -1,6 +1,8 @@
 class Uboat{
-    constructor(type){
+    constructor(type, tv, gm){
         this.subClass = type;
+        this.tv = tv;
+        this.gm = gm;
         //this.patrol = null;
 
         //-----SUBSYSTEM STATES
@@ -96,9 +98,9 @@ class Uboat{
                 this.systems["3.7 Flak"] = -1;
                 break;
             }
-
-        this.g7a = 0;
-        this.g7e = 0;
+        this.reserves_fore = this.G7aStarting + this.G7eStarting - this.reserves_aft;
+        this.G7a = 0;
+        this.G7e = 0;
 
         //--------------- AMMUNITION (What's in what tube) and overall damage indicators
         this.hull_Damage = 0;                        // current amount of hull damage
@@ -171,5 +173,22 @@ class Uboat{
 
     getType(){
         return this.subClass;
+    }
+
+    torpedoResupply(){
+        //Called in port to allow user to select torpedoes to load given the spread parameters
+
+        this.forward_G7a = 0
+        this.forward_G7e = 0
+        this.aft_G7a = 0
+        this.aft_G7e = 0
+        this.reloads_forward_G7a = 0
+        this.reloads_forward_G7e = 0
+        this.reloads_aft_G7a = 0
+        this.reloads_aft_G7e = 0
+        this.minesLoadedForward = true
+        this.minesLoadedAft = true
+
+        const subResupply = new ResupplyPopup(this.tv, this.gm, this.G7aStarting, this.G7eStarting, this.reserves_aft, 0);
     }
 }

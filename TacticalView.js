@@ -43,8 +43,8 @@ class TacticalView{
         this.mainUI.handleEvent(event);
     }
 
-    startGame(kmdtTextField, numField){
-        this.gm.startGame(kmdtTextField, numField);
+    startGame(kmdtTextField, numField, subType){
+        this.gm.startGame(kmdtTextField, numField, subType);
     }
 
     drawLowerImage(ctx){

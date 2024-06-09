@@ -41,14 +41,15 @@ class Main{
   handleEvent(){
     if (event.target.id == "StartButton"){
       if (this.numField.value > 9999 || this.numField.value < 1) {
-        console.log("Error");
+        console.log("Error in U-Boat ID #");
         this.numField.style.backgroundColor = "red";
       }
       else{
         document.getElementById("Commander").style.visibility = "hidden";
         document.getElementById("SubNum").style.visibility = "hidden";
         document.getElementById("StartButton").style.visibility = "hidden";
-        this.tv.startGame(this.kmdtTextField.value, this.numField.value);
+        document.getElementById("subSelectTable").style.visibility = "hidden";
+        this.tv.startGame(this.kmdtTextField.value, this.numField.value, document.querySelector('input[name="uboat"]:checked').value);
       }
     }
   }

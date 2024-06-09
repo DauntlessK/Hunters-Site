@@ -10,9 +10,48 @@
       <canvas class="game-canvas" width="1280" height="720"></canvas>
     </div>
     <div class="input-container">
-      <input type="text" id="Commander" placeholder="Enter Commander Name" maxlength="25">
-      <input type="number" id="SubNum" placeholder="Enter sub #" maxlength="4">
-      <input type="button" id="StartButton" value="Start Game">
+      <table id="subSelectTable">
+        <tr>
+          <td>
+            <input type="text" id="Commander" placeholder="Enter Commander Name" maxlength="25">
+          </td>
+          <td>
+            <input type="number" id="SubNum" placeholder="Enter sub #" maxlength="4">
+          </td>
+          <td>
+            <input type="button" id="StartButton" value="Start Game">
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <input type="radio" id="VIIA" name="uboat" value="VIIA" checked="checked">
+            <label for="VIIA">Type VIIA (Sept - 1939)</label>
+          </td>
+          <td>
+            <input type="radio" id="IXA" name="uboat" value="IXA">
+            <label for="IXA">Type IXA (Sept - 1939)</label><br>
+          </td>
+          <td>
+            <input type="radio" id="VIIC" name="uboat" value="VIIC">
+            <label for="VIIC">Type VIIC (Oct - 1940)</label>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <input type="radio" id="VIIB" name="uboat" value="VIIB">
+            <label for="VIIB">Type VIIB (Sept - 1939)</label>
+          </td>
+          <td>
+            <input type="radio" id="IXB" name="uboat" value="IXB">
+            <label for="IXB">Type IXB (Apr - 1940)</label>
+          </td>
+          <td>
+            <input type="radio" id="VIID" name="uboat" value="VIID">
+            <label for="VIID">Type VIID (Sept - 1942)</label>
+          </td>
+        </tr>
+      </table>
+
     </div>
 
 
@@ -26,6 +65,7 @@
     <script src="Popup.js"></script>
     <script src="GameManager.js"></script>
     <script src="Uboat.js"></script>
+    <script src="ResupplyPopup.js"></script>
     <script src="util.js"></script>
     <script src="init.js"></script>
 

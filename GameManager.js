@@ -3,6 +3,7 @@ class GameManager{
 
         this.tv = tv;
         this.sub = null;
+        this.eventResolved = true;
 
         this.kmdt = "";
         this.id = "";
@@ -59,32 +60,58 @@ class GameManager{
         this.pastSubs = [];
     }
 
-    startGame(name, num){
+    async startGame(name, num, subType){
         this.kmdt = name;
         this.id = num;
+        this.sub = new Uboat(subType, this.tv, this);
         this.tv.mainUI.subNum = this.getFullUboatID();
-        this.tv.mainUI.rank = this.rank[0] + " " + this.kmdt;
+        this.tv.mainUI.rank = this.rank[this.sub.crew_levels["Kommandant"]] + " " + this.kmdt;
         this.tv.mainUI.date = this.getFullDate();
 
-        //Popup to select sub
-        const introPopup = new Popup("subSelect", this.tv, this);
-        
+        //Popup to greet start of game
+        this.getStartingRank();
+        this.eventResolved = false;
+        const popup2 = new Popup("startGameText", this.tv, this);
+
+        await until(_ => this.eventResolved == true);
+        this.setDate();
+        this.sub.torpedoResupply();        
     }
 
     getFullUboatID(){
-        return "U-" + this.id;
+        if (this.sub == null){
+            return "";
+        }
+        else{
+            return "U-" + this.id;
+        }
     }
 
     getFullDate(){
-        return this.month[this.date_month] + " - " + this.date_year;
+        if (this.sub == null){
+            return "";
+        }
+        else{
+            return this.month[this.date_month] + " - " + this.date_year;
+        }
     }
 
     getLRankAndName(){
-        return this.rankLong[0] + " " + this.kmdt;
+        if (this.sub == null){
+            return "";
+        }
+        else{
+            return this.rankLong[this.sub.crew_levels["Kommandant"]] + " " + this.kmdt;
+        }
     }
 
     getRankAndName(){
-        return this.rank[0] + " " + this.kmdt;
+        if (this.sub == null){
+            return "";
+        }
+        else{
+            return this.rank[this.sub.crew_levels["Kommandant"]] + " " + this.kmdt;
+        }
     }
 
     getStartingRank(){
@@ -93,14 +120,40 @@ class GameManager{
             this.sub.crew_levels["Kommandant"] = 1;
         }
         else{
-            console.log(d6Roll());
+            roll = d6Roll();
+            switch (this.date_year){
+                case 1939:
+                    this.sub.crew_levels["Kommandant"] = 1;
+                    break;
+                case 1940:
+                    if (roll >= 3){
+                        this.sub.crew_levels["Kommandant"] = 1;
+                    }
+                    else{
+                        this.sub.crew_levels["Kommandant"] = 0;
+                    }
+                case 1941:
+                    if (roll >= 4){
+                        this.sub.crew_levels["Kommandant"] = 1;
+                    }
+                    else{
+                        this.sub.crew_levels["Kommandant"] = 0;
+                    }
+                case 1942:
+                case 1943:
+                    if (roll >= 6){
+                        this.sub.crew_levels["Kommandant"] = 1;
+                    }
+                    else{
+                        this.sub.crew_levels["Kommandant"] = 0;
+                    }
+            }
         }
     }
 
-    setSub(subChosen){
-        //takes input from what user selected and adjusts parameters for submarine
-        this.sub = new Uboat(subChosen);
-        switch (subChosen){
+    setDate(){
+        //sets date and other settings based on sub selection
+        switch (this.sub.getType()){
             case "VIIA":
                 this.date_month = 8;
                 this.date_year = 1939;
@@ -125,6 +178,7 @@ class GameManager{
             case "VIID":
                 this.date_month = 0;
                 this.date_year = 1942;
+                this.francePost = true;
                 break;
         }
     }

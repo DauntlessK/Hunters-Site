@@ -1,7 +1,6 @@
 class Popup{
     constructor(message, tv, gm) {
         this.message = message;
-        //this.onComplete = onConplete;
         this.tv = tv;
         this.gm = gm;
         this.tv.pauseGame();
@@ -20,54 +19,78 @@ class Popup{
             case "startGameText":
                 this.startGameTextElement();
                 break;
+            case "subResupply1":
+                this.subResupply1();
+                break;
             default:
                 console.log("Error selecting correct message to popup");
         }
         container.appendChild(this.element);
     }
 
-
-    subSelectElement() {
-        //Message to select sub at start of game
-
-        this.element.innerHTML = (`
-            <h3 class="HeaderMessage_h3">Hunters: German U-Boats at War
-            <p class="TextMessage_p">Choose your U-Boat / start date:<br>
-            <button class="Option_button" id="VIIC">Type VIIA    •   Sept - 39</button><br>
-            <button class="Option_button" id="VIIB">Type VIIB   •   Sept - 39</button><br>
-            <button class="Option_button" id="IXA">Type IXA    •   Sept - 39</button><br>
-            <button class="Option_button" id="IXB">Type IXB • Apr - 40</button><br>
-            <button class="Option_button" id="VIIC">Type VIIC • Oct - 40</button><br>
-            <button class="Option_button" id="VIID">Type VIID • Jan - 42</button>
-            </p>
-        `)
-
-        this.element.addEventListener("click", ()=> {
-            //determine which button was clicked
-            this.gm.setSub(event.target.id);
-            
-            //close popup
-            this.done()
-            this.gm.getStartingRank();
-            const popup2 = new Popup("startGameText", this.tv, this.gm);
-        });
-
-    }
-
     startGameTextElement() {
         //Message to announce starting rank, sub, date, etc
+        var storyIntroText = "";
+        if (this.gm.date_year == 1939){
+            storyIntroText = "The invasion of Poland has begun and Great Britain and France have declared war on us."
+        }
+        else if (this.gm.date_year == 1940){
+            storyIntroText = "1940 text"
+        }
 
         //new div to add
         this.element.innerHTML = (`
             <h3 class="HeaderMessage_h3">Hunters: German U-Boats at War
-            <p class="TextMessage_p">Welcome, ${this.gm.getRankAndName()}. Report to ${this.gm.getFullUboatID()} immediately.</p>
+            <p class="TextMessage_p">${this.gm.getFullDate()}<br>
+            ${this.gm.getLRankAndName()}, pleaste report to ${this.gm.getFullUboatID()} immediately.<br><br>
+            ${storyIntroText}</p>
             <button class="TextMessage_button">Next</button>
         `)
 
         this.element.querySelector("button").addEventListener("click", ()=> {
             //close popup
             this.done();
+            this.gm.eventResolved = true;
         })
+    }
+
+    subResupply1() {
+        //Popup to select loadout of torpedoes
+        var currentG7a = this.gm.sub.G7aStarting;
+        var currentG7e = this.gm.sub.G7eStarting;
+
+
+        this.element.innerHTML = (`
+            <h3 class="HeaderMessage_h3">Port Resupply
+            <p class="TextMessage_p">${this.gm.getFullUboatID()} has been assigned ${this.gm.sub.G7aStarting} G7a (steam) torpedoes and
+            ${this.gm.sub.G7eStarting} G7e (electric) torpedoes.<br>You may adjust this spread by +/- ${this.gm.sub.torpedo_type_spread}.<br>
+            <button class="Option_button" id="DecG7a"><---</button> ${currentG7a} <button class="Option_button" id="IncG7a">---></button><br>
+            <button class="Option_button" id="DecG7e"><---</button> ${currentG7e} <button class="Option_button" id="IncG7e">---></button><br>
+            </p>
+        `)
+
+        this.element.addEventListener("click", ()=> {
+            //determine which button was clicked
+            if (event.target.id == "DecG7a"){
+                currentG7a--;
+                currentG7e++;
+            }
+            else if (event.target.id == "IncG7a"){
+                currentG7a++;
+                currentG7e--;
+            }
+            else if (event.target.id == "DecG7e"){
+                currentG7a++;
+                currentG7e--;
+            }
+            else if (event.target.id == "IncG7e"){
+                currentG7a--;
+                currentG7e++;
+            }
+            else{
+                this.done();
+            }
+        });
     }
 
     done(){
