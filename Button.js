@@ -11,6 +11,9 @@ class Button {
         this.x = config.x;   //location drawn x
         this.y = config.y;   //location drawn y
 
+        this.gm = config.gm;
+        this.tube = config.tube || null;
+
         //Boundaries
         this.xBoundMin = this.x;
         this.xBoundMax = this.xBoundMin + this.width;
@@ -20,7 +23,6 @@ class Button {
         //states
         this.frames = config.frames;   //default 0= active, 1=pressed, 2=pressed, 3 disabled
         this.currentFrame = 0; //default state is 0/active
-
     }
 
     handleEvent(event){

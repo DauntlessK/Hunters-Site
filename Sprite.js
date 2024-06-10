@@ -37,7 +37,7 @@ class Sprite {
 
   updateAnimationProgress(){
     //Downtick frame progress if game is unpaused
-    if (this.tv.isUnpaused == true){
+    if (this.tv.isUnpaused == true && window.Scene === "Sunny"){
       this.animationFrameProgress -= 1;
       //Check to see if frame limit is 0, if it is, roll to next frame
       if (this.animationFrameProgress === 0 && this.currentAnimation === "cruise"){
@@ -50,6 +50,9 @@ class Sprite {
       else if (this.currentAnimation === "idle"){
         this.currentAnimationFrame = 0;
       }
+    }
+    else{
+      this.currentFrame = 0;
     }
   }
 

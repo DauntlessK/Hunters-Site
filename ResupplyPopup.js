@@ -170,6 +170,7 @@ class ResupplyPopup{
 
     done(){
         this.element.remove();
-        reloadpopup = new ReloadPopup(this.tv, this.gm);
+        this.gm.sub.torpedoReload(2, 2, 1, 1);
+        //reloadpopup = new ReloadPopup(this.tv, this.gm);
     }
 }

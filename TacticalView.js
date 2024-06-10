@@ -4,6 +4,7 @@ class TacticalView{
     constructor(config){
         this.gameObjects = config.gameObjects;
         this.gm = new GameManager(this);
+        this.scene = config.scene;
         this.isUnpaused = true;
 
         this.lowerImage = new Image();
@@ -13,6 +14,9 @@ class TacticalView{
         this.animationFrameLimit = 16;
         this.animationFrameProgress = 16;
 
+        //handle intial scene
+        changeScene(this.scene);
+
         //bgd image must be same size: 1280x720px
 
         this.upperImage = new Image();
@@ -21,6 +25,7 @@ class TacticalView{
         //UI
         this.mainUI = new UI({
             src: "images/ui/uibgd.png",
+            tv: this,
             gm: this.gm
         });
 
@@ -48,6 +53,10 @@ class TacticalView{
     }
 
     drawLowerImage(ctx){
+        if (window.Scenes === "Port"){
+            this.currentFrame = 0;
+            console.log("Port");
+        }
         ctx.drawImage(this.lowerImage,
             this.currentFrame * 1280, 0,
             1280, 720,
@@ -85,26 +94,44 @@ class TacticalView{
             }
         }
     }
+
+    changeScene(newScene){
+        switch (newScene){
+            case "Port":
+                this.lowerImage.src = "images/portscene.png";
+                this.upperImage.src = "images/logo.png";
+                gameObjects: {
+                    sub: new GameObject({
+                        x: 200,
+                        y: 420,
+                        src: "images/ships/Uboat_VIIC_spritesheet.png",
+                        width: 803,
+                        height: 95,
+                        frames: 1,
+                    })
+                }
+        }
+    }
 }
 
 window.Scenes = {
     Port: {
-        lowerSrc: "images/scrollingwater.gif",
+        lowerSrc: "images/portscene.png",
+        upperSrc: "images/logo.png",
         gameObjects: {
             sub: new GameObject({
-                x: 15,
-                y: 200,
+                x: 200,
+                y: 420,
                 src: "images/ships/Uboat_VIIC_spritesheet.png",
-                width: 455,
-                height: 85,
-                frames: 48,
+                width: 803,
+                height: 95,
+                frames: 1,
             })
         }
     },
     Sunny: {
         lowerSrc: "images/scrollingwater_spritesheet.png",
         upperSrc: "images/deepwater.png",
-        //UI: this.mainUI,
         bgdFrames: 49,
         gameObjects: {
             sub: new GameObject({

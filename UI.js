@@ -1,6 +1,7 @@
 class UI{
     constructor(config){
         this.gm = config.gm;
+        this.tv = config.tv;
 
         this.bgdUI = new Image();
         this.src = config.src;
@@ -13,47 +14,58 @@ class UI{
 
         this.uiBgd.onload = () => {
             this.isLoaded = true;
-          }
+        }
 
-        this.button1 = new Button({
+        //create buttons
+        this.button1 = new TorpedoButton({
             src: "images/ui/torpbutton.png",
             x: 1007,
             y: 245,
             width: 100,
             height: 100,
-            frames: 4
+            frames: 4,
+            tube: 1,
+            gm: this.gm
           });
-        this.button2 = new Button({
+        this.button2 = new TorpedoButton({
             src: "images/ui/TorpButton.png",
             x: 1110,
             y: 245,
             width: 100,
             height: 100,
-            frames: 4
+            frames: 4,
+            tube: 2,
+            gm: this.gm
         });
-        this.button3 = new Button({
+        this.button3 = new TorpedoButton({
             src: "images/ui/torpbutton.png",
             x: 1007,
             y: 341,
             width: 100,
             height: 100,
-            frames: 4
+            frames: 4,
+            tube: 3,
+            gm: this.gm
           });
-        this.button4 = new Button({
+        this.button4 = new TorpedoButton({
             src: "images/ui/torpbutton.png",
             x: 1110,
             y: 341,
             width: 100,
             height: 100,
-            frames: 4
+            frames: 4,
+            tube: 4,
+            gm: this.gm
         });
-        this.button5 = new Button({
+        this.button5 = new TorpedoButton({
             src: "images/ui/torpbutton.png",
             x: 1057,
             y: 449,
             width: 100,
             height: 100,
-            frames: 4
+            frames: 4,
+            tube: 5,
+            gm: this.gm
         });
 
     }
@@ -67,16 +79,18 @@ class UI{
     }
         
     draw(ctx){
-        this.drawBgd(ctx);
-        this.button1.draw(ctx);
-        this.button2.draw(ctx);
-        this.button3.draw(ctx);
-        this.button4.draw(ctx);
-        this.button5.draw(ctx);
-        this.drawHeaderTxt(ctx);
-        //Object.values(this.buttons).forEach(object => {
-        //object.button.draw(this.ctx);
-      //})
+        if (window.Scenes === "Sunny"){
+            this.drawBgd(ctx);
+            this.button1.draw(ctx);
+            this.button2.draw(ctx);
+            this.button3.draw(ctx);
+            this.button4.draw(ctx);
+            this.button5.draw(ctx);
+            this.drawHeaderTxt(ctx);
+            //Object.values(this.buttons).forEach(object => {
+            //object.button.draw(this.ctx);
+          //})
+        }
     }
 
     drawBgd(ctx){
