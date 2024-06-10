@@ -42,7 +42,7 @@ class Popup{
         this.element.innerHTML = (`
             <h3 class="HeaderMessage_h3">Hunters: German U-Boats at War
             <p class="TextMessage_p">${this.gm.getFullDate()}<br>
-            ${this.gm.getLRankAndName()}, pleaste report to ${this.gm.getFullUboatID()} immediately.<br><br>
+            ${this.gm.getLRankAndName()}, please report to ${this.gm.getFullUboatID()} immediately.<br><br>
             ${storyIntroText}</p>
             <button class="TextMessage_button">Next</button>
         `)

@@ -189,6 +189,16 @@ class Uboat{
         this.minesLoadedForward = true
         this.minesLoadedAft = true
 
-        const subResupply = new ResupplyPopup(this.tv, this.gm, this.G7aStarting, this.G7eStarting, this.reserves_aft, 0);
+        const subResupply = new ResupplyPopup(this.tv, this.gm, this.G7aStarting, this.G7eStarting, this.reserves_aft + this.aft_tubes, 0);
+
+        //set loadout to remember for next resupply
+        this.lastLoadoutForward_G7a = this.forward_G7a;
+        this.lastLoadoutForward_G7e = this.forward_G7e;
+        this.lastLoadoutAft_G7a = this.aft_G7a;
+        this.lastLoadoutAft_G7e = this.aft_G7e;
+        this.lastLoadoutReloads_forward_G7a = this.reloads_forward_G7a;
+        this.lastLoadoutReloads_forward_G7e = this.reloads_forward_G7e;
+        this.lastLoadoutReloads_aft_G7a = this.reloads_aft_G7a;
+        this.lastLoadoutReloads_aft_G7e = this.reloads_aft_G7e;
     }
 }

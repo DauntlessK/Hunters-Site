@@ -21,10 +21,9 @@ class ReloadPopup{
 
         this.element.innerHTML = (`
             <h3 class="HeaderMessage_h3">Tube Reload Selection
-            <p class="TextMessage_p">${this.gm.sub.G7a()} has been assigned<span class= "G7a"> ${this.gm.sub.G7aStarting} G7a (steam) torpedoes</span> and
-            <span class="G7e">${this.gm.sub.G7eStarting} G7e (electric) torpedoes</span>.<br>You may adjust this spread by +/- ${this.gm.sub.torpedo_type_spread}.<br>
-            <span class="G7a">G7a: </span><button class="Option_button" id="DecG7a"><---</button><span class="G7a"> ${this.currentG7a} </span><button class="Option_button" id="IncG7a">---></button><br>
-            <span class="G7e">G7e: </span><button class="Option_button" id="DecG7e"><---</button><span class="G7e"> ${this.currentG7e} </span><button class="Option_button" id="IncG7e">---></button><br>
+            <p class="TextMessage_p">Fore Torpedoes: <span class="G7a">${this.gm.sub.reloads_forward_G7a}</span>      <span class="G7e">${this.gm.sub.reloads_forward_G7e}</span><br>
+            <p class="TextMessage_p">Aft Torpedoes:  <span class="G7a">${this.gm.sub.reloads_aft_G7a}</span>      <span class="G7e">${this.gm.sub.reloads_aft_G7e}</span><br>
+            <img src="images/ui/TorpButton.png">
             </p>
             <button class="TextMessage_button" id="done">Done</button>
         `)
