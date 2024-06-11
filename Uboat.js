@@ -106,7 +106,7 @@ class Uboat{
                 this.tube[6] = null;
                 break;
             }
-        this.reserves_fore = this.G7aStarting + this.G7eStarting - this.reserves_aft;
+        this.reserves_fore = this.G7aStarting + this.G7eStarting - this.reserves_aft - this.aft_tubes;
         this.G7a = 0;
         this.G7e = 0;
 
@@ -210,6 +210,49 @@ class Uboat{
         this.lastLoadoutReloads_forward_G7e = this.reloads_forward_G7e;
         this.lastLoadoutReloads_aft_G7a = this.reloads_aft_G7a;
         this.lastLoadoutReloads_aft_G7e = this.reloads_aft_G7e;
+    }
+
+    loadTube(tubeNum, type){
+        //loads a tube with a given torpedo type, checking to make sure the stores are available
+
+        if (tubeNum <= 4){   //trying to load fore torpedoes
+            if (type == 1 && this.reloads_forward_G7a > 0){
+                if (this.tube[tubeNum] == 2){  //unload existing G7e if not empty (add back to fore G7e reserves)
+                    this.reloads_forward_G7e++;
+                }
+                this.reloads_forward_G7a--;
+                this.tube[tubeNum] = type;
+            }
+            else if (type == 2 && this.reloads_forward_G7e > 0){
+                if (this.tube[tubeNum] == 1){  //unload existing G7a if not empty (add back to fore G7a reserves)
+                    this.reloads_forward_G7a++;
+                }
+                this.reloads_forward_G7e--;
+                this.tube[tubeNum] = type;
+            }
+            else {
+                console.log("No Torpedoes available of that type to load forward.")
+            }
+        }
+        else {  //trying to load aft torpedoes
+            if (type == 1 && this.reloads_aft_G7a > 0){
+                if (this.tube[tubeNum] == 2){  //unload existing G7e if not empty (add back to aft G7e reserves)
+                    this.reloads_aft_G7e++;
+                }
+                this.reloads_aft_G7a--;
+                this.tube[tubeNum] = type;
+            }
+            else if (type == 2 && this.reloads_aft_G7e > 0){
+                if (this.tube[tubeNum] == 1){  //unload existing G7a if not empty (add back to aft G7a reserves)
+                    this.reloads_aft_G7a++;
+                }
+                this.reloads_aft_G7e--;
+                this.tube[tubeNum] = type;
+            }
+            else {
+                console.log("No Torpedoes available of that type to load aft.")
+            }
+        }
     }
 
     torpedoReload(G7aToLoadFore, G7eToLoadFore, G7aToLoadAft, G7eToLoadAft){

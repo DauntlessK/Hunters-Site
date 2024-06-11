@@ -1,15 +1,57 @@
 class TorpedoButton extends Button{
     constructor(...args){
         super(...args);
+        this.tubeState = "emptyAndReloading";    //can be empty, empty and reloading, and ready
+        this.baseFrameEmpty = 4;
+        this.baseFrameReady = 0;
+        this.baseFrame = 4;
+        this.currentFrame = this.baseFrame;
     }
 
     getLatestState(){
         //figure out how many G7a or G7e are loaded forward. First go for G7a
-        switch (this.tube){
-            case 1:
-                break;
-            case 2:
-                break;
+
+        if (this.tubeState == "emptyAndReloading"){
+            this.baseFrame = 4;
+            if (this.gm.sub.tube[this.tube] == 1){
+                this.currentFrame = 6
+            }
+            else if (this.gm.sub.tube[this.tube] == 2){
+                this.currentFrame = 7;
+            }
+        }
+        else {
+            this.baseFrame = 0;
+        }
+    }
+
+    clickedButton(){
+        if (this.tubeState == "emptyAndReloading") {
+            if (this.tv.reloadMode == true){
+                if (this.gm.sub.tube[this.tube] == 0){
+                    if (this.tube <= 4 && this.gm.sub.reloads_forward_G7a > 0){
+                        this.gm.sub.loadTube(this.tube, 1);
+                    }
+                    else if (this.tube <=4 && this.gm.sub.reloads_forward_G7e > 0){
+                        this.gm.sub.loadTube(this.tube, 2);
+                    }
+                    else if (this.tube > 4 && this.gm.sub.reloads_aft_G7a > 0){
+                        this.gm.sub.loadTube(this.tube, 1);
+                    }
+                    else if (this.tube > 4 && this.gm.sub.reloads_aft_G7e > 0){
+                        this.gm.sub.loadTube(this.tube, 2);
+                    }
+                }
+                else if (this.gm.sub.tube[this.tube] == 1){
+                    this.gm.sub.loadTube(this.tube, 2);
+                }
+                else if (this.gm.sub.tube[this.tube] == 2){
+                    this.gm.sub.loadTube(this.tube, 1);
+                }
+            }
+            //else{
+            //    this.currentFrame = this.baseFrame;   
+            //}
         }
     }
 
@@ -21,13 +63,14 @@ class TorpedoButton extends Button{
                 this.clickedButton();
             }
         }
-        else if (event.type == "mousemove")
-            if (this.withinBounds(xPos, yPos) && this.currentFrame == 0){
-                this.currentFrame = 1;
+        else if (event.type == "mousemove"){
+            if (this.withinBounds(xPos, yPos) && this.currentFrame == this.baseFrame){
+                this.currentFrame = this.baseFrame + 1;
             }
-            else if (!this.withinBounds(xPos, yPos) && this.currentFrame == 1){
-                this.currentFrame = 0;
+            else if (!this.withinBounds(xPos, yPos) && this.currentFrame == this.baseFrame + 1){
+                this.currentFrame = this.baseFrame;
             }
-        //this.getLatestState()
+        }
+        this.getLatestState()
     }
 }

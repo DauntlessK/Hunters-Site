@@ -23,9 +23,10 @@ class UI{
             y: 245,
             width: 100,
             height: 100,
-            frames: 4,
+            frames: 8,
             tube: 1,
-            gm: this.gm
+            gm: this.gm,
+            tv: this.tv
           });
         this.button2 = new TorpedoButton({
             src: "images/ui/TorpButton.png",
@@ -33,9 +34,10 @@ class UI{
             y: 245,
             width: 100,
             height: 100,
-            frames: 4,
+            frames: 8,
             tube: 2,
-            gm: this.gm
+            gm: this.gm,
+            tv: this.tv
         });
         this.button3 = new TorpedoButton({
             src: "images/ui/torpbutton.png",
@@ -43,9 +45,10 @@ class UI{
             y: 341,
             width: 100,
             height: 100,
-            frames: 4,
+            frames: 8,
             tube: 3,
-            gm: this.gm
+            gm: this.gm,
+            tv: this.tv
           });
         this.button4 = new TorpedoButton({
             src: "images/ui/torpbutton.png",
@@ -53,20 +56,49 @@ class UI{
             y: 341,
             width: 100,
             height: 100,
-            frames: 4,
+            frames: 8,
             tube: 4,
-            gm: this.gm
+            gm: this.gm,
+            tv: this.tv
         });
-        this.button5 = new TorpedoButton({
-            src: "images/ui/torpbutton.png",
-            x: 1057,
-            y: 449,
-            width: 100,
-            height: 100,
-            frames: 4,
-            tube: 5,
-            gm: this.gm
-        });
+        //torpedo buttons for IXA and IXB (two)
+        if (this.gm.sub.getType() == "IXA" || this.gm.sub.getType() == "IXB"){
+            this.button5 = new TorpedoButton({
+                src: "images/ui/torpbutton.png",
+                x: 1007,
+                y: 449,
+                width: 100,
+                height: 100,
+                frames: 8,
+                tube: 5,
+                gm: this.gm,
+                tv: this.tv
+            });
+            this.button6 = new TorpedoButton({
+                src: "images/ui/torpbutton.png",
+                x: 1110,
+                y: 449,
+                width: 100,
+                height: 100,
+                frames: 8,
+                tube: 6,
+                gm: this.gm,
+                tv: this.tv
+            });
+        }
+        else{   //single button for VII types
+            this.button5 = new TorpedoButton({
+                src: "images/ui/torpbutton.png",
+                x: 1057,
+                y: 449,
+                width: 100,
+                height: 100,
+                frames: 8,
+                tube: 5,
+                gm: this.gm,
+                tv: this.tv
+            });
+        }
 
     }
 
@@ -76,6 +108,9 @@ class UI{
         this.button3.handleEvent(event);
         this.button4.handleEvent(event);
         this.button5.handleEvent(event);
+        if (this.gm.sub.getType() == "IXA" || this.gm.sub.getType() == "IXB"){
+            this.button6.handleEvent(event);
+        }
     }
     
     uiIsOn(){
@@ -96,6 +131,9 @@ class UI{
             this.button3.draw(ctx);
             this.button4.draw(ctx);
             this.button5.draw(ctx);
+            if (this.gm.sub.getType() == "IXA" || this.gm.sub.getType() == "IXB"){
+                this.button6.draw(ctx);
+            }
             this.drawHeaderTxt(ctx);
             //Object.values(this.buttons).forEach(object => {
             //object.button.draw(this.ctx);
@@ -127,16 +165,132 @@ class UI{
         ctx.fillText(this.gm.getFullDate(), 1260, 40);
 
         //orders
-        ctx.fillStyle = "black";
-        ctx.textAlign = "center";
-        ctx.font = "italic 14px courier";
-        ctx.fillText(this.orders, 1108, 85);
+        //ctx.fillStyle = "black";
+        //ctx.textAlign = "center";
+        //ctx.font = "italic 14px courier";
+        //ctx.fillText(this.orders, 1108, 85);
 
         //Torpedo totals
-        ctx.fillStyle = "red";
-        ctx.font = "12px courier";
-        ctx.fillText(this.gm.sub.tube[1], 1000, 500);
-        ctx.fillText(this.gm.sub.tube[2], 1100, 500);
+        ctx.textAlign = "center";
+        ctx.fillStyle = "blue";
+        ctx.font = "bold 16px Courier";
+        //draw G7a (blue) text UI
+        ctx.fillText(this.gm.sub.reloads_forward_G7a, 975, 258);
+        ctx.fillText(this.gm.sub.reloads_aft_G7a, 975, 545);
+
+        //draw G7e (red) text UI
+        ctx.fillStyle = "darkred";
+        ctx.fillText(this.gm.sub.reloads_forward_G7e, 1240, 258);
+        ctx.fillText(this.gm.sub.reloads_aft_G7e, 1240, 545);
+
+        const leftSide = 983;
+        const rightSide = 1234;
+        const topRow = 292
+        const secondRow = 395;
+        const bottomRow = 499;
+
+        //draw tube text
+        ctx.font = "bold 12px Courier";
+        if (this.gm.sub.tube[1] == 1){
+            ctx.fillStyle = "blue";
+            ctx.fillText("G7a", leftSide, topRow);
+        }
+        else if (this.gm.sub.tube[1] == 2){
+            ctx.fillStyle = "darkred";
+            ctx.fillText("G7e", leftSide, topRow);
+        }
+        else{
+            ctx.fillStyle = "black";
+            ctx.fillText("--", leftSide, topRow);
+        }
+
+        if (this.gm.sub.tube[2] == 1){
+            ctx.fillStyle = "blue";
+            ctx.fillText("G7a", rightSide, topRow);
+        }
+        else if (this.gm.sub.tube[2] == 2){
+            ctx.fillStyle = "darkred";
+            ctx.fillText("G7e", rightSide, topRow);
+        }
+        else{
+            ctx.fillStyle = "black";
+            ctx.fillText("--", rightSide, topRow);
+        }
+
+        if (this.gm.sub.tube[3] == 1){
+            ctx.fillStyle = "blue";
+            ctx.fillText("G7a", leftSide, secondRow);
+        }
+        else if (this.gm.sub.tube[3] == 2){
+            ctx.fillStyle = "darkred";
+            ctx.fillText("G7e", leftSide, secondRow);
+        }
+        else{
+            ctx.fillStyle = "black";
+            ctx.fillText("--", leftSide, secondRow);
+        }
+
+        if (this.gm.sub.tube[4] == 1){
+            ctx.fillStyle = "blue";
+            ctx.fillText("G7a", rightSide, secondRow);
+        }
+        else if (this.gm.sub.tube[4] == 2){
+            ctx.fillStyle = "darkred";
+            ctx.fillText("G7e", rightSide, secondRow);
+        }
+        else{
+            ctx.fillStyle = "black";
+            ctx.fillText("--", rightSide, secondRow);
+        }
+
+        if (this.gm.sub.getType() == "IXA" || this.gm.sub.getType() == "IXB"){
+            if (this.gm.sub.tube[5] == 1){
+                ctx.fillStyle = "blue";
+                ctx.fillText("G7a", leftSide, bottomRow);
+            }
+            else if (this.gm.sub.tube[5] == 2){
+                ctx.fillStyle = "darkred";
+                ctx.fillText("G7e", leftSide, bottomRow);
+            }
+            else{
+                ctx.fillStyle = "black";
+                ctx.fillText("--", leftSide, bottomRow);
+            }
+    
+            if (this.gm.sub.tube[6] == 1){
+                ctx.fillStyle = "blue";
+                ctx.fillText("G7a", rightSide, bottomRow);
+            }
+            else if (this.gm.sub.tube[6] == 2){
+                ctx.fillStyle = "darkred";
+                ctx.fillText("G7e", rightSide, bottomRow);
+            }
+            else{
+                ctx.fillStyle = "black";
+                ctx.fillText("--", rightSide, bottomRow);
+            }
+        }
+        else {
+            if (this.gm.sub.tube[5] == 1){
+                ctx.fillStyle = "blue";
+                ctx.fillText("G7a", leftSide + 50, bottomRow);
+            }
+            else if (this.gm.sub.tube[5] == 2){
+                ctx.fillStyle = "darkred";
+                ctx.fillText("G7e", leftSide + 50, bottomRow);
+            }
+            else{
+                ctx.fillStyle = "black";
+                ctx.fillText("--", leftSide + 50, bottomRow);
+            }
+        }
+        
+        //Bottom Right (either reloading flag or telegraph)
+        if (this.tv.reloadMode == true){
+            ctx.fillStyle = "darkred";
+            ctx.font = "bold 30px Courier";
+            ctx.fillText("LOADING TORPEDOES", 1108, 640);
+        }
 
     }
 

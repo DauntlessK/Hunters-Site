@@ -113,8 +113,8 @@ class ResupplyPopup{
             <span class="G7a">G7a: </span><button class="Option_button" id="DecG7a"><---</button><span class="G7a"> ${this.currentG7a} </span><button class="Option_button" id="IncG7a">---></button><br>
             <span class="G7e">G7e: </span><button class="Option_button" id="DecG7e"><---</button><span class="G7e"> ${this.currentG7e} </span><button class="Option_button" id="IncG7e">---></button><br>
             <br>
-            Fore Torpedoes:    <span class="G7a">${this.currentForeG7a}</span>      <span class="G7e">${this.currentForeG7e}</span><br>
-            Aft Torpedoes: (${this.gm.sub.reserves_aft + this.gm.sub.aft_tubes}): <button class="option_button" id="IncG7aAFT"><span class="G7a" id="IncG7aAFT">${this.current_aftG7a}</span></button>
+            Fore Torpedoes (${this.gm.sub.reserves_fore}):  <span class="G7a">${this.currentForeG7a}</span>      <span class="G7e">${this.currentForeG7e}</span><br>
+            Aft  Torpedoes (${this.gm.sub.reserves_aft + this.gm.sub.aft_tubes}): <button class="option_button" id="IncG7aAFT"><span class="G7a" id="IncG7aAFT">${this.current_aftG7a}</span></button>
               <button class="option_button" id="IncG7eAFT"><span class="G7e" id="IncG7eAFT">${this.current_aftG7e}</span></button>
                 (Click to increase a given aft reserve torpedo type and decrease the other)
             </p>
@@ -171,6 +171,7 @@ class ResupplyPopup{
     done(){
         this.element.remove();
         this.tv.changeScene("Port");
+        this.tv.unpauseGame();
         this.tv.mainUI.reloadMode();
         //this.gm.sub.torpedoReload(2, 2, 1, 1);
         //reloadpopup = new ReloadPopup(this.tv, this.gm);

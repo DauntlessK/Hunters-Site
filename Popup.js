@@ -32,18 +32,24 @@ class Popup{
         //Message to announce starting rank, sub, date, etc
         var storyIntroText = "";
         if (this.gm.date_year == 1939){
-            storyIntroText = "The invasion of Poland has begun and Great Britain and France have declared war on us."
+            storyIntroText = "The invasion of Poland has begun and Great Britain and France have declared war on Germany. It is time to prove your mettle and help the war effort in disrupting shipping to the allies."
+        }
+        else if (this.gm.date_year == 1940 && this.gm.date_month < 6){
+            storyIntroText = "With Poland defeated, Germany looks to tighten its control of the Atlantic. We must continue to strangle the Allies' supply lines."
         }
         else if (this.gm.date_year == 1940){
-            storyIntroText = "1940 text"
+            storyIntroText = "With France defeated, Germany's U-Boats have mostly relocated to French ports. Help tip the Battle of the Atlantic, now in full swing, in favor of Germany."
+        }
+        else {
+            storyIntroText = "The Battle for the Atlantic has swung against Germany, as hundreds of U-Boats have been lost. Exercise caution as the allies have learned to hunt U-Boats."
         }
 
         //new div to add
         this.element.innerHTML = (`
-            <h3 class="HeaderMessage_h3">Hunters: German U-Boats at War
+            <h3 class="HeaderMessage_h3">The Hunters: German U-Boats at War
             <p class="TextMessage_p">${this.gm.getFullDate()}<br>
             ${this.gm.getLRankAndName()}, please report to ${this.gm.getFullUboatID()} immediately.<br><br>
-            ${storyIntroText}</p>
+            ${storyIntroText}<br><br>Formal orders to follow shortly.</p>
             <button class="TextMessage_button">Next</button>
         `)
 

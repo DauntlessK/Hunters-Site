@@ -4,6 +4,7 @@ class TacticalView{
     constructor(startScene){
         //this.gameObjects = config.gameObjects;
         this.gm = new GameManager(this);
+        this.mainUI = null;
         this.scene = startScene;
         this.isUnpaused = true;
         this.reloadMode = false;
@@ -20,12 +21,6 @@ class TacticalView{
         //handle intial scene
         this.changeScene(this.scene);
 
-        //UI
-        this.mainUI = new UI({
-            src: "images/ui/uibgd.png",
-            tv: this,
-            gm: this.gm
-        });
     }
 
     pauseGame(){
@@ -37,11 +32,21 @@ class TacticalView{
     }
 
     handleEvent(){
-        this.mainUI.handleEvent(event);
+        if (this.mainUI != null){
+            this.mainUI.handleEvent(event);
+          }
     }
 
     startGame(kmdtTextField, numField, subType){
+        //create game manager 
         this.gm.startGame(kmdtTextField, numField, subType);
+
+        //create UI object
+        this.mainUI = new UI({
+            src: "images/ui/uibgd.png",
+            tv: this,
+            gm: this.gm
+        });
     }
 
     drawLowerImage(ctx){
@@ -104,7 +109,7 @@ class TacticalView{
                 break;
             case "Port":
                 this.lowerImage.src = "images/portscene.png";
-                this.upperImage.src = null;
+                this.upperImage.src = "images/blank.png";
                 this.gameObjects = {
                     sub: new GameObject({
                         x: 40,

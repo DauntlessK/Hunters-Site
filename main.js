@@ -1,5 +1,6 @@
 class Main{
   constructor(config){
+      this.version = .351
       this.element = config.element;
       this.canvas = this.element.querySelector(".game-canvas");
       this.ctx = this.canvas.getContext("2d");
@@ -29,7 +30,9 @@ class Main{
       this.tv.drawUpperImage(this.ctx);
 
       //Draw UI
-      this.tv.drawUI(this.ctx);
+      if (this.tv.mainUI != null){
+        this.tv.drawUI(this.ctx);
+      }
 
       requestAnimationFrame(() => {
         step();
@@ -60,6 +63,7 @@ class Main{
     this.canvas.addEventListener('click', this.tv);
     this.canvas.addEventListener('mousemove', this.tv);
     this.button.addEventListener('click', this);
-
+    console.log("The Hunters: German Uboats at War\nArt, Design & Programming By Kyle Breen-Bondie\nBased on the GMT Board Game Designed by Gregory M. Smith");
+    console.log("Version: " + this.version);
   }
 }

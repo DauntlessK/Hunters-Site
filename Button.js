@@ -1,5 +1,8 @@
 class Button {
     constructor(config){
+        this.gm = config.gm;
+        this.tv = config.tv;
+
         //Set up the image
         this.image = new Image();
         this.image.src = config.src;
@@ -11,7 +14,6 @@ class Button {
         this.x = config.x;   //location drawn x
         this.y = config.y;   //location drawn y
 
-        this.gm = config.gm;
         this.tube = config.tube || null;
 
         //Boundaries

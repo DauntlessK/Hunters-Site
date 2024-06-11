@@ -12,7 +12,7 @@ class GameManager{
         this.date_year = 1939;
         this.rankLong = ["Oberleutnant zur See", "Kapitän-leutnant", "Korvetten-kapitän", "Fregatten-kapitän",
                             "Kapitän zur See"];
-        this.rank = ["OLt zS", "KptLt", "KKpt", "FFKpt", "Kapitän zur See"];
+        this.rank = ["OLt zS", "KptLt", "KKpt", "FFKpt", "KptzS"];
         this.awardName = ["", "Knight's Cross", "Knight's Cross with Oakleaves", "Knight's Cross with Oakleaves and Swords",
                             "Knight's Cross with Oakleaves, Swords and Diamonds"];
         this.monthsSinceLastPromotionCheck = 0;     //how many months since last promotion roll
@@ -64,54 +64,35 @@ class GameManager{
         this.kmdt = name;
         this.id = num;
         this.sub = new Uboat(subType, this.tv, this);
-        this.tv.mainUI.subNum = this.getFullUboatID();
-        this.tv.mainUI.rank = this.rank[this.sub.crew_levels["Kommandant"]] + " " + this.kmdt;
-        this.tv.mainUI.date = this.getFullDate();
+        if (this.tv.mainUI != null){
+            this.tv.mainUI.subNum = this.getFullUboatID();
+            this.tv.mainUI.rank = this.rank[this.sub.crew_levels["Kommandant"]] + " " + this.kmdt;
+            this.tv.mainUI.date = this.getFullDate();
+        }
 
         //Popup to greet start of game
         this.getStartingRank();
         this.eventResolved = false;
-        const popup2 = new Popup("startGameText", this.tv, this);
-
-        await until(_ => this.eventResolved == true);
         this.setDate();
+        const popup2 = new Popup("startGameText", this.tv, this);
+        await until(_ => this.eventResolved == true);
         this.sub.torpedoResupply();        
     }
 
     getFullUboatID(){
-        if (this.sub == null){
-            return "";
-        }
-        else{
-            return "U-" + this.id;
-        }
+        return "U-" + this.id;
     }
 
     getFullDate(){
-        if (this.sub == null){
-            return "";
-        }
-        else{
-            return this.month[this.date_month] + " - " + this.date_year;
-        }
+        return this.month[this.date_month] + " - " + this.date_year;
     }
 
     getLRankAndName(){
-        if (this.sub == null){
-            return "";
-        }
-        else{
-            return this.rankLong[this.sub.crew_levels["Kommandant"]] + " " + this.kmdt;
-        }
+        return this.rankLong[this.sub.crew_levels["Kommandant"]] + " " + this.kmdt;
     }
 
     getRankAndName(){
-        if (this.sub == null){
-            return "";
-        }
-        else{
-            return this.rank[this.sub.crew_levels["Kommandant"]] + " " + this.kmdt;
-        }
+        return this.rank[this.sub.crew_levels["Kommandant"]] + " " + this.kmdt;
     }
 
     getStartingRank(){
