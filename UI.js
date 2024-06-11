@@ -77,9 +77,19 @@ class UI{
         this.button4.handleEvent(event);
         this.button5.handleEvent(event);
     }
-        
+    
+    uiIsOn(){
+        //checks if UI should be on or off
+        if (this.tv.scene === "Sunny" || this.tv.reloadMode == true){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     draw(ctx){
-        if (this.tv.scene === "Sunny"){
+        if (this.uiIsOn()){
             this.drawBgd(ctx);
             this.button1.draw(ctx);
             this.button2.draw(ctx);
@@ -121,29 +131,16 @@ class UI{
         ctx.textAlign = "center";
         ctx.font = "italic 14px courier";
         ctx.fillText(this.orders, 1108, 85);
+
+        //Torpedo totals
+        ctx.fillStyle = "red";
+        ctx.font = "12px courier";
+        ctx.fillText(this.gm.sub.tube[1], 1000, 500);
+        ctx.fillText(this.gm.sub.tube[2], 1100, 500);
+
+    }
+
+    reloadMode(){
+        this.tv.reloadMode = true;
     }
 }
-
-/**UI.elements = {
-    main: {
-        bgdUIsrc: "images/ui/uibgd.png",
-        buttons: {
-            tube1: new Button({
-                x: 5,
-                y: 230,
-                src: "images/buttontext.png",
-                width: 200,
-                height: 100,
-                frames: 4
-            }),
-            tube2: new Button({
-                x: 100,
-                y: 230,
-                src: "images/buttontext.png",
-                width: 200,
-                height: 100,
-                frames: 4
-            })
-        }
-    }
-}*/

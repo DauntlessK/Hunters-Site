@@ -100,7 +100,7 @@ class Sprite {
     var swidth = 0;
     var sheight = 0;
 
-    if (this.tv.scene == "Port"){
+    if (this.tv.scene == "Port" || this.tv.scene == "IntroPort"){
       swidth = this.width + 361;
       sheight = this.height + 43;
     }

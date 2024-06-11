@@ -170,7 +170,9 @@ class ResupplyPopup{
 
     done(){
         this.element.remove();
-        this.gm.sub.torpedoReload(2, 2, 1, 1);
+        this.tv.changeScene("Port");
+        this.tv.mainUI.reloadMode();
+        //this.gm.sub.torpedoReload(2, 2, 1, 1);
         //reloadpopup = new ReloadPopup(this.tv, this.gm);
     }
 }

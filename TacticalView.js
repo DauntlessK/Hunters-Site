@@ -6,6 +6,7 @@ class TacticalView{
         this.gm = new GameManager(this);
         this.scene = startScene;
         this.isUnpaused = true;
+        this.reloadMode = false;
 
         this.lowerImage = new Image();
         this.upperImage = new Image();
@@ -44,7 +45,7 @@ class TacticalView{
     }
 
     drawLowerImage(ctx){
-        if (this.scene === "Port"){
+        if (this.scene === "Port" || this.scene === "IntroPort"){
             this.currentFrame = 0;
         }
         ctx.drawImage(this.lowerImage,
@@ -87,9 +88,23 @@ class TacticalView{
 
     changeScene(newScene){
         switch (newScene){
-            case "Port":
+            case "IntroPort":
                 this.lowerImage.src = "images/portscene.png";
                 this.upperImage.src = "images/logo.png";
+                this.gameObjects = {
+                    sub: new GameObject({
+                        x: 40,
+                        y: 375,
+                        src: "images/ships/Uboat_VIIC_spritesheet.png",
+                        width: 803,
+                        height: 95,
+                        frames: 1,
+                    })
+                }
+                break;
+            case "Port":
+                this.lowerImage.src = "images/portscene.png";
+                this.upperImage.src = null;
                 this.gameObjects = {
                     sub: new GameObject({
                         x: 40,

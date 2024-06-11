@@ -55,7 +55,7 @@ class Main{
   }
 
   init(){
-    this.tv = new TacticalView("Port");
+    this.tv = new TacticalView("IntroPort");
     this.startGameLoop();
     this.canvas.addEventListener('click', this.tv);
     this.canvas.addEventListener('mousemove', this.tv);
