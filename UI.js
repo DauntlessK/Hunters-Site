@@ -18,7 +18,7 @@ class UI{
 
         //create buttons
         this.button1 = new TorpedoButton({
-            src: "images/ui/torpbutton.png",
+            src: "images/ui/TorpButton.png",
             x: 1007,
             y: 245,
             width: 100,
@@ -40,7 +40,7 @@ class UI{
             tv: this.tv
         });
         this.button3 = new TorpedoButton({
-            src: "images/ui/torpbutton.png",
+            src: "images/ui/TorpButton.png",
             x: 1007,
             y: 341,
             width: 100,
@@ -51,7 +51,7 @@ class UI{
             tv: this.tv
           });
         this.button4 = new TorpedoButton({
-            src: "images/ui/torpbutton.png",
+            src: "images/ui/TorpButton.png",
             x: 1110,
             y: 341,
             width: 100,
@@ -64,7 +64,7 @@ class UI{
         //torpedo buttons for IXA and IXB (two)
         if (this.gm.sub.getType() == "IXA" || this.gm.sub.getType() == "IXB"){
             this.button5 = new TorpedoButton({
-                src: "images/ui/torpbutton.png",
+                src: "images/ui/TorpButton.png",
                 x: 1007,
                 y: 449,
                 width: 100,
@@ -75,7 +75,7 @@ class UI{
                 tv: this.tv
             });
             this.button6 = new TorpedoButton({
-                src: "images/ui/torpbutton.png",
+                src: "images/ui/TorpButton.png",
                 x: 1110,
                 y: 449,
                 width: 100,
@@ -88,7 +88,7 @@ class UI{
         }
         else{   //single button for VII types
             this.button5 = new TorpedoButton({
-                src: "images/ui/torpbutton.png",
+                src: "images/ui/TorpButton.png",
                 x: 1057,
                 y: 449,
                 width: 100,

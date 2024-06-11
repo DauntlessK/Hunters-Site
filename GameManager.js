@@ -10,8 +10,8 @@ class GameManager{
         this.month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
         this.date_month = 8;
         this.date_year = 1939;
-        this.rankLong = ["Oberleutnant zur See", "Kapitän-leutnant", "Korvetten-kapitän", "Fregatten-kapitän",
-                            "Kapitän zur See"];
+        this.rankLong = ["Oberleutnant zur See", "Kapitan-leutnant", "Korvetten-kapitan", "Fregatten-kapitan", "Kapitan zur See"];
+        //this.rankLong = ["Oberleutnant zur See", "Kapitän-leutnant", "Korvetten-kapitän", "Fregatten-kapitän", "Kapitän zur See"];
         this.rank = ["OLt zS", "KptLt", "KKpt", "FFKpt", "KptzS"];
         this.awardName = ["", "Knight's Cross", "Knight's Cross with Oakleaves", "Knight's Cross with Oakleaves and Swords",
                             "Knight's Cross with Oakleaves, Swords and Diamonds"];
