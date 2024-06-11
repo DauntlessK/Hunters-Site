@@ -1,26 +1,23 @@
 //substitute for overworld map
 
 class TacticalView{
-    constructor(config){
-        this.gameObjects = config.gameObjects;
+    constructor(startScene){
+        //this.gameObjects = config.gameObjects;
         this.gm = new GameManager(this);
-        this.scene = config.scene;
+        this.scene = startScene;
         this.isUnpaused = true;
 
         this.lowerImage = new Image();
-        this.lowerImage.src = config.lowerSrc;
-        this.bgdFrames = config.bgdFrames;
+        this.upperImage = new Image();
+
         this.currentFrame = 0;
         this.animationFrameLimit = 16;
         this.animationFrameProgress = 16;
 
-        //handle intial scene
-        changeScene(this.scene);
-
         //bgd image must be same size: 1280x720px
 
-        this.upperImage = new Image();
-        this.upperImage.src = config.upperSrc;
+        //handle intial scene
+        this.changeScene(this.scene);
 
         //UI
         this.mainUI = new UI({
@@ -28,12 +25,6 @@ class TacticalView{
             tv: this,
             gm: this.gm
         });
-
-
-        //update tv on each sprite
-        Object.values(this.gameObjects).forEach(object => {
-            object.sprite.updateTV(this);
-        })
     }
 
     pauseGame(){
@@ -53,9 +44,8 @@ class TacticalView{
     }
 
     drawLowerImage(ctx){
-        if (window.Scenes === "Port"){
+        if (this.scene === "Port"){
             this.currentFrame = 0;
-            console.log("Port");
         }
         ctx.drawImage(this.lowerImage,
             this.currentFrame * 1280, 0,
@@ -100,7 +90,7 @@ class TacticalView{
             case "Port":
                 this.lowerImage.src = "images/portscene.png";
                 this.upperImage.src = "images/logo.png";
-                gameObjects: {
+                this.gameObjects = {
                     sub: new GameObject({
                         x: 200,
                         y: 420,
@@ -110,38 +100,25 @@ class TacticalView{
                         frames: 1,
                     })
                 }
+                break;
+            case "Sunny":
+                this.lowerImage.src = "images/scrollingwater_spritesheet.png",
+                this.upperImage.src = "images/deepwater.png",
+                this.bgdFrames = 49,
+                this.gameObjects = {
+                    sub: new GameObject({
+                        x: 0,
+                        y: 460,
+                        src: "images/ships/Uboat_VIIC_spritesheet.png",
+                        width: 803,
+                        height: 150,
+                        frames: 48,
+                    })
+                }
         }
-    }
-}
-
-window.Scenes = {
-    Port: {
-        lowerSrc: "images/portscene.png",
-        upperSrc: "images/logo.png",
-        gameObjects: {
-            sub: new GameObject({
-                x: 200,
-                y: 420,
-                src: "images/ships/Uboat_VIIC_spritesheet.png",
-                width: 803,
-                height: 95,
-                frames: 1,
-            })
-        }
-    },
-    Sunny: {
-        lowerSrc: "images/scrollingwater_spritesheet.png",
-        upperSrc: "images/deepwater.png",
-        bgdFrames: 49,
-        gameObjects: {
-            sub: new GameObject({
-                x: 0,
-                y: 460,
-                src: "images/ships/Uboat_VIIC_spritesheet.png",
-                width: 803,
-                height: 150,
-                frames: 48,
-            })
-        }
+        //update tv on each sprite
+        Object.values(this.gameObjects).forEach(object => {
+            object.sprite.updateTV(this);
+        })
     }
 }

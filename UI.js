@@ -79,7 +79,7 @@ class UI{
     }
         
     draw(ctx){
-        if (window.Scenes === "Sunny"){
+        if (this.tv.scene === "Sunny"){
             this.drawBgd(ctx);
             this.button1.draw(ctx);
             this.button2.draw(ctx);
