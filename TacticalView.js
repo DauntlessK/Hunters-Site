@@ -92,8 +92,8 @@ class TacticalView{
                 this.upperImage.src = "images/logo.png";
                 this.gameObjects = {
                     sub: new GameObject({
-                        x: 200,
-                        y: 420,
+                        x: 40,
+                        y: 375,
                         src: "images/ships/Uboat_VIIC_spritesheet.png",
                         width: 803,
                         height: 95,

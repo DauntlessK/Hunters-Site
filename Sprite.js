@@ -97,11 +97,23 @@ class Sprite {
     const x = this.gameObject.x;
     const y = this.gameObject.y + this.randomUpAndDown();
 
+    var swidth = 0;
+    var sheight = 0;
+
+    if (this.tv.scene == "Port"){
+      swidth = this.width + 361;
+      sheight = this.height + 43;
+    }
+    else{
+      swidth = this.width;
+      sheight = this.height;
+    }
+
     this.isLoaded && ctx.drawImage(this.image,
       this.currentFrame * this.width, 0,
       this.width, this.height,
       x, y,
-      this.width, this.height
+      swidth, sheight
     )
     this.updateAnimationProgress();
   }
