@@ -32,8 +32,8 @@ class Patrol{
             console.log("Error getting patrol chart .txt file.")
         }
 
-        const ordersRoll = d6Rollx2()
-        console.log(patrolChart);
+        const ordersRoll = d6Rollx2();
+        const textFile = "data/" + patrolChart + ".txt";
 
         /**with open(patrolChart, "r") as fp:
             lines = fp.readlines()
@@ -60,4 +60,16 @@ class Patrol{
 
         this.currentOrders = orders*/
     }
+
+    readTextFile() {
+        var rawFile = new XMLHttpRequest();
+        rawFile.open("GET", "data/${patrolChart}.txt", true);
+        rawFile.onreadystatechange = function() {
+          if (rawFile.readyState === 4) {
+            var allText = rawFile.responseText;
+            document.getElementById("textSection").innerHTML = allText;
+          }
+        }
+        rawFile.send();
+      }
 }

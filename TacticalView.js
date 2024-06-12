@@ -21,6 +21,7 @@ class TacticalView{
         //handle intial scene
         this.changeScene(this.scene);
 
+        //console.log(this.gameObjects.uboat.sprite);
     }
 
     pauseGame(){
@@ -101,7 +102,7 @@ class TacticalView{
                 this.lowerImage.src = "images/portscene.png";
                 this.upperImage.src = "images/logo.png";
                 this.gameObjects = {
-                    sub: new GameObject({
+                    uboat: new GameObject({
                         x: 40,
                         y: 375,
                         src: "images/ships/Uboat_VIIC_spritesheet.png",
@@ -115,7 +116,7 @@ class TacticalView{
                 this.lowerImage.src = "images/portscene.png";
                 this.upperImage.src = "images/blank.png";
                 this.gameObjects = {
-                    sub: new GameObject({
+                    uboat: new GameObject({
                         x: 40,
                         y: 375,
                         src: "images/ships/Uboat_VIIC_spritesheet.png",
@@ -130,7 +131,7 @@ class TacticalView{
                 this.upperImage.src = "images/deepwater.png",
                 this.bgdFrames = 49,
                 this.gameObjects = {
-                    sub: new GameObject({
+                    uboat: new GameObject({
                         x: 0,
                         y: 460,
                         src: "images/ships/Uboat_VIIC_spritesheet.png",

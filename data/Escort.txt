@@ -1,0 +1,700 @@
+NOSHIP
+HMS Abelia#Corvette#925
+HMS Acanthus#Corvette#925
+HMS Aconite#Corvette#925
+HMS Alisma#Corvette#925
+HMS Alyssum#Corvette#925
+HMS Amaranthus#Corvette#925
+HMS Anchusa#Corvette#925
+HMS Anemone#Corvette#925
+HMS Arabis#Corvette#925
+HMS Arbutus#Corvette#925
+HMS Armeria#Corvette#925
+HMS Arrowhead#Corvette#925
+HMS Asphodel#Corvette#925
+HMS Aster#Corvette#925
+HMS Aubrietia#Corvette#925
+HMS Auricula#Corvette#925
+HMS Azalea#Corvette#925
+HMS Balsam#Corvette#925
+HMS Begonia#Corvette#925
+HMS Bellwort#Corvette#925
+HMS Bergamot#Corvette#925
+HMS Bittersweet#Corvette#925
+HMS Bluebell#Corvette#925
+HMS Borage#Corvette#925
+HMS Bryony#Corvette#925
+HMS Burdock#Corvette#925
+HMS Buttercup#Corvette#925
+HMS Calendula#Corvette#925
+HMS Camellia#Corvette#925
+HMS Campanula#Corvette#925
+HMS Campion#Corvette#925
+HMS Candytuft#Corvette#925
+HMS Carnation#Corvette#925
+HMS Celandine#Corvette#925
+HMS Chrysanthemum#Corvette#925
+HMS Clarkia#Corvette#925
+HMS Clematis#Corvette#925
+HMS Clover#Corvette#925
+HMS Coltsfoot#Corvette#925
+HMS Columbine#Corvette#925
+HMS Convolvulus#Corvette#925
+HMS Coreopsis#Corvette#925
+HMS Coriander#Corvette#925
+HMS Cowslip#Corvette#925
+HMS Crocus#Corvette#925
+HMS Cyclamen#Corvette#925
+HMS Dahlia#Corvette#925
+HMS Delphinium#Corvette#925
+HMS Dianella#Corvette#925
+HMS Dianthus#Corvette#925
+HMS Eglantine#Corvette#925
+HMS Erica#Corvette#925
+HMS Eyebright#Corvette#925
+HMS Fennel#Corvette#925
+HMS Fleur de Lys#Corvette#925
+HMS Freesia#Corvette#925
+HMS Fritillary#Corvette#925
+HMS Gardenia#Corvette#925
+HMS Genista#Corvette#925
+HMS Gentian#Corvette#925
+HMS Geranium#Corvette#925
+HMS Gladiolus#Corvette#925
+HMS Gloriosa#Corvette#925
+HMS Gloxinia#Corvette#925
+HMS Godetia#Corvette#925
+HMS Godetia#Corvette#925
+HMS Harebell#Corvette#925
+HMS Heartsease#Corvette#925
+HMS Heather#Corvette#925
+HMS Heliotrope#Corvette#925
+HMS Hemlock#Corvette#925
+HMS Hepatica#Corvette#925
+HMS Hibiscus#Corvette#925
+HMS Hollyhock#Corvette#925
+HMS Honeysuckle#Corvette#925
+HMS Hyacinth#Corvette#925
+HMS Hyderabad#Corvette#925
+HMS Hydrangea#Corvette#925
+HMS Ivy#Corvette#925
+HMS Jasmine#Corvette#925
+HMS Jonquil#Corvette#925
+HMS Kingcup#Corvette#925
+HMS La Malouine#Corvette#925
+HMS Larkspur#Corvette#925
+HMS Lavender#Corvette#925
+HMS Ling#Corvette#925
+HMS Lobelia#Corvette#925
+HMS Loosestrife#Corvette#925
+HMS Lotus#Corvette#925
+HMS Mallow#Corvette#925
+HMS Marguerite#Corvette#925
+HMS Marigold#Corvette#925
+HMS Marjoram#Corvette#925
+HMS Mayflower#Corvette#925
+HMS Meadowsweet#Corvette#925
+HMS Mignonette#Corvette#925
+HMS Mimosa#Corvette#925
+HMS Monkshood#Corvette#925
+HMS Montbretia#Corvette#925
+HMS Myosotis#Corvette#925
+HMS Narcissus#Corvette#925
+HMS Nasturtium#Corvette#925
+HMS Nigella#Corvette#925
+HMS Orchis#Corvette#925
+HMS Oxlip#Corvette#925
+HMS Pennywort#Corvette#925
+HMS Pentstemon#Corvette#925
+HMS Peony#Corvette#925
+HMS Periwinkle#Corvette#925
+HMS Petunia#Corvette#925
+HMS Phlox#Corvette#925
+HMS Picotee#Corvette#925
+HMS Pimpernel#Corvette#925
+HMS Pink#Corvette#925
+HMS Polyanthus#Corvette#925
+HMS Poppy#Corvette#925
+HMS Potentilla#Corvette#925
+HMS Primrose#Corvette#925
+HMS Primula#Corvette#925
+HMS Ranunculus#Corvette#925
+HMS Rhododendron#Corvette#925
+HMS Rockrose#Corvette#925
+HMS Rose#Corvette#925
+HMS Salvia#Corvette#925
+HMS Samphire#Corvette#925
+HMS Saxifrage#Corvette#925
+HMS Snapdragon#Corvette#925
+HMS Snowberry#Corvette#925
+HMS Snowdrop#Corvette#925
+HMS Snowflake#Corvette#925
+HMS Spikenard#Corvette#925
+HMS Spiraea#Corvette#925
+HMS Starwort#Corvette#925
+HMS Stonecrop#Corvette#925
+HMS Sundew#Corvette#925
+HMS Sunflower#Corvette#925
+HMS Sweetbriar#Corvette#925
+HMS Tamarisk#Corvette#925
+HMS Thyme#Corvette#925
+HMS Trillium#Corvette#925
+HMS Tulip#Corvette#925
+HMS Verbena#Corvette#925
+HMS Veronica#Corvette#925
+HMS Vervain#Corvette#925
+HMS Vetch#Corvette#925
+HMS Violet#Corvette#925
+HMS Wallflower#Corvette#925
+HMS Windflower#Corvette#925
+HMS Woodruff#Corvette#925
+HMS Zinnia#Corvette#925
+USS Aaron Ward#Gleaves-class Destroyer#1630
+HMS Acasta#A-class Destroyer#1350
+HMS Achates#A-class Destroyer#1350
+HMS Acheron#A-class Destroyer#1350
+HMS Active#A-class Destroyer#1350
+HMS Afridi#Tribal-class Destroyer#1891
+USS Alden#Clemson-class Destroyer#1215
+USS Allen#Sampson-class Destroyer#1111
+HMS Amazon#prototype-class Destroyer#1350
+HMS Ambuscade#prototype-class Destroyer#1173
+USS Anderson#Sims-class Destroyer#1570
+HMCS Annapolis#Town-class Destroyer#1190
+HMS Antelope#A-class Destroyer#1350
+HMS Anthony#A-class Destroyer#1350
+HMS Ardent#A-class Destroyer#1350
+HMS Arrow#A-class Destroyer#1350
+HMS Ashanti#Tribal-class Destroyer#1891
+HMCS Assiniboine#River-class Destroyer flotilla leader#1390
+USS Aulick#Fletcher-class Destroyer#2050
+USS Aylwin#Farragut-class Destroyer#1365
+USS Babbitt#Wickes-class Destroyer#1190
+USS Bache#Fletcher-class Destroyer#2050
+USS Badger#Wickes-class Destroyer#1190
+USS Bagley#Bagley-class Destroyer#1500
+USS Bailey#Benson-class Destroyer#1620
+USS Bainbridge#Clemson-class Destroyer#1215
+USS Balch#Porter-class Destroyer#1850
+USS Ballard#Clemson-class Destroyer#1215
+USS Bancroft#Benson-class Destroyer#1620
+USS Barker#Clemson-class Destroyer#1215
+USS Barney#Wickes-class Destroyer#1190
+USS Barry#Clemson-class Destroyer#1215
+HMS Basilisk#B-class Destroyer#1350
+HMS Beagle#B-class Destroyer#1350
+USS Beale#Fletcher-class Destroyer#2050
+HMS Bedouin#Tribal-class Destroyer#1891
+USS Belknap#Clemson-class Destroyer#1215
+HMS Belmont#Town-class Destroyer#1200
+USS Benson#Benson-class Destroyer#1620
+USS Bernadou#Wickes-class Destroyer#1190
+HMS Beverley#Town-class Destroyer#1200
+USS Biddle#Wickes-class Destroyer#1190
+USS Blakeley#Wickes-class Destroyer#1190
+HMS Blanche#B-class Destroyer#1350
+HMS Boadicea#B-class Destroyer#1350
+USS Boggs#Wickes-class Destroyer minesweeper#1190
+USS Boyle#Benson-class Destroyer#1620
+HMS Bradford#Town-class Destroyer#1200
+HMS Brazen#B-class Destroyer#1350
+USS Breckinridge#Wickes-class Destroyer#1190
+USS Breese#Wickes-class Destroyer minelayer#1190
+HMS Brilliant#B-class Destroyer#1350
+HMS Broadwater#Town-class Destroyer#1200
+HMS Broadway#Town-class Destroyer#1200
+HMS Broke#Thornycroft type-class Destroyer flotilla leader#1480
+USS Brooks#Clemson-class Destroyer#1215
+USS Broome#Clemson-class Destroyer#1200
+HMS Bruce#Admiralty type-class Destroyer flotilla leader#1801
+USS Buchanan#Gleaves-class Destroyer#1630
+HMS Bulldog#B-class Destroyer#1350
+USS Bulmer#Clemson-class Destroyer#1215
+HMS Burnham#Town-class Destroyer#1200
+HMS Burwell#Town-class Destroyer#1200
+USS Butler#Gleaves-class Destroyer#1630
+USS Caldwell#Benson-class Destroyer#1620
+HMS Cameron#Town-class Destroyer#1190
+HMS Campbell#Admiralty type-class Destroyer flotilla leader#1580
+USS Carmick#Gleaves-class Destroyer#1630
+USS Case#Mahan-class Destroyer#1450
+USS Cassin#Mahan-class Destroyer#1450
+HMS Castleton#Town-class Destroyer#1190
+USS Champlin#Benson-class Destroyer#1620
+USS Chandler#Clemson-class Destroyer minesweeper#1215
+USS Charles Ausburne#Fletcher-class Destroyer#2050
+USS Charles F. Hughes#Benson-class Destroyer#1620
+HMS Charlestown#Town-class Destroyer#1190
+HMS Chesterfield#Town-class Destroyer#1190
+USS Chew#Wickes-class Destroyer#1190
+USS Childs#Clemson-class Destroyer#1215
+HMS Clare#Town-class Destroyer#1190
+USS Clark#Porter-class Destroyer#1850
+USS Claxton#Fletcher-class Destroyer#2050
+USS Clemson#Clemson-class Destroyer#1215
+HMS Codrington#A-class Destroyer#1350
+USS Coghlan#Benson-class Destroyer#1620
+USS Cole#Wickes-class Destroyer#1190
+HMCS Columbia#Town-class Destroyer#1060
+USS Converse#Fletcher-class Destroyer#2050
+USS Conway#Fletcher-class Destroyer#2050
+USS Cony#Fletcher-class Destroyer#2050
+USS Conyngham#Mahan-class Destroyer#1450
+USS Cowie#Gleaves-class Destroyer#1630
+USS Crane#Wickes-class Destroyer#1190
+USS Craven#Gridley-class Destroyer#1590
+USS Crosby#Wickes-class Destroyer#1190
+USS Cummings#Mahan-class Destroyer#1450
+USS Dahlgren#Clemson-class Destroyer#1215
+HMS Dainty#D-class Destroyer#1375
+USS Dale#Farragut-class Destroyer#1365
+USS Dallas#Clemson-class Destroyer#1215
+USS Daly#Fletcher-class Destroyer#2050
+HMS Daring#D-class Destroyer#1375
+USS Davis#Somers-class Destroyer#1850
+USS Davison#Gleaves-class Destroyer#1630
+USS Decatur#Clemson-class Destroyer#1215
+HMS Defender#D-class Destroyer#1397
+HMS Delight#D-class Destroyer#1397
+USS Dent#Wickes-class Destroyer#1150
+USS Dewey#Farragut-class Destroyer#1365
+HMS Diamond#D-class Destroyer#1375
+USS Dickerson#Wickes-class Destroyer#1150
+USS Doran#Gleaves-class Destroyer#1630
+USS Dorsey#Wickes-class Destroyer#1150
+HMS Douglas#Admiralty type-class Destroyer flotilla leader#1580
+USS Downes#Mahan-class Destroyer#1450
+USS Drayton#Mahan-class Destroyer#1450
+USS Du Pont#Wickes-class Destroyer#1150
+HMS Duchess#D-class Destroyer#1375
+HMS Duncan#D-class Destroyer flotilla leader#1400
+USS Dunlap#Mahan-class Destroyer#1450
+USS Dyson#Fletcher-class Destroyer#2050
+USS Earle#Gleaves-class Destroyer#1630
+USS Eaton#Fletcher-class Destroyer#2050
+USS Eberle#Gleaves-class Destroyer#1630
+HMS Eclipse#E-class Destroyer#1428
+USS Edison#Gleaves-class Destroyer#1630
+USS Edwards#Gleaves-class Destroyer#1630
+USS Edsall#Clemson-class Destroyer#1215
+HMS Electra#E-class Destroyer#1405
+USS Ellet#Benham-class Destroyer#1656
+USS Elliot#Wickes-class Destroyer minesweeper#1190
+USS Ellis#Wickes-class Destroyer#1190
+USS Ellyson#Gleaves-class Destroyer#1630
+USS Emmons#Gleaves-class Destroyer#1630
+HMS Encounter#E-class Destroyer#1405
+USS Ericsson#Gleaves-class Destroyer#1630
+HMS Escapade#E-class Destroyer#1405
+HMS Escort#E-class Destroyer#1405
+HMS Esk#E-class Destroyer#1405
+HMS Eskimo#Tribal-class Destroyer#1891
+HMS Exmouth#E-class Destroyer flotilla leader#1495
+HMS Fame#F-class Destroyer#1405
+USS Fanning#Mahan-class Destroyer#1450
+USS Farenholt#Benson-class Destroyer#1620
+USS Farragut#Farragut-class Destroyer#1365
+HMS Faulknor#F-class Destroyer flotilla leader#1475
+HMS Fearless#F-class Destroyer#1428
+HMS Firedrake#F-class Destroyer#1405
+USS Fitch#Gleaves-class Destroyer#1630
+USS Fletcher#Fletcher-class Destroyer#2050
+USS Flusser#Mahan-class Destroyer#1450
+USS Foote#Fletcher-class Destroyer#2050
+HMS Foresight#F-class Destroyer#1405
+USS Forrest#Gleaves-class Destroyer#1630
+HMS Forester#F-class Destroyer#1405
+USS Fox#Clemson-class Destroyer#1215
+HMCS Fraser#River-class Destroyer#1375
+USS Frazier#Benson-class Destroyer#1620
+HMS Fury#F-class Destroyer#1405
+HMS Gallant#G-class Destroyer#1350
+USS Gamble#Wickes-class Destroyer minelayer#1190
+USS Gansevoort#Benson-class Destroyer#1620
+USS George E. Badger#Clemson-class Destroyer#1215
+USS Gherardi#Gleaves-class Destroyer#1630
+USS Gillespie#Benson-class Destroyer#1620
+USS Gillis#Clemson-class Destroyer#1215
+USS Gilmer#Clemson-class Destroyer#1215
+HMS Gipsy#G-class Destroyer#1350
+USS Gleaves#Gleaves-class Destroyer#1630
+HMS Glowworm#G-class Destroyer#1350
+USS Goff#Clemson-class Destroyer#1215
+USS Goldsborough#Clemson-class Destroyer#1215
+HMS Grafton#G-class Destroyer#1350
+USS Grayson#Gleaves-class Destroyer#1630
+USS Greene#Clemson-class Destroyer minesweeper#1215
+USS Greer#Wickes-class Destroyer#1190
+HMS Grenade#G-class Destroyer#1350
+HMS Greyhound#G-class Destroyer#1350
+USS Gridley#Gridley-class Destroyer#1590
+USS Guest#Fletcher-class Destroyer#2050
+USS Hambleton#Gleaves-class Destroyer#1630
+USS Hamilton#Wickes-class Destroyer minesweeper#1190
+USS Hammann#Sims-class Destroyer#1570
+HMS Harvester#Havant-class Destroyer#1350
+HMS Hasty#H-class Destroyer#1350
+USS Hatfield#Clemson-class Destroyer#1190
+HMS Havant#Havant-class Destroyer#1350
+HMS Havelock#Havant-class Destroyer#1350
+HMS Havock#H-class Destroyer#1350
+USS Helm#Bagley-class Destroyer#1500
+USS Herbert#Wickes-class Destroyer#1190
+HMS Hereward#H-class Destroyer#1350
+USS Herndon#Gleaves-class Destroyer#1630
+HMS Hesperus#Havant-class Destroyer#1350
+HMS Highlander#Havant-class Destroyer#1350
+USS Hilary P. Jones#Benson-class Destroyer#1620
+USS Hobby#Benson-class Destroyer#1620
+USS Hobson#Gleaves-class Destroyer#1630
+USS Hogan#Wickes-class Destroyer minesweeper#1190
+USS Hopkins#Clemson-class Destroyer minesweeper#1190
+HMS Hostile#H-class Destroyer#1350
+HMS Hotspur#H-class Destroyer#1350
+USS Hovey#Clemson-class Destroyer minesweeper#1190
+USS Howard#Wickes-class Destroyer minesweeper#1190
+USS Hughes#Sims-class Destroyer#1570
+USS Hulbert#Clemson-class Destroyer#1190
+USS Hull#Farragut-class Destroyer#1365
+USS Humphreys#Clemson-class Destroyer#1190
+HMS Hunter#H-class Destroyer#1350
+HMS Hurricane#Havant-class Destroyer#1350
+USS Hutchins#Fletcher-class Destroyer#2050
+HMS Hyperion#H-class Destroyer#1350
+HMS Icarus#I-class Destroyer#1370
+HMS Ilex#I-class Destroyer#1370
+HMS Imogen#I-class Destroyer#1370
+HMS Imperial#I-class Destroyer#1370
+HMS Impulsive#I-class Destroyer#1370
+HMS Inconstant#I-class Destroyer#1370
+HMS Inglefield#I-class Destroyer flotilla leader#1544
+HMS Intrepid#I-class Destroyer#1370
+HMCS Iroquois#Tribal-class Destroyer#1927
+HMS Isis#I-class Destroyer#1370
+HMS Ithuriel#I-class Destroyer#1370
+HMS Ivanhoe#I-class Destroyer#1370
+USS J. Fred Talbott#Wickes-class Destroyer#1190
+HMS Jackal#J-class Destroyer#1690
+USS Jacob Jones#Wickes-class Destroyer#1190
+HMS Jaguar#J-class Destroyer#1690
+HMS Janus#J-class Destroyer#1690
+HMS Javelin#J-class Destroyer#1690
+USS Jeffers#Gleaves-class Destroyer#1630
+USS Jenkins#Fletcher-class Destroyer#2050
+HMS Jersey#J-class Destroyer#1690
+HMS Jervis#J-class Destroyer flotilla leader#1690
+USS John D. Edwards#Clemson-class Destroyer#1215
+USS John D. Ford#Clemson-class Destroyer#1190
+USS Jouett#Somers-class Destroyer#1850
+HMS Juno#J-class Destroyer#1690
+HMS Jupiter#J-class Destroyer#1690
+USS Kalk#Benson-class Destroyer#1620
+HMS Kandahar#K-class Destroyer#1690
+USS Kane#Clemson-class Destroyer#1215
+HMS Kashmir#K-class Destroyer#1690
+USS Kearny#Gleaves-class Destroyer#1630
+HMS Keith#B-class Destroyer#1350
+HMS Kelly#K-class Destroyer flotilla leader#1690
+HMS Kelvin#K-class Destroyer#1690
+USS Kendrick#Benson-class Destroyer#1620
+USS Kennison#Wickes-class Destroyer#1190
+HMS Keppel#Thornycroft type-class Destroyer flotilla leader#1480
+HMS Khartoum#K-class Destroyer#1690
+USS Kilty#Wickes-class Destroyer#1190
+HMS Kimberley#K-class Destroyer#1690
+USS King#Clemson-class Destroyer#1190
+HMS Kingston#K-class Destroyer#1690
+HMS Kipling#K-class Destroyer#1690
+USS Knight#Gleaves-class Destroyer#1630
+USS La Vallette#Fletcher-class Destroyer#2050
+HMS Laforey#L-class Destroyer flotilla leader#1920
+USS Lamberton#Wickes-class Destroyer minesweeper#1190
+USS Lamson#Mahan-class Destroyer#1450
+HMS Lancaster#Town-class Destroyer#1190
+HMS Lance#L-class Destroyer#1920
+USS Lang#Benham-class Destroyer#1656
+USS Lansdale#Benson-class Destroyer#1620
+USS Lansdowne#Gleaves-class Destroyer#1630
+USS Lardner#Gleaves-class Destroyer#1630
+USS Laub#Benson-class Destroyer#1620
+USS Lawrence#Clemson-class Destroyer#1190
+USS Lea#Wickes-class Destroyer#1190
+HMS Leeds#Town-class Destroyer#1125
+HMS Legion#L-class Destroyer#1920
+HMS Lewes#Town-class Destroyer#1125
+HMS Lightning#L-class Destroyer#1920
+USS Litchfield#Clemson-class Destroyer#1215
+HMS Lively#L-class Destroyer#1920
+USS Livermore#Gleaves-class Destroyer#1630
+USS Long#Clemson-class Destroyer minesweeper#1190
+HMS Lookout#L-class Destroyer#1920
+HMS Loyal#L-class Destroyer#1920
+HMS Ludlow#Town-class Destroyer#1190
+USS Ludlow#Gleaves-class Destroyer#1630
+USS Macdonough#Farragut-class Destroyer#1365
+HMS Mackay#Admiralty type-class Destroyer flotilla leader#1801
+USS MacKenzie#Benson-class Destroyer#1620
+USS MacLeish#Clemson-class Destroyer minesweeper#1190
+USS Macomb#Gleaves-class Destroyer#1630
+USS Madison#Benson-class Destroyer#1620
+USS Mahan#Mahan-class Destroyer#1450
+HMS Mahratta#M-class Destroyer#1920
+HMS Malcolm#Admiralty type-class Destroyer flotilla leader#1530
+USS Manley#Caldwell-class Destroyer#1020
+HMS Mansfield#Town-class Destroyer#1190
+HMS Maori#Tribal-class Destroyer#1891
+HMS Marne#M-class Destroyer#1920
+HMS Martin#M-class Destroyer#1920
+HMS Mashona#Tribal-class Destroyer#1891
+HMS Matabele#Tribal-class Destroyer#1891
+HMS Matchless#M-class Destroyer#1920
+USS Maury#Gridley-class Destroyer#1590
+USS Mayo#Benson-class Destroyer#1620
+USS Mayrant#Benham-class Destroyer#1656
+USS McCall#Gridley-class Destroyer#1590
+USS McCalla#Gleaves-class Destroyer#1630
+USS McCormick#Clemson-class Destroyer#1190
+USS McDougal#Porter-class Destroyer#1850
+USS McFarland#Clemson-class Destroyer#1190
+USS McLanahan#Benson-class Destroyer#1620
+USS Meade#Benson-class Destroyer#1620
+USS Mervine#Gleaves-class Destroyer#1630
+HMS Meteor#M-class Destroyer#1920
+HMS Milne#M-class Destroyer#1920
+USS Moffett#Porter-class Destroyer#1850
+HMS Mohawk#Tribal-class Destroyer#1891
+USS Monaghan#Farragut-class Destroyer#1365
+USS Montgomery#Wickes-class Destroyer minelayer#1190
+HMS Montrose#Admiralty type-class Destroyer flotilla leader#1530
+USS Morris#Sims-class Destroyer#1570
+USS Mugford#Bagley-class Destroyer#1500
+USS Murphy#Benson-class Destroyer#1620
+HMS Musketeer#M-class Destroyer#1920
+USS Mustin#Sims-class Destroyer#1570
+USS Nelson#Gleaves-class Destroyer#1630
+HMS Newark#Town-class Destroyer#1060
+HMS Newmarket#Town-class Destroyer#1060
+HMCS Niagara#Town-class Destroyer#1190
+USS Niblack#Gleaves-class Destroyer#1630
+USS Nicholas#Fletcher-class Destroyer#2050
+USS Nicholson#Gleaves-class Destroyer#1630
+HMS Nubian#Tribal-class Destroyer#1891
+USS O'Bannon#Fletcher-class Destroyer#2050
+HMS Obdurate#O-class Destroyer#1540
+HMS Obedient#O-class Destroyer#1540
+HMS Offa#O-class Destroyer#1610
+HMS Onslaught#O-class Destroyer#1610
+HMS Onslow#O-class Destroyer flotilla leader#1610
+HMS Opportune#O-class Destroyer#1540
+HMS Oribi#O-class Destroyer#1610
+HMS Orwell#O-class Destroyer#1540
+USS Osmond Ingram#Clemson-class Destroyer#1215
+HMCS Ottawa#River-class Destroyer#1375
+USS Overton#Clemson-class Destroyer#1308
+HMS Pakenham#P-class Destroyer flotilla leader#1690
+HMS Paladin#P-class Destroyer#1690
+USS Palmer#Wickes-class Destroyer minesweeper#1190
+HMS Panther#P-class Destroyer#1690
+USS Parker#Benson-class Destroyer#1620
+USS Parrott#Clemson-class Destroyer#1190
+HMS Partridge#P-class Destroyer#1690
+HMS Pathfinder#P-class Destroyer#1690
+USS Patterson#Bagley-class Destroyer#1500
+USS Paul Jones#Clemson-class Destroyer#1215
+USS Peary#Clemson-class Destroyer#1190
+HMS Penn#P-class Destroyer#1690
+HMS Petard#P-class Destroyer#1690
+USS Phelps#Porter-class Destroyer#1850
+USS Philip#Fletcher-class Destroyer#2050
+USS Pillsbury#Clemson-class Destroyer#1190
+USS Plunkett#Gleaves-class Destroyer#1630
+USS Pope#Clemson-class Destroyer#1190
+HMS Porcupine#P-class Destroyer#1690
+USS Preble#Clemson-class Destroyer minelayer#1190
+USS Pringle#Fletcher-class Destroyer#2050
+USS Pruitt#Clemson-class Destroyer minelayer#1190
+HMS Punjabi#Tribal-class Destroyer#1891
+HMS Quentin#Q-class Destroyer#1692
+USS Quick#Gleaves-class Destroyer#1630
+HMS Quickmatch#Q-class Destroyer#1692
+HMS Quilliam#Q-class Destroyer flotilla leader#1692
+HMS Racehorse#R-class Destroyer#1705
+USS Radford#Fletcher-class Destroyer#2050
+HMS Raider#R-class Destroyer#1705
+USS Ralph Talbot#Bagley-class Destroyer#1500
+USS Ramsay#Wickes-class Destroyer minelayer#1190
+HMS Ramsey#Town-class Destroyer#1190
+USS Rathburne#Wickes-class Destroyer#1190
+HMS Reading#Town-class Destroyer#1190
+HMS Redoubt#R-class Destroyer#1705
+USS Reid#Mahan-class Destroyer#1450
+HMS Relentless#R-class Destroyer#1705
+USS Renshaw#Fletcher-class Destroyer#2050
+HMCS Restigouche#River-class Destroyer#1375
+USS Reuben James#Clemson-class Destroyer#1215
+USS Rhind#Benham-class Destroyer#1656
+USS Ringgold#Fletcher-class Destroyer#2050
+HMS Ripley#Town-class Destroyer#1190
+HMS Rockingham#Town-class Destroyer#1190
+USS Rodman#Gleaves-class Destroyer#1630
+USS Roe#Sims-class Destroyer#1570
+USS Roper#Wickes-class Destroyer#1190
+HMS Rotherham#R-class Destroyer flotilla leader#1705
+USS Russell#Sims-class Destroyer#1570
+HMS Sabre#S (Admiralty)-class Destroyer#1075
+HMCS Saguenay#River-class Destroyer#1337
+HMS Saladin#S (Admiralty)-class Destroyer#1075
+USS Sampson#Somers-class Destroyer#1850
+USS Sands#Clemson-class Destroyer#1190
+HMS Sardonyx#S (Admiralty)-class Destroyer#1075
+USS Saufley#Fletcher-class Destroyer#2050
+USS Schenck#Wickes-class Destroyer#1190
+USS Schley#Wickes-class Destroyer#1190
+HMS Scimitar#S (Admiralty)-class Destroyer#1075
+HMS Scout#S (Admiralty)-class Destroyer#1075
+USS Selfridge#Porter-class Destroyer#1850
+USS Semmes#Clemson-class Destroyer#1215
+USS Shaw#Mahan-class Destroyer#1450
+HMS Sherwood#Town-class Destroyer#1190
+HMS Shikari#S (Admiralty)-class Destroyer#1075
+USS Sicard#Clemson-class Destroyer minelayer#1215
+HMS Sikh#Tribal-class Destroyer#1891
+USS Simpson#Clemson-class Destroyer#1215
+USS Sims#Sims-class Destroyer#1570
+HMS Skate#R (Admiralty)-class Destroyer#900
+HMCS Skeena#River-class Destroyer#1350
+USS Smith#Mahan-class Destroyer#1450
+HMS Somali#Tribal-class Destroyer#1891
+USS Somers#Somers-class Destroyer#1850
+USS Southard#Clemson-class Destroyer minesweeper#1215
+HMCS St. Clair#Town-class Destroyer#1190
+HMCS St. Croix#Town-class Destroyer#1215
+HMCS St. Francis#Town-class Destroyer#1215
+HMCS St. Laurent#River-class Destroyer#1375
+HMS St. Mary's#Town-class Destroyer#1190
+USS Stack#Benham-class Destroyer#1656
+HMS Stanley#Town-class Destroyer#1060
+USS Stanly#Fletcher-class Destroyer#2050
+USS Stansbury#Wickes-class Destroyer minesweeper#1190
+USS Sterett#Benham-class Destroyer#1656
+USS Stevenson#Gleaves-class Destroyer#1630
+USS Stringham#Wickes-class Destroyer#1190
+HMS Stronghold#S (Admiralty)-class Destroyer#1075
+HMS Sturdy#S (Admiralty)-class Destroyer#1075
+USS Sturtevant#Clemson-class Destroyer#1215
+USS Swanson#Gleaves-class Destroyer#1630
+USS Talbot#Wickes-class Destroyer#1190
+USS Tarbell#Wickes-class Destroyer#1190
+HMS Tartar#Tribal-class Destroyer#1891
+USS Tattnall#Wickes-class Destroyer#1060
+USS Taylor#Fletcher-class Destroyer#2050
+HMS Tenedos#S (Admiralty)-class Destroyer#1075
+HMS Thanet#S (Admiralty)-class Destroyer#1075
+USS Thornton#Clemson-class Destroyer#1215
+USS Tillman#Gleaves-class Destroyer#1630
+USS Tracy#Clemson-class Destroyer minelayer#1215
+USS Trever#Clemson-class Destroyer minesweeper#1215
+USS Trippe#Benham-class Destroyer#1656
+USS Truxtun#Clemson-class Destroyer#1215
+USS Tucker#Mahan-class Destroyer#1450
+USS Upshur#Wickes-class Destroyer#1190
+HMS Valentine#V (Admiralty leader)-class Destroyer flotilla leader#1188
+HMS Valorous#V (Admiralty leader)-class Destroyer flotilla leader#1316
+HMS Vanessa#V (Admiralty)-class Destroyer#1272
+HMS Vanity#V (Admiralty)-class Destroyer#1272
+HMS Vanoc#V (Admiralty)-class Destroyer#1272
+HMS Vanquisher#V (Admiralty)-class Destroyer#1272
+HMS Vansittart#W (Admiralty)-class Destroyer#1140
+HMS Vega#V (Admiralty)-class Destroyer#1272
+HMS Velox#V (Admiralty)-class Destroyer#1272
+HMS Venetia#V (Admiralty)-class Destroyer#1272
+HMS Venomous#W (Admiralty)-class Destroyer#1140
+HMS Verdun#V (Admiralty)-class Destroyer#1272
+HMS Verity#W (Admiralty)-class Destroyer#1140
+HMS Versatile#V (Admiralty)-class Destroyer#1272
+HMS Vesper#V (Admiralty)-class Destroyer#1272
+HMS Veteran#W (Admiralty)-class Destroyer#1140
+HMS Viceroy#V (Thornycroft)-class Destroyer#1120
+HMS Vidette#V (Admiralty)-class Destroyer#1272
+HMS Vigilant#V-class Destroyer#1777
+HMS Vimiera#V (Admiralty)-class Destroyer#1272
+HMS Vimy#V (Admiralty)-class Destroyer#1272
+HMS Viscount#V (Thornycroft)-class Destroyer#1120
+HMS Vivacious#V (Admiralty)-class Destroyer#1272
+HMS Vivien#V (Admiralty)-class Destroyer#1207
+HMS Volunteer#W (Admiralty)-class Destroyer#1140
+HMS Vortigern#V (Admiralty)-class Destroyer#1272
+USS Wainwright#Sims-class Destroyer#1570
+HMS Walker#W (Admiralty)-class Destroyer#1100
+HMS Wallace#Thornycroft type-class AA escort flotilla leader#1480
+USS Waller#Fletcher-class Destroyer#2050
+HMS Walpole#W (Admiralty)-class Destroyer#1100
+HMS Wanderer#W (Admiralty)-class Destroyer#1140
+USS Ward#Wickes-class Destroyer#1190
+HMS Warwick#W (Admiralty)-class Destroyer#1100
+USS Wasmuth#Clemson-class Destroyer minesweeper#1215
+HMS Watchman#W (Admiralty)-class Destroyer#1100
+USS Waters#Wickes-class Destroyer#1190
+HMS Wells#Town-class Destroyer#1190
+HMS Westcott#W (Admiralty)-class Destroyer#1100
+HMS Westminster#W (Admiralty)-class Destroyer#1100
+USS Whipple#Clemson-class Destroyer#1215
+HMS Whitehall#W (Admiralty)-class Destroyer#1140
+HMS Whitley#W (Admiralty)-class Destroyer#1100
+HMS Whitshed#W (Admiralty)-class Destroyer#1140
+HMS Wild Swan#W (Admiralty)-class Destroyer#1140
+USS Wilkes#Gleaves-class Destroyer#1630
+USS William B. Preston#Clemson-class Destroyer#1215
+USS Williamson#Clemson-class Destroyer#1215
+USS Wilson#Benham-class Destroyer#1656
+HMS Winchelsea#W (Admiralty)-class Destroyer#1100
+HMS Winchester#W (Admiralty)-class Destroyer#1100
+HMS Windsor#W (Admiralty)-class Destroyer#1100
+USS Winslow#Porter-class Destroyer#1850
+HMS Wishart#W (Thornycroft)-class Destroyer#1140
+HMS Witch#W (Thornycroft)-class Destroyer#1140
+HMS Witherington#W (Admiralty)-class Destroyer#1140
+HMS Wivern#W (Admiralty)-class Destroyer#1140
+HMS Wolfhound#W (Admiralty)-class Destroyer#1100
+HMS Wolsey#W (Thornycroft)-class Destroyer#1120
+HMS Wolverine#W (Admiralty)-class Destroyer#1140
+USS Woodworth#Benson-class Destroyer#1620
+USS Woolsey#Gleaves-class Destroyer#1630
+HMS Woolston#W (Thornycroft)-class Destroyer#1120
+USS Worden#Farragut-class Destroyer#1365
+HMS Wren#W (Admiralty)-class Destroyer#1140
+HMS Wrestler#W (Admiralty)-class Destroyer#1100
+HMS Wryneck#W (Admiralty)-class Destroyer#1100
+USS Zane#Clemson-class Destroyer minesweeper#1215
+HMS Zulu#Tribal-class Destroyer#1891
+USS Worden#Farragut-class Destroyer#1365
+USS Winslow#Porter-class Destroyer#1850
+USS Wilkes#Gleaves-class Destroyer#1630
+USS William B. Preston#Clemson-class Destroyer#1215
+USS Williamson#Clemson-class Destroyer#1215
+USS Wilson#Benham-class Destroyer#1656
+USS Whipple#Clemson-class Destroyer#1215
+USS Gherardi#Gleaves-class Destroyer#1630
+USS Gillespie#Benson-class Destroyer#1620
+USS Gillis#Clemson-class Destroyer#1215
+USS Gilmer#Clemson-class Destroyer#1215
+USS Alden#Clemson-class Destroyer#1215
+USS Allen#Sampson-class Destroyer#1111
+USS Aulick#Fletcher-class Destroyer#2050
+USS Aylwin#Farragut-class Destroyer#1365
+USS Babbitt#Wickes-class Destroyer#1190
+USS Badger#Wickes-class Destroyer#1190
+USS Bagley#Bagley-class Destroyer#1500
+USS Bailey#Benson-class Destroyer#1620
+USS Ellis#Wickes-class Destroyer#1190
+USS Ellyson#Gleaves-class Destroyer#1630
+USS Lardner#Gleaves-class Destroyer#1630
+USS Laub#Benson-class Destroyer#1620
+USS Lawrence#Clemson-class Destroyer#1190
+USS Lea#Wickes-class Destroyer#1190
+USS Fletcher#Fletcher-class Destroyer#2050
+USS Flusser#Mahan-class Destroyer#1450
+USS Foote#Fletcher-class Destroyer#2050
+USS Selfridge#Porter-class Destroyer#1850
+USS Rodman#Gleaves-class Destroyer#1630
+USS Roe#Sims-class Destroyer#1570

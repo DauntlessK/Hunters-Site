@@ -91,12 +91,14 @@ class Sprite {
       return this.currentTranslation;
   }
 
+  setDeparted(){
+    this.departed = true;
+  }
+
   depart(){
     if (this.departed){
-      if (this.animationFrameProgress === 0){
-        this.departTranslation += 5;
-        return this.departTranslation;
-      }
+      this.departTranslation++;
+      return this.departTranslation;
     }
     else{
       return 0;

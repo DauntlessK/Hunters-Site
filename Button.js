@@ -59,14 +59,14 @@ class Button {
         console.log("Clicked button!----");
         this.tv.reloadMode = false;
         this.gm.newPatrol();
-        this.tv.gameObjects.sub.departed = true;
+        this.tv.gameObjects.uboat.sprite.setDeparted();
+
         if (this.currentFrame == 0 || this.currentFrame == 1) {
             this.currentFrame = 2;
         }
         else if (this.currentFrame == 2){
             this.currentFrame = 0;
         }
-
     }
 
     disableButton(){

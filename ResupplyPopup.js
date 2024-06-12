@@ -173,7 +173,5 @@ class ResupplyPopup{
         this.tv.changeScene("Port");
         this.tv.unpauseGame();
         this.tv.mainUI.reloadMode();
-        //this.gm.sub.torpedoReload(2, 2, 1, 1);
-        //reloadpopup = new ReloadPopup(this.tv, this.gm);
     }
 }

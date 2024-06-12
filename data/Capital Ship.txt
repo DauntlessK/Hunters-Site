@@ -1,0 +1,11 @@
+NOSHIP
+HMS Ark Royal#Ark Royak-class Carrier#22000
+HMS Royal Oak#Revenge-class Battleship#29100
+HMS Courageous#Courageous-class Battlecruiser#18600
+HMS Belfast#Town-class Light Cruiser#10000
+HMS Barham#Queen Elizabeth-class Battleship#31100
+HMS Nelson#Nelson-class Battleship#34000
+HMS Malaya#Queen Elizabeth-class Battleship#31300
+HMS Eagle#Eagle-class Aircraft Carrier#22600
+HMS Avenger#Avenger-class Escort Carrier#12800
+HMS Audacity#Audacity-class Escort Carrier#11000
