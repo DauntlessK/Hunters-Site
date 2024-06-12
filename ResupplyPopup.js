@@ -108,8 +108,8 @@ class ResupplyPopup{
 
         this.element.innerHTML = (`
             <h3 class="HeaderMessage_h3">Port Resupply
-            <p class="TextMessage_p">${this.gm.getFullUboatID()} has been assigned<span class= "G7a"> ${this.gm.sub.G7aStarting} G7a (steam) torpedoes</span> and
-            <span class="G7e">${this.gm.sub.G7eStarting} G7e (electric) torpedoes</span>.<br>You may adjust this spread by +/- ${this.gm.sub.torpedo_type_spread}.<br>
+            <p class="TextMessage_p">${this.gm.getFullUboatID()} has been assigned<span class= "G7a"> ${this.gm.sub.G7aStarting}x G7a (steam) torpedoes</span> and
+            <span class="G7e">${this.gm.sub.G7eStarting}x G7e (electric) torpedoes</span>.<br>You may adjust this spread by +/- ${this.gm.sub.torpedo_type_spread}.<br>
             <span class="G7a">G7a: </span><button class="Option_button" id="DecG7a"><---</button><span class="G7a"> ${this.currentG7a} </span><button class="Option_button" id="IncG7a">---></button><br>
             <span class="G7e">G7e: </span><button class="Option_button" id="DecG7e"><---</button><span class="G7e"> ${this.currentG7e} </span><button class="Option_button" id="IncG7e">---></button><br>
             <br>

@@ -23,6 +23,7 @@ class GameManager{
         this.monthOfLastKnightsCrossAward = -1;
         this.yearOfLastKnightsCrossAward = -1;
         this.currentOrders = "";
+        this.patrol = null;
         this.patrolCount = ["", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth",
                             "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth",
                             "seventeenth", "eighteenth", "nineteenth", "twentieth", "twenty-first", "twenty-second",
@@ -61,6 +62,7 @@ class GameManager{
     }
 
     async startGame(name, num, subType){
+        //begins game once player has selected sub from below HTML canvas
         this.kmdt = name;
         this.id = num;
         this.sub = new Uboat(subType, this.tv, this);
@@ -162,5 +164,9 @@ class GameManager{
                 this.francePost = true;
                 break;
         }
+    }
+
+    newPatrol(){
+        this.patrol = new Patrol(this);
     }
 }

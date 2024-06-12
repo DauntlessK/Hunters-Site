@@ -57,6 +57,9 @@ class Button {
 
     clickedButton(){
         console.log("Clicked button!----");
+        this.tv.reloadMode = false;
+        this.gm.newPatrol();
+        this.tv.gameObjects.sub.departed = true;
         if (this.currentFrame == 0 || this.currentFrame == 1) {
             this.currentFrame = 2;
         }

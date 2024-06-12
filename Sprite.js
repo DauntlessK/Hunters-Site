@@ -25,6 +25,9 @@ class Sprite {
     this.animationFrameLimit = 8;
     this.animationFrameProgress = 8;
 
+    this.departed = false;
+    this.departTranslation = 0;
+
     //maximum variance of up/down animation float
     this.currentTranslation = 0;
     this.totalTranslation = 0;
@@ -88,13 +91,25 @@ class Sprite {
       return this.currentTranslation;
   }
 
+  depart(){
+    if (this.departed){
+      if (this.animationFrameProgress === 0){
+        this.departTranslation += 5;
+        return this.departTranslation;
+      }
+    }
+    else{
+      return 0;
+    }
+  }
+
   updateTV(tv){
     this.tv = tv;
   }
 
   //Draw sprite
   draw(ctx) {
-    const x = this.gameObject.x;
+    const x = this.gameObject.x + this.depart();
     const y = this.gameObject.y + this.randomUpAndDown();
 
     var swidth = 0;

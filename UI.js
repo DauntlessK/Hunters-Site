@@ -17,7 +17,7 @@ class UI{
         }
 
         //create buttons
-        this.button1 = new TorpedoButton({
+        this.tubeButton1 = new TorpedoButton({
             src: "images/ui/TorpButton.png",
             x: 1007,
             y: 245,
@@ -28,7 +28,7 @@ class UI{
             gm: this.gm,
             tv: this.tv
           });
-        this.button2 = new TorpedoButton({
+        this.tubeButton2 = new TorpedoButton({
             src: "images/ui/TorpButton.png",
             x: 1110,
             y: 245,
@@ -39,7 +39,7 @@ class UI{
             gm: this.gm,
             tv: this.tv
         });
-        this.button3 = new TorpedoButton({
+        this.tubeButton3 = new TorpedoButton({
             src: "images/ui/TorpButton.png",
             x: 1007,
             y: 341,
@@ -50,7 +50,7 @@ class UI{
             gm: this.gm,
             tv: this.tv
           });
-        this.button4 = new TorpedoButton({
+        this.tubeButton4 = new TorpedoButton({
             src: "images/ui/TorpButton.png",
             x: 1110,
             y: 341,
@@ -63,7 +63,7 @@ class UI{
         });
         //torpedo buttons for IXA and IXB (two)
         if (this.gm.sub.getType() == "IXA" || this.gm.sub.getType() == "IXB"){
-            this.button5 = new TorpedoButton({
+            this.tubeButton5 = new TorpedoButton({
                 src: "images/ui/TorpButton.png",
                 x: 1007,
                 y: 449,
@@ -74,7 +74,7 @@ class UI{
                 gm: this.gm,
                 tv: this.tv
             });
-            this.button6 = new TorpedoButton({
+            this.tubeButton6 = new TorpedoButton({
                 src: "images/ui/TorpButton.png",
                 x: 1110,
                 y: 449,
@@ -87,7 +87,7 @@ class UI{
             });
         }
         else{   //single button for VII types
-            this.button5 = new TorpedoButton({
+            this.tubeButton5 = new TorpedoButton({
                 src: "images/ui/TorpButton.png",
                 x: 1057,
                 y: 449,
@@ -99,18 +99,31 @@ class UI{
                 tv: this.tv
             });
         }
+        this.reloadButton = new Button({
+            src: "images/ui/TorpButton.png",
+            x: 1057,
+            y: 650,
+            width: 50,
+            height: 50,
+            frames: 8,
+            tube: null,
+            gm: this.gm,
+            tv: this.tv
+        });
 
     }
 
     handleEvent(){
-        this.button1.handleEvent(event);
-        this.button2.handleEvent(event);
-        this.button3.handleEvent(event);
-        this.button4.handleEvent(event);
-        this.button5.handleEvent(event);
+        //passes events from UI to individual buttons
+        this.tubeButton1.handleEvent(event);
+        this.tubeButton2.handleEvent(event);
+        this.tubeButton3.handleEvent(event);
+        this.tubeButton4.handleEvent(event);
+        this.tubeButton5.handleEvent(event);
         if (this.gm.sub.getType() == "IXA" || this.gm.sub.getType() == "IXB"){
-            this.button6.handleEvent(event);
+            this.tubeButton6.handleEvent(event);
         }
+        this.reloadButton.handleEvent(event);
     }
     
     uiIsOn(){
@@ -124,15 +137,19 @@ class UI{
     }
 
     draw(ctx){
+        //draws elemnts of UI
         if (this.uiIsOn()){
             this.drawBgd(ctx);
-            this.button1.draw(ctx);
-            this.button2.draw(ctx);
-            this.button3.draw(ctx);
-            this.button4.draw(ctx);
-            this.button5.draw(ctx);
+            this.tubeButton1.draw(ctx);
+            this.tubeButton2.draw(ctx);
+            this.tubeButton3.draw(ctx);
+            this.tubeButton4.draw(ctx);
+            this.tubeButton5.draw(ctx);
             if (this.gm.sub.getType() == "IXA" || this.gm.sub.getType() == "IXB"){
-                this.button6.draw(ctx);
+                this.tubeButton6.draw(ctx);
+            }
+            if (this.tv.reloadMode){
+                this.reloadButton.draw(ctx);
             }
             this.drawHeaderTxt(ctx);
             //Object.values(this.buttons).forEach(object => {
@@ -149,6 +166,7 @@ class UI{
     }
 
     drawHeaderTxt(ctx){
+        //draws all text-based UI elements
         //Sub #
         ctx.font = "bold 30px courier";
         ctx.fillStyle = "white";

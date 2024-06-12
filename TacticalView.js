@@ -50,6 +50,7 @@ class TacticalView{
     }
 
     drawLowerImage(ctx){
+        //draw lowest layer of background
         if (this.scene === "Port" || this.scene === "IntroPort"){
             this.currentFrame = 0;
         }
@@ -62,6 +63,7 @@ class TacticalView{
     }
 
     drawUpperImage(ctx){
+        //draw layer above background
         ctx.drawImage(this.upperImage,
             0, 0,
             1280, 720,
@@ -71,6 +73,7 @@ class TacticalView{
     }
 
     drawUI(ctx){
+        //calls UI to draw elements (buttons, text, UI bgd)
         this.mainUI.draw(ctx);
         this.updateAnimationProgress();
     }
@@ -92,6 +95,7 @@ class TacticalView{
     }
 
     changeScene(newScene){
+        //called to change the scene, responsible for background and sprites on background
         switch (newScene){
             case "IntroPort":
                 this.lowerImage.src = "images/portscene.png";
