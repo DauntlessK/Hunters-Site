@@ -24,9 +24,6 @@ class Uboat{
             "Flak Gun": 0
         }
 
-        //---------------Tubes 1-6 (0=empty, 1=G7a, 2=G7e)
-        this.tube = [null, 0, 0, 0, 0, 0, 0]
-
         //set type-specific values for u-boat
         switch (this.subClass){
             case "VIIA":
@@ -42,7 +39,6 @@ class Uboat{
                 this.deck_gun_cap = 10;                      // sub's deck gun ammo capacity
                 this.reserves_aft = 0;                       // number of aft torpedo reloads
                 this.systems["3.7 Flak"] = -1;               // large (3.7) flak (-1 means not present)
-                this.tube[6] = null;                           // tube 6 (second aft tube)
                 break;
             case "VIIB":
             case "VIIC":
@@ -58,7 +54,6 @@ class Uboat{
                 this.deck_gun_cap = 10;
                 this.reserves_aft = 1;
                 this.systems["3.7 Flak"] = -1;
-                this.tube[6] = null; 
                 break;
             case "IXA":
                 this.patrol_length = 5;  
@@ -73,7 +68,6 @@ class Uboat{
                 this.deck_gun_cap = 5;
                 this.reserves_aft = 2;
                 this.systems["3.7 Flak"] = 0;
-                this.tube[6] = 0; 
                 break;
             case "IXB":
                 this.patrol_length = 6;  
@@ -88,7 +82,6 @@ class Uboat{
                 this.deck_gun_cap = 5;
                 this.reserves_aft = 2;
                 this.systems["3.7 Flak"] = 0;
-                this.tube[6] = 0; 
                 break;
             case "VIID":
                 this.patrol_length = 5;  
@@ -103,10 +96,9 @@ class Uboat{
                 this.deck_gun_cap = 10;
                 this.reserves_aft = 1;
                 this.systems["3.7 Flak"] = -1;
-                this.tube[6] = null;
                 break;
             }
-        this.reserves_fore = this.G7aStarting + this.G7eStarting - this.reserves_aft - this.aft_tubes;
+        this.reserves_fore = this.G7aStarting + this.G7eStarting - this.reserves_aft;
         this.G7a = 0;
         this.G7e = 0;
 
@@ -123,8 +115,6 @@ class Uboat{
         this.reloads_aft_G7e = 0;                    // number of reloads aft of G7e
         this.minesLoadedForward = false;
         this.minesLoadedAft = false;
-
-        //-------Last Loadout Settings
         this.lastLoadoutForward_G7a = 0;            //last loadouts for remembering the last chosen torpedo choices
         this.lastLoadoutForward_G7e = 0;
         this.lastLoadoutAft_G7a = 0;
@@ -210,87 +200,5 @@ class Uboat{
         this.lastLoadoutReloads_forward_G7e = this.reloads_forward_G7e;
         this.lastLoadoutReloads_aft_G7a = this.reloads_aft_G7a;
         this.lastLoadoutReloads_aft_G7e = this.reloads_aft_G7e;
-    }
-
-    loadTube(tubeNum, type){
-        //loads a tube with a given torpedo type, checking to make sure the stores are available
-
-        if (tubeNum <= 4){   //trying to load fore torpedoes
-            if (type == 1 && this.reloads_forward_G7a > 0){
-                if (this.tube[tubeNum] == 2){  //unload existing G7e if not empty (add back to fore G7e reserves)
-                    this.reloads_forward_G7e++;
-                }
-                this.reloads_forward_G7a--;
-                this.tube[tubeNum] = type;
-            }
-            else if (type == 2 && this.reloads_forward_G7e > 0){
-                if (this.tube[tubeNum] == 1){  //unload existing G7a if not empty (add back to fore G7a reserves)
-                    this.reloads_forward_G7a++;
-                }
-                this.reloads_forward_G7e--;
-                this.tube[tubeNum] = type;
-            }
-            else {
-                console.log("No Torpedoes available of that type to load forward.")
-            }
-        }
-        else {  //trying to load aft torpedoes
-            if (type == 1 && this.reloads_aft_G7a > 0){
-                if (this.tube[tubeNum] == 2){  //unload existing G7e if not empty (add back to aft G7e reserves)
-                    this.reloads_aft_G7e++;
-                }
-                this.reloads_aft_G7a--;
-                this.tube[tubeNum] = type;
-            }
-            else if (type == 2 && this.reloads_aft_G7e > 0){
-                if (this.tube[tubeNum] == 1){  //unload existing G7a if not empty (add back to aft G7a reserves)
-                    this.reloads_aft_G7a++;
-                }
-                this.reloads_aft_G7e--;
-                this.tube[tubeNum] = type;
-            }
-            else {
-                console.log("No Torpedoes available of that type to load aft.")
-            }
-        }
-    }
-
-    torpedoReload(G7aToLoadFore, G7eToLoadFore, G7aToLoadAft, G7eToLoadAft){
-        //determine tubes that need loading
-        var tubesNeedingReload = 0;
-        for (let i = 0; i < 7; i++){
-            if (this.tube[i] === 0){
-                tubesNeedingReload++;
-            }
-        }
-
-        if (G7aToLoadFore + G7eToLoadFore + G7aToLoadAft + G7eToLoadAft !== tubesNeedingReload){
-            console.log("Error, torpedoes to load does not match empty tubes.");
-        }
-
-        for (let i = 0; i < 7; i++){
-            if (this.tube[i] === 0){
-                if (G7aToLoadFore > 0){
-                    G7aToLoadFore--;
-                    this.tube[i] = 1;
-                }
-                else if (G7eToLoadFore > 0){
-                    G7eToLoadFore--;
-                    this.tube[i] = 2;
-                }
-                else if (G7aToLoadAft > 0){
-                    G7aToLoadAft--;
-                    this.tube[i] = 1;
-                }
-                else if (G7eToLoadAft > 0){
-                    G7eToLoadAft--;
-                    this.tube[i] = 2;
-                }
-                else {
-                    console.log("Error loading into tube" + i);
-                }
-            }
-            console.log("Tube #" + i + ": " + this.tube[i]);
-        }
     }
 }

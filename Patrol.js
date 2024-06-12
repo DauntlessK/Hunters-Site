@@ -74,12 +74,7 @@ class Patrol{
         //change loadout of boat by adding mines
         //todo change tube loads
         if (this.gm.currentOrders.includes("Minelaying")){
-            this.gm.sub.forward_G7a = 0;
-            this.gm.sub.forward_G7e = 0;
-            this.gm.sub.aft_G7a = 0;
-            this.gm.sub.aft_G7e = 0;
-            this.gm.sub.minesLoadedForward = True;
-            this.gm.sub.minesLoadedAft = True;
+            this.gm.sub.loadMines();
         }
         if (this.gm.currentOrders.includes("Abwehr")){
             this.gm.sub.crew_health["Abwehr Agent"] = 0;
@@ -101,27 +96,35 @@ class Patrol{
     }
 
     for (let x=0; x < this.getPatrolLength() + 1; x++){
-        if x == 0:
-            self.patrolArray.append("Port")
-        elif x == 1 or x == patrolLength:
-            if self.francePost and not self.permMedPost:
-                self.patrolArray.append("Bay of Biscay")
-            else:
-                self.patrolArray.append("Transit")
-        elif x == 2 or x == patrolLength - 1:
-            self.patrolArray.append("Transit")
-        elif x == 3 and "Abwehr" in self.currentOrders and not NAorders:
-            self.patrolArray.append("Mission")
-        elif x == 3 and "Minelaying" in self.currentOrders and not NAorders:
-            self.patrolArray.append("Mission")
-        elif (x == 3 or x == patrolLength - 2) and NAorders:
-            self.patrolArray.append("Transit")
+        if (x == 0){
+            this.patrolArray.append("Port");
+        }
+        else if (x == 1 || x == patrolLength){
+            if (this.gm.francePost && this.gm.permMedPost){
+                this.patrolArray.append("Bay of Biscay");
+            }
+            else{
+                this.patrolArray.append("Transit");
+            }
+        }
+        else if (x == 2 || x == patrolLength - 1){
+            this.patrolArray.append("Transit");
+        }
+        else if (x == 3 && "Abwehr" in this.gm.currentOrders && !NAorders){
+            this.patrolArray.append("Mission");
+        }
+        else if (x == 3 && "Minelaying" in self.currentOrders && !NAorders){
+            this.patrolArray.append("Mission");
+        }
+        else if ((x == 3 || x == patrolLength - 2) and NAorders){
+            this.patrolArray.append("Transit")
+        }
         elif (x == 4 or x == patrolLength - 3) and NAorders:
-            self.patrolArray.append("Transit")
+            this.patrolArray.append("Transit")
         elif x == 5 and "Abwehr" in self.currentOrders and NAorders:
-            self.patrolArray.append("Mission")
+            this.patrolArray.append("Mission")
         elif x == 5 and "Minelaying" in self.currentOrders and NAorders:
-            self.patrolArray.append("Mission")
+            this.patrolArray.append("Mission")
         else:
             newp = self.currentOrders
             if "Abwehr" in self.currentOrders:
@@ -130,14 +133,14 @@ class Patrol{
                 newp = self.currentOrders.replace("(Minelaying)", "")
             elif "Wolfpack" in self.currentOrders:
                 newp = self.currentOrders.replace("(Wolfpack)", "")
-            self.patrolArray.append(newp)
+            this.patrolArray.append(newp)
     }
 
     #remove one NA/Caribbean patrol if applicable
     if "Caribbean" in self.currentOrders or "North America" in self.currentOrders:
         try:
-            self.patrolArray.remove("North America")
-            self.patrolArray.remove("Caribbean")
+            this.patrolArray.remove("North America")
+            this.patrolArraym.remove("Caribbean")
         except:
             pass
     }
