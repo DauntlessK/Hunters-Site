@@ -2,12 +2,18 @@ class Patrol{
     constructor(gm){
         this.gm = gm;
 
+        //array of orders options for a given date
+        this.ordersArray = null;
+
+        //array of each "step" of a patrol, which includes port, transit and patrol/mission spots
+        this.patrolArray = null;
+
         this.getPatrol();
     }
 
-    getPatrolLength(patrol){
+    getPatrolLength(){
         //Determines full length of a given patrol (number of on station steps + all transit steps
-        switch (patrol) {
+        switch (this.gm.currentOrders) {
             case "North America":
             case  "Caribbean":
                 return this.gm.sub.patrol_length - 1 + 8;  // NA patrol has 1 less on station patrol + 2 BoB + EXTRA 2 transits
@@ -16,7 +22,7 @@ class Patrol{
         }
     }
 
-    getPatrol(pickingPatrol){
+    async getPatrol(){
         //Gets patrol based on date, type, permanent assignments, etc from patrol text files.
 
         var patrolChart = null;
@@ -34,55 +40,105 @@ class Patrol{
 
         const ordersRoll = d6Rollx2();
         const textFile = "data/" + patrolChart;
-        console.log(textFile);
 
-        this.getData(textFile);
-        //fetch(textFile).then(this.convertData()).then(this.processData());
+        this.ordersArray = await getDataFromTxt(textFile)
 
+        this.gm.currentOrders = this.ordersArray[ordersRoll];
+        console.log(this.gm.currentOrders);
+
+        this.validatePatrol();
     }
 
-    getData(textFile) {
-        const myRequest = new Request(textFile);
-        var patrol;
+    validatePatrol(){
+        //checks if the randomly chosen patrol is valid given the U-boat type, permanent posts, etc
+        
+        //Deal with changes in orders based on U-Boat type
+        if (this.gm.currentOrders == "Mediterranean" || this.gm.currentOrders == "Artic" && (self.sub.getType().includes("IX"))){       //IX cannot patrol Artic or Med
+            this.gm.currentOrders = "West African Coast";
+        }
+        if ((this.gm.currentOrders == "West African Coast" || this.gm.currentOrders == "Caribbean") && (self.sub.getType().includes("VII"))){   // VII Cannot patrol west africa
+            this.gm.currentOrders = "Atlantic";
+        }
+        if (this.gm.currentOrders == "British Isles" && this.gm.sub.getType() == "VIID"){                                                // VIID Minelays in BI
+            this.gm.currentOrders = "British Isles(Minelaying)";
+        }
 
-        fetch(myRequest)
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`HTTP error, status = ${response.status}`);
+        //deal with permanent stations
+        if (permMedPost){
+            this.gm.currentOrders = "Mediterranean";
+        }
+        if (self.permArcPost){
+            this.gm.currentOrders = "Arctic";
+        }
+
+        //change loadout of boat by adding mines
+        //todo change tube loads
+        if (this.gm.currentOrders.includes("Minelaying")){
+            this.gm.sub.forward_G7a = 0;
+            this.gm.sub.forward_G7e = 0;
+            this.gm.sub.aft_G7a = 0;
+            this.gm.sub.aft_G7e = 0;
+            this.gm.sub.minesLoadedForward = True;
+            this.gm.sub.minesLoadedAft = True;
+        }
+        if (this.gm.currentOrders.includes("Abwehr")){
+            this.gm.sub.crew_health["Abwehr Agent"] = 0;
+        }
+        //Do not allow VIID and VIIC Flak in the Med, so recall get patrol to get new orders and get new orders
+        if (this.gm.sub.getType() == "VIID" || this.gm.sub.getType() == "VIIC Flak"){
+            if (this.gm.currentOrders  == "Mediterranean"){
+                this.getPatrol;
             }
-            return response.text();
-          })
-          .then((text) => {
-            console.log(text);
-            patrol = text;
-          })
-          .catch((error) => {
-            patrol = `Error: ${error.message}`;
-          });
-      }
+        }
+    }
 
-    /**with open(patrolChart, "r") as fp:
-            lines = fp.readlines()
-            if pickingPatrol:
-                #get unique list of orders, then print them and ask for input
-                uniqueOrders = []
-                for x in lines:
-                    x = x.rstrip('\r\n')
-                    if x not in uniqueOrders:
-                        uniqueOrders.append(x)
-                for x in range(len(uniqueOrders)):
-                    count = x + 1
-                    tp = str(count) + ") " + uniqueOrders[x]
-                    print(tp)
-                inpNum = getInputNum("Pick your orders: ", 1, len(uniqueOrders))
-                orders = uniqueOrders[inpNum - 1]
+    buildPatrol(){
+    //Builds array of strings, each item being a step in the patrol. Step 0 is port.
+    //build patrol for non NA patrols
+    var NAorders = false;
+    if (this.gm.currentOrders == "North America" || self.currentOrders == "Carribean"){
+        NAorders = True
+    }
+
+    for (let x=0; x < this.getPatrolLength() + 1; x++){
+        if x == 0:
+            self.patrolArray.append("Port")
+        elif x == 1 or x == patrolLength:
+            if self.francePost and not self.permMedPost:
+                self.patrolArray.append("Bay of Biscay")
             else:
-                orders = lines[ordersRoll - 2]
+                self.patrolArray.append("Transit")
+        elif x == 2 or x == patrolLength - 1:
+            self.patrolArray.append("Transit")
+        elif x == 3 and "Abwehr" in self.currentOrders and not NAorders:
+            self.patrolArray.append("Mission")
+        elif x == 3 and "Minelaying" in self.currentOrders and not NAorders:
+            self.patrolArray.append("Mission")
+        elif (x == 3 or x == patrolLength - 2) and NAorders:
+            self.patrolArray.append("Transit")
+        elif (x == 4 or x == patrolLength - 3) and NAorders:
+            self.patrolArray.append("Transit")
+        elif x == 5 and "Abwehr" in self.currentOrders and NAorders:
+            self.patrolArray.append("Mission")
+        elif x == 5 and "Minelaying" in self.currentOrders and NAorders:
+            self.patrolArray.append("Mission")
+        else:
+            newp = self.currentOrders
+            if "Abwehr" in self.currentOrders:
+                newp = self.currentOrders.replace("(Abwehr Agent Delivery)", "")
+            elif "Minelaying" in self.currentOrders:
+                newp = self.currentOrders.replace("(Minelaying)", "")
+            elif "Wolfpack" in self.currentOrders:
+                newp = self.currentOrders.replace("(Wolfpack)", "")
+            self.patrolArray.append(newp)
+    }
 
-        # strip any stray returns that may have gotten into the orders string
-        orders = orders.strip('\n')
-
-        orders = this.validatePatrol(orders, pickingPatrol)
-
-        this.currentOrders = orders*/
+    #remove one NA/Caribbean patrol if applicable
+    if "Caribbean" in self.currentOrders or "North America" in self.currentOrders:
+        try:
+            self.patrolArray.remove("North America")
+            self.patrolArray.remove("Caribbean")
+        except:
+            pass
+    }
 }

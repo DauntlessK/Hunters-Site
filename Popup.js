@@ -32,7 +32,7 @@ class Popup{
         //Message to announce starting rank, sub, date, etc
         var storyIntroText = "";
         if (this.gm.date_year == 1939){
-            storyIntroText = "The invasion of Poland has begun and Great Britain and France have declared war on Germany. It is time to prove your mettle and help the war effort in disrupting shipping to the allies."
+            storyIntroText = "The invasion of Poland has begun... Hostilities with England effective immediately. It is time to prove your mettle and help the war effort in disrupting shipping to the allies."
         }
         else if (this.gm.date_year == 1940 && this.gm.date_month < 6){
             storyIntroText = "With Poland defeated, Germany looks to tighten its control of the Atlantic. We must continue to strangle the Allies' supply lines."
