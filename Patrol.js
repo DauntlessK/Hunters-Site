@@ -33,9 +33,35 @@ class Patrol{
         }
 
         const ordersRoll = d6Rollx2();
-        const textFile = "data/" + patrolChart + ".txt";
+        const textFile = "data/" + patrolChart;
+        console.log(textFile);
 
-        /**with open(patrolChart, "r") as fp:
+        this.getData(textFile);
+        //fetch(textFile).then(this.convertData()).then(this.processData());
+
+    }
+
+    getData(textFile) {
+        const myRequest = new Request(textFile);
+        var patrol;
+
+        fetch(myRequest)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error, status = ${response.status}`);
+            }
+            return response.text();
+          })
+          .then((text) => {
+            console.log(text);
+            patrol = text;
+          })
+          .catch((error) => {
+            patrol = `Error: ${error.message}`;
+          });
+      }
+
+    /**with open(patrolChart, "r") as fp:
             lines = fp.readlines()
             if pickingPatrol:
                 #get unique list of orders, then print them and ask for input
@@ -59,17 +85,4 @@ class Patrol{
         orders = this.validatePatrol(orders, pickingPatrol)
 
         this.currentOrders = orders*/
-    }
-
-    readTextFile() {
-        var rawFile = new XMLHttpRequest();
-        rawFile.open("GET", "data/${patrolChart}.txt", true);
-        rawFile.onreadystatechange = function() {
-          if (rawFile.readyState === 4) {
-            var allText = rawFile.responseText;
-            document.getElementById("textSection").innerHTML = allText;
-          }
-        }
-        rawFile.send();
-      }
 }
