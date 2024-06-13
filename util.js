@@ -17,14 +17,32 @@ function until(conditionFunction) {
       else setTimeout(_ => poll(resolve), 400);
     }
     return new Promise(poll);
-  }
+}
 
+function convertData(rawData){
+  toReturn = rawData;
+  toReturn = toReturn.split("\r");
+    for (let i = 0; i < toReturn.length; i++){
+        toReturn[i] = toReturn[i].replace('\n','');
+    }
+  console.log("returning");
+  return toReturn;
+}
+
+function processData(strData){
+  return strData.split();
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 async function getDataFromTxt(fullFilePath) {
   //gets a list from a txt file and returns 1 array
   const myRequest = new Request(fullFilePath);
   var toReturn;
 
+  console.log("Fetching");
   return fetch(myRequest)
     .then((response) => {
       if (!response.ok) {
@@ -38,6 +56,7 @@ async function getDataFromTxt(fullFilePath) {
       for (let i = 0; i < toReturn.length; i++){
           toReturn[i] = toReturn[i].replace('\n','');
       }
+      console.log("returning?");
       return toReturn;
     })
     .catch((error) => {

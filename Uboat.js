@@ -304,7 +304,7 @@ class Uboat{
         this.aft_G7a = 0;
         this.aft_G7e = 0;
         
-        this.gm.sub.minesLoadedForward = True;
-        this.gm.sub.minesLoadedAft = True;
+        this.gm.sub.minesLoadedForward = true;
+        this.gm.sub.minesLoadedAft = true;
     }
 }

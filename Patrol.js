@@ -9,7 +9,6 @@ class Patrol{
         this.patrolArray = [];
 
         this.getPatrol();
-        this.buildPatrol();
     }
 
     getPatrolLength(){
@@ -42,18 +41,24 @@ class Patrol{
         const ordersRoll = d6Rollx2();
         const textFile = "data/" + patrolChart;
 
+        console.log("Beginning Fetch");
         this.ordersArray = await getDataFromTxt(textFile);
-
-        this.gm.currentOrders = this.ordersArray[ordersRoll];
-        console.log(this.gm.currentOrders);
-
-        this.validatePatrol();
+        //fetch(textFile).then(convertData).then(processData);
+        
+        sleep(3000).then(() => {
+            this.gm.currentOrders = this.ordersArray[ordersRoll];
+            console.log(this.gm.currentOrders);
+    
+            this.validatePatrol();
+            this.buildPatrol();
+        });
     }
 
     validatePatrol(){
         //checks if the randomly chosen patrol is valid given the U-boat type, permanent posts, etc
         
         //Deal with changes in orders based on U-Boat type
+        console.log("Validating Patrol");
         if (this.gm.currentOrders == "Mediterranean" || this.gm.currentOrders == "Artic" && (self.sub.getType().includes("IX"))){       //IX cannot patrol Artic or Med
             this.gm.currentOrders = "West African Coast";
         }
@@ -75,12 +80,7 @@ class Patrol{
         //change loadout of boat by adding mines
         //todo change tube loads
         if (this.gm.currentOrders.includes("Minelaying")){
-            this.gm.sub.forward_G7a = 0;
-            this.gm.sub.forward_G7e = 0;
-            this.gm.sub.aft_G7a = 0;
-            this.gm.sub.aft_G7e = 0;
-            this.gm.sub.minesLoadedForward = True;
-            this.gm.sub.minesLoadedAft = True;
+            this.gm.sub.loadMines();
         }
         if (this.gm.currentOrders.includes("Abwehr")){
             this.gm.sub.crew_health["Abwehr Agent"] = 0;
@@ -96,25 +96,27 @@ class Patrol{
     buildPatrol(){
         //Builds array of strings, each item being a step in the patrol. Step 0 is port.
         //build patrol for non NA patrols
+
+        console.log("Building Patrol");
         var NAorders = false;
         if (this.gm.currentOrders == "North America" || self.currentOrders == "Carribean"){
             NAorders = True
         }
     
         for (let x=0; x < this.getPatrolLength() + 1; x++){
-            console.log("loop through patrol array");
+            console.log("Looped through patrol array " + x + " times.");
             if (x == 0){
                 this.patrolArray.push("Port");
             }
-            else if (x == 1 || x == this.patrolLength){
-                if (this.gm.francePost && this.gm.permMedPost){
+            else if (x == 1 || x == this.getPatrolLength()){
+                if (this.gm.francePost && !this.gm.permMedPost){
                     this.patrolArray.push("Bay of Biscay");
                 }
                 else{
                     this.patrolArray.push("Transit");
                 }
             }
-            else if (x == 2 || x == this.patrolLength - 1){
+            else if (x == 2 || x == this.getPatrolLength() - 1){
                 this.patrolArray.push("Transit");
             }
             else if (x == 3 && this.gm.currentOrders.includes("Abwehr") && !NAorders){
@@ -123,10 +125,10 @@ class Patrol{
             else if (x == 3 && this.gm.currentOrders.includes("Minelaying") && !NAorders){
                 this.patrolArray.push("Mission");
             }
-            else if ((x == 3 || x == this.patrolLength - 2) && NAorders){
+            else if ((x == 3 || x == this.getPatrolLength() - 2) && NAorders){
                 this.patrolArray.push("Transit");
             }
-            else if ((x == 4 || x == this.patrolLength - 3) && NAorders){
+            else if ((x == 4 || x == this.getPatrolLength() - 3) && NAorders){
                 this.patrolArray.push("Transit");
             }
             else if (x == 5 && this.gm.currentOrders.includes("Abwehr") && NAorders){
@@ -145,8 +147,8 @@ class Patrol{
                 }
                 else if (this.gm.currentOrders.includes("Wolfpack")){
                     otherSpot = self.currentOrders.replace("(Wolfpack)", "");
-                this.patrolArray.push(otherSpot);
                 }
+                this.patrolArray.push(otherSpot);
             }
         }
         //remove one NA/Caribbean patrol if applicable
