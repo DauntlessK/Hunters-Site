@@ -56,7 +56,6 @@ class Button {
     }
 
     clickedButton(){
-        console.log("Clicked button!----");
         this.tv.reloadMode = false;
         this.gm.newPatrol();
         this.tv.gameObjects.uboat.sprite.setDeparted();

@@ -103,12 +103,12 @@ class UI{
             });
         }
         this.reloadButton = new Button({
-            src: "images/ui/TorpButton.png",
+            src: "images/ui/CommitButton.png",
             x: 1057,
             y: 650,
-            width: 50,
+            width: 100,
             height: 50,
-            frames: 8,
+            frames: 2,
             tube: null,
             gm: this.gm,
             tv: this.tv

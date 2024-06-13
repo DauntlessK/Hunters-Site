@@ -103,7 +103,6 @@ class Popup{
         //Message at start of patrol to show orders
         this.tv.changeScene("Sunny");
         var message = "";
-        console.log("Popup");
         switch (this.gm.currentOrders){
             case "British Isles":
                 message = " is to proceed to the enclosed area to patrol the British Isles."
