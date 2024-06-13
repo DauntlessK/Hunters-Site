@@ -217,6 +217,10 @@ class UI{
             ctx.fillStyle = "darkred";
             ctx.fillText("G7e", leftSide, topRow);
         }
+        else if (this.gm.sub.tube[1] == 3){
+            ctx.fillStyle = "black";
+            ctx.fillText("MINES", leftSide, topRow);
+        }
         else{
             ctx.fillStyle = "black";
             ctx.fillText("--", leftSide, topRow);
@@ -229,6 +233,10 @@ class UI{
         else if (this.gm.sub.tube[2] == 2){
             ctx.fillStyle = "darkred";
             ctx.fillText("G7e", rightSide, topRow);
+        }
+        else if (this.gm.sub.tube[2] == 3){
+            ctx.fillStyle = "black";
+            ctx.fillText("MINES", rightSide, topRow);
         }
         else{
             ctx.fillStyle = "black";
@@ -243,6 +251,10 @@ class UI{
             ctx.fillStyle = "darkred";
             ctx.fillText("G7e", leftSide, secondRow);
         }
+        else if (this.gm.sub.tube[3] == 3){
+            ctx.fillStyle = "black";
+            ctx.fillText("MINES", leftSide, secondRow);
+        }
         else{
             ctx.fillStyle = "black";
             ctx.fillText("--", leftSide, secondRow);
@@ -255,6 +267,10 @@ class UI{
         else if (this.gm.sub.tube[4] == 2){
             ctx.fillStyle = "darkred";
             ctx.fillText("G7e", rightSide, secondRow);
+        }
+        else if (this.gm.sub.tube[4] == 3){
+            ctx.fillStyle = "black";
+            ctx.fillText("MINES", rightSide, secondRow);
         }
         else{
             ctx.fillStyle = "black";
@@ -270,6 +286,10 @@ class UI{
                 ctx.fillStyle = "darkred";
                 ctx.fillText("G7e", leftSide, bottomRow);
             }
+            else if (this.gm.sub.tube[5] == 3){
+                ctx.fillStyle = "black";
+                ctx.fillText("MINES", leftSide, bottomRow);
+            }
             else{
                 ctx.fillStyle = "black";
                 ctx.fillText("--", leftSide, bottomRow);
@@ -282,6 +302,10 @@ class UI{
             else if (this.gm.sub.tube[6] == 2){
                 ctx.fillStyle = "darkred";
                 ctx.fillText("G7e", rightSide, bottomRow);
+            }
+            else if (this.gm.sub.tube[6] == 3){
+                ctx.fillStyle = "black";
+                ctx.fillText("MINES", rightSide, bottomRow);
             }
             else{
                 ctx.fillStyle = "black";
@@ -296,6 +320,10 @@ class UI{
             else if (this.gm.sub.tube[5] == 2){
                 ctx.fillStyle = "darkred";
                 ctx.fillText("G7e", leftSide + 50, bottomRow);
+            }
+            else if (this.gm.sub.tube[5] == 3){
+                ctx.fillStyle = "black";
+                ctx.fillText("MINES", leftSide + 50, bottomRow);
             }
             else{
                 ctx.fillStyle = "black";

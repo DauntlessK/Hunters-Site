@@ -6,9 +6,10 @@ class Patrol{
         this.ordersArray = null;
 
         //array of each "step" of a patrol, which includes port, transit and patrol/mission spots
-        this.patrolArray = null;
+        this.patrolArray = [];
 
         this.getPatrol();
+        this.buildPatrol();
     }
 
     getPatrolLength(){
@@ -17,7 +18,7 @@ class Patrol{
             case "North America":
             case  "Caribbean":
                 return this.gm.sub.patrol_length - 1 + 8;  // NA patrol has 1 less on station patrol + 2 BoB + EXTRA 2 transits
-            case _:
+            default:
                 return this.gm.sub.patrol_length + 4;
         }
     }
@@ -41,7 +42,7 @@ class Patrol{
         const ordersRoll = d6Rollx2();
         const textFile = "data/" + patrolChart;
 
-        this.ordersArray = await getDataFromTxt(textFile)
+        this.ordersArray = await getDataFromTxt(textFile);
 
         this.gm.currentOrders = this.ordersArray[ordersRoll];
         console.log(this.gm.currentOrders);
@@ -64,10 +65,10 @@ class Patrol{
         }
 
         //deal with permanent stations
-        if (permMedPost){
+        if (this.gm.permMedPost){
             this.gm.currentOrders = "Mediterranean";
         }
-        if (self.permArcPost){
+        if (this.gm.permArcPost){
             this.gm.currentOrders = "Arctic";
         }
 
@@ -93,52 +94,69 @@ class Patrol{
     }
 
     buildPatrol(){
-    //Builds array of strings, each item being a step in the patrol. Step 0 is port.
-    //build patrol for non NA patrols
-    var NAorders = false;
-    if (this.gm.currentOrders == "North America" || self.currentOrders == "Carribean"){
-        NAorders = True
-    }
-
-    for (let x=0; x < this.getPatrolLength() + 1; x++){
-        if x == 0:
-            self.patrolArray.append("Port")
-        elif x == 1 or x == patrolLength:
-            if self.francePost and not self.permMedPost:
-                self.patrolArray.append("Bay of Biscay")
-            else:
-                self.patrolArray.append("Transit")
-        elif x == 2 or x == patrolLength - 1:
-            self.patrolArray.append("Transit")
-        elif x == 3 and "Abwehr" in self.currentOrders and not NAorders:
-            self.patrolArray.append("Mission")
-        elif x == 3 and "Minelaying" in self.currentOrders and not NAorders:
-            self.patrolArray.append("Mission")
-        elif (x == 3 or x == patrolLength - 2) and NAorders:
-            self.patrolArray.append("Transit")
-        elif (x == 4 or x == patrolLength - 3) and NAorders:
-            self.patrolArray.append("Transit")
-        elif x == 5 and "Abwehr" in self.currentOrders and NAorders:
-            self.patrolArray.append("Mission")
-        elif x == 5 and "Minelaying" in self.currentOrders and NAorders:
-            self.patrolArray.append("Mission")
-        else:
-            newp = self.currentOrders
-            if "Abwehr" in self.currentOrders:
-                newp = self.currentOrders.replace("(Abwehr Agent Delivery)", "")
-            elif "Minelaying" in self.currentOrders:
-                newp = self.currentOrders.replace("(Minelaying)", "")
-            elif "Wolfpack" in self.currentOrders:
-                newp = self.currentOrders.replace("(Wolfpack)", "")
-            self.patrolArray.append(newp)
-    }
-
-    #remove one NA/Caribbean patrol if applicable
-    if "Caribbean" in self.currentOrders or "North America" in self.currentOrders:
-        try:
-            self.patrolArray.remove("North America")
-            self.patrolArray.remove("Caribbean")
-        except:
-            pass
+        //Builds array of strings, each item being a step in the patrol. Step 0 is port.
+        //build patrol for non NA patrols
+        var NAorders = false;
+        if (this.gm.currentOrders == "North America" || self.currentOrders == "Carribean"){
+            NAorders = True
+        }
+    
+        for (let x=0; x < this.getPatrolLength() + 1; x++){
+            console.log("loop through patrol array");
+            if (x == 0){
+                this.patrolArray.push("Port");
+            }
+            else if (x == 1 || x == this.patrolLength){
+                if (this.gm.francePost && this.gm.permMedPost){
+                    this.patrolArray.push("Bay of Biscay");
+                }
+                else{
+                    this.patrolArray.push("Transit");
+                }
+            }
+            else if (x == 2 || x == this.patrolLength - 1){
+                this.patrolArray.push("Transit");
+            }
+            else if (x == 3 && this.gm.currentOrders.includes("Abwehr") && !NAorders){
+                this.patrolArray.push("Mission");
+            }
+            else if (x == 3 && this.gm.currentOrders.includes("Minelaying") && !NAorders){
+                this.patrolArray.push("Mission");
+            }
+            else if ((x == 3 || x == this.patrolLength - 2) && NAorders){
+                this.patrolArray.push("Transit");
+            }
+            else if ((x == 4 || x == this.patrolLength - 3) && NAorders){
+                this.patrolArray.push("Transit");
+            }
+            else if (x == 5 && this.gm.currentOrders.includes("Abwehr") && NAorders){
+                this.patrolArray.push("Mission");
+            }
+            else if (x == 5 && this.gm.currentOrders.includes("Minelaying" && NAorders)){
+                this.patrolArray.push("Mission");
+            }
+            else{   //used to replace patrol array spots that have parentheses and should not (so location is only displayed)
+                var otherSpot = this.gm.currentOrders;
+                if (this.gm.currentOrders.includes("Abwehr")){
+                    otherSpot = self.currentOrders.replace("(Abwehr Agent Delivery)", "")
+                }
+                else if (this.gm.currentOrders.includes("Abwehr")){
+                    otherSpot = self.currentOrders.replace("(Minelaying)", "");
+                }
+                else if (this.gm.currentOrders.includes("Wolfpack")){
+                    otherSpot = self.currentOrders.replace("(Wolfpack)", "");
+                this.patrolArray.push(otherSpot);
+                }
+            }
+        }
+        //remove one NA/Caribbean patrol if applicable
+        if (this.gm.currentOrders == "North America"){
+            this.patrolArray.remove("North America");
+        }
+        if (this.gm.currentOrders == "Carribean"){
+            this.patrolArray.remove("Caribbean");
+        }
+        console.log("patrolArray =");
+        console.log(this.patrolArray);
     }
 }

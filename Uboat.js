@@ -24,7 +24,7 @@ class Uboat{
             "Flak Gun": 0
         }
 
-        //---------------Tubes 1-6 (0=empty, 1=G7a, 2=G7e)
+        //---------------Tubes 1-6 (0=empty, 1=G7a, 2=G7e, 3=Mines)
         this.tube = [null, 0, 0, 0, 0, 0, 0]
 
         //set type-specific values for u-boat
@@ -42,7 +42,7 @@ class Uboat{
                 this.deck_gun_cap = 10;                      // sub's deck gun ammo capacity
                 this.reserves_aft = 0;                       // number of aft torpedo reloads
                 this.systems["3.7 Flak"] = -1;               // large (3.7) flak (-1 means not present)
-                this.tube[6] = null;                           // tube 6 (second aft tube)
+                this.tube[6] = null;                         // tube 6 (second aft tube)
                 break;
             case "VIIB":
             case "VIIC":
@@ -292,5 +292,19 @@ class Uboat{
             }
             console.log("Tube #" + i + ": " + this.tube[i]);
         }
+    }
+
+    loadMines(){
+        for (let i = 1; i < 4 + this.aft_tubes; i++){
+            this.tube[i] = 3;
+        }
+        //unsure if forward and aft type counts are needed anymore
+        this.forward_G7a = 0;
+        this.forward_G7e = 0;
+        this.aft_G7a = 0;
+        this.aft_G7e = 0;
+        
+        this.gm.sub.minesLoadedForward = True;
+        this.gm.sub.minesLoadedAft = True;
     }
 }
