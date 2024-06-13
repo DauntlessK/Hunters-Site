@@ -101,26 +101,44 @@ class Popup{
 
     orders(){
         //Message at start of patrol to show orders
-        var storyIntroText = "";
-        if (this.gm.date_year == 1939){
-            storyIntroText = "The invasion of Poland has begun and Great Britain and France have declared war on Germany. It is time to prove your mettle and help the war effort in disrupting shipping to the allies."
+        this.tv.changeScene("Sunny");
+        var message = "";
+        console.log("Popup");
+        switch (this.gm.currentOrders){
+            case "British Isles":
+                message = " is to proceed to the enclosed area to patrol the British Isles."
+                break;
+            case "West African Coast":
+            case "Spanish Coast":
+                message = " is hereby ordered to patrol off the ${this.gm.currentOrders}."
+                break;
+            case "British Isles(Minelaying)":
+                message = " is directed to take the loaded mines to the enclosed target area and lay the mines, then proceed to patrol the British Isles."
+                break;
+            case "Norway":
+                message = " has been assigned to a patrol off Norway. Proceed to the enclosed target area."
+                break;
+            case "British Isles(Abwehr Agent Delivery":
+                message = " has been entrusted to safely deliver the onboard Abwehr agent to the enclosed area, then proceed to patrol the British Isles."
+                break;
+            case "Atlantic":
+                message = " is hereby ordered to patrol the enclosed area in the Mid-Atlantic."
+                break;
+            case "Atlantic(Wolfpack)":
+                message = " has been assigned to a Wolfpack. Proceed to the area enclosed in these orders and maintain contact with the Wolfpack."
+                break;
+            case "Mediterranean":
+                message = " has been reassigned to the Mediterranean. Immediately upon receipt of this order, proceed through the Gibraltar Strait to join the Mediterranean fleet."
+                break;
         }
-        else if (this.gm.date_year == 1940 && this.gm.date_month < 6){
-            storyIntroText = "With Poland defeated, Germany looks to tighten its control of the Atlantic. We must continue to strangle the Allies' supply lines."
-        }
-        else if (this.gm.date_year == 1940){
-            storyIntroText = "With France defeated, Germany's U-Boats have mostly relocated to French ports. Help tip the Battle of the Atlantic, now in full swing, in favor of Germany."
-        }
-        else {
-            storyIntroText = "The Battle for the Atlantic has swung against Germany, as hundreds of U-Boats have been lost. Exercise caution as the allies have learned to hunt U-Boats."
-        }
+        
 
         //new div to add
         this.element.innerHTML = (`
-            <h3 class="HeaderMessage_h3">The Hunters: German U-Boats at War
+            <h3 class="HeaderMessage_h3">Incoming Orders from BdU
             <p class="TextMessage_p">${this.gm.getFullDate()}<br>
-            ${this.gm.getLRankAndName()}, please report to ${this.gm.getFullUboatID()} immediately.<br><br>
-            ${storyIntroText}<br><br>Formal orders to follow shortly.</p>
+            ${this.gm.getLRankAndName()}<br><br>
+            ${this.gm.getFullUboatID()}${message}<br><br>Happy Hunting.</p>
             <button class="TextMessage_button">Next</button>
         `)
 

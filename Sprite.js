@@ -13,6 +13,8 @@ class Sprite {
     this.height = config.height;
     this.frames = config.frames;
 
+    this.depth = 0;
+    this.surface();
 
     //Configure Animation & Initial State
     this.animations = config.animations || {
@@ -40,7 +42,7 @@ class Sprite {
 
   updateAnimationProgress(){
     //Downtick frame progress if game is unpaused
-    if (this.tv.isUnpaused == true && window.Scene === "Sunny"){
+    if (this.tv.isUnpaused == true && this.depth > 0){
       this.animationFrameProgress -= 1;
       //Check to see if frame limit is 0, if it is, roll to next frame
       if (this.animationFrameProgress === 0 && this.currentAnimation === "cruise"){
@@ -109,10 +111,20 @@ class Sprite {
     this.tv = tv;
   }
 
+  dive(){
+    this.depth = 85;
+    this.height = 150;
+  }
+
+  surface(){
+    this.depth = 0;
+    this.height = 95;
+  }
+
   //Draw sprite
   draw(ctx) {
     const x = this.gameObject.x + this.depart();
-    const y = this.gameObject.y + this.randomUpAndDown();
+    const y = this.gameObject.y + this.randomUpAndDown() + this.depth;
 
     var swidth = 0;
     var sheight = 0;

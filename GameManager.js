@@ -23,6 +23,7 @@ class GameManager{
         this.monthOfLastKnightsCrossAward = -1;
         this.yearOfLastKnightsCrossAward = -1;
         this.currentOrders = "";
+        this.currentOrdersLong = "";
         this.patrol = null;
         this.patrolCount = ["", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth",
                             "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth",
@@ -169,4 +170,48 @@ class GameManager{
     newPatrol(){
         this.patrol = new Patrol(this);
     }
+
+    setCurrentOrdersLong(){
+        switch (this.currentOrders){
+            case "British Isles":
+            case "Mediterranean":
+            case "Artic":
+            case "Caribbean":
+                this.currentOrdersLong = "Patrol the " + this.currentOrders;
+                break;
+            case "West African Coast":
+            case "Spanish Coash":
+                this.currentOrdersLong = "Patrol off the " + this.currentOrders;
+                break;
+            case "Norway":
+                this.currentOrdersLong = "Patrol off " + this.currentOrders;
+                break;
+            case "Atlantic":
+                this.currentOrdersLong = "Patrol the Mid-Atlantic";
+                break;
+            case "North America":
+                this.currentOrdersLong = "Patrol the NA Station";
+                break;
+            case "British Isles(Minelaying)":
+                this.currentOrdersLong = "Minelay off British Isles"
+                break;
+            case "British Isles(Abwehr Agent Delivery)":
+                this.currentOrdersLong = "Deliver Agent to Britian"
+                break;
+            case "Atlantic(Wolfpack)":
+                this.currentOrdersLong = "Wolfpack patrol the Mid-Atlantic";
+                break;
+            case "North America(Abwehr Agent Delivery)":
+                this.currentOrdersLong = "Deliver Agent to USA"
+                break;
+            default:
+                console.log("Error getting Long orders version.");
+                break;
+        }
+    }
+
+    ordersPopup(){
+        const ordersPopUp = new Popup("orders", this.tv, this);
+    }
+    
 }

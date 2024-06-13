@@ -2,7 +2,6 @@
 
 class TacticalView{
     constructor(startScene){
-        //this.gameObjects = config.gameObjects;
         this.gm = new GameManager(this);
         this.mainUI = null;
         this.scene = startScene;
@@ -20,8 +19,6 @@ class TacticalView{
 
         //handle intial scene
         this.changeScene(this.scene);
-
-        //console.log(this.gameObjects.uboat.sprite);
     }
 
     pauseGame(){
@@ -97,6 +94,7 @@ class TacticalView{
 
     changeScene(newScene){
         //called to change the scene, responsible for background and sprites on background
+        this.scene = newScene;
         switch (newScene){
             case "IntroPort":
                 this.lowerImage.src = "images/portscene.png";
@@ -133,7 +131,7 @@ class TacticalView{
                 this.gameObjects = {
                     uboat: new GameObject({
                         x: 0,
-                        y: 460,
+                        y: 280,
                         src: "images/ships/Uboat_VIIC_spritesheet.png",
                         width: 803,
                         height: 150,

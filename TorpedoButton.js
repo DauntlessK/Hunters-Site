@@ -11,7 +11,7 @@ class TorpedoButton extends Button{
     getLatestState(){
         //figure out how many G7a or G7e are loaded forward. First go for G7a
 
-        if (this.tubeState == "emptyAndReloading"){
+        if (this.tv.reloadMode){
             this.baseFrame = 4;
             if (this.gm.sub.tube[this.tube] == 1){
                 this.currentFrame = 6
@@ -22,11 +22,17 @@ class TorpedoButton extends Button{
         }
         else {
             this.baseFrame = 0;
+                if (this.gm.sub.tube[this.tube] > 0){
+                    this.currentFrame = this.baseFrame;
+                }
+                else{
+                    this.currentFrame = 5;
+                }
         }
     }
 
     clickedButton(){
-        if (this.tubeState == "emptyAndReloading") {
+        if (this.tv.reloadMode) {
             if (this.tv.reloadMode == true){
                 if (this.gm.sub.tube[this.tube] == 0){
                     if (this.tube <= 4 && this.gm.sub.reloads_forward_G7a > 0){

@@ -16,6 +16,9 @@ class UI{
             this.isLoaded = true;
         }
 
+        this.telegraph = new Image();
+        this.telegraph.src = "images/ui/Telegraph.png"
+
         //create buttons
         this.tubeButton1 = new TorpedoButton({
             src: "images/ui/TorpButton.png",
@@ -152,6 +155,9 @@ class UI{
                 this.reloadButton.draw(ctx);
             }
             this.drawHeaderTxt(ctx);
+            if (!this.tv.reloadMode){
+                this.drawTelegraph(ctx);
+            }
             //Object.values(this.buttons).forEach(object => {
             //object.button.draw(this.ctx);
           //})
@@ -162,6 +168,13 @@ class UI{
         this.isLoaded && ctx.drawImage(
             this.uiBgd,
             0, 0
+          )
+    }
+
+    drawTelegraph(ctx){
+        this.isLoaded && ctx.drawImage(
+            this.telegraph,
+            1014, 570
           )
     }
 
@@ -183,10 +196,10 @@ class UI{
         ctx.fillText(this.gm.getFullDate(), 1260, 40);
 
         //orders
-        //ctx.fillStyle = "black";
-        //ctx.textAlign = "center";
-        //ctx.font = "italic 14px courier";
-        //ctx.fillText(this.orders, 1108, 85);
+        ctx.fillStyle = "black";
+        ctx.textAlign = "center";
+        ctx.font = "italic 12px courier";
+        ctx.fillText("Orders: " + this.gm.currentOrdersLong, 1108, 85);
 
         //Torpedo totals
         ctx.textAlign = "center";

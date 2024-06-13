@@ -3,7 +3,6 @@ class Uboat{
         this.subClass = type;
         this.tv = tv;
         this.gm = gm;
-        //this.patrol = null;
 
         //-----SUBSYSTEM STATES
         // states are: 0=operational, 1=damaged, 2=inoperational
@@ -179,6 +178,9 @@ class Uboat{
         //  3 = KCO&S= Knight's Cross Oakleaves & Swords (Sink 250k GRT, OR sink 1 capital ship after being given KCO, or sink 75k GRT after being given GCO)
         //  4 = KCOS&D=Knight's Cross Oakleaves, Swords and Diamonds (Sink 300k GRT, sink 1 capital ship after being given KCO&S or sink 50k GRT after being given GCO&S
         this.knightsCross = 0;
+
+        //Other States-----
+        this.depth = 0;   //0=surfaced, 1=attack depth, 2=deep
     }
 
     getType(){
@@ -295,8 +297,11 @@ class Uboat{
     }
 
     loadMines(){
-        for (let i = 1; i < 4 + this.aft_tubes; i++){
+        for (let i = 1; i < 5 + this.aft_tubes; i++){
             this.tube[i] = 3;
+        }
+        if (this.getType() == "IXA" || this.getType() == "IXB"){
+            this.tube[6] = 3;
         }
         //unsure if forward and aft type counts are needed anymore
         this.forward_G7a = 0;

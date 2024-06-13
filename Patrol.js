@@ -41,16 +41,15 @@ class Patrol{
         const ordersRoll = d6Rollx2();
         const textFile = "data/" + patrolChart;
 
-        console.log("Beginning Fetch");
         this.ordersArray = await getDataFromTxt(textFile);
         //fetch(textFile).then(convertData).then(processData);
         
         sleep(3000).then(() => {
             this.gm.currentOrders = this.ordersArray[ordersRoll];
-            console.log(this.gm.currentOrders);
     
             this.validatePatrol();
             this.buildPatrol();
+            this.gm.setCurrentOrdersLong();
         });
     }
 
@@ -58,11 +57,10 @@ class Patrol{
         //checks if the randomly chosen patrol is valid given the U-boat type, permanent posts, etc
         
         //Deal with changes in orders based on U-Boat type
-        console.log("Validating Patrol");
-        if (this.gm.currentOrders == "Mediterranean" || this.gm.currentOrders == "Artic" && (self.sub.getType().includes("IX"))){       //IX cannot patrol Artic or Med
+        if (this.gm.currentOrders == "Mediterranean" || this.gm.currentOrders == "Artic" && (this.gm.sub.getType().includes("IX"))){       //IX cannot patrol Artic or Med
             this.gm.currentOrders = "West African Coast";
         }
-        if ((this.gm.currentOrders == "West African Coast" || this.gm.currentOrders == "Caribbean") && (self.sub.getType().includes("VII"))){   // VII Cannot patrol west africa
+        if ((this.gm.currentOrders == "West African Coast" || this.gm.currentOrders == "Caribbean") && (this.gm.sub.getType().includes("VII"))){   // VII Cannot patrol west africa
             this.gm.currentOrders = "Atlantic";
         }
         if (this.gm.currentOrders == "British Isles" && this.gm.sub.getType() == "VIID"){                                                // VIID Minelays in BI
@@ -97,14 +95,12 @@ class Patrol{
         //Builds array of strings, each item being a step in the patrol. Step 0 is port.
         //build patrol for non NA patrols
 
-        console.log("Building Patrol");
         var NAorders = false;
-        if (this.gm.currentOrders == "North America" || self.currentOrders == "Carribean"){
+        if (this.gm.currentOrders == "North America" || this.gm.currentOrders == "Carribean"){
             NAorders = True
         }
     
         for (let x=0; x < this.getPatrolLength() + 1; x++){
-            console.log("Looped through patrol array " + x + " times.");
             if (x == 0){
                 this.patrolArray.push("Port");
             }
@@ -140,13 +136,13 @@ class Patrol{
             else{   //used to replace patrol array spots that have parentheses and should not (so location is only displayed)
                 var otherSpot = this.gm.currentOrders;
                 if (this.gm.currentOrders.includes("Abwehr")){
-                    otherSpot = self.currentOrders.replace("(Abwehr Agent Delivery)", "")
+                    otherSpot = this.gm.currentOrders.replace("(Abwehr Agent Delivery)", "")
                 }
                 else if (this.gm.currentOrders.includes("Abwehr")){
-                    otherSpot = self.currentOrders.replace("(Minelaying)", "");
+                    otherSpot = this.gm.currentOrders.replace("(Minelaying)", "");
                 }
                 else if (this.gm.currentOrders.includes("Wolfpack")){
-                    otherSpot = self.currentOrders.replace("(Wolfpack)", "");
+                    otherSpot = this.gm.currentOrders.replace("(Wolfpack)", "");
                 }
                 this.patrolArray.push(otherSpot);
             }
@@ -158,7 +154,8 @@ class Patrol{
         if (this.gm.currentOrders == "Carribean"){
             this.patrolArray.remove("Caribbean");
         }
-        console.log("patrolArray =");
         console.log(this.patrolArray);
+
+        this.gm.ordersPopup();
     }
 }
