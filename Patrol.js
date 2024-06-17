@@ -1,6 +1,7 @@
 class Patrol{
-    constructor(gm){
+    constructor(tv, gm){
         this.gm = gm;
+        this.tv = tv;
 
         //array of orders options for a given date
         this.ordersArray = null;
@@ -29,7 +30,7 @@ class Patrol{
         this.getPatrol();
     }
 
-    async getPatrol(){
+    getPatrol(){
         //Gets patrol based on date, type, permanent assignments, etc from patrol text files.
 
         if (this.gm.date_year == 1939 || (this.gm.date_month <= 2 && this.gm.date_year == 1940)){this.ordersArray = this.patrolChart1;}   // 1939 - Mar 1940 
@@ -41,14 +42,29 @@ class Patrol{
         else if (this.gm.date_month >= 6 && this.gm.date_month <= 11 && this.gm.date_year == 1942){this.ordersArray = this.patrolChart7;} // 1942 - Jul - Dec
         else if (this.gm.date_year == 1943){this.ordersArray = this.patrolChart8;}                                                        // 1943
         else{
-            console.log("Error getting patrol array.")
+            console.log("Error getting patrol array.");
         }
 
-        const ordersRoll = d6Rollx2();
-        //const textFile = "data/" + patrolChart;
+        var unique = this.ordersArray.filter(onlyUnique);
+        console.log("before");
+        this.pickOrders(unique);
+        console.log("after");
 
-        //this.ordersArray = await getDataFromTxt(textFile);
-        //fetch(textFile).then(convertData).then(processData);
+        /**check if picking orders - cannot pick if permanently assigned to med or arctic
+        var canPickPatrol = false;
+        var unique = this.ordersArray.filter(onlyUnique);
+        
+        const pickOrderRoll = d6Roll();
+        var picking = false
+        if (pickOrderRoll >= this.gm.sub.crew_levels["Kommandant"] && !this.gm.permArcPost && !this.permMedPost){
+            picking = true;
+        }
+        var unique = this.ordersArray.filter(onlyUnique);
+        console.log("Before");
+        this.gm.pickOrdersPopup(unique);
+        console.log("After");
+
+        const ordersRoll = d6Rollx2();
         
         sleep(3000).then(() => {
             this.gm.currentOrders = this.ordersArray[ordersRoll];
@@ -57,7 +73,11 @@ class Patrol{
             this.validatePatrol();
             this.buildPatrol();
             this.gm.setCurrentOrdersLong();
-        });
+        });*/
+    }
+
+    async pickOrders(unique){
+        const pickOrdersPopup = new OrdersPopup(this.tv, this.gm, unique);
     }
 
     validatePatrol(){

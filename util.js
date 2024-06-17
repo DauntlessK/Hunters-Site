@@ -47,3 +47,8 @@ async function getDataFromTxt(fullFilePath) {
       toReturn = `Error: ${error.message}`;
     });
 }
+
+function onlyUnique(value, index, array) {
+  //returns array of only unique values
+  return array.indexOf(value) === index;
+}

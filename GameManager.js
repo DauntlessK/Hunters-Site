@@ -168,7 +168,8 @@ class GameManager{
     }
 
     newPatrol(){
-        this.patrol = new Patrol(this);
+        //gets new patrol, validates orders etc
+        this.patrol = new Patrol(this.tv, this);
     }
 
     setCurrentOrdersLong(){

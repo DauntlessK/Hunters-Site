@@ -1,11 +1,12 @@
 class Popup{
-    constructor(message, tv, gm) {
+    constructor(message, tv, gm, uniqueOrders) {
         this.message = message;
         this.tv = tv;
         this.gm = gm;
+        this.uniqueOrders = uniqueOrders;
         this.tv.pauseGame();
 
-        const container = document.querySelector(".game-container");
+        this.container = document.querySelector(".game-container");
 
         //Create the element
         this.element = document.createElement("div");
@@ -15,17 +16,24 @@ class Popup{
         switch(message){
             case "startGameText":
                 this.startGameTextElement();
+                this.container.appendChild(this.element);
                 break;
             case "subResupply1":
                 this.subResupply1();
+                this.container.appendChild(this.element);
                 break;
             case "orders":
                 this.orders();
+                this.container.appendChild(this.element);
+                break;
+            case "pick orders":
+                this.pickOrders();
                 break;
             default:
                 console.log("Error selecting correct message to popup");
         }
-        container.appendChild(this.element);
+
+        //container.appendChild(this.element);
     }
 
     startGameTextElement() {
@@ -109,7 +117,7 @@ class Popup{
                 break;
             case "West African Coast":
             case "Spanish Coast":
-                message = " is hereby ordered to patrol off the ${this.gm.currentOrders}."
+                message = " is hereby ordered to patrol off the " + this.gm.currentOrders + "."
                 break;
             case "British Isles(Minelaying)":
                 message = " is directed to take the loaded mines to the enclosed target area and lay the mines, then proceed to patrol the British Isles."
@@ -148,7 +156,59 @@ class Popup{
         })
     }
 
+    pickOrders(){
+        var elementsArray = [];
+
+        for (let i = 0; i < this.uniqueOrders.length; i++){
+            elementsArray[i] = document.createElement("div");
+            elementsArray[i].classList.add("TextMessage");
+            elementsArray[i].innerHTML = (`
+                <p class="TextMessage_p> Test </p>
+                `)
+      
+        }
+
+        this.element.innerHTML = (`
+            <h3 class="HeaderMessage_h3">Choose Your Orders
+            <p class="TextMessage_p">You are being given the opportunity to pick your orders. Choose from below.<br>
+            ${this.element[0]}<br>
+            ${this.element[1]}<br>
+            </p>
+        `)
+
+        this.container.appendChild(this.element);//container is not THIS
+
+        this.element.addEventListener("click", ()=> {
+            //determine which button was clicked
+            if (event.target.id == "DecG7a"){
+                currentG7a--;
+                currentG7e++;
+            }
+            else if (event.target.id == "IncG7a"){
+                currentG7a++;
+                currentG7e--;
+            }
+            else if (event.target.id == "DecG7e"){
+                currentG7a++;
+                currentG7e--;
+            }
+            else if (event.target.id == "IncG7e"){
+                currentG7a--;
+                currentG7e++;
+            }
+            else{
+                this.done2();
+            }
+        });
+    }
+
     done(){
+        this.element.remove();
+        this.tv.unpauseGame();
+    }
+
+    done2(){
+        
         this.element.remove();
         this.tv.unpauseGame();
     }
