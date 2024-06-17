@@ -23,6 +23,11 @@
     width: 100px;
 }
 
+.Arrow_button {
+    width: 100px;
+    font-family: webdings;
+}
+
 .TextMessage_button {
     margin: 0;
     font-size: 16px;

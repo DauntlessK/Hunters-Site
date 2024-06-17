@@ -8,44 +8,51 @@ class Patrol{
         //array of each "step" of a patrol, which includes port, transit and patrol/mission spots
         this.patrolArray = [];
 
-        this.getPatrol();
-    }
+        //all patrol charts init
+        this.patrolChart1 = ["", "", "Spanish Coast", "British Isles", "British Isles", "British Isles(Minelaying)", "British Isles",
+            "British Isles", "British Isles", "British Isles(Minelaying)", "British Isles", "British Isles", "West African Coast"];
+        this.patrolChart2 = ["", "", "Spanish Coast", "Norway", "British Isles", "British Isles(Minelaying)", "British Isles", "British Isles",
+            "British Isles", "British Isles", "Norway", "Norway", "West African Coast"];
+        this.patrolChart3 = ["", "", "Spanish Coast", "Spanish Coast", "British Isles(Abwehr Agent Delivery)", "British Isles", "Atlantic", "British Isles",
+            "British Isles", "British Isles(Minelaying)", "Atlantic", "West African Coast", "West African Coast"]; 
+        this.patrolChart4 = ["", "", "Spanish Coast", "Atlantic(Wolfpack)", "British Isles", "Atlantic", "British Isles", "Atlantic", "Atlantic",
+            "British Isles", "West African Coast", "West African Coast", "Mediterranean"];
+        this.patrolChart5 = ["", "", "Mediterranean", "Spanish Coast", "British Isles", "Atlantic(Wolfpack)", "Atlantic", "Atlantic", "Atlantic", 
+            "British Isles", "West African Coast", "Arctic", "Mediterranean"];
+        this.patrolChart6 = ["", "", "Arctic", "North America(Abwehr Agent Delivery)", "Atlantic(Wolfpack)", "North America", "North America",
+            "North America", "Atlantic", "British Isles", "Atlantic", "Caribbean", "West African Coast"];
+        this.patrolChart7 = ["", "", "Mediterranean", "Arctic", "Atlantic(Wolfpack)", "North America", "Atlantic", "Atlantic", "Atlantic(Wolfpack)",
+            "British Isles", "North America", "Atlantic", "West African Coast"];
+        this.patrolChart8 = ["", "", "Mediterranean", "Atlantic(Wolfpack)", "British Isles", "North America", "Atlantic(Wolfpack)", "Atlantic",
+            "Atlantic", "North America", "Arctic", "Atlantic(Wolfpack)", "West African Coast"];
 
-    getPatrolLength(){
-        //Determines full length of a given patrol (number of on station steps + all transit steps
-        switch (this.gm.currentOrders) {
-            case "North America":
-            case  "Caribbean":
-                return this.gm.sub.patrol_length - 1 + 8;  // NA patrol has 1 less on station patrol + 2 BoB + EXTRA 2 transits
-            default:
-                return this.gm.sub.patrol_length + 4;
-        }
+        this.getPatrol();
     }
 
     async getPatrol(){
         //Gets patrol based on date, type, permanent assignments, etc from patrol text files.
 
-        var patrolChart = null;
-        if (this.gm.date_year == 1939 || (this.gm.date_month <= 2 && this.gm.date_year == 1940)){patrolChart = "PatrolChart1.txt";}   // 1939 - Mar 1940 
-        else if (this.gm.date_month > 2 && this.gm.date_month <= 5 && this.gm.date_year == 1940){patrolChart = "PatrolChart2.txt";}   // 1940 - Apr - Jun    
-        else if (this.gm.date_month >= 6 && this.gm.date_month <= 11 && this.gm.date_year == 1940){patrolChart = "PatrolChart3.txt";} // 1940 - Jul - Dec 
-        else if (this.gm.date_month >= 0 && this.gm.date_month <= 5 && this.gm.date_year == 1941){patrolChart = "PatrolChart4.txt";}  // 1941 - Jan - Jun
-        else if (this.gm.date_month >= 6 && this.gm.date_month <= 11 && this.gm.date_year == 1941){patrolChart = "PatrolChart5.txt";} // 1941 - Jul - Dec
-        else if (this.gm.date_month >= 0 && this.gm.date_month <= 5 && this.gm.date_year == 1942){patrolChart = "PatrolChart6.txt";}  // 1942 - Jan - Jun
-        else if (this.gm.date_month >= 6 && this.gm.date_month <= 11 && this.gm.date_year == 1942){patrolChart = "PatrolChart7.txt";} // 1942 - Jul - Dec
-        else if (this.gm.date_year == 1943){patrolChart = "PatrolChart8.txt";}                                                        // 1943
+        if (this.gm.date_year == 1939 || (this.gm.date_month <= 2 && this.gm.date_year == 1940)){this.ordersArray = this.patrolChart1;}   // 1939 - Mar 1940 
+        else if (this.gm.date_month > 2 && this.gm.date_month <= 5 && this.gm.date_year == 1940){this.ordersArray = this.patrolChart2;}   // 1940 - Apr - Jun    
+        else if (this.gm.date_month >= 6 && this.gm.date_month <= 11 && this.gm.date_year == 1940){this.ordersArray = this.patrolChart3;} // 1940 - Jul - Dec 
+        else if (this.gm.date_month >= 0 && this.gm.date_month <= 5 && this.gm.date_year == 1941){this.ordersArray = this.patrolChart4;}  // 1941 - Jan - Jun
+        else if (this.gm.date_month >= 6 && this.gm.date_month <= 11 && this.gm.date_year == 1941){this.ordersArray = this.patrolChart5;} // 1941 - Jul - Dec
+        else if (this.gm.date_month >= 0 && this.gm.date_month <= 5 && this.gm.date_year == 1942){this.ordersArray = this.patrolChart6;}  // 1942 - Jan - Jun
+        else if (this.gm.date_month >= 6 && this.gm.date_month <= 11 && this.gm.date_year == 1942){this.ordersArray = this.patrolChart7;} // 1942 - Jul - Dec
+        else if (this.gm.date_year == 1943){this.ordersArray = this.patrolChart8;}                                                        // 1943
         else{
-            console.log("Error getting patrol chart .txt file.")
+            console.log("Error getting patrol array.")
         }
 
         const ordersRoll = d6Rollx2();
-        const textFile = "data/" + patrolChart;
+        //const textFile = "data/" + patrolChart;
 
-        this.ordersArray = await getDataFromTxt(textFile);
+        //this.ordersArray = await getDataFromTxt(textFile);
         //fetch(textFile).then(convertData).then(processData);
         
         sleep(3000).then(() => {
             this.gm.currentOrders = this.ordersArray[ordersRoll];
+            console.log("Orders: " + this.gm.currentOrders);
     
             this.validatePatrol();
             this.buildPatrol();
@@ -75,8 +82,8 @@ class Patrol{
             this.gm.currentOrders = "Arctic";
         }
 
-        //change loadout of boat by adding mines
-        //todo change tube loads
+        console.log(this.gm.currentOrders);
+        //change loadout of boat by adding mines in the tube, replacing torpedoes in tube
         if (this.gm.currentOrders.includes("Minelaying")){
             this.gm.sub.loadMines();
         }
@@ -88,6 +95,17 @@ class Patrol{
             if (this.gm.currentOrders  == "Mediterranean"){
                 this.getPatrol;
             }
+        }
+    }
+
+    getPatrolLength(){
+        //Determines full length of a given patrol (number of on station steps + all transit steps
+        switch (this.gm.currentOrders) {
+            case "North America":
+            case  "Caribbean":
+                return this.gm.sub.patrol_length - 1 + 8;  // NA patrol has 1 less on station patrol + 2 BoB + EXTRA 2 transits
+            default:
+                return this.gm.sub.patrol_length + 4;
         }
     }
 
@@ -138,7 +156,7 @@ class Patrol{
                 if (this.gm.currentOrders.includes("Abwehr")){
                     otherSpot = this.gm.currentOrders.replace("(Abwehr Agent Delivery)", "")
                 }
-                else if (this.gm.currentOrders.includes("Abwehr")){
+                else if (this.gm.currentOrders.includes("Minelaying")){
                     otherSpot = this.gm.currentOrders.replace("(Minelaying)", "");
                 }
                 else if (this.gm.currentOrders.includes("Wolfpack")){

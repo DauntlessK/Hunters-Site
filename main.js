@@ -34,6 +34,8 @@ class Main{
         this.tv.drawUI(this.ctx);
       }
 
+      this.tv.updateAnimationProgress();
+
       requestAnimationFrame(() => {
         step();
       })

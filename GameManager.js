@@ -180,7 +180,7 @@ class GameManager{
                 this.currentOrdersLong = "Patrol the " + this.currentOrders;
                 break;
             case "West African Coast":
-            case "Spanish Coash":
+            case "Spanish Coast":
                 this.currentOrdersLong = "Patrol off the " + this.currentOrders;
                 break;
             case "Norway":

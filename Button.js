@@ -59,6 +59,7 @@ class Button {
         this.tv.reloadMode = false;
         this.gm.newPatrol();
         this.tv.gameObjects.uboat.sprite.setDeparted();
+        this.tv.gameObjects.waterline.sprite.setDeparted();
 
         if (this.currentFrame == 0 || this.currentFrame == 1) {
             this.currentFrame = 2;
