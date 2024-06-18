@@ -297,6 +297,7 @@ class Uboat{
     }
 
     loadMines(){
+        //changes all current tubes to mines
         for (let i = 1; i < 5 + this.aft_tubes; i++){
             this.tube[i] = 3;
         }
@@ -311,5 +312,13 @@ class Uboat{
         
         this.gm.sub.minesLoadedForward = true;
         this.gm.sub.minesLoadedAft = true;
+    }
+
+    dieselsInop(){
+        //Returns int of how many inoperative diesel engines U-boat has
+        var numInOp = 0;
+        if (this.systems["Diesel Engine #1"] == 2) {numInOp ++;} 
+        if (this.systems["Diesel Engine #2"] == 2) {numInOp ++;}
+        return numInOp
     }
 }

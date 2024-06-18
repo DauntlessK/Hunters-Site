@@ -19,89 +19,38 @@ class UI{
         this.telegraph = new Image();
         this.telegraph.src = "images/ui/Telegraph.png"
 
+        this.tubeButtonArray = [0];
+
+        var xArray = [];
+        var yArray = [];
+
+        //create x and y arrays for torpedo button locations
+        if (this.gm.sub.getType() == "IXA" || this.gm.sub.getType() == "IXB") { 
+            xArray = [0, 1007, 1110, 1007, 1110, 1007, 1110];
+            yArray = [0, 245, 245, 341, 341, 449, 449];
+        }
+        else {
+            xArray = [0, 1007, 1110, 1007, 1110, 1057, 2000];
+            yArray = [0, 245, 245, 341, 341, 449, 2000];
+        }
+
+        //create array of torpedo buttons
+        for (let i = 1; i < 7; i++){
+            const button = new TorpedoButton({
+                src: "images/ui/TorpButton.png",
+                x: xArray[i],
+                y: yArray[i],
+                width: 100,
+                height: 100,
+                frames: 8,
+                tube: i,
+                gm: this.gm,
+                tv: this.tv
+        })
+            this.tubeButtonArray.push(button)
+        }
+
         //create buttons
-        this.tubeButton1 = new TorpedoButton({
-            src: "images/ui/TorpButton.png",
-            x: 1007,
-            y: 245,
-            width: 100,
-            height: 100,
-            frames: 8,
-            tube: 1,
-            gm: this.gm,
-            tv: this.tv
-          });
-        this.tubeButton2 = new TorpedoButton({
-            src: "images/ui/TorpButton.png",
-            x: 1110,
-            y: 245,
-            width: 100,
-            height: 100,
-            frames: 8,
-            tube: 2,
-            gm: this.gm,
-            tv: this.tv
-        });
-        this.tubeButton3 = new TorpedoButton({
-            src: "images/ui/TorpButton.png",
-            x: 1007,
-            y: 341,
-            width: 100,
-            height: 100,
-            frames: 8,
-            tube: 3,
-            gm: this.gm,
-            tv: this.tv
-          });
-        this.tubeButton4 = new TorpedoButton({
-            src: "images/ui/TorpButton.png",
-            x: 1110,
-            y: 341,
-            width: 100,
-            height: 100,
-            frames: 8,
-            tube: 4,
-            gm: this.gm,
-            tv: this.tv
-        });
-        //torpedo buttons for IXA and IXB (two)
-        if (this.gm.sub.getType() == "IXA" || this.gm.sub.getType() == "IXB"){
-            this.tubeButton5 = new TorpedoButton({
-                src: "images/ui/TorpButton.png",
-                x: 1007,
-                y: 449,
-                width: 100,
-                height: 100,
-                frames: 8,
-                tube: 5,
-                gm: this.gm,
-                tv: this.tv
-            });
-            this.tubeButton6 = new TorpedoButton({
-                src: "images/ui/TorpButton.png",
-                x: 1110,
-                y: 449,
-                width: 100,
-                height: 100,
-                frames: 8,
-                tube: 6,
-                gm: this.gm,
-                tv: this.tv
-            });
-        }
-        else{   //single button for VII types
-            this.tubeButton5 = new TorpedoButton({
-                src: "images/ui/TorpButton.png",
-                x: 1057,
-                y: 449,
-                width: 100,
-                height: 100,
-                frames: 8,
-                tube: 5,
-                gm: this.gm,
-                tv: this.tv
-            });
-        }
         this.reloadButton = new Button({
             src: "images/ui/CommitButton.png",
             x: 1057,
@@ -111,26 +60,37 @@ class UI{
             frames: 2,
             tube: null,
             gm: this.gm,
-            tv: this.tv
+            tv: this.tv,
+            onClick: "commitReload"
         });
+        this.beginPatrolButton = new Button({
+            src: "images/ui/BeginPatrolButton.png",
+            x: 1057,
+            y: 600,
+            width: 100,
+            height: 50,
+            frames: 2,
+            tube: null,
+            gm: this.gm,
+            tv: this.tv,
+            onClick: "beginPatrol"
+        })
 
     }
 
     handleEvent(){
         //passes events from UI to individual buttons
-        this.tubeButton1.handleEvent(event);
-        this.tubeButton2.handleEvent(event);
-        this.tubeButton3.handleEvent(event);
-        this.tubeButton4.handleEvent(event);
-        this.tubeButton5.handleEvent(event);
-        if (this.gm.sub.getType() == "IXA" || this.gm.sub.getType() == "IXB"){
-            this.tubeButton6.handleEvent(event);
+
+        for (let i = 1; i < 7; i++) {
+            this.tubeButtonArray[i].handleEvent(event);
         }
         this.reloadButton.handleEvent(event);
+        this.beginPatrolButton.handleEvent(event);
     }
     
     uiIsOn(){
         //checks if UI should be on or off
+
         if (this.tv.scene === "Sunny" || this.tv.reloadMode == true){
             return true;
         }
@@ -141,22 +101,22 @@ class UI{
 
     draw(ctx){
         //draws elemnts of UI
+
         if (this.uiIsOn()){
             this.drawBgd(ctx);
-            this.tubeButton1.draw(ctx);
-            this.tubeButton2.draw(ctx);
-            this.tubeButton3.draw(ctx);
-            this.tubeButton4.draw(ctx);
-            this.tubeButton5.draw(ctx);
-            if (this.gm.sub.getType() == "IXA" || this.gm.sub.getType() == "IXB"){
-                this.tubeButton6.draw(ctx);
+
+            for (let i = 1; i < 7; i++) {
+                this.tubeButtonArray[i].draw(ctx);
             }
             if (this.tv.reloadMode){
                 this.reloadButton.draw(ctx);
             }
             this.drawHeaderTxt(ctx);
-            if (!this.tv.reloadMode){
+            if (!this.tv.reloadMode && this.gm.patrolling){
                 this.drawTelegraph(ctx);
+            }
+            if (!this.tv.reloadMode && !this.gm.patrolling){
+                this.beginPatrolButton.draw(ctx);
             }
             //Object.values(this.buttons).forEach(object => {
             //object.button.draw(this.ctx);
@@ -222,126 +182,26 @@ class UI{
 
         //draw tube text
         ctx.font = "bold 12px Courier";
-        if (this.gm.sub.tube[1] == 1){
-            ctx.fillStyle = "blue";
-            ctx.fillText("G7a", leftSide, topRow);
-        }
-        else if (this.gm.sub.tube[1] == 2){
-            ctx.fillStyle = "darkred";
-            ctx.fillText("G7e", leftSide, topRow);
-        }
-        else if (this.gm.sub.tube[1] == 3){
-            ctx.fillStyle = "black";
-            ctx.fillText("MINES", leftSide, topRow);
-        }
-        else{
-            ctx.fillStyle = "black";
-            ctx.fillText("--", leftSide, topRow);
-        }
 
-        if (this.gm.sub.tube[2] == 1){
-            ctx.fillStyle = "blue";
-            ctx.fillText("G7a", rightSide, topRow);
-        }
-        else if (this.gm.sub.tube[2] == 2){
-            ctx.fillStyle = "darkred";
-            ctx.fillText("G7e", rightSide, topRow);
-        }
-        else if (this.gm.sub.tube[2] == 3){
-            ctx.fillStyle = "black";
-            ctx.fillText("MINES", rightSide, topRow);
-        }
-        else{
-            ctx.fillStyle = "black";
-            ctx.fillText("--", rightSide, topRow);
-        }
+        var sideArray = [];
+        var rowArray = [];
 
-        if (this.gm.sub.tube[3] == 1){
-            ctx.fillStyle = "blue";
-            ctx.fillText("G7a", leftSide, secondRow);
-        }
-        else if (this.gm.sub.tube[3] == 2){
-            ctx.fillStyle = "darkred";
-            ctx.fillText("G7e", leftSide, secondRow);
-        }
-        else if (this.gm.sub.tube[3] == 3){
-            ctx.fillStyle = "black";
-            ctx.fillText("MINES", leftSide, secondRow);
-        }
-        else{
-            ctx.fillStyle = "black";
-            ctx.fillText("--", leftSide, secondRow);
-        }
-
-        if (this.gm.sub.tube[4] == 1){
-            ctx.fillStyle = "blue";
-            ctx.fillText("G7a", rightSide, secondRow);
-        }
-        else if (this.gm.sub.tube[4] == 2){
-            ctx.fillStyle = "darkred";
-            ctx.fillText("G7e", rightSide, secondRow);
-        }
-        else if (this.gm.sub.tube[4] == 3){
-            ctx.fillStyle = "black";
-            ctx.fillText("MINES", rightSide, secondRow);
-        }
-        else{
-            ctx.fillStyle = "black";
-            ctx.fillText("--", rightSide, secondRow);
-        }
-
+        //determine x and y values for torpedo tube text, depending on 5 or 6 tubes
         if (this.gm.sub.getType() == "IXA" || this.gm.sub.getType() == "IXB"){
-            if (this.gm.sub.tube[5] == 1){
-                ctx.fillStyle = "blue";
-                ctx.fillText("G7a", leftSide, bottomRow);
-            }
-            else if (this.gm.sub.tube[5] == 2){
-                ctx.fillStyle = "darkred";
-                ctx.fillText("G7e", leftSide, bottomRow);
-            }
-            else if (this.gm.sub.tube[5] == 3){
-                ctx.fillStyle = "black";
-                ctx.fillText("MINES", leftSide, bottomRow);
-            }
-            else{
-                ctx.fillStyle = "black";
-                ctx.fillText("--", leftSide, bottomRow);
-            }
-    
-            if (this.gm.sub.tube[6] == 1){
-                ctx.fillStyle = "blue";
-                ctx.fillText("G7a", rightSide, bottomRow);
-            }
-            else if (this.gm.sub.tube[6] == 2){
-                ctx.fillStyle = "darkred";
-                ctx.fillText("G7e", rightSide, bottomRow);
-            }
-            else if (this.gm.sub.tube[6] == 3){
-                ctx.fillStyle = "black";
-                ctx.fillText("MINES", rightSide, bottomRow);
-            }
-            else{
-                ctx.fillStyle = "black";
-                ctx.fillText("--", rightSide, bottomRow);
-            }
+            sideArray = [0, 983, 1234, 983, 1234, 983, 1234];          //x values for torpedo tube text
+            rowArray = [0, 292, 292, 395, 395, 499, 499];              //y values for torpedo tube text
         }
-        else {
-            if (this.gm.sub.tube[5] == 1){
-                ctx.fillStyle = "blue";
-                ctx.fillText("G7a", leftSide + 50, bottomRow);
-            }
-            else if (this.gm.sub.tube[5] == 2){
-                ctx.fillStyle = "darkred";
-                ctx.fillText("G7e", leftSide + 50, bottomRow);
-            }
-            else if (this.gm.sub.tube[5] == 3){
-                ctx.fillStyle = "black";
-                ctx.fillText("MINES", leftSide + 50, bottomRow);
-            }
-            else{
-                ctx.fillStyle = "black";
-                ctx.fillText("--", leftSide + 50, bottomRow);
-            }
+        else{
+            sideArray = [0, 983, 1234, 983, 1234, 1033, 2000];         //x values for torpedo tube text
+            rowArray = [0, 292, 292, 395, 395, 499, 2000];             //y values for torpedo tube text
+        }
+        const fillStyleArray = ["black", "blue", "darkred", "black"];        //color values for text
+        const textArray = ["--", "G7a", "G7e", "MINES"]                      //text values
+
+        //draw first 4 tubes
+        for (let i = 1; i < 7; i++){
+            ctx.fillStyle = fillStyleArray[this.gm.sub.tube[i]];
+            ctx.fillText(textArray[this.gm.sub.tube[i]], sideArray[i], rowArray[i]);
         }
         
         //Bottom Right (either reloading flag or telegraph)

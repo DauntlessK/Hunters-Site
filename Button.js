@@ -14,6 +14,8 @@ class Button {
         this.x = config.x;   //location drawn x
         this.y = config.y;   //location drawn y
 
+        this.onClick = config.onClick;
+
         this.tube = config.tube || null;
 
         //Boundaries
@@ -30,12 +32,12 @@ class Button {
     handleEvent(event){
         const xPos = event.offsetX;
         const yPos = event.offsetY;
-        if (event.type == "click"){
+        if (event.type == "click" && this.currentFrame != 3){
             if (this.withinBounds(xPos, yPos)) {
-                this.clickedButton();
+                this[this.onClick]();
             }
         }
-        else if (event.type == "mousemove")
+        else if (event.type == "mousemove" && this.currentFrame != 3)
             if (this.withinBounds(xPos, yPos) && this.currentFrame == 0){
                 this.currentFrame = 1;
             }
@@ -46,6 +48,8 @@ class Button {
     }
 
     withinBounds(xPos, yPos){
+        //returns true if x and y pos are within the bounds of the width and height
+
         if (xPos > this.xBoundMin && xPos < this.xBoundMax &&
             yPos > this.yBoundMin && yPos < this.yBoundMax) {
             return true;
@@ -55,19 +59,22 @@ class Button {
         }
     }
 
-    clickedButton(){
+    commitReload(){
+        //called when finished with the reload mode
+
         this.tv.reloadMode = false;
         this.gm.newPatrol();
         this.tv.gameObjects.uboat.sprite.setDeparted();
         this.tv.gameObjects.waterline.sprite.setDeparted();
         this.tv.gameObjects.waterAround.sprite.setDeparted();
 
-        if (this.currentFrame == 0 || this.currentFrame == 1) {
-            this.currentFrame = 2;
-        }
-        else if (this.currentFrame == 2){
-            this.currentFrame = 0;
-        }
+        this.disableButton();
+    }
+
+    beginPatrol(){
+        //for begin patrol button to start patrol loop
+        this.gm.patrolLoop();
+        this.disableButton();
     }
 
     disableButton(){

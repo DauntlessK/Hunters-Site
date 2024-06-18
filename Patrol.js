@@ -49,8 +49,6 @@ class Patrol{
         var unique = this.ordersArray.filter(onlyUnique);
         var isPicking = false
         if (pickOrderRoll <= this.gm.sub.crew_levels["Kommandant"] && !this.gm.permArcPost && !this.permMedPost){  //final should be <=
-            console.log(pickOrderRoll);
-            console.log(this.gm.sub.crew_levels["Kommandant"]);
             isPicking = true;
             this.gm.ordersPopup(unique, isPicking);
 
@@ -73,32 +71,6 @@ class Patrol{
             await until(_ => this.eventResolved == true);
         }
         console.log("Orders: " + this.gm.currentOrders);
-
-
-        /**check if picking orders - cannot pick if permanently assigned to med or arctic
-        var canPickPatrol = false;
-        var unique = this.ordersArray.filter(onlyUnique);
-        
-        const pickOrderRoll = d6Roll();
-        var picking = false
-        if (pickOrderRoll >= this.gm.sub.crew_levels["Kommandant"] && !this.gm.permArcPost && !this.permMedPost){
-            picking = true;
-        }
-        var unique = this.ordersArray.filter(onlyUnique);
-        console.log("Before");
-        this.gm.pickOrdersPopup(unique);
-        console.log("After");
-
-        const ordersRoll = d6Rollx2();
-        
-        sleep(3000).then(() => {
-            this.gm.currentOrders = this.ordersArray[ordersRoll];
-            console.log("Orders: " + this.gm.currentOrders);
-    
-            this.validatePatrol();
-            this.buildPatrol();
-            this.gm.setCurrentOrdersLong();
-        });*/
     }
 
     validatePatrol(){
@@ -220,5 +192,231 @@ class Patrol{
             }
         }
         console.log(this.patrolArray);
+    }
+
+    getEncounter(loc, year, randomEvent){
+        roll = d6Rollx2();
+
+        if (loc != "Additional Round of Combat"){
+            console.log("Roll for " + loc + ": " + roll);
+        }
+
+        //first check if random event (natural 12)
+        if (roll == 12 && randomEvent == false && loc != "Additional Round of Combat" && loc != "Mission"){
+            console.log("TODO - deal with getting a random event");
+        }
+
+        switch (loc){
+            case "Transit":
+                switch (roll){
+                    case 2:
+                    case 3:
+                        //aircraft
+                        return "encounterAircraft";
+                    case 12:
+                        return "encounterAttack('Ship')";
+                    default:
+                        return "No Encounter";
+                }
+                break;
+            case "Arctic":
+                switch (roll){
+                    case 2:
+                        return "encounterAttack('Capital Ship')";
+                        break;
+                    case 3:
+                        return "encounterAttack('Ship')";
+                        break;
+                    case 6:
+                    case 7:
+                    case 8:
+                        return "encounterAttack('Convoy')";
+                        break;
+                    case 12:
+                        return "encounterAircraft";
+                        break;
+                    default:
+                        return "No Encounter";                 
+                }
+                break;
+            case "Atlantic":
+            case "Atlantic (Wolfpack)":
+            case "Atlantic(WolfPack)":
+                switch (roll){
+                    case 2:
+                        return "encounterAttack('Captail Ship')";
+                        break;
+                    case 3:
+                        return "encounterAttack('Ship')";
+                        break;
+                    case 6:
+                    case 7:
+                    case 9:
+                    case 12:
+                        return "encounterAttack('Convoy')";
+                        break;
+                    default:
+                        return "No Encounter";
+                }
+                break;
+            case "British Isles":
+                switch (roll) {
+                    case 2:
+                        return "encounterAttack('Capital Ship')";
+                        break;
+                    case 5:
+                    case 8:
+                        return "encounterAttack('Ship')";
+                        break;
+                    case 6:
+                        return "encounterAttack('Ship + Escort')";
+                        break;
+                    case 10:
+                        return "encounterAttack('Convoy')";
+                        break;
+                    case 12:
+                        return "encounterAircraft";
+                        break;
+                    default:
+                        return "No Encounter";
+                }
+                break;
+            case "Caribbean":
+                switch (roll) {
+                    case 2:
+                    case 12:
+                        return "encounterAircraft";
+                        break;
+                    case 4:
+                        return "encounterAttack('Capital Ship')";
+                        break;
+                    case 7:
+                        return "encounterAttack('Ship')";
+                        break;
+                    case 8:
+                        return "encounterAttack('Convoy')";
+                        break;
+                    case 10:
+                        return "encounterAttack('Two Ships + Escort')";
+                        break;
+                    default:
+                        return "No Encounter";
+                }
+                break;
+            case "North America":
+                switch (roll){
+                    case 2:
+                        return "encounterAircraft";
+                        break;
+                    case 4:
+                    case 6:
+                        return "encounterAttack('Ship')";
+                        break;
+                    case 5:
+                        return "encounterAttack('Two Ships + Escort')";
+                        break;
+                    case 8:
+                        return "encounterAttack('Two Ships')";
+                        break;
+                    case 9:
+                    case 12:
+                        return "encounterAttack('Tanker')";
+                        break;
+                    case 11:
+                        return "encounterAttack('Convoy')";
+                        break;
+                    default:
+                        return "No Encounter";
+                }
+                break;
+            case "Norway":
+                switch (roll) {
+                    case 2:
+                    case 12:
+                        return "encounterAircraft";
+                        break;
+                    case 3:
+                    case 11:
+                        return "encounterAttack('Capital Ship')";
+                        break;
+                    case 4:
+                    case 9:
+                    case 10:
+                        return "encounterAttack('Ship + Escort')";
+                        break;
+                    default:
+                        return "No Encounter"
+                }
+                break;
+            case "Spanish Coast":
+                switch (roll) {
+                    case 2:
+                    case 12:
+                        return "encounterAircraft";
+                        break;
+                    case 5:
+                        return "encounterAttack('Ship + Escort')";
+                        break;
+                    case 6:
+                    case 7:
+                        return "encounterAttack('Ship')";
+                        break;
+                    case 10:
+                    case 11:
+                        return "encounterAttack('Convoy')";
+                        break;
+                    default:
+                        return "No Encounter" 
+                }
+                break;
+            case "West African Coast":
+                switch (roll) {
+                    case 2:
+                        return "encounterAircraft";
+                        break;
+                    case 3:
+                    case 7:
+                        return "encounterAttack('Ship')";
+                        break;
+                    case 6:
+                    case 10:
+                        return "encounterAttack('Convoy')";
+                        break;
+                    case 9:
+                        return "encounterAttack('Ship + Escort')";
+                        break;
+                    case 12:
+                        return "encounterAircraft";
+                        break;
+                    default:
+                        return "No Encounter" 
+                }
+                break;
+            case "Additional Round of Combat":
+            case "Gibraltar Passage":
+                if (year == 1942) { roll = roll - 1;}
+                if (year == 1943) { roll = roll - 2;}
+                if (loc == "Gibraltar Passage") { roll = roll - 2;}
+
+                switch (roll) {
+                    case -2:
+                    case -1:
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 3:
+                        if (loc == "Additional Round of Combat") {console.log("TO DO- Notify- An enemy escort has arrived!");}
+                        else { console.log("TO DO- Notify- An enemy escort has arrived!");}
+                }
+                break;
+            case "Bay of Biscay":
+            case "Mission":
+            case "Resupply":
+                console.log("TODO - BoB / mission / resupply checks");
+                break;
+            
+
+
+        }
     }
 }

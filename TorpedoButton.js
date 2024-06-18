@@ -55,9 +55,6 @@ class TorpedoButton extends Button{
                     this.gm.sub.loadTube(this.tube, 1);
                 }
             }
-            //else{
-            //    this.currentFrame = this.baseFrame;   
-            //}
         }
     }
 

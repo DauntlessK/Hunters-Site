@@ -25,6 +25,7 @@ class GameManager{
         this.currentOrders = "";
         this.currentOrdersLong = "";
         this.patrol = null;
+        this.patrolling = false;
         this.patrolCount = ["", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth",
                             "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth",
                             "seventeenth", "eighteenth", "nineteenth", "twentieth", "twenty-first", "twenty-second",
@@ -88,6 +89,10 @@ class GameManager{
 
     getFullDate(){
         return this.month[this.date_month] + " - " + this.date_year;
+    }
+
+    getYear(){
+        return this.date_year;
     }
 
     getLRankAndName(){
@@ -221,6 +226,67 @@ class GameManager{
         const ordersPopUp = new OrdersPopup(this.tv, this, onlyUnique, isPicking);
         await until(_ => this.eventResolved == true);
         this.tv.changeScene("Sunny");
+    }
+
+    patrolLoop() {
+        //patrol sequence to go through patrol
+
+        this.patrolling = true;
+        //todo - assignment to arctic
+        if (this.currentOrders == "Arctic"){
+            console.log("TODO roll for <=3");
+        }
+
+        //loop to run through patrol array (each patrol box)
+        var x = 1;
+        while (x <= this.patrol.getPatrolLength()) {
+
+            //handle aborting near end of patrol
+            if (this.abortingPatrol && x < this.patrol.getPatrolLength() - 2) {
+                x++;
+                continue;
+            }
+
+            //if doctor is SW or KIA, see if any other injured crew members die (each patrol box, before encounter)
+            if (this.sub.crew_health["Doctor"] >= 2){
+                //check if any hurt crewmen
+                console.log("TO DO - CREWMEN DEATH CHECK")
+            }
+
+            //get the current box name of this patrol (i.e. "Transit", "Mission", "Atlantic", etc)
+            var currentBoxName = this.patrol.patrolArray[x];
+
+            //check for automatic aborts
+            if (this.sub.dieselsInop() == 2){
+                if (x == this.patrol.getPatrolLength()){
+                    console.log("TO DO- POPUP TOWED INTO PORT");
+                }
+                else {
+                    console.log("TODO - SCUTTLE due to 2 diesel engines inop");
+                }
+            }
+            else if (this.sub.dieselsInop() == 1 || this.sub.systems["Fuel Tanks"] == 2){
+                console.log("TO DO- Abort Patrol due to fuel tanks or 1 diesel engine inop");
+                this.abortingPatrol = true;
+                continue;
+            }
+
+            // check if on weather duty or severe weather random events (skips current box)
+            if (this.weatherDuty){
+                console.log("TO DO - Deal with weather duty");
+            }
+            if (this.severeWeather) {
+                console.log("TO DO - Deal with severe weather");
+            }
+
+            var currentEncounter = this.patrol.getEncounter(currentBoxName, this.getYear(), this.randomEvent);
+
+            console.log(currentEncounter);
+
+            x++;
+        }
+
+        console.log("Finished Patrol");
     }
     
 }

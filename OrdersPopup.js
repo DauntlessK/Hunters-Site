@@ -75,7 +75,7 @@ class OrdersPopup{
         //build html buttons for unique orders in patrol array
         for (let i = 0; i < this.uniqueOrders.length; i++){
             elementsArray[i] = document.createElement("button");
-            elementsArray[i].classList.add("Option_button");
+            elementsArray[i].classList.add("Orders_button");
             elementsArray[i].id = this.uniqueOrders[i];
             elementsArray[i].innerHTML = (`
                 ${this.uniqueOrders[i]}
@@ -86,7 +86,6 @@ class OrdersPopup{
         this.element.innerHTML = (`
             <h3 class="HeaderMessage_h3">Choose Your Orders
             <p class="TextMessage_p">You are being given the opportunity to pick your orders. Choose from below.<br>
-            <br>
             </p>
         `)
         this.container.appendChild(this.element);
