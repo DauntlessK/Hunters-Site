@@ -98,9 +98,9 @@ class OrdersPopup{
 
         this.element.addEventListener("click", ()=> {
             //determine which button was clicked
-            console.log(this.uniqueOrders.includes(event.target.id))
             if (this.uniqueOrders.includes(event.target.id)){
                 this.gm.currentOrders = event.target.id;
+                this.gm.ordersPopup(this.uniqueOrders, false)
                 this.done();
             }
 
