@@ -74,9 +74,9 @@ class GameManager{
         }
 
         //Popup to greet start of game
-        this.getStartingRank();
         this.eventResolved = false;
         this.setDate();
+        this.getStartingRank();
         const popup2 = new Popup("startGameText", this.tv, this);
         await until(_ => this.eventResolved == true);
         this.sub.torpedoResupply();        
@@ -116,6 +116,7 @@ class GameManager{
                     else{
                         this.sub.crew_levels["Kommandant"] = 0;
                     }
+                    break;
                 case 1941:
                     if (roll >= 4){
                         this.sub.crew_levels["Kommandant"] = 1;
@@ -123,6 +124,7 @@ class GameManager{
                     else{
                         this.sub.crew_levels["Kommandant"] = 0;
                     }
+                    break;
                 case 1942:
                 case 1943:
                     if (roll >= 6){
@@ -131,6 +133,9 @@ class GameManager{
                     else{
                         this.sub.crew_levels["Kommandant"] = 0;
                     }
+                    break;
+                default:
+                    console.log("Error getting starting rank");
             }
         }
     }
@@ -211,8 +216,11 @@ class GameManager{
         }
     }
 
-    ordersPopup(){
-        const ordersPopUp = new Popup("orders", this.tv, this);
+    async ordersPopup(onlyUnique, isPicking){
+        this.eventResolved = false;
+        const ordersPopUp = new OrdersPopup(this.tv, this, onlyUnique, isPicking);
+        await until(_ => this.eventResolved == true);
+        this.tv.changeScene("Sunny");
     }
     
 }

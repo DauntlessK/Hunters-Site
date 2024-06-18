@@ -30,7 +30,7 @@ class Patrol{
         this.getPatrol();
     }
 
-    getPatrol(){
+    async getPatrol(){
         //Gets patrol based on date, type, permanent assignments, etc from patrol text files.
 
         if (this.gm.date_year == 1939 || (this.gm.date_month <= 2 && this.gm.date_year == 1940)){this.ordersArray = this.patrolChart1;}   // 1939 - Mar 1940 
@@ -45,10 +45,35 @@ class Patrol{
             console.log("Error getting patrol array.");
         }
 
+        const pickOrderRoll = d6Roll();
         var unique = this.ordersArray.filter(onlyUnique);
-        console.log("before");
-        this.pickOrders(unique);
-        console.log("after");
+        var isPicking = false
+        if (pickOrderRoll <= this.gm.sub.crew_levels["Kommandant"] && !this.gm.permArcPost && !this.permMedPost){  //final should be <=
+            console.log(pickOrderRoll);
+            console.log(this.gm.sub.crew_levels["Kommandant"]);
+            isPicking = true;
+            this.gm.ordersPopup(unique, isPicking);
+
+            await until(_ => this.gm.eventResolved == true);
+
+            this.validatePatrol();
+            this.buildPatrol();
+            this.gm.setCurrentOrdersLong();
+        }
+        else {
+            const ordersRoll = d6Rollx2();
+            this.gm.currentOrders = this.ordersArray[ordersRoll];
+
+            this.validatePatrol();
+            this.buildPatrol();
+            this.gm.setCurrentOrdersLong();
+
+            this.gm.ordersPopup(unique, isPicking);
+
+            await until(_ => this.eventResolved == true);
+        }
+        console.log("Orders: " + this.gm.currentOrders);
+
 
         /**check if picking orders - cannot pick if permanently assigned to med or arctic
         var canPickPatrol = false;
@@ -74,10 +99,6 @@ class Patrol{
             this.buildPatrol();
             this.gm.setCurrentOrdersLong();
         });*/
-    }
-
-    async pickOrders(unique){
-        const pickOrdersPopup = new OrdersPopup(this.tv, this.gm, unique);
     }
 
     validatePatrol(){
@@ -135,7 +156,7 @@ class Patrol{
 
         var NAorders = false;
         if (this.gm.currentOrders == "North America" || this.gm.currentOrders == "Carribean"){
-            NAorders = True
+            NAorders = true
         }
     
         for (let x=0; x < this.getPatrolLength() + 1; x++){
@@ -187,13 +208,17 @@ class Patrol{
         }
         //remove one NA/Caribbean patrol if applicable
         if (this.gm.currentOrders == "North America"){
-            this.patrolArray.remove("North America");
+            const index = array.indexOf("North America");
+            if (index > -1) { 
+                this.patrolArray.splice(index, 1);
+            }
         }
         if (this.gm.currentOrders == "Carribean"){
-            this.patrolArray.remove("Caribbean");
+            const index = array.indexOf("Carribean");
+            if (index > -1) { 
+                this.patrolArray.splice(index, 1);
+            }
         }
         console.log(this.patrolArray);
-
-        this.gm.ordersPopup();
     }
 }

@@ -1,8 +1,9 @@
 class OrdersPopup{
-    constructor(tv, gm, uniqueOrders) {
+    constructor(tv, gm, uniqueOrders, isPicking) {
         this.tv = tv;
         this.gm = gm;
         this.uniqueOrders = uniqueOrders;
+        this.uniqueOrders.shift();
         this.tv.pauseGame();
 
         this.container = document.querySelector(".game-container");
@@ -11,13 +12,16 @@ class OrdersPopup{
         this.element = document.createElement("div");
         this.element.classList.add("TextMessage");
 
-        this.pickOrders();
-        //container.appendChild(this.element);
+        if (isPicking){
+            this.pickOrders();
+        }
+        else {
+            this.orders();
+        }
     }
 
     orders(){
         //Message at start of patrol to show orders
-        this.tv.changeScene("Sunny");
         var message = "";
         switch (this.gm.currentOrders){
             case "British Isles":
@@ -57,49 +61,55 @@ class OrdersPopup{
             <button class="TextMessage_button">Next</button>
         `)
 
+        this.container.appendChild(this.element);
+
         this.element.querySelector("button").addEventListener("click", ()=> {
             //close popup
             this.done();
-            this.gm.eventResolved = true;
         })
     }
 
     pickOrders(){
         var elementsArray = [];
 
+        //build html buttons for unique orders in patrol array
         for (let i = 0; i < this.uniqueOrders.length; i++){
-            elementsArray[i] = document.createElement("div");
-            elementsArray[i].classList.add("TextMessage");
+            elementsArray[i] = document.createElement("button");
+            elementsArray[i].classList.add("Option_button");
+            elementsArray[i].id = this.uniqueOrders[i];
             elementsArray[i].innerHTML = (`
-                <p class="TextMessage_p> Test </p>
-                `)
-      
+                ${this.uniqueOrders[i]}
+                `)      
         }
 
+        //main body text
         this.element.innerHTML = (`
             <h3 class="HeaderMessage_h3">Choose Your Orders
             <p class="TextMessage_p">You are being given the opportunity to pick your orders. Choose from below.<br>
-            ${this.element[0]}<br>
-            ${this.element[1]}<br>
+            <br>
             </p>
         `)
-
         this.container.appendChild(this.element);
+
+        //add buttons to popup
+        for (let i = 0; i < elementsArray.length; i++){
+            this.element.appendChild(elementsArray[i]);
+        }
 
         this.element.addEventListener("click", ()=> {
             //determine which button was clicked
-            if (event.target.id == "DecG7a"){
-                currentG7a--;
-                currentG7e++;
-            }
-            else{
+            console.log(this.uniqueOrders.includes(event.target.id))
+            if (this.uniqueOrders.includes(event.target.id)){
+                this.gm.currentOrders = event.target.id;
                 this.done();
             }
+
         });
     }
 
     done(){
         this.element.remove();
+        this.gm.eventResolved = true;
         this.tv.unpauseGame();
     }
 

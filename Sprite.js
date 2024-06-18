@@ -117,7 +117,7 @@ class Sprite {
   }
 
   depart(){
-    if (this.departed){
+    if (this.departed && this.tv.scene == "Port"){
       this.departTranslation++;
       return this.departTranslation;
     }

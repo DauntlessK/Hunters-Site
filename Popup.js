@@ -1,10 +1,9 @@
 class Popup{
-    constructor(message, tv, gm, uniqueOrders) {
+    constructor(message, tv, gm,) {
         this.message = message;
         this.tv = tv;
         this.gm = gm;
-        this.uniqueOrders = uniqueOrders;
-        this.tv.pauseGame();
+        //this.uniqueOrders = uniqueOrders;
 
         this.container = document.querySelector(".game-container");
 
@@ -197,7 +196,7 @@ class Popup{
                 currentG7e++;
             }
             else{
-                this.done2();
+                this.done();
             }
         });
     }
@@ -207,9 +206,8 @@ class Popup{
         this.tv.unpauseGame();
     }
 
-    done2(){
-        
-        this.element.remove();
-        this.tv.unpauseGame();
+    init(){
+        this.container.appendChild(this.element);
+        this.tv.pauseGame();
     }
 }
