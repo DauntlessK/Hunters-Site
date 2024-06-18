@@ -1,6 +1,7 @@
 class Patrol{
-    constructor(gm){
+    constructor(tv, gm){
         this.gm = gm;
+        this.tv = tv;
 
         //array of orders options for a given date
         this.ordersArray = null;
@@ -8,49 +9,96 @@ class Patrol{
         //array of each "step" of a patrol, which includes port, transit and patrol/mission spots
         this.patrolArray = [];
 
-        this.getPatrol();
-    }
+        //all patrol charts init
+        this.patrolChart1 = ["", "", "Spanish Coast", "British Isles", "British Isles", "British Isles(Minelaying)", "British Isles",
+            "British Isles", "British Isles", "British Isles(Minelaying)", "British Isles", "British Isles", "West African Coast"];
+        this.patrolChart2 = ["", "", "Spanish Coast", "Norway", "British Isles", "British Isles(Minelaying)", "British Isles", "British Isles",
+            "British Isles", "British Isles", "Norway", "Norway", "West African Coast"];
+        this.patrolChart3 = ["", "", "Spanish Coast", "Spanish Coast", "British Isles(Abwehr Agent Delivery)", "British Isles", "Atlantic", "British Isles",
+            "British Isles", "British Isles(Minelaying)", "Atlantic", "West African Coast", "West African Coast"]; 
+        this.patrolChart4 = ["", "", "Spanish Coast", "Atlantic(Wolfpack)", "British Isles", "Atlantic", "British Isles", "Atlantic", "Atlantic",
+            "British Isles", "West African Coast", "West African Coast", "Mediterranean"];
+        this.patrolChart5 = ["", "", "Mediterranean", "Spanish Coast", "British Isles", "Atlantic(Wolfpack)", "Atlantic", "Atlantic", "Atlantic", 
+            "British Isles", "West African Coast", "Arctic", "Mediterranean"];
+        this.patrolChart6 = ["", "", "Arctic", "North America(Abwehr Agent Delivery)", "Atlantic(Wolfpack)", "North America", "North America",
+            "North America", "Atlantic", "British Isles", "Atlantic", "Caribbean", "West African Coast"];
+        this.patrolChart7 = ["", "", "Mediterranean", "Arctic", "Atlantic(Wolfpack)", "North America", "Atlantic", "Atlantic", "Atlantic(Wolfpack)",
+            "British Isles", "North America", "Atlantic", "West African Coast"];
+        this.patrolChart8 = ["", "", "Mediterranean", "Atlantic(Wolfpack)", "British Isles", "North America", "Atlantic(Wolfpack)", "Atlantic",
+            "Atlantic", "North America", "Arctic", "Atlantic(Wolfpack)", "West African Coast"];
 
-    getPatrolLength(){
-        //Determines full length of a given patrol (number of on station steps + all transit steps
-        switch (this.gm.currentOrders) {
-            case "North America":
-            case  "Caribbean":
-                return this.gm.sub.patrol_length - 1 + 8;  // NA patrol has 1 less on station patrol + 2 BoB + EXTRA 2 transits
-            default:
-                return this.gm.sub.patrol_length + 4;
-        }
+        this.getPatrol();
     }
 
     async getPatrol(){
         //Gets patrol based on date, type, permanent assignments, etc from patrol text files.
 
-        var patrolChart = null;
-        if (this.gm.date_year == 1939 || (this.gm.date_month <= 2 && this.gm.date_year == 1940)){patrolChart = "PatrolChart1.txt";}   // 1939 - Mar 1940 
-        else if (this.gm.date_month > 2 && this.gm.date_month <= 5 && this.gm.date_year == 1940){patrolChart = "PatrolChart2.txt";}   // 1940 - Apr - Jun    
-        else if (this.gm.date_month >= 6 && this.gm.date_month <= 11 && this.gm.date_year == 1940){patrolChart = "PatrolChart3.txt";} // 1940 - Jul - Dec 
-        else if (this.gm.date_month >= 0 && this.gm.date_month <= 5 && this.gm.date_year == 1941){patrolChart = "PatrolChart4.txt";}  // 1941 - Jan - Jun
-        else if (this.gm.date_month >= 6 && this.gm.date_month <= 11 && this.gm.date_year == 1941){patrolChart = "PatrolChart5.txt";} // 1941 - Jul - Dec
-        else if (this.gm.date_month >= 0 && this.gm.date_month <= 5 && this.gm.date_year == 1942){patrolChart = "PatrolChart6.txt";}  // 1942 - Jan - Jun
-        else if (this.gm.date_month >= 6 && this.gm.date_month <= 11 && this.gm.date_year == 1942){patrolChart = "PatrolChart7.txt";} // 1942 - Jul - Dec
-        else if (this.gm.date_year == 1943){patrolChart = "PatrolChart8.txt";}                                                        // 1943
+        if (this.gm.date_year == 1939 || (this.gm.date_month <= 2 && this.gm.date_year == 1940)){this.ordersArray = this.patrolChart1;}   // 1939 - Mar 1940 
+        else if (this.gm.date_month > 2 && this.gm.date_month <= 5 && this.gm.date_year == 1940){this.ordersArray = this.patrolChart2;}   // 1940 - Apr - Jun    
+        else if (this.gm.date_month >= 6 && this.gm.date_month <= 11 && this.gm.date_year == 1940){this.ordersArray = this.patrolChart3;} // 1940 - Jul - Dec 
+        else if (this.gm.date_month >= 0 && this.gm.date_month <= 5 && this.gm.date_year == 1941){this.ordersArray = this.patrolChart4;}  // 1941 - Jan - Jun
+        else if (this.gm.date_month >= 6 && this.gm.date_month <= 11 && this.gm.date_year == 1941){this.ordersArray = this.patrolChart5;} // 1941 - Jul - Dec
+        else if (this.gm.date_month >= 0 && this.gm.date_month <= 5 && this.gm.date_year == 1942){this.ordersArray = this.patrolChart6;}  // 1942 - Jan - Jun
+        else if (this.gm.date_month >= 6 && this.gm.date_month <= 11 && this.gm.date_year == 1942){this.ordersArray = this.patrolChart7;} // 1942 - Jul - Dec
+        else if (this.gm.date_year == 1943){this.ordersArray = this.patrolChart8;}                                                        // 1943
         else{
-            console.log("Error getting patrol chart .txt file.")
+            console.log("Error getting patrol array.");
         }
 
-        const ordersRoll = d6Rollx2();
-        const textFile = "data/" + patrolChart;
+        const pickOrderRoll = d6Roll();
+        var unique = this.ordersArray.filter(onlyUnique);
+        var isPicking = false
+        if (pickOrderRoll <= this.gm.sub.crew_levels["Kommandant"] && !this.gm.permArcPost && !this.permMedPost){  //final should be <=
+            console.log(pickOrderRoll);
+            console.log(this.gm.sub.crew_levels["Kommandant"]);
+            isPicking = true;
+            this.gm.ordersPopup(unique, isPicking);
 
-        this.ordersArray = await getDataFromTxt(textFile);
-        //fetch(textFile).then(convertData).then(processData);
+            await until(_ => this.gm.eventResolved == true);
+
+            this.validatePatrol();
+            this.buildPatrol();
+            this.gm.setCurrentOrdersLong();
+        }
+        else {
+            const ordersRoll = d6Rollx2();
+            this.gm.currentOrders = this.ordersArray[ordersRoll];
+
+            this.validatePatrol();
+            this.buildPatrol();
+            this.gm.setCurrentOrdersLong();
+
+            this.gm.ordersPopup(unique, isPicking);
+
+            await until(_ => this.eventResolved == true);
+        }
+        console.log("Orders: " + this.gm.currentOrders);
+
+
+        /**check if picking orders - cannot pick if permanently assigned to med or arctic
+        var canPickPatrol = false;
+        var unique = this.ordersArray.filter(onlyUnique);
+        
+        const pickOrderRoll = d6Roll();
+        var picking = false
+        if (pickOrderRoll >= this.gm.sub.crew_levels["Kommandant"] && !this.gm.permArcPost && !this.permMedPost){
+            picking = true;
+        }
+        var unique = this.ordersArray.filter(onlyUnique);
+        console.log("Before");
+        this.gm.pickOrdersPopup(unique);
+        console.log("After");
+
+        const ordersRoll = d6Rollx2();
         
         sleep(3000).then(() => {
             this.gm.currentOrders = this.ordersArray[ordersRoll];
+            console.log("Orders: " + this.gm.currentOrders);
     
             this.validatePatrol();
             this.buildPatrol();
             this.gm.setCurrentOrdersLong();
-        });
+        });*/
     }
 
     validatePatrol(){
@@ -75,8 +123,8 @@ class Patrol{
             this.gm.currentOrders = "Arctic";
         }
 
-        //change loadout of boat by adding mines
-        //todo change tube loads
+        console.log(this.gm.currentOrders);
+        //change loadout of boat by adding mines in the tube, replacing torpedoes in tube
         if (this.gm.currentOrders.includes("Minelaying")){
             this.gm.sub.loadMines();
         }
@@ -91,13 +139,24 @@ class Patrol{
         }
     }
 
+    getPatrolLength(){
+        //Determines full length of a given patrol (number of on station steps + all transit steps
+        switch (this.gm.currentOrders) {
+            case "North America":
+            case  "Caribbean":
+                return this.gm.sub.patrol_length - 1 + 8;  // NA patrol has 1 less on station patrol + 2 BoB + EXTRA 2 transits
+            default:
+                return this.gm.sub.patrol_length + 4;
+        }
+    }
+
     buildPatrol(){
         //Builds array of strings, each item being a step in the patrol. Step 0 is port.
         //build patrol for non NA patrols
 
         var NAorders = false;
         if (this.gm.currentOrders == "North America" || this.gm.currentOrders == "Carribean"){
-            NAorders = True
+            NAorders = true
         }
     
         for (let x=0; x < this.getPatrolLength() + 1; x++){
@@ -138,7 +197,7 @@ class Patrol{
                 if (this.gm.currentOrders.includes("Abwehr")){
                     otherSpot = this.gm.currentOrders.replace("(Abwehr Agent Delivery)", "")
                 }
-                else if (this.gm.currentOrders.includes("Abwehr")){
+                else if (this.gm.currentOrders.includes("Minelaying")){
                     otherSpot = this.gm.currentOrders.replace("(Minelaying)", "");
                 }
                 else if (this.gm.currentOrders.includes("Wolfpack")){
@@ -149,13 +208,17 @@ class Patrol{
         }
         //remove one NA/Caribbean patrol if applicable
         if (this.gm.currentOrders == "North America"){
-            this.patrolArray.remove("North America");
+            const index = array.indexOf("North America");
+            if (index > -1) { 
+                this.patrolArray.splice(index, 1);
+            }
         }
         if (this.gm.currentOrders == "Carribean"){
-            this.patrolArray.remove("Caribbean");
+            const index = array.indexOf("Carribean");
+            if (index > -1) { 
+                this.patrolArray.splice(index, 1);
+            }
         }
         console.log(this.patrolArray);
-
-        this.gm.ordersPopup();
     }
 }

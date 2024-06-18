@@ -19,19 +19,6 @@ function until(conditionFunction) {
     return new Promise(poll);
 }
 
-/**function convertData(rawData){
-  toReturn = rawData;
-  toReturn = toReturn.split("\r");
-    for (let i = 0; i < toReturn.length; i++){
-        toReturn[i] = toReturn[i].replace('\n','');
-    }
-  return toReturn;
-}
-
-function processData(strData){
-  return strData.split();
-}*/
-
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -59,4 +46,9 @@ async function getDataFromTxt(fullFilePath) {
     .catch((error) => {
       toReturn = `Error: ${error.message}`;
     });
+}
+
+function onlyUnique(value, index, array) {
+  //returns array of only unique values
+  return array.indexOf(value) === index;
 }

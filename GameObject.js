@@ -8,6 +8,8 @@ class GameObject {
       width: config.width,
       height: config.height,
       frames: config.frames,
+      isPlayer: config.isPlayer
     });
   }
 }
+  

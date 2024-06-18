@@ -110,8 +110,8 @@ class ResupplyPopup{
             <h3 class="HeaderMessage_h3">Port Resupply
             <p class="TextMessage_p">${this.gm.getFullUboatID()} has been assigned<span class= "G7a"> ${this.gm.sub.G7aStarting}x G7a (steam) torpedoes</span> and
             <span class="G7e">${this.gm.sub.G7eStarting}x G7e (electric) torpedoes</span>.<br>You may adjust this spread by +/- ${this.gm.sub.torpedo_type_spread}.<br>
-            <span class="G7a">G7a: </span><button class="Option_button" id="DecG7a"><---</button><span class="G7a"> ${this.currentG7a} </span><button class="Option_button" id="IncG7a">---></button><br>
-            <span class="G7e">G7e: </span><button class="Option_button" id="DecG7e"><---</button><span class="G7e"> ${this.currentG7e} </span><button class="Option_button" id="IncG7e">---></button><br>
+            <span class="G7a">G7a: </span><button class="Arrow_button" id="DecG7a">3 3</button><span class="G7a"> ${this.currentG7a} </span><button class="Arrow_button" id="IncG7a">4 4</button><br>
+            <span class="G7e">G7e: </span><button class="Arrow_button" id="DecG7e">3 3</button><span class="G7e"> ${this.currentG7e} </span><button class="Arrow_button" id="IncG7e">4 4</button><br>
             <br>
             Fore Torpedoes (${this.gm.sub.reserves_fore}):  <span class="G7a">${this.currentForeG7a}</span>      <span class="G7e">${this.currentForeG7e}</span><br>
             Aft  Torpedoes (${this.gm.sub.reserves_aft + this.gm.sub.aft_tubes}): <button class="option_button" id="IncG7aAFT"><span class="G7a" id="IncG7aAFT">${this.current_aftG7a}</span></button>

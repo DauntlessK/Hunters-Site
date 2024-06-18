@@ -19,6 +19,10 @@ class TacticalView{
 
         //handle intial scene
         this.changeScene(this.scene);
+
+        this.nextTranslationTimer = 0;
+        this.totalTranslation = 0;
+        this.setNewTranslation();
     }
 
     pauseGame(){
@@ -35,6 +39,15 @@ class TacticalView{
           }
     }
 
+    setNewTranslation(){
+        this.nextTranslationTimer = Math.floor(Math.random() * (250 - 100)) + 100;
+        this.totalTranslation = Math.floor(Math.random() * (10 - -10)) + -10;
+    }
+
+    getTotalTranslation(){
+        return this.totalTranslation;
+    }
+
     startGame(kmdtTextField, numField, subType){
         //create game manager 
         this.gm.startGame(kmdtTextField, numField, subType);
@@ -49,9 +62,6 @@ class TacticalView{
 
     drawLowerImage(ctx){
         //draw lowest layer of background
-        if (this.scene === "Port" || this.scene === "IntroPort"){
-            this.currentFrame = 0;
-        }
         ctx.drawImage(this.lowerImage,
             this.currentFrame * 1280, 0,
             1280, 720,
@@ -73,7 +83,6 @@ class TacticalView{
     drawUI(ctx){
         //calls UI to draw elements (buttons, text, UI bgd)
         this.mainUI.draw(ctx);
-        this.updateAnimationProgress();
     }
 
     updateAnimationProgress(){
@@ -97,30 +106,70 @@ class TacticalView{
         this.scene = newScene;
         switch (newScene){
             case "IntroPort":
-                this.lowerImage.src = "images/portscene.png";
+                this.lowerImage.src = "images/portscene_spritesheet.png";
                 this.upperImage.src = "images/logo.png";
+                this.bgdFrames = 30,
                 this.gameObjects = {
+                    waterAround: new GameObject({
+                        x: -70,
+                        y: -5,
+                        src: "images/portscene_water_spritesheet.png",
+                        width: 1280,
+                        height: 720,
+                        frames: 24,
+                        isPlayer: false
+                    }),
                     uboat: new GameObject({
-                        x: 40,
-                        y: 375,
+                        x: 137,
+                        y: 392,
                         src: "images/ships/Uboat_VIIC_spritesheet.png",
                         width: 803,
                         height: 95,
                         frames: 1,
+                        isPlayer: true
+                    }),
+                    waterline: new GameObject({
+                        x: -58,
+                        y: -5,
+                        src: "images/portscene_waterline_spritesheet.png",
+                        width: 1280,
+                        height: 720,
+                        frames: 24,
+                        isPlayer: false
                     })
                 }
                 break;
             case "Port":
-                this.lowerImage.src = "images/portscene.png";
+                this.lowerImage.src = "images/portscene_spritesheet.png";
                 this.upperImage.src = "images/blank.png";
+                this.bgdFrames = 30,
                 this.gameObjects = {
+                    waterAround: new GameObject({
+                        x: -70,
+                        y: -5,
+                        src: "images/portscene_water_spritesheet.png",
+                        width: 1280,
+                        height: 720,
+                        frames: 24,
+                        isPlayer: false
+                    }),
                     uboat: new GameObject({
-                        x: 40,
-                        y: 375,
+                        x: 137,
+                        y: 392,
                         src: "images/ships/Uboat_VIIC_spritesheet.png",
                         width: 803,
                         height: 95,
                         frames: 1,
+                        isPlayer: true
+                    }),
+                    waterline: new GameObject({
+                        x: -58,
+                        y: -5,
+                        src: "images/portscene_waterline_spritesheet.png",
+                        width: 1280,
+                        height: 720,
+                        frames: 24,
+                        isPlayer: false
                     })
                 }
                 break;
@@ -134,8 +183,9 @@ class TacticalView{
                         y: 280,
                         src: "images/ships/Uboat_VIIC_spritesheet.png",
                         width: 803,
-                        height: 150,
-                        frames: 48,
+                        height: 95,
+                        frames: 1,
+                        isPlayer: true
                     })
                 }
         }
