@@ -23,7 +23,20 @@ class MenuIcon {
     }
 
     update(){
-        this.currentFrame = window[this.subItem];
+        this.currentFrame = eval(this.subItem);
+    }
+
+    setSrc() {
+        var q = "T";
+        var w = "P";
+        if (this.gm.francePost) { 
+            q = "B"   
+        }
+        if (this.gm.patrol.isMissionPatrol()) {
+            w = "M"
+        }
+        var telegraphSrc = "images/ui/telegraph/Telegraph" + this.gm.patrol.getPatrolLength() + q + w + ".png";
+        this.image.src = telegraphSrc;
     }
 
     advanceFrame(){

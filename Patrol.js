@@ -10,24 +10,24 @@ class Patrol{
         this.patrolArray = [];
 
         //all patrol charts init
-        this.patrolChart1 = ["", "", "Spanish Coast", "British Isles", "British Isles", "British Isles(Minelaying)", "British Isles",
-            "British Isles", "British Isles", "British Isles(Minelaying)", "British Isles", "British Isles", "West African Coast"];
-        this.patrolChart2 = ["", "", "Spanish Coast", "Norway", "British Isles", "British Isles(Minelaying)", "British Isles", "British Isles",
+        this.patrolChart1 = ["", "", "Spanish Coast", "British Isles", "British Isles", "British Isles (Minelaying)", "British Isles",
+            "British Isles", "British Isles", "British Isles (Minelaying)", "British Isles", "British Isles", "West African Coast"];
+        this.patrolChart2 = ["", "", "Spanish Coast", "Norway", "British Isles", "British Isles (Minelaying)", "British Isles", "British Isles",
             "British Isles", "British Isles", "Norway", "Norway", "West African Coast"];
-        this.patrolChart3 = ["", "", "Spanish Coast", "Spanish Coast", "British Isles(Abwehr Agent Delivery)", "British Isles", "Atlantic", "British Isles",
-            "British Isles", "British Isles(Minelaying)", "Atlantic", "West African Coast", "West African Coast"]; 
-        this.patrolChart4 = ["", "", "Spanish Coast", "Atlantic(Wolfpack)", "British Isles", "Atlantic", "British Isles", "Atlantic", "Atlantic",
+        this.patrolChart3 = ["", "", "Spanish Coast", "Spanish Coast", "British Isles (Abwehr Agent Delivery)", "British Isles", "Atlantic", "British Isles",
+            "British Isles", "British Isles (Minelaying)", "Atlantic", "West African Coast", "West African Coast"]; 
+        this.patrolChart4 = ["", "", "Spanish Coast", "Atlantic (Wolfpack)", "British Isles", "Atlantic", "British Isles", "Atlantic", "Atlantic",
             "British Isles", "West African Coast", "West African Coast", "Mediterranean"];
-        this.patrolChart5 = ["", "", "Mediterranean", "Spanish Coast", "British Isles", "Atlantic(Wolfpack)", "Atlantic", "Atlantic", "Atlantic", 
+        this.patrolChart5 = ["", "", "Mediterranean", "Spanish Coast", "British Isles", "Atlantic (Wolfpack)", "Atlantic", "Atlantic", "Atlantic", 
             "British Isles", "West African Coast", "Arctic", "Mediterranean"];
-        this.patrolChart6 = ["", "", "Arctic", "North America(Abwehr Agent Delivery)", "Atlantic(Wolfpack)", "North America", "North America",
+        this.patrolChart6 = ["", "", "Arctic", "North America (Abwehr Agent Delivery)", "Atlantic (Wolfpack)", "North America", "North America",
             "North America", "Atlantic", "British Isles", "Atlantic", "Caribbean", "West African Coast"];
-        this.patrolChart7 = ["", "", "Mediterranean", "Arctic", "Atlantic(Wolfpack)", "North America", "Atlantic", "Atlantic", "Atlantic(Wolfpack)",
+        this.patrolChart7 = ["", "", "Mediterranean", "Arctic", "Atlantic (Wolfpack)", "North America", "Atlantic", "Atlantic", "Atlantic (Wolfpack)",
             "British Isles", "North America", "Atlantic", "West African Coast"];
-        this.patrolChart8 = ["", "", "Mediterranean", "Atlantic(Wolfpack)", "British Isles", "North America", "Atlantic(Wolfpack)", "Atlantic",
-            "Atlantic", "North America", "Arctic", "Atlantic(Wolfpack)", "West African Coast"];
+        this.patrolChart8 = ["", "", "Mediterranean", "Atlantic (Wolfpack)", "British Isles", "North America", "Atlantic (Wolfpack)", "Atlantic",
+            "Atlantic", "North America", "Arctic", "Atlantic (Wolfpack)", "West African Coast"];
 
-        this.getPatrol();
+        //this.getPatrol();
     }
 
     async getPatrol(){
@@ -84,7 +84,7 @@ class Patrol{
             this.gm.currentOrders = "Atlantic";
         }
         if (this.gm.currentOrders == "British Isles" && this.gm.sub.getType() == "VIID"){                                                // VIID Minelays in BI
-            this.gm.currentOrders = "British Isles(Minelaying)";
+            this.gm.currentOrders = "British Isles (Minelaying)";
         }
 
         //deal with permanent stations
@@ -95,7 +95,6 @@ class Patrol{
             this.gm.currentOrders = "Arctic";
         }
 
-        console.log(this.gm.currentOrders);
         //change loadout of boat by adding mines in the tube, replacing torpedoes in tube
         if (this.gm.currentOrders.includes("Minelaying")){
             this.gm.sub.loadMines();
@@ -125,6 +124,8 @@ class Patrol{
     buildPatrol(){
         //Builds array of strings, each item being a step in the patrol. Step 0 is port.
         //build patrol for non NA patrols
+        
+        this.tv.mainUI.telegraph.setSrc(this.gm.currentOrders); //set telegraph to correct png
 
         var NAorders = false;
         if (this.gm.currentOrders == "North America" || this.gm.currentOrders == "Carribean"){
@@ -194,6 +195,16 @@ class Patrol{
         console.log(this.patrolArray);
     }
 
+    isMissionPatrol() {
+        if (this.gm.currentOrders.includes("Minelaying") || this.gm.currentOrders.includes("Abwehr")){
+            return true;
+        }
+        else {
+
+            return false;
+        }
+    }
+
     getEncounter(loc, year, randomEvent){
         roll = d6Rollx2();
 
@@ -216,7 +227,7 @@ class Patrol{
                     case 12:
                         return "encounterAttack('Ship')";
                     default:
-                        return "No Encounter";
+                        return "noEncounter";
                 }
                 break;
             case "Arctic":
@@ -236,12 +247,11 @@ class Patrol{
                         return "encounterAircraft";
                         break;
                     default:
-                        return "No Encounter";                 
+                        return "noEncounter";                 
                 }
                 break;
             case "Atlantic":
             case "Atlantic (Wolfpack)":
-            case "Atlantic(WolfPack)":
                 switch (roll){
                     case 2:
                         return "encounterAttack('Captail Ship')";
@@ -256,7 +266,7 @@ class Patrol{
                         return "encounterAttack('Convoy')";
                         break;
                     default:
-                        return "No Encounter";
+                        return "noEncounter";
                 }
                 break;
             case "British Isles":
@@ -278,7 +288,7 @@ class Patrol{
                         return "encounterAircraft";
                         break;
                     default:
-                        return "No Encounter";
+                        return "noEncounter";
                 }
                 break;
             case "Caribbean":
@@ -300,7 +310,7 @@ class Patrol{
                         return "encounterAttack('Two Ships + Escort')";
                         break;
                     default:
-                        return "No Encounter";
+                        return "noEncounter";
                 }
                 break;
             case "North America":
@@ -326,7 +336,7 @@ class Patrol{
                         return "encounterAttack('Convoy')";
                         break;
                     default:
-                        return "No Encounter";
+                        return "noEncounter";
                 }
                 break;
             case "Norway":
@@ -345,7 +355,7 @@ class Patrol{
                         return "encounterAttack('Ship + Escort')";
                         break;
                     default:
-                        return "No Encounter"
+                        return "noEncounter"
                 }
                 break;
             case "Spanish Coast":
@@ -366,7 +376,7 @@ class Patrol{
                         return "encounterAttack('Convoy')";
                         break;
                     default:
-                        return "No Encounter" 
+                        return "noEncounter" 
                 }
                 break;
             case "West African Coast":
@@ -389,7 +399,7 @@ class Patrol{
                         return "encounterAircraft";
                         break;
                     default:
-                        return "No Encounter" 
+                        return "noEncounter" 
                 }
                 break;
             case "Additional Round of Combat":

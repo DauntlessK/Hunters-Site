@@ -24,7 +24,7 @@ class GameManager{
         this.yearOfLastKnightsCrossAward = -1;
         this.currentOrders = "";
         this.currentOrdersLong = "";
-        this.patrol = null;
+        this.patrol = new Patrol(this.tv, this);
         this.patrolling = false;
         this.patrolCount = ["", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth",
                             "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth",
@@ -179,7 +179,7 @@ class GameManager{
 
     newPatrol(){
         //gets new patrol, validates orders etc
-        this.patrol = new Patrol(this.tv, this);
+        this.patrol.getPatrol();
     }
 
     setCurrentOrdersLong(){
@@ -203,16 +203,16 @@ class GameManager{
             case "North America":
                 this.currentOrdersLong = "Patrol the NA Station";
                 break;
-            case "British Isles(Minelaying)":
+            case "British Isles (Minelaying)":
                 this.currentOrdersLong = "Minelay off British Isles"
                 break;
-            case "British Isles(Abwehr Agent Delivery)":
+            case "British Isles (Abwehr Agent Delivery)":
                 this.currentOrdersLong = "Deliver Agent to Britian"
                 break;
-            case "Atlantic(Wolfpack)":
+            case "Atlantic (Wolfpack)":
                 this.currentOrdersLong = "Wolfpack patrol the Mid-Atlantic";
                 break;
-            case "North America(Abwehr Agent Delivery)":
+            case "North America (Abwehr Agent Delivery)":
                 this.currentOrdersLong = "Deliver Agent to USA"
                 break;
             default:
@@ -228,10 +228,20 @@ class GameManager{
         this.tv.changeScene("Sunny");
     }
 
-    patrolLoop() {
-        //patrol sequence to go through patrol
-
+    beginPatrol() {
         this.patrolling = true;
+        this.currentBox = 1;
+        this.advancePatrol(true);
+    }
+
+    advancePatrol(begin) {
+        //patrol sequence to go through patrol
+        if (! begin) {
+            this.currentBox++;
+        }
+
+        console.log("Patrol Advance---------- " + this.currentBox);
+
         //todo - assignment to arctic
         if (this.currentOrders == "Arctic"){
             //TODO: Roll for artic assignment
@@ -239,60 +249,55 @@ class GameManager{
         }
 
         //loop to run through patrol array (each patrol box)
-        var x = 1;
-        while (x <= this.patrol.getPatrolLength()) {
 
-            //handle aborting near end of patrol
-            if (this.abortingPatrol && x < this.patrol.getPatrolLength() - 2) {
-                x++;
-                continue;
-            }
-
-            //if doctor is SW or KIA, see if any other injured crew members die (each patrol box, before encounter)
-            if (this.sub.crew_health["Doctor"] >= 2){
-                //check if any hurt crewmen
-                //TODO: Crewman Death Check
-                console.log("TO DO - CREWMEN DEATH CHECK")
-            }
-
-            //get the current box name of this patrol (i.e. "Transit", "Mission", "Atlantic", etc)
-            var currentBoxName = this.patrol.patrolArray[x];
-
-            //check for automatic aborts
-            if (this.sub.dieselsInop() == 2){
-                if (x == this.patrol.getPatrolLength()){
-                    //TODO: Popups (small)
-                    console.log("TO DO- POPUP TOWED INTO PORT");
-                }
-                else {
-                    //TODO: Scuttle
-                    console.log("TODO - SCUTTLE due to 2 diesel engines inop");
-                }
-            }
-            else if (this.sub.dieselsInop() == 1 || this.sub.systems["Fuel Tanks"] == 2){
-                console.log("TO DO- Abort Patrol due to fuel tanks or 1 diesel engine inop");
-                this.abortingPatrol = true;
-                continue;
-            }
-
-            // check if on weather duty or severe weather random events (skips current box)
-            if (this.weatherDuty){
-                //TODO: weather
-                console.log("TO DO - Deal with weather duty");
-            }
-            if (this.severeWeather) {
-                //TODO: weather
-                console.log("TO DO - Deal with severe weather");
-            }
-
-            var currentEncounter = this.patrol.getEncounter(currentBoxName, this.getYear(), this.randomEvent);
-
-            console.log(currentEncounter);
-
-            x++;
+        //handle aborting near end of patrol
+        if (this.abortingPatrol && x < this.patrol.getPatrolLength() - 2) {
+            this.currentBox++;
+            return;
         }
 
-        console.log("Finished Patrol");
+        //if doctor is SW or KIA, see if any other injured crew members die (each patrol box, before encounter)
+        if (this.sub.crew_health["Doctor"] >= 2){
+            //check if any hurt crewmen
+            //TODO: Crewman Death Check
+            console.log("TO DO - CREWMEN DEATH CHECK")
+        }
+
+        //get the current box name of this patrol (i.e. "Transit", "Mission", "Atlantic", etc)
+        var currentBoxName = this.patrol.patrolArray[this.currentBox];
+
+        //check for automatic aborts
+        if (this.sub.dieselsInop() == 2){
+            if (this.currentBox == this.patrol.getPatrolLength()){
+                //TODO: Popups (small)
+                console.log("TO DO- POPUP TOWED INTO PORT");
+            }
+            else {
+                //TODO: Scuttle
+                console.log("TODO - SCUTTLE due to 2 diesel engines inop");
+            }
+        }
+        else if (this.sub.dieselsInop() == 1 || this.sub.systems["Fuel Tanks"] == 2){
+            console.log("TO DO- Abort Patrol due to fuel tanks or 1 diesel engine inop");
+            this.abortingPatrol = true;
+            return;
+        }
+
+        // check if on weather duty or severe weather random events (skips current box)
+        if (this.weatherDuty){
+            //TODO: weather
+            console.log("TO DO - Deal with weather duty");
+        }
+        if (this.severeWeather) {
+            //TODO: weather
+            console.log("TO DO - Deal with severe weather");
+        }
+
+        var currentEncounter = this.patrol.getEncounter(currentBoxName, this.getYear(), this.randomEvent);
+        //create popup based on that encounter
+        const patrolPop = new PatrolPopup(this.tv, this, currentEncounter);
+
+        console.log(currentEncounter);
     }
     
 }

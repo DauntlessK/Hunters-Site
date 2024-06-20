@@ -1,0 +1,20 @@
+.PatrolMessage {
+    font-size: 10;
+    position: absolute;
+    left: 25px;
+    right: 370px;
+    bottom: 25px;
+    padding: 15px;
+    font-family: courier;
+    background: var(--menu-background);
+    border-top: 1px solid var (--menu-font-color);
+    border-top: 1px solid var (--menu-border-color);
+    color: var(--menu-font-color);
+    outline: 2px solid #000;
+    max-height: 120px;
+}
+
+.PatrolMessage_p {
+    font-size: 12;
+    font-family: courier;
+}

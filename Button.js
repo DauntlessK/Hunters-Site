@@ -77,8 +77,12 @@ class Button {
 
     beginPatrol(){
         //for begin patrol button to start patrol loop
-        this.gm.patrolLoop();
+        this.gm.beginPatrol();
         this.disableButton();
+    }
+
+    continuePatrol(){
+        this.gm.advancePatrol(false);
     }
 
     disableButton(){

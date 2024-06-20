@@ -4,7 +4,6 @@ class OrdersPopup{
         this.gm = gm;
         this.uniqueOrders = uniqueOrders;
         this.uniqueOrders.shift();
-        this.tv.pauseGame();
 
         this.container = document.querySelector(".game-container");
 
@@ -31,19 +30,19 @@ class OrdersPopup{
             case "Spanish Coast":
                 message = " is hereby ordered to patrol off the " + this.gm.currentOrders + "."
                 break;
-            case "British Isles(Minelaying)":
+            case "British Isles (Minelaying)":
                 message = " is directed to take the loaded mines to the enclosed target area and lay the mines, then proceed to patrol the British Isles."
                 break;
             case "Norway":
                 message = " has been assigned to a patrol off Norway. Proceed to the enclosed target area."
                 break;
-            case "British Isles(Abwehr Agent Delivery":
+            case "British Isles (Abwehr Agent Delivery":
                 message = " has been entrusted to safely deliver the onboard Abwehr agent to the enclosed area, then proceed to patrol the British Isles."
                 break;
             case "Atlantic":
                 message = " is hereby ordered to patrol the enclosed area in the Mid-Atlantic."
                 break;
-            case "Atlantic(Wolfpack)":
+            case "Atlantic (Wolfpack)":
                 message = " has been assigned to a Wolfpack. Proceed to the area enclosed in these orders and maintain contact with the Wolfpack."
                 break;
             case "Mediterranean":
@@ -109,7 +108,6 @@ class OrdersPopup{
     done(){
         this.element.remove();
         this.gm.eventResolved = true;
-        this.tv.unpauseGame();
     }
 
 }

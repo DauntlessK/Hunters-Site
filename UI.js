@@ -16,9 +16,6 @@ class UI{
             this.isLoaded = true;
         }
 
-        this.telegraph = new Image();
-        this.telegraph.src = "images/ui/Telegraph.png"
-
         this.tubeButtonArray = [0];
 
         var xArray = [];
@@ -87,8 +84,24 @@ class UI{
             tv: this.tv,
             onClick: "openStatus"
         });
+
+
+        this.continueButton = new Button({
+            src: "images/ui/ContinuePatrolButton.png",
+            x: 1210,
+            y: 590,
+            width: 50,
+            height: 120,
+            frames: 2,
+            tube: null,
+            gm: this.gm,
+            tv: this.tv,
+            onClick: "continuePatrol"
+        });
+
+        //flood gauge
         var fgaugeSrc = "images/ui/FloodGauge" + this.gm.sub.flooding_hp + ".png";
-        this.floodGauge = new Button({
+        this.floodGauge = new MenuIcon({
             src: fgaugeSrc,
             x: 1055,
             y: 120,
@@ -97,38 +110,36 @@ class UI{
             frames: this.gm.sub.flooding_hp,
             gm: this.gm,
             tv: this.tv,
-            subItem: "this.gm.sub.flooding_hp"
-        })
-        var dgaugeSrc = "images/ui/DamageGauge" + this.gm.sub.hull_hp + ".png";
-        this.damageGauge = new Button({
-            src: dgaugeSrc,
-            x: 955,
-            y: 120,
-            width: 100,
-            height: 100,
-            frames: this.gm.sub.hull_hp,
-            gm: this.gm,
-            tv: this.tv,
-            subItem: "this.gm.sub.hull_hp"
-        })
-        //telegraph 
-        var q = "";
-        var w = "";
-        //FIND IF TRANSIT OR BoB FOR Q
-        if (this.gm.) //FIND IF MISSION ORDERS OR NOT FOR W
-        var telegraphSrc = "images/ui/telegraph/Telegraph" + this.gm.patrol.getPatrolLength() + q + w + ".png";
-        this.damageGauge = new Button({
-            src: dgaugeSrc,
-            x: 955,
-            y: 120,
-            width: 100,
-            height: 100,
-            frames: this.gm.sub.hull_hp,
-            gm: this.gm,
-            tv: this.tv,
-            subItem: "this.gm.sub.hull_hp"
+            subItem: "this.gm.sub.flooding_Damage"
         })
 
+        //damage gauge
+        var dgaugeSrc = "images/ui/DamageGauge" + this.gm.sub.hull_hp + ".png";
+        this.damageGauge = new MenuIcon({
+            src: dgaugeSrc,
+            x: 955,
+            y: 120,
+            width: 100,
+            height: 100,
+            frames: this.gm.sub.hull_hp,
+            gm: this.gm,
+            tv: this.tv,
+            subItem: "this.gm.sub.hull_Damage"
+        })
+
+        //telegraph 
+        var telegraphSrc = "images/ui/telegraph/Telegraph8TP.png";  //incorrect starting src
+        this.telegraph = new MenuIcon({
+            src: telegraphSrc,
+            x: 1014,
+            y: 570,
+            width: 200,
+            height: 200,
+            frames: this.gm.patrol.getPatrolLength(),
+            gm: this.gm,
+            tv: this.tv,
+            subItem: "this.gm.currentBox"
+        })
     }
 
     handleEvent(){
@@ -140,6 +151,7 @@ class UI{
         this.reloadButton.handleEvent(event);
         this.beginPatrolButton.handleEvent(event);
         this.statusButton.handleEvent(event);
+        this.continueButton.handleEvent(event);
     }
     
     uiIsOn(){
@@ -167,7 +179,8 @@ class UI{
             }
             this.drawHeaderTxt(ctx);
             if (!this.tv.reloadMode && this.gm.patrolling){
-                this.drawTelegraph(ctx);
+                this.telegraph.draw(ctx);
+                this.continueButton.draw(ctx);
             }
             if (!this.tv.reloadMode && !this.gm.patrolling){
                 this.beginPatrolButton.draw(ctx);
@@ -175,9 +188,6 @@ class UI{
             this.floodGauge.draw(ctx);
             this.damageGauge.draw(ctx);
             
-            //Object.values(this.buttons).forEach(object => {
-            //object.button.draw(this.ctx);
-          //})
         }
     }
 
@@ -185,13 +195,6 @@ class UI{
         this.isLoaded && ctx.drawImage(
             this.uiBgd,
             0, 0
-          )
-    }
-
-    drawTelegraph(ctx){
-        this.isLoaded && ctx.drawImage(
-            this.telegraph,
-            1014, 570
           )
     }
 
