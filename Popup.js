@@ -3,7 +3,8 @@ class Popup{
         this.message = message;
         this.tv = tv;
         this.gm = gm;
-        //this.uniqueOrders = uniqueOrders;
+
+        this.tv.pauseGame();
 
         this.container = document.querySelector(".game-container");
 
@@ -204,10 +205,5 @@ class Popup{
     done(){
         this.element.remove();
         this.tv.unpauseGame();
-    }
-
-    init(){
-        this.container.appendChild(this.element);
-        this.tv.pauseGame();
     }
 }

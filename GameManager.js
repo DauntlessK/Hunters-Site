@@ -234,6 +234,7 @@ class GameManager{
         this.patrolling = true;
         //todo - assignment to arctic
         if (this.currentOrders == "Arctic"){
+            //TODO: Roll for artic assignment
             console.log("TODO roll for <=3");
         }
 
@@ -250,6 +251,7 @@ class GameManager{
             //if doctor is SW or KIA, see if any other injured crew members die (each patrol box, before encounter)
             if (this.sub.crew_health["Doctor"] >= 2){
                 //check if any hurt crewmen
+                //TODO: Crewman Death Check
                 console.log("TO DO - CREWMEN DEATH CHECK")
             }
 
@@ -259,9 +261,11 @@ class GameManager{
             //check for automatic aborts
             if (this.sub.dieselsInop() == 2){
                 if (x == this.patrol.getPatrolLength()){
+                    //TODO: Popups (small)
                     console.log("TO DO- POPUP TOWED INTO PORT");
                 }
                 else {
+                    //TODO: Scuttle
                     console.log("TODO - SCUTTLE due to 2 diesel engines inop");
                 }
             }
@@ -273,9 +277,11 @@ class GameManager{
 
             // check if on weather duty or severe weather random events (skips current box)
             if (this.weatherDuty){
+                //TODO: weather
                 console.log("TO DO - Deal with weather duty");
             }
             if (this.severeWeather) {
+                //TODO: weather
                 console.log("TO DO - Deal with severe weather");
             }
 

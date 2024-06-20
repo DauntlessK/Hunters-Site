@@ -74,6 +74,59 @@ class UI{
             gm: this.gm,
             tv: this.tv,
             onClick: "beginPatrol"
+        });
+        this.statusButton = new Button({
+            src: "images/ui/StatusButton.png",
+            x: 1150,
+            y: 120,
+            width: 100,
+            height: 100,
+            frames: 2,
+            tube: null,
+            gm: this.gm,
+            tv: this.tv,
+            onClick: "openStatus"
+        });
+        var fgaugeSrc = "images/ui/FloodGauge" + this.gm.sub.flooding_hp + ".png";
+        this.floodGauge = new Button({
+            src: fgaugeSrc,
+            x: 1055,
+            y: 120,
+            width: 100,
+            height: 100,
+            frames: this.gm.sub.flooding_hp,
+            gm: this.gm,
+            tv: this.tv,
+            subItem: "this.gm.sub.flooding_hp"
+        })
+        var dgaugeSrc = "images/ui/DamageGauge" + this.gm.sub.hull_hp + ".png";
+        this.damageGauge = new Button({
+            src: dgaugeSrc,
+            x: 955,
+            y: 120,
+            width: 100,
+            height: 100,
+            frames: this.gm.sub.hull_hp,
+            gm: this.gm,
+            tv: this.tv,
+            subItem: "this.gm.sub.hull_hp"
+        })
+        //telegraph 
+        var q = "";
+        var w = "";
+        //FIND IF TRANSIT OR BoB FOR Q
+        if (this.gm.) //FIND IF MISSION ORDERS OR NOT FOR W
+        var telegraphSrc = "images/ui/telegraph/Telegraph" + this.gm.patrol.getPatrolLength() + q + w + ".png";
+        this.damageGauge = new Button({
+            src: dgaugeSrc,
+            x: 955,
+            y: 120,
+            width: 100,
+            height: 100,
+            frames: this.gm.sub.hull_hp,
+            gm: this.gm,
+            tv: this.tv,
+            subItem: "this.gm.sub.hull_hp"
         })
 
     }
@@ -86,6 +139,7 @@ class UI{
         }
         this.reloadButton.handleEvent(event);
         this.beginPatrolButton.handleEvent(event);
+        this.statusButton.handleEvent(event);
     }
     
     uiIsOn(){
@@ -104,7 +158,7 @@ class UI{
 
         if (this.uiIsOn()){
             this.drawBgd(ctx);
-
+            this.statusButton.draw(ctx);
             for (let i = 1; i < 7; i++) {
                 this.tubeButtonArray[i].draw(ctx);
             }
@@ -118,6 +172,9 @@ class UI{
             if (!this.tv.reloadMode && !this.gm.patrolling){
                 this.beginPatrolButton.draw(ctx);
             }
+            this.floodGauge.draw(ctx);
+            this.damageGauge.draw(ctx);
+            
             //Object.values(this.buttons).forEach(object => {
             //object.button.draw(this.ctx);
           //})

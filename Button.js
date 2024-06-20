@@ -66,9 +66,13 @@ class Button {
         this.gm.newPatrol();
         this.tv.gameObjects.uboat.sprite.setDeparted();
         this.tv.gameObjects.waterline.sprite.setDeparted();
-        this.tv.gameObjects.waterAround.sprite.setDeparted();
 
         this.disableButton();
+    }
+
+    openStatus(){
+        this.gm.eventResolved = false;
+        const popup = new StatusPopup(this.tv, this.gm);
     }
 
     beginPatrol(){

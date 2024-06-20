@@ -1,0 +1,176 @@
+.StatusMessage {
+    font-size: 10;
+    position: absolute;
+    left: 50px;
+    right: 50px;
+    top: 61px;
+    bottom: 61px;
+    padding: 15px;
+    font-family: courier;
+    background: var(--menu-background);
+    border-top: 1px solid var (--menu-font-color);
+    border-top: 1px solid var (--menu-border-color);
+    color: var(--menu-font-color);
+    outline: 2px solid #000;
+}
+
+.CloseStatus_button {
+    margin: 0;
+    font-size: 20px;
+    padding: 0;
+    -webkit-appearance: none;
+    background: none;
+    border: 0;
+    font-family: inherit;
+    cursor: pointer;
+
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+}
+
+.ReloadStatus_button {
+    margin: 0;
+    font-size: 20px;
+    padding: 0;
+    -webkit-appearance: none;
+    background: none;
+    border: 0;
+    font-family: inherit;
+    cursor: pointer;
+
+    position: absolute;
+    left: 15px;
+    bottom: 15px;
+}
+
+.UboatCrew {
+    width: 200px;
+    position: absolute;
+    right: 30px;
+    top: 25px;
+}
+
+.StatusMessage td {
+    font-size: 12px;
+    padding: 4px;
+    text-align: center; 
+}
+
+.StatusMessage th {
+    font-size: 12px;
+    padding: 4px;
+    text-align: center;
+}
+
+.EEngine1 {
+    font-size: 11px;
+    font-family: courier;
+    position: absolute;
+    left: 22px;
+    top: 201px;
+}
+
+.EEngine2 {
+    font-size: 11px;
+    font-family: courier;
+    position: absolute;
+    left: 70px;
+    top: 233px;
+}
+
+.DEngine1 {
+    font-size: 11px;
+    font-family: courier;
+    position: absolute;
+    left: 450px;
+    top: 213px;
+}
+
+.DEngine2 {
+    font-size: 11px;
+    font-family: courier;
+    position: absolute;
+    left: 384px;
+    top: 237px;
+}
+
+.Periscope {
+    font-size: 11px;
+    font-family: courier;
+    position: absolute;
+    left: 398px;
+    top: 20px;
+}
+
+.Radio {
+    font-size: 11px;
+    font-family: courier;
+    position: absolute;
+    left: 590px;
+    top: 15px;
+}
+
+.Hydrophones {
+    font-size: 11px;
+    font-family: courier;
+    position: absolute;
+    left: 716px;
+    top: 204px;
+}
+
+.Batteries {
+    font-size: 11px;
+    font-family: courier;
+    position: absolute;
+    left: 644px;
+    top: 235px;
+}
+
+.FTDoors {
+    font-size: 11px;
+    font-family: courier;
+    position: absolute;
+    left: 727px;
+    top: 61px;
+}
+
+.ATDoors {
+    font-size: 11px;
+    font-family: courier;
+    position: absolute;
+    left: 20px;
+    top: 93px;
+}
+
+.DivePlanes {
+    font-size: 11px;
+    font-family: courier;
+    position: absolute;
+    left: 835px;
+    top: 187px;
+}
+
+.FuelTanks {
+    font-size: 11px;
+    font-family: courier;
+    position: absolute;
+    left: 190px;
+    top: 80px;
+}
+
+.DeckGun {
+    font-size: 11px;
+    font-family: courier;
+    position: absolute;
+    left: 615px;
+    top: 67px;
+}
+
+.FlakGun {
+    font-size: 11px;
+    font-family: courier;
+    position: absolute;
+    left: 340px;
+    top: 60px;
+}

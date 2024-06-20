@@ -110,19 +110,10 @@ class TacticalView{
                 this.upperImage.src = "images/logo.png";
                 this.bgdFrames = 30,
                 this.gameObjects = {
-                    waterAround: new GameObject({
-                        x: -70,
-                        y: -5,
-                        src: "images/portscene_water_spritesheet.png",
-                        width: 1280,
-                        height: 720,
-                        frames: 24,
-                        isPlayer: false
-                    }),
                     uboat: new GameObject({
                         x: 137,
                         y: 392,
-                        src: "images/ships/Uboat_VIIC_spritesheet.png",
+                        src: "images/ships/Uboat_VIIC_spritesheet2.png",
                         width: 803,
                         height: 95,
                         frames: 1,
@@ -144,19 +135,10 @@ class TacticalView{
                 this.upperImage.src = "images/blank.png";
                 this.bgdFrames = 30,
                 this.gameObjects = {
-                    waterAround: new GameObject({
-                        x: -70,
-                        y: -5,
-                        src: "images/portscene_water_spritesheet.png",
-                        width: 1280,
-                        height: 720,
-                        frames: 24,
-                        isPlayer: false
-                    }),
                     uboat: new GameObject({
                         x: 137,
                         y: 392,
-                        src: "images/ships/Uboat_VIIC_spritesheet.png",
+                        src: "images/ships/Uboat_VIIC_spritesheet2.png",
                         width: 803,
                         height: 95,
                         frames: 1,
@@ -181,7 +163,7 @@ class TacticalView{
                     uboat: new GameObject({
                         x: 0,
                         y: 280,
-                        src: "images/ships/Uboat_VIIC_spritesheet.png",
+                        src: "images/ships/Uboat_VIIC_spritesheet2.png",
                         width: 803,
                         height: 95,
                         frames: 1,
