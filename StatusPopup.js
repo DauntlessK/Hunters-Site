@@ -22,6 +22,8 @@ class StatusPopup{
         //new div to add
         this.element.innerHTML = (`
             <img src = "images/ui/Status.png">
+            <p class="Type">Type: ${this.gm.sub.getType()}</p>
+            <p class="Patrol">Patrol # ${this.gm.patrolNum}</p>
             <p class="EEngine1">Electric Engine #1</p>
             <p class="EEngine2">Electric Engine #2</p>
             <p class="DEngine1">Diesel Engine #1</p>

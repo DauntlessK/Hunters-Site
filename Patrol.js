@@ -110,26 +110,38 @@ class Patrol{
         }
     }
 
+    //Determines full length of a given patrol (number of on station steps + all transit steps)
     getPatrolLength(){
-        //Determines full length of a given patrol (number of on station steps + all transit steps
         switch (this.gm.currentOrders) {
             case "North America":
             case  "Caribbean":
-                return this.gm.sub.patrol_length - 1 + 8;  // NA patrol has 1 less on station patrol + 2 BoB + EXTRA 2 transits
+                return this.gm.sub.patrol_length - 1 + 8;  // NA patrol has 1 less on station patrol + 2 BoB + EXTRA 4 transits (8 total)
+                break;
+            case "West African Coast":
+                if (this.gm.sub.getType() == "IXA") {
+                    return this.gm.sub.patrol_length  + 6;
+                }
+                else {
+                    return this.gm.sub.patrol_length  + 5;  // WAC patrol has 1 less on station (like NA) + 2 extra transits (6 total)
+                }
+                break;
             default:
                 return this.gm.sub.patrol_length + 4;
         }
     }
 
+    //Builds array of strings, each item being a step in the patrol. Step 0 is port.
     buildPatrol(){
-        //Builds array of strings, each item being a step in the patrol. Step 0 is port.
-        //build patrol for non NA patrols
         
         this.tv.mainUI.telegraph.setSrc(this.gm.currentOrders); //set telegraph to correct png
 
         var NAorders = false;
         if (this.gm.currentOrders == "North America" || this.gm.currentOrders == "Carribean"){
             NAorders = true
+        }
+        var WAfricanCoast = false;
+        if (this.gm.currentOrders == "West African Coast") {
+            WAfricanCoast = true;
         }
     
         for (let x=0; x < this.getPatrolLength() + 1; x++){
@@ -150,10 +162,13 @@ class Patrol{
             else if (x == 3 && this.gm.currentOrders.includes("Abwehr") && !NAorders){
                 this.patrolArray.push("Mission");
             }
-            else if (x == 3 && this.gm.currentOrders.includes("Minelaying") && !NAorders){
+            else if (x == 3 && this.gm.currentOrders.includes("Minelaying") && !NAorders && !WAfricanCoast){
                 this.patrolArray.push("Mission");
             }
             else if ((x == 3 || x == this.getPatrolLength() - 2) && NAorders){
+                this.patrolArray.push("Transit");
+            }
+            else if ((x == 3 || x == this.getPatrolLength() - 2) && WAfricanCoast){
                 this.patrolArray.push("Transit");
             }
             else if ((x == 4 || x == this.getPatrolLength() - 3) && NAorders){
@@ -179,15 +194,15 @@ class Patrol{
                 this.patrolArray.push(otherSpot);
             }
         }
-        //remove one NA/Caribbean patrol if applicable
+        //remove one NA/Caribbean/WAC patrol if applicable
         if (this.gm.currentOrders == "North America"){
-            const index = array.indexOf("North America");
+            const index = this.patrolArray.indexOf("North America");
             if (index > -1) { 
                 this.patrolArray.splice(index, 1);
             }
         }
         if (this.gm.currentOrders == "Carribean"){
-            const index = array.indexOf("Carribean");
+            const index = this.patrolArray.indexOf("Carribean");
             if (index > -1) { 
                 this.patrolArray.splice(index, 1);
             }

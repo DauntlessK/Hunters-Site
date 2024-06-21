@@ -103,9 +103,9 @@ class GameManager{
         return this.rank[this.sub.crew_levels["Kommandant"]] + " " + this.kmdt;
     }
 
+    //Determines the starting rank of the player
     getStartingRank(){
-        //Determines the starting rank of the player
-        if (this.sub.getType() == "IXA" || this.sub.getType() == "IXB"){
+        if ((this.gm.sub.getType().includes("IX"))) {
             this.sub.crew_levels["Kommandant"] = 1;
         }
         else{
@@ -145,8 +145,8 @@ class GameManager{
         }
     }
 
+    //sets date and other settings based on sub selection
     setDate(){
-        //sets date and other settings based on sub selection
         switch (this.sub.getType()){
             case "VIIA":
                 this.date_month = 8;
@@ -163,6 +163,11 @@ class GameManager{
             case "IXB":
                 this.date_month = 3;
                 this.date_year = 1940;
+                break;
+            case "IXC":
+                this.date_month = 4;
+                this.date_year = 1941;
+                this.francePost = true;
                 break;
             case "VIIC":
                 this.date_month = 9;

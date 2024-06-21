@@ -51,6 +51,22 @@
     top: 25px;
 }
 
+.Type {
+    font-size: 16px;
+    font-family: courier;
+    position: absolute;
+    left: 30px;
+    top: 10px;
+}
+
+.Patrol {
+    font-size: 12px;
+    font-family: courier;
+    position: absolute;
+    left: 30px;
+    top: 40px;
+}
+
 .StatusMessage td {
     font-size: 12px;
     padding: 4px;

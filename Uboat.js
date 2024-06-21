@@ -89,6 +89,21 @@ class Uboat{
                 this.systems["3.7 Flak"] = 0;
                 this.tube[6] = 0; 
                 break;
+            case "IXC":
+                this.patrol_length = 7;  
+                this.hull_hp = 9;  
+                this.flooding_hp = 9; 
+                this.G7aStarting = 12; 
+                this.G7eStarting = 10;  
+                this.forward_tubes = 4;  
+                this.aft_tubes = 2;
+                this.torpedo_type_spread = 4;
+                this.deck_gun_ammo = 5;
+                this.deck_gun_cap = 5;
+                this.reserves_aft = 2;
+                this.systems["3.7 Flak"] = 0;
+                this.tube[6] = 0; 
+                break;
             case "VIID":
                 this.patrol_length = 5;  
                 this.hull_hp = 8;  
