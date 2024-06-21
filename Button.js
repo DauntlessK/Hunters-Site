@@ -59,13 +59,17 @@ class Button {
         }
     }
 
+    //called when finished with the reload mode
     commitReload(){
-        //called when finished with the reload mode
 
         this.tv.reloadMode = false;
-        this.gm.newPatrol();
-        this.tv.gameObjects.uboat.sprite.setDeparted();
-        this.tv.gameObjects.waterline.sprite.setDeparted();
+
+        if (!this.tv.isDeparted) {
+            this.gm.newPatrol();
+            this.tv.gameObjects.uboat.sprite.setDeparted();
+            this.tv.gameObjects.waterline.sprite.setDeparted();
+            this.tv.setDeparted(true);
+        }
 
         this.disableButton();
     }

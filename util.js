@@ -10,6 +10,12 @@ function d6Rollx2() {
     return roll;
 }
 
+function d3Roll() {
+  //rolls a single die (1-3)
+    roll = Math.floor(Math.random() * (3 - 1)) + 1;
+    return roll;
+}
+
 function until(conditionFunction) {
   // part of async function to wait until action is taken
     const poll = resolve => {
@@ -23,7 +29,7 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function getDataFromTxt(fullFilePath) {
+function getDataFromTxt(fullFilePath, ship) {
   //gets a list from a txt file and returns 1 array
   const myRequest = new Request(fullFilePath);
   var toReturn;
@@ -41,6 +47,8 @@ async function getDataFromTxt(fullFilePath) {
       for (let i = 0; i < toReturn.length; i++){
           toReturn[i] = toReturn[i].replace('\n','');
       }
+      console.log("toReturn = " + toreturn);
+      ship.loadResolved(true);
       return toReturn;
     })
     .catch((error) => {

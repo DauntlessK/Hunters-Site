@@ -27,7 +27,7 @@ class Patrol{
         this.patrolChart8 = ["", "", "Mediterranean", "Atlantic (Wolfpack)", "British Isles", "North America", "Atlantic (Wolfpack)", "Atlantic",
             "Atlantic", "North America", "Arctic", "Atlantic (Wolfpack)", "West African Coast"];
 
-        //this.getPatrol();
+        this.telegraphSrc = "";
     }
 
     async getPatrol(){
@@ -115,7 +115,12 @@ class Patrol{
         switch (this.gm.currentOrders) {
             case "North America":
             case  "Caribbean":
-                return this.gm.sub.patrol_length - 1 + 8;  // NA patrol has 1 less on station patrol + 2 BoB + EXTRA 4 transits (8 total)
+                if (this.gm.sub.getType() == "IXA") {
+                    return this.gm.sub.patrol_length  + 8;
+                }
+                else {
+                    return this.gm.sub.patrol_length - 1 + 8;  // NA patrol has 1 less on station patrol + 2 BoB + EXTRA 4 transits (8 total)
+                }
                 break;
             case "West African Coast":
                 if (this.gm.sub.getType() == "IXA") {
@@ -133,10 +138,10 @@ class Patrol{
     //Builds array of strings, each item being a step in the patrol. Step 0 is port.
     buildPatrol(){
         
-        this.tv.mainUI.telegraph.setSrc(this.gm.currentOrders); //set telegraph to correct png
+        this.tv.mainUI.telegraph.setSrc(this.getTelegraphSrc()); //set telegraph to correct png
 
         var NAorders = false;
-        if (this.gm.currentOrders == "North America" || this.gm.currentOrders == "Carribean"){
+        if (this.gm.currentOrders == "North America" || this.gm.currentOrders == "Caribbean"){
             NAorders = true
         }
         var WAfricanCoast = false;
@@ -156,6 +161,9 @@ class Patrol{
                     this.patrolArray.push("Transit");
                 }
             }
+            else if (x == 2 && !this.gm.permMedPost && this.currentOrders == "Mediterranean"){
+                this.patrolArray.push("Gibraltar");
+            }
             else if (x == 2 || x == this.getPatrolLength() - 1){
                 this.patrolArray.push("Transit");
             }
@@ -172,6 +180,9 @@ class Patrol{
                 this.patrolArray.push("Transit");
             }
             else if ((x == 4 || x == this.getPatrolLength() - 3) && NAorders){
+                this.patrolArray.push("Transit");
+            }
+            else if ((x == 4 || x == this.getPatrolLength() - 3) && WAfricanCoast){
                 this.patrolArray.push("Transit");
             }
             else if (x == 5 && this.gm.currentOrders.includes("Abwehr") && NAorders){
@@ -195,18 +206,19 @@ class Patrol{
             }
         }
         //remove one NA/Caribbean/WAC patrol if applicable
-        if (this.gm.currentOrders == "North America"){
+        //unsure if removal is needed if the patrol lengths are accurate===========
+        /**if (this.gm.currentOrders == "North America"){
             const index = this.patrolArray.indexOf("North America");
             if (index > -1) { 
                 this.patrolArray.splice(index, 1);
             }
         }
-        if (this.gm.currentOrders == "Carribean"){
-            const index = this.patrolArray.indexOf("Carribean");
+        if (this.gm.currentOrders == "Caribbean"){
+            const index = this.patrolArray.indexOf("Caribbean");
             if (index > -1) { 
                 this.patrolArray.splice(index, 1);
             }
-        }
+        }*/
         console.log(this.patrolArray);
     }
 
@@ -240,7 +252,7 @@ class Patrol{
                         //aircraft
                         return "encounterAircraft";
                     case 12:
-                        return "encounterAttack('Ship')";
+                        return "encounterAttackShip";
                     default:
                         return "noEncounter";
                 }
@@ -248,15 +260,15 @@ class Patrol{
             case "Arctic":
                 switch (roll){
                     case 2:
-                        return "encounterAttack('Capital Ship')";
+                        return "encounterAttackCapitalShip";
                         break;
                     case 3:
-                        return "encounterAttack('Ship')";
+                        return "encounterAttackShip";
                         break;
                     case 6:
                     case 7:
                     case 8:
-                        return "encounterAttack('Convoy')";
+                        return "encounterAttackConvoy";
                         break;
                     case 12:
                         return "encounterAircraft";
@@ -269,16 +281,16 @@ class Patrol{
             case "Atlantic (Wolfpack)":
                 switch (roll){
                     case 2:
-                        return "encounterAttack('Captail Ship')";
+                        return "encounterAttackCapitalShip";
                         break;
                     case 3:
-                        return "encounterAttack('Ship')";
+                        return "encounterAttackShip";
                         break;
                     case 6:
                     case 7:
                     case 9:
                     case 12:
-                        return "encounterAttack('Convoy')";
+                        return "encounterAttackConvoy";
                         break;
                     default:
                         return "noEncounter";
@@ -287,17 +299,17 @@ class Patrol{
             case "British Isles":
                 switch (roll) {
                     case 2:
-                        return "encounterAttack('Capital Ship')";
+                        return "encounterAttackCapitalShip";
                         break;
                     case 5:
                     case 8:
-                        return "encounterAttack('Ship')";
+                        return "encounterAttackShip";
                         break;
                     case 6:
-                        return "encounterAttack('Ship + Escort')";
+                        return "encounterAttackShipEscort";
                         break;
                     case 10:
-                        return "encounterAttack('Convoy')";
+                        return "encounterAttackConvoy";
                         break;
                     case 12:
                         return "encounterAircraft";
@@ -313,16 +325,16 @@ class Patrol{
                         return "encounterAircraft";
                         break;
                     case 4:
-                        return "encounterAttack('Capital Ship')";
+                        return "encounterAttackCapitalShip";
                         break;
                     case 7:
-                        return "encounterAttack('Ship')";
+                        return "encounterAttackShip";
                         break;
                     case 8:
-                        return "encounterAttack('Convoy')";
+                        return "encounterAttackConvoy";
                         break;
                     case 10:
-                        return "encounterAttack('Two Ships + Escort')";
+                        return "encounterAttackTwoShipsEscort";
                         break;
                     default:
                         return "noEncounter";
@@ -335,20 +347,20 @@ class Patrol{
                         break;
                     case 4:
                     case 6:
-                        return "encounterAttack('Ship')";
+                        return "encounterAttackShip";
                         break;
                     case 5:
-                        return "encounterAttack('Two Ships + Escort')";
+                        return "encounterAttackTwoShipsEscort";
                         break;
                     case 8:
-                        return "encounterAttack('Two Ships')";
+                        return "encounterAttackTwoShips";
                         break;
                     case 9:
                     case 12:
-                        return "encounterAttack('Tanker')";
+                        return "encounterAttackTanker";
                         break;
                     case 11:
-                        return "encounterAttack('Convoy')";
+                        return "encounterAttackConvoy";
                         break;
                     default:
                         return "noEncounter";
@@ -362,12 +374,12 @@ class Patrol{
                         break;
                     case 3:
                     case 11:
-                        return "encounterAttack('Capital Ship')";
+                        return "encounterAttackCapitalShip";
                         break;
                     case 4:
                     case 9:
                     case 10:
-                        return "encounterAttack('Ship + Escort')";
+                        return "encounterAttackShipEscort";
                         break;
                     default:
                         return "noEncounter"
@@ -380,15 +392,15 @@ class Patrol{
                         return "encounterAircraft";
                         break;
                     case 5:
-                        return "encounterAttack('Ship + Escort')";
+                        return "encounterAttackShipEscort";
                         break;
                     case 6:
                     case 7:
-                        return "encounterAttack('Ship')";
+                        return "encounterAttackShip";
                         break;
                     case 10:
                     case 11:
-                        return "encounterAttack('Convoy')";
+                        return "encounterAttackConvoy";
                         break;
                     default:
                         return "noEncounter" 
@@ -401,14 +413,14 @@ class Patrol{
                         break;
                     case 3:
                     case 7:
-                        return "encounterAttack('Ship')";
+                        return "encounterAttackShip";
                         break;
                     case 6:
                     case 10:
-                        return "encounterAttack('Convoy')";
+                        return "encounterAttackConvoy";
                         break;
                     case 9:
-                        return "encounterAttack('Ship + Escort')";
+                        return "encounterAttackShipEscort";
                         break;
                     case 12:
                         return "encounterAircraft";
@@ -443,5 +455,37 @@ class Patrol{
 
 
         }
+    }
+
+    //creates the string for the correct telegraph png source file based on the patrol / U-boat
+    getTelegraphSrc() {
+
+        //Default to transitType (BoB or T), patrol (Patrol or Mission), and transitBoxes (2, 3 or 4)
+        var transitType = "T";
+        var missionType = "P";
+        var transitBoxes = "2";
+
+        //Bay of Biscay cases
+        if (this.gm.francePost && (this.gm.currentOrders != "Norway" || this.gm.currentOrders != "Arctic")) { 
+            transitType = "B"   
+        }
+
+        //Mission cases
+        if (this.gm.patrol.isMissionPatrol()) {
+            missionType = "M"
+        }
+
+        //Get num of transit boxes
+        if (this.gm.currentOrders == "Caribbean" || this.gm.currentOrders.includes("America")) {
+            transitBoxes = "4";
+        }
+        else if (this.gm.currentOrders == "South African Coast") {
+            transitBoxes = "3";
+        }
+
+        const toReturn = "images/ui/telegraph/Telegraph" + this.gm.patrol.getPatrolLength() + "_" + missionType + "_" + transitBoxes + transitType + ".png";
+         
+        console.log("Telegraph Image: "+ toReturn);
+        return toReturn;
     }
 }

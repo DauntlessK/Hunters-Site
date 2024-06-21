@@ -128,7 +128,7 @@ class UI{
         })
 
         //telegraph 
-        var telegraphSrc = "images/ui/telegraph/Telegraph8TP.png";  //incorrect starting src
+        var telegraphSrc = "images/ui/telegraph/Telegraph7_P_2T.png";  //incorrect starting src as default
         this.telegraph = new MenuIcon({
             src: telegraphSrc,
             x: 1014,
@@ -187,7 +187,6 @@ class UI{
             }
             this.floodGauge.draw(ctx);
             this.damageGauge.draw(ctx);
-            
         }
     }
 

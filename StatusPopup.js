@@ -89,14 +89,21 @@ class StatusPopup{
                 <td>${this.gm.sub.crew_levels["Crew"]}</td>
                 <td>${this.gm.sub.crew_health["Crew 4"]}</td>
             </tr>
-            <button class="CloseStatus_button">Close</button>
-            <button class="ReloadStatus_button">Reload</button>
+            <button class="CloseStatus_button" id="close">Close</button>
+            <button class="ReloadStatus_button" id="reload">Reload</button>
         `)
 
-        this.element.querySelector("button").addEventListener("click", ()=> {
-            //close popup
-            this.done();
-            this.gm.eventResolved = true;
+        this.element.addEventListener("click", ()=> {
+            if (event.target.id == "close"){
+                //close popup
+                this.done();
+                this.gm.eventResolved = true;
+            }
+            else if (event.target.id == "reload" && ! this.tv.isInEncounter) {
+                this.tv.enterReloadMode();
+                this.done();
+                this.gm.eventResolved = true;
+            }
         })
     }
 

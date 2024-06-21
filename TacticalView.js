@@ -7,6 +7,8 @@ class TacticalView{
         this.scene = startScene;
         this.isUnpaused = true;
         this.reloadMode = false;
+        this.isInEncounter = false;
+        this.isDeparted = false; //used to track after reloading whether the boat leaves port, or simply finishes reload
 
         this.lowerImage = new Image();
         this.upperImage = new Image();
@@ -33,6 +35,19 @@ class TacticalView{
         this.isUnpaused = true;
     }
 
+    enterReloadMode() {
+        this.reloadMode = true;
+        this.mainUI.reloadButton.enableButton()
+    }
+
+    commitReload() {
+        this.reloadMode = false;
+    }
+
+    setDeparted(val) {
+        this.isDeparted = val;
+    }
+
     handleEvent(){
         if (this.mainUI != null){
             this.mainUI.handleEvent(event);
@@ -48,6 +63,7 @@ class TacticalView{
         return this.totalTranslation;
     }
 
+    //Called when start game button is clicked on HTML. Creates gm (and thus sub), and UI
     startGame(kmdtTextField, numField, subType){
         //create game manager 
         this.gm.startGame(kmdtTextField, numField, subType);
@@ -103,6 +119,10 @@ class TacticalView{
 
     changeScene(newScene){
         //called to change the scene, responsible for background and sprites on background
+        if (newScene == "Random") {
+            const sceneArray = ["Sunny", "Partly Cloudy", "Cloudy", "Rainy", "Foggy", "Stormy"] //adjust to d12 roll and assign likely values
+        }
+
         this.scene = newScene;
         switch (newScene){
             case "IntroPort":

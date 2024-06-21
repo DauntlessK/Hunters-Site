@@ -73,7 +73,6 @@ class GameManager{
             this.tv.mainUI.rank = this.rank[this.sub.crew_levels["Kommandant"]] + " " + this.kmdt;
             this.tv.mainUI.date = this.getFullDate();
         }
-
         //Popup to greet start of game
         this.eventResolved = false;
         this.setDate();
@@ -105,7 +104,7 @@ class GameManager{
 
     //Determines the starting rank of the player
     getStartingRank(){
-        if ((this.gm.sub.getType().includes("IX"))) {
+        if ((this.sub.getType().includes("IX"))) {
             this.sub.crew_levels["Kommandant"] = 1;
         }
         else{
@@ -302,7 +301,43 @@ class GameManager{
         //create popup based on that encounter
         const patrolPop = new PatrolPopup(this.tv, this, currentEncounter);
 
+        switch (currentEncounter) {
+            case "encounterAttackShip":
+                this.encounterAttack("Ship");
+                break;
+            case "encounterAttackShipEscort":
+                this.encounterAttack("Ship");
+                break;
+        }
+
         console.log(currentEncounter);
+    }
+
+    //When any type of ship/convoy is rolled as an encounter
+    encounterAttack(enc, existingShips) {
+        console.log("ALARRRRM");
+        var ship = [];
+        if (existingShips == null) {
+            ship = this.getShips(enc);
+        }
+        else {
+            ship = existingShips;
+        }
+    }
+
+    //creates and returns a list of ship object(s) for a given encounter
+    getShips(enc) {
+        var tgt = []
+
+        //First add escort if applicable
+        /**if (enc == "Convoy" || enc == "Capital Ship" || enc.includes("Escort")) {
+            tgt.push(new Ship("Escort", this.date_month, this.date_year));
+        }*/
+
+            tgt.push(new Ship("Small Freighter", this.date_month, this.date_year));
+            sleep(2000);
+            console.log("after new ship");
+            console.log("Encounter ship: " + tgt);
     }
     
 }
