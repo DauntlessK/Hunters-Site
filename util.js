@@ -29,7 +29,7 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function getDataFromTxt(fullFilePath, ship) {
+function getDataFromTxt(fullFilePath) {
   //gets a list from a txt file and returns 1 array
   const myRequest = new Request(fullFilePath);
   var toReturn;
@@ -47,8 +47,37 @@ function getDataFromTxt(fullFilePath, ship) {
       for (let i = 0; i < toReturn.length; i++){
           toReturn[i] = toReturn[i].replace('\n','');
       }
-      console.log("toReturn = " + toreturn);
-      ship.loadResolved(true);
+      return toReturn;
+    })
+    .catch((error) => {
+      toReturn = `Error: ${error.message}`;
+    });
+}
+
+function getDataFromTxt2(fullFilePath) {
+  //gets a list from a txt file and returns 1 array
+  const myRequest = new Request(fullFilePath);
+  var toReturn;
+
+  return fetch(myRequest)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error, status = ${response.status}`);
+      }
+      return response.text();
+    })
+    .then((text) => {
+      toReturn = text;
+      toReturn = toReturn.split("\r");
+      console.log("Second Then");
+      for (let i = 0; i < toReturn.length; i++){
+        //console.log("x  " + toReturn[i]);
+          toReturn[i] = toReturn[i].replace('\n','');
+      }
+      //console.log("toReturn = " + toReturn);
+      this.ship.shipNames = toReturn;
+      this.gm.namesTest = toReturn;
+      //ship.loadResolved(true);
       return toReturn;
     })
     .catch((error) => {

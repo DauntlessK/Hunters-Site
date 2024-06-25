@@ -6,7 +6,9 @@ class Ship {
         this.dateSunk = "";
         this.monthSunk = month;
         this.yearSunk = year;
-        this.loadResolved = false;        
+        this.loadResolved = false;   
+        
+        this.shipNames = "";
 
         this.getShip();
     }
@@ -23,11 +25,11 @@ class Ship {
                     this.clss = this.type;
 
                     //OPEN TXT?
-                    
+                    console.log("OPEN TEXT");
                     var names = getDataFromTxt("data/SmallFreighter.txt", this);
                     await until(_ => this.loadResolved == true);
                     console.log("Resolved");
-                    console.log(names);
+                    console.log(this.shipNames);
             }
         }
     }

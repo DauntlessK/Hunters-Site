@@ -61,6 +61,9 @@ class GameManager{
         this.hitsTaken = 0;
         this.randomEvents = 0;
         this.pastSubs = [];
+
+        this.test = [];
+
     }
 
     async startGame(name, num, subType){
@@ -73,6 +76,10 @@ class GameManager{
             this.tv.mainUI.rank = this.rank[this.sub.crew_levels["Kommandant"]] + " " + this.kmdt;
             this.tv.mainUI.date = this.getFullDate();
         }
+
+        this.test = await getDataFromTxt("data/SmallFreighter.txt");
+        console.log(this.test);
+
         //Popup to greet start of game
         this.eventResolved = false;
         this.setDate();
@@ -235,6 +242,7 @@ class GameManager{
     beginPatrol() {
         this.patrolling = true;
         this.currentBox = 1;
+        console.log(this.test);
         this.advancePatrol(true);
     }
 
@@ -333,10 +341,9 @@ class GameManager{
         /**if (enc == "Convoy" || enc == "Capital Ship" || enc.includes("Escort")) {
             tgt.push(new Ship("Escort", this.date_month, this.date_year));
         }*/
-
-            tgt.push(new Ship("Small Freighter", this.date_month, this.date_year));
+            var ship1 = new Ship("Small Freighter", this.date_month, this.date_year)
+            tgt.push(ship1);
             sleep(2000);
-            console.log("after new ship");
             console.log("Encounter ship: " + tgt);
     }
     
