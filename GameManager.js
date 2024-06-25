@@ -62,8 +62,6 @@ class GameManager{
         this.randomEvents = 0;
         this.pastSubs = [];
 
-        this.test = [];
-
     }
 
     async startGame(name, num, subType){
@@ -77,8 +75,7 @@ class GameManager{
             this.tv.mainUI.date = this.getFullDate();
         }
 
-        this.test = await getDataFromTxt("data/SmallFreighter.txt");
-        console.log(this.test);
+        //this.test = await getDataFromTxt("data/SmallFreighter.txt");
 
         //Popup to greet start of game
         this.eventResolved = false;
@@ -242,7 +239,6 @@ class GameManager{
     beginPatrol() {
         this.patrolling = true;
         this.currentBox = 1;
-        console.log(this.test);
         this.advancePatrol(true);
     }
 
@@ -305,7 +301,9 @@ class GameManager{
             console.log("TO DO - Deal with severe weather");
         }
 
+        //get current encounter (IE noEncounter, encounterAttackConvoy)
         var currentEncounter = this.patrol.getEncounter(currentBoxName, this.getYear(), this.randomEvent);
+        
         //create popup based on that encounter
         const patrolPop = new PatrolPopup(this.tv, this, currentEncounter);
 
@@ -341,9 +339,9 @@ class GameManager{
         /**if (enc == "Convoy" || enc == "Capital Ship" || enc.includes("Escort")) {
             tgt.push(new Ship("Escort", this.date_month, this.date_year));
         }*/
-            var ship1 = new Ship("Small Freighter", this.date_month, this.date_year)
+            var ship1 = new Ship("Small Freighter", this.date_month, this.date_year, this.shipsSunk, this.currentOrders);
+            console.log(ship1);
             tgt.push(ship1);
-            sleep(2000);
             console.log("Encounter ship: " + tgt);
     }
     

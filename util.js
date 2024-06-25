@@ -16,6 +16,11 @@ function d3Roll() {
     return roll;
 }
 
+function randomNum(min, max) {
+  num = Math.floor(Math.random() * (max - min)) + 1;
+  return num;
+}
+
 function until(conditionFunction) {
   // part of async function to wait until action is taken
     const poll = resolve => {
@@ -29,8 +34,8 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+//gets a list from a txt file and returns 1 array
 function getDataFromTxt(fullFilePath) {
-  //gets a list from a txt file and returns 1 array
   const myRequest = new Request(fullFilePath);
   var toReturn;
 
@@ -47,37 +52,6 @@ function getDataFromTxt(fullFilePath) {
       for (let i = 0; i < toReturn.length; i++){
           toReturn[i] = toReturn[i].replace('\n','');
       }
-      return toReturn;
-    })
-    .catch((error) => {
-      toReturn = `Error: ${error.message}`;
-    });
-}
-
-function getDataFromTxt2(fullFilePath) {
-  //gets a list from a txt file and returns 1 array
-  const myRequest = new Request(fullFilePath);
-  var toReturn;
-
-  return fetch(myRequest)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error, status = ${response.status}`);
-      }
-      return response.text();
-    })
-    .then((text) => {
-      toReturn = text;
-      toReturn = toReturn.split("\r");
-      console.log("Second Then");
-      for (let i = 0; i < toReturn.length; i++){
-        //console.log("x  " + toReturn[i]);
-          toReturn[i] = toReturn[i].replace('\n','');
-      }
-      //console.log("toReturn = " + toReturn);
-      this.ship.shipNames = toReturn;
-      this.gm.namesTest = toReturn;
-      //ship.loadResolved(true);
       return toReturn;
     })
     .catch((error) => {
