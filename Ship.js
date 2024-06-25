@@ -28,8 +28,7 @@ class Ship {
                 this.damage = 0;
                 this.hp = 2;
                 this.sunk = false;
-                this.clss = this.type;
-                
+                this.clss = this.type;                
 
                 //Get freighter name & GRT
                 var names = await getDataFromTxt("data/SmallFreighter.txt");
@@ -117,5 +116,17 @@ class Ship {
                 }
             }
         }
+    }
+
+    getName() {
+        return this.name;
+    }
+
+    getGRT() {
+        return this.GRT;
+    }
+
+    getNameAndGRT() {
+        return this.name + " - " + this.GRT;  
     }
 }

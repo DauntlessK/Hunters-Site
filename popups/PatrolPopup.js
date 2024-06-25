@@ -62,7 +62,34 @@ class PatrolPopup{
     }
 
     encounterAttackShip() {
-        console.log("TODO");
+        var encounterAttackShipArray = [];
+        const bearing = randomNum(0, 359);
+        const course = ["N", "NNW", "NW", "WNW", "W", "WSW", "SW", "SSW", "S", "SSE", "SE", "ESE", "E", "ENE", "NE", "NNE"];
+        const courseNum = randomNum(0, 15);
+
+        encounterAttackShipArray = ["", 
+            "Smoke on the horizon, bearing ",
+            "Lone ship bearing ",
+            "Single ship bearing "];
+
+        const roll = d3Roll();
+
+        //new div to add
+        this.element.innerHTML = (`
+            <p class="PatrolMessage_p">${encounterAttackShipArray[roll]}${bearing}, course ${course[courseNum]}!<br>
+            </p>
+            <button class="AttackPopup_button" id="attack">Attack</button>
+        `)
+
+        this.element.addEventListener("click", ()=> {
+            if (event.target.id == "attack"){
+                //close popup, move to next attack popup
+                this.done();
+                //const attackPopup = new AttackStartPopup();
+            }
+        })
+
+        this.container.appendChild(this.element);
     }
 
     encounterAttackShipEscort() {
@@ -71,7 +98,6 @@ class PatrolPopup{
     
     done(){
         this.element.remove();
-        this.tv.unpauseGame();
     }
 
 }

@@ -62,6 +62,7 @@ class GameManager{
         this.randomEvents = 0;
         this.pastSubs = [];
 
+        this.patrolPop = null;
     }
 
     async startGame(name, num, subType){
@@ -74,8 +75,6 @@ class GameManager{
             this.tv.mainUI.rank = this.rank[this.sub.crew_levels["Kommandant"]] + " " + this.kmdt;
             this.tv.mainUI.date = this.getFullDate();
         }
-
-        //this.test = await getDataFromTxt("data/SmallFreighter.txt");
 
         //Popup to greet start of game
         this.eventResolved = false;
@@ -242,9 +241,10 @@ class GameManager{
         this.advancePatrol(true);
     }
 
-    advancePatrol(begin) {
+    async advancePatrol(begin) {
         //patrol sequence to go through patrol
         if (! begin) {
+            this.patrolPop.done();
             this.currentBox++;
         }
 
@@ -303,9 +303,7 @@ class GameManager{
 
         //get current encounter (IE noEncounter, encounterAttackConvoy)
         var currentEncounter = this.patrol.getEncounter(currentBoxName, this.getYear(), this.randomEvent);
-        
-        //create popup based on that encounter
-        const patrolPop = new PatrolPopup(this.tv, this, currentEncounter);
+        console.log("Current Encounter: " + currentEncounter);
 
         switch (currentEncounter) {
             case "encounterAttackShip":
@@ -316,12 +314,15 @@ class GameManager{
                 break;
         }
 
-        console.log(currentEncounter);
+        //create popup based on that encounter
+        this.patrolPop = new PatrolPopup(this.tv, this, currentEncounter);
+
+        console.log("End Encounter");
     }
 
     //When any type of ship/convoy is rolled as an encounter
     encounterAttack(enc, existingShips) {
-        console.log("ALARRRRM");
+        console.log("ALARRRRM!  " + enc);
         var ship = [];
         if (existingShips == null) {
             ship = this.getShips(enc);
@@ -334,15 +335,63 @@ class GameManager{
     //creates and returns a list of ship object(s) for a given encounter
     getShips(enc) {
         var tgt = []
+        var ship1 = null;
+        var ship2 = null;
+        var ship3 = null;
+        var ship4 = null;
 
         //First add escort if applicable
-        /**if (enc == "Convoy" || enc == "Capital Ship" || enc.includes("Escort")) {
-            tgt.push(new Ship("Escort", this.date_month, this.date_year));
-        }*/
-            var ship1 = new Ship("Small Freighter", this.date_month, this.date_year, this.shipsSunk, this.currentOrders);
-            console.log(ship1);
+        if (enc == "Convoy" || enc == "Capital Ship" || enc.includes("Escort")) {
+            var esc = new Ship("Escort", this.date_month, this.date_year, this.shipsSunk, this.currentOrders);
+            tgt.push(esc);
+        }
+
+        if (enc == "Tanker") {
+            var ship1 = new Ship("Tanker", this.date_month, this.date_year, this.shipsSunk, this.currentOrders);
             tgt.push(ship1);
-            console.log("Encounter ship: " + tgt);
+        }
+
+        if (enc == "Capital Ship") {
+            var ship1 = new Ship("Tanker", this.date_month, this.date_year, this.shipsSunk, this.currentOrders);
+            tgt.push(ship1);
+        }
+
+        if (enc == "Ship" || enc == "Two Ships" || enc == "Convoy" || enc == "Ship + Escort" || enc == "Two Ships + Escort") {
+            var ship1 = new Ship(this.getTargetShipType(), this.date_month, this.date_year, this.shipsSunk, this.currentOrders);
+            tgt.push(ship1);
+        }
+
+        if (enc == "Two Ships" || enc == "Two Ships + Escort" || enc == "Convoy") {
+            var ship2 = new Ship(this.getTargetShipType(), this.date_month, this.date_year, this.shipsSunk, this.currentOrders);
+            tgt.push(ship2);
+        }
+
+        if (enc == "Convoy") {
+            var ship3 = new Ship(this.getTargetShipType(), this.date_month, this.date_year, this.shipsSunk, this.currentOrders);
+            var ship4 = new Ship(this.getTargetShipType(), this.date_month, this.date_year, this.shipsSunk, this.currentOrders);
+            tgt.push(ship3);
+            tgt.push(ship4);
+        }
+
+        console.log("Encounter ships:");
+        console.log(tgt);
+        return tgt;
+    }
+
+    //Determines the enemy cargo ship type
+    getTargetShipType() {
+        const shipRoll = d6Roll();
+        switch (shipRoll) {
+            case 1:
+            case 2:
+            case 3:
+                return "Small Freighter";
+            case 4:
+            case 5:
+                return "Large Freighter";
+            case 6:
+                return "Tanker";
+        }
     }
     
 }

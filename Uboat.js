@@ -329,11 +329,21 @@ class Uboat{
         this.gm.sub.minesLoadedAft = true;
     }
 
+    //Returns int of how many inoperative diesel engines U-boat has
     dieselsInop(){
-        //Returns int of how many inoperative diesel engines U-boat has
         var numInOp = 0;
         if (this.systems["Diesel Engine #1"] == 2) {numInOp ++;} 
         if (this.systems["Diesel Engine #2"] == 2) {numInOp ++;}
         return numInOp
+    }
+
+    //Returns true if the boat has any mines loaded and thus cannot engage in escorted ships
+    hasMinesLoaded() {
+        if (this.minesLoadedForward == true || this.minesLoadedAft == true) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }
