@@ -330,6 +330,10 @@ class GameManager{
         else {
             ship = existingShips;
         }
+        this.tv.enterEncounter();
+        this.eventResolved = false;
+        this.tv.pauseGame();
+        
     }
 
     //creates and returns a list of ship object(s) for a given encounter

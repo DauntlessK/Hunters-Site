@@ -14,14 +14,35 @@
     max-height: 120px;
 }
 
+.AttackMessage {
+    font-size: 10;
+    position: absolute;
+    height: 200px;
+    left: 75px;
+    right: 75px;
+    bottom: 260px;
+    padding: 15px;
+    font-family: courier;
+    background: var(--menu-background);
+    border-top: 1px solid var (--menu-font-color);
+    border-top: 1px solid var (--menu-border-color);
+    color: var(--menu-font-color);
+    outline: 2px solid #000;
+}
+
 .PatrolMessage_p {
     font-size: 12;
     font-family: courier;
 }
 
+.PatrolAttackMessage_p {
+    font-size: 15;
+    font-family: courier;
+}
+
 .AttackPopup_button {
     margin: 0;
-    font-size: 14px;
+    font-size: 20px;
     padding: 0;
     -webkit-appearance: none;
     background: none;
@@ -31,5 +52,20 @@
 
     position: absolute;
     right: 15px;
+    bottom: 15px;
+}
+
+.PassPopup_button {
+    margin: 0;
+    font-size: 20px;
+    padding: 0;
+    -webkit-appearance: none;
+    background: none;
+    border: 0;
+    font-family: inherit;
+    cursor: pointer;
+
+    position: absolute;
+    right: 170px;
     bottom: 15px;
 }

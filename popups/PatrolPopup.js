@@ -7,6 +7,7 @@ class PatrolPopup{
 
         //Create the element
         this.element = document.createElement("div");
+
         this.element.classList.add("PatrolMessage");
         this[event]();
     }
@@ -76,9 +77,12 @@ class PatrolPopup{
 
         //new div to add
         this.element.innerHTML = (`
-            <p class="PatrolMessage_p">${encounterAttackShipArray[roll]}${bearing}, course ${course[courseNum]}!<br>
+            <h3 class="HeaderMessage_h3">Alarm!</h3>
+            <p class="PatrolAttackMessage_p">${encounterAttackShipArray[roll]}${bearing}, course ${course[courseNum]}!<br>
+            Orders, Herr Kaleun? <br>
             </p>
             <button class="AttackPopup_button" id="attack">Attack</button>
+            <button class="PassPopup_button" id="pass">Ignore</button>
         `)
 
         this.element.addEventListener("click", ()=> {

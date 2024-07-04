@@ -48,6 +48,15 @@ class TacticalView{
         this.isDeparted = val;
     }
 
+    enterEncounter(){
+        console.log("Entered Encounter");
+        this.isInEncounter = true;
+    }
+
+    finishEncounter() {
+        this.isInEncounter = false;
+    }
+
     handleEvent(){
         if (this.mainUI != null){
             this.mainUI.handleEvent(event);

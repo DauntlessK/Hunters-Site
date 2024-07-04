@@ -24,7 +24,7 @@ class OrdersPopup{
         var message = "";
         switch (this.gm.currentOrders){
             case "British Isles":
-                message = " is to proceed to the enclosed area to patrol the British Isles."
+                message = " is to proceed to the enclosed grid square to patrol the British Isles."
                 break;
             case "West African Coast":
             case "Spanish Coast":
@@ -40,7 +40,7 @@ class OrdersPopup{
                 message = " has been entrusted to safely deliver the onboard Abwehr agent to the enclosed area, then proceed to patrol the British Isles."
                 break;
             case "Atlantic":
-                message = " is hereby ordered to patrol the enclosed area in the Mid-Atlantic."
+                message = " is hereby ordered to patrol the enclosed grid square in the Mid-Atlantic."
                 break;
             case "Atlantic (Wolfpack)":
                 message = " has been assigned to a Wolfpack. Proceed to the area enclosed in these orders and maintain contact with the Wolfpack."

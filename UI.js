@@ -149,9 +149,13 @@ class UI{
             this.tubeButtonArray[i].handleEvent(event);
         }
         this.reloadButton.handleEvent(event);
-        this.beginPatrolButton.handleEvent(event);
+        if (!this.gm.patrolling) {
+            this.beginPatrolButton.handleEvent(event);
+        }
         this.statusButton.handleEvent(event);
-        this.continueButton.handleEvent(event);
+        if (!this.tv.isInEncounter) {
+            this.continueButton.handleEvent(event);
+        }
     }
     
     uiIsOn(){
@@ -180,7 +184,9 @@ class UI{
             this.drawHeaderTxt(ctx);
             if (!this.tv.reloadMode && this.gm.patrolling){
                 this.telegraph.draw(ctx);
-                this.continueButton.draw(ctx);
+                if (!this.tv.isInEncounter) {
+                    this.continueButton.draw(ctx);
+                }
             }
             if (!this.tv.reloadMode && !this.gm.patrolling){
                 this.beginPatrolButton.draw(ctx);
