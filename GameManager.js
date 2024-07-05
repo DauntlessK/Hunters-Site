@@ -331,6 +331,7 @@ class GameManager{
             ship = existingShips;
         }
         this.tv.enterEncounter();
+        this.tv.changeScene("SunnyShip");
         this.eventResolved = false;
         this.tv.pauseGame();
         

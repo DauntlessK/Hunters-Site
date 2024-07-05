@@ -199,6 +199,32 @@ class TacticalView{
                         isPlayer: true
                     })
                 }
+                break;
+            case "SunnyShip":
+                this.lowerImage.src = "images/scrollingwater_spritesheet.png",
+                this.upperImage.src = "images/deepwater.png",
+                this.bgdFrames = 49,
+                this.gameObjects = {
+                    uboat: new GameObject({
+                        x: 0,
+                        y: 280,
+                        src: "images/ships/Uboat_VIIC_spritesheet2.png",
+                        width: 803,
+                        height: 95,
+                        frames: 1,
+                        isPlayer: true
+                    }),
+                    ship1: new GameObject({
+                        x: 300,
+                        y: 200,
+                        src: "images/ships/CargoShip1.png",
+                        width: 200,
+                        height: 55,
+                        frames: 1,
+                        isPlayer: true
+                    })
+                }
+                break;
         }
         //update tv on each sprite
         Object.values(this.gameObjects).forEach(object => {
