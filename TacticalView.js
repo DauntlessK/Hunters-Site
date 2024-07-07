@@ -22,6 +22,11 @@ class TacticalView{
         //handle intial scene
         this.changeScene(this.scene);
 
+        //weather images and tod
+        this.weather1 = null;
+        this.weather2 = null;
+        this.time = "Day";
+
         this.nextTranslationTimer = 0;
         this.totalTranslation = 0;
         this.setNewTranslation();
@@ -85,6 +90,24 @@ class TacticalView{
         });
     }
 
+    getNewWeather() {
+        if (newScene == "Random") {
+            const sceneArray = ["Sunny", "Partly Cloudy", "Cloudy", "Rainy", "Foggy", "Stormy"] //adjust to 2xd6 roll and assign likely values
+        }
+
+    }
+
+    setTimeOfDay(time) {
+        this.time = time;
+
+        if (time == "Day") {
+            this.lowerImage.src = "images/scrollingwater_spritesheet.png"
+        }
+        else {
+            this.lowerImage.src = "images/scrollingwater_NIGHT_spritesheet.png"
+        }
+    }
+
     drawLowerImage(ctx){
         //draw lowest layer of background
         ctx.drawImage(this.lowerImage,
@@ -103,6 +126,11 @@ class TacticalView{
             0, 0,
             1280, 720
           )   
+    }
+
+    //draws weather layers
+    drawWeather(ctx) {
+
     }
 
     drawUI(ctx){
@@ -126,10 +154,11 @@ class TacticalView{
         }
     }
 
-    changeScene(newScene){
+    changeScene(newScene, newTime){
         //called to change the scene, responsible for background and sprites on background
-        if (newScene == "Random") {
-            const sceneArray = ["Sunny", "Partly Cloudy", "Cloudy", "Rainy", "Foggy", "Stormy"] //adjust to d12 roll and assign likely values
+
+        if (newScene != "IntroPort" || newScene != "Port") {
+            this.setTimeOfDay(newTime);
         }
 
         this.scene = newScene;
@@ -184,24 +213,7 @@ class TacticalView{
                     })
                 }
                 break;
-            case "Sunny":
-                this.lowerImage.src = "images/scrollingwater_spritesheet.png",
-                this.upperImage.src = "images/deepwater.png",
-                this.bgdFrames = 49,
-                this.gameObjects = {
-                    uboat: new GameObject({
-                        x: 0,
-                        y: 280,
-                        src: "images/ships/Uboat_VIIC_spritesheet2.png",
-                        width: 803,
-                        height: 95,
-                        frames: 1,
-                        isPlayer: true
-                    })
-                }
-                break;
-            case "SunnyShip":
-                this.lowerImage.src = "images/scrollingwater_spritesheet.png",
+            case "Ship":
                 this.upperImage.src = "images/deepwater.png",
                 this.bgdFrames = 49,
                 this.gameObjects = {
@@ -220,6 +232,21 @@ class TacticalView{
                         src: "images/ships/CargoShip1.png",
                         width: 200,
                         height: 55,
+                        frames: 1,
+                        isPlayer: true
+                    })
+                }
+                break;
+            default:
+                this.upperImage.src = "images/deepwater.png",
+                this.bgdFrames = 49,
+                this.gameObjects = {
+                    uboat: new GameObject({
+                        x: 0,
+                        y: 280,
+                        src: "images/ships/Uboat_VIIC_spritesheet2.png",
+                        width: 803,
+                        height: 95,
                         frames: 1,
                         isPlayer: true
                     })

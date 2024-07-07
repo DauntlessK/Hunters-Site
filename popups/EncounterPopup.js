@@ -1,7 +1,9 @@
-class PatrolPopup{
-    constructor(tv, gm, event) {
+class EncounterPopup{
+    constructor(tv, gm, enc, shipList) {
         this.tv = tv;
         this.gm = gm;
+        this.enc = enc;
+        this.shipList = shipList;
 
         this.container = document.querySelector(".game-container");
 
@@ -9,7 +11,7 @@ class PatrolPopup{
         this.element = document.createElement("div");
 
         this.element.classList.add("PatrolMessage");
-        this[event]();
+        this[enc]();
     }
     
     //Popup when encounter is "noEncounter"
@@ -62,11 +64,21 @@ class PatrolPopup{
         this.container.appendChild(this.element);
     }
 
-    encounterAttackShip() {
+    //Popup for lone ship encounter
+    Ship() {
         var encounterAttackShipArray = [];
         const bearing = randomNum(0, 359);
         const course = ["N", "NNW", "NW", "WNW", "W", "WSW", "SW", "SSW", "S", "SSE", "SE", "ESE", "E", "ENE", "NE", "NNE"];
         const courseNum = randomNum(0, 15);
+        var currTime = this.tv.time;
+        var oppositeTime = null;
+
+        if (currTime == "Day") {
+            oppositeTime = "Night";
+        }
+        else {
+            oppositeTime = "Day";
+        }
 
         encounterAttackShipArray = ["", 
             "Smoke on the horizon, bearing ",
@@ -82,14 +94,19 @@ class PatrolPopup{
             Orders, Herr Kaleun? <br>
             </p>
             <button class="AttackPopup_button" id="attack">Attack</button>
+            <button class="WaitPopup_button" id="wait">Follow Until ${oppositeTime}</button>
             <button class="PassPopup_button" id="pass">Ignore</button>
         `)
 
         this.element.addEventListener("click", ()=> {
-            if (event.target.id == "attack"){
+            var action = null;
+            if (event.target.id == "attack" || event.target.id == "wait"){
                 //close popup, move to next attack popup
-                this.done();
                 //const attackPopup = new AttackStartPopup();
+                this.continueAttack(event.target.id);
+            }
+            else if (event.target.id == "ignore") {
+                this.done()
             }
         })
 
@@ -102,6 +119,11 @@ class PatrolPopup{
     
     done(){
         this.element.remove();
+    }
+
+    continueAttack(){
+        this.element.remove();
+        var ADpopup = new AttackDepthPopup(this.tv, this.gm, this.enc, this.shipList);
     }
 
 }

@@ -3,6 +3,10 @@ class StatusPopup{
         this.tv = tv;
         this.gm = gm;
 
+        this.gameWasAlreadyPaused = false; //used to remember if the game was already in a paused state
+        if (this.tv.isUnpaused == false) {
+            this.gameWasAlreadyPaused = true;
+        }
         this.tv.pauseGame();
 
         this.container = document.querySelector(".game-container");
@@ -110,6 +114,8 @@ class StatusPopup{
 
     done(){
         this.element.remove();
-        this.tv.unpauseGame();
+        if (!this.gameWasAlreadyPaused) {
+            this.tv.unpauseGame();
+        }
     }
 }

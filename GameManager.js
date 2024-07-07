@@ -62,7 +62,7 @@ class GameManager{
         this.randomEvents = 0;
         this.pastSubs = [];
 
-        this.patrolPop = null;
+        this.encPop = null;
     }
 
     async startGame(name, num, subType){
@@ -232,7 +232,7 @@ class GameManager{
         this.eventResolved = false;
         const ordersPopUp = new OrdersPopup(this.tv, this, onlyUnique, isPicking);
         await until(_ => this.eventResolved == true);
-        this.tv.changeScene("Sunny");
+        this.tv.changeScene("NoShip", "Day");
     }
 
     beginPatrol() {
@@ -244,11 +244,11 @@ class GameManager{
     async advancePatrol(begin) {
         //patrol sequence to go through patrol
         if (! begin) {
-            this.patrolPop.done();
+            this.encPop.done();
             this.currentBox++;
         }
 
-        console.log("Patrol Advance---------- " + this.currentBox);
+        console.log("Patrol Advance---------- step #" + this.currentBox);
 
         //todo - assignment to arctic
         if (this.currentOrders == "Arctic"){
@@ -306,6 +306,9 @@ class GameManager{
         console.log("Current Encounter: " + currentEncounter);
 
         switch (currentEncounter) {
+            case "noEncounter":
+                this.encPop = new EncounterPopup(this.tv, this, currentEncounter, null);
+                break;
             case "encounterAttackShip":
                 this.encounterAttack("Ship");
                 break;
@@ -314,24 +317,26 @@ class GameManager{
                 break;
         }
 
-        //create popup based on that encounter
-        this.patrolPop = new PatrolPopup(this.tv, this, currentEncounter);
-
         console.log("End Encounter");
     }
 
     //When any type of ship/convoy is rolled as an encounter
     encounterAttack(enc, existingShips) {
         console.log("ALARRRRM!  " + enc);
-        var ship = [];
+        var shipList = [];
         if (existingShips == null) {
-            ship = this.getShips(enc);
+            shipList = this.getShips(enc);
         }
         else {
-            ship = existingShips;
+            shipList = existingShips;
         }
+
+        
+        //create popup based on that encounter
+        this.encPop = new EncounterPopup(this.tv, this, enc, shipList);
+
         this.tv.enterEncounter();
-        this.tv.changeScene("SunnyShip");
+        this.tv.changeScene("Ship", this.getTimeOfDay(false));
         this.eventResolved = false;
         this.tv.pauseGame();
         
@@ -398,5 +403,77 @@ class GameManager{
                 return "Tanker";
         }
     }
-    
+
+    //Returns string of time of day (Day or Night) based on current orders and die roll
+    getTimeOfDay(isFollowing) {
+        //first deal with actic always day or always night months if applicable
+        if (this.currentOrders == "Arctic" && (this.date_month == 5 || this.date_month == 11)) {
+            if (this.date_month == 5){
+                return "Day";
+            }
+            else if (this.date_month == 11) {
+                return "Night";
+            }
+            else {
+                console.log("Error in Artic Orders");
+            }
+        }
+        //otherwise, if following, choose day or night to attack
+        else if (isFollowing) {
+            //print("Attack during day or night?")
+            //print("1) Day")
+            //print("2) Night")
+            //choice = input()
+            //match choice:
+            //    case "1" | "Day" | "day":
+            //        return "Day"
+            //    case "2" | "Night" | "night":
+            //        return "Night"
+            console.log("TODO follow choice");
+        }
+        //otherwise randomly determine day or night
+        else {
+            var timeRoll = d6Roll();
+            //deal with arctic times
+            if (this.currentOrders == "Artic") {
+                switch (this.date_month) {
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 9:
+                    case 10:
+                        if (timeRoll <= 2) {
+                            return "Day";
+                        }
+                        else {
+                            return "Night";
+                        }
+                    case 3:
+                    case 4:
+                    case 6:
+                    case 7:
+                    case 8:
+                        if (timeRoll <= 4) {
+                            return "Day";
+                        }
+                        else {
+                            return "Night";
+                        }
+                    case 5:
+                        return "Day";
+                    case 11:
+                        return "Night";
+                }
+            }
+            //non-arctic day/night 50/50 roll
+            else {
+                if (timeRoll <= 3) {
+                    return "Day";
+                }
+                else {
+                    return "Night";
+                }
+            }
+        }
+    }  
 }
