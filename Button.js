@@ -86,7 +86,7 @@ class Button {
     }
 
     continuePatrol(){
-        this.gm.advancePatrol(false);
+        this.gm.advancePatrol();
     }
 
     disableButton(){

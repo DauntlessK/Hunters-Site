@@ -171,7 +171,7 @@ class ResupplyPopup{
     done(){
         this.element.remove();
         this.tv.changeScene("Port");
-        this.tv.unpauseGame();
+        this.tv.pauseGame(false);
         this.tv.mainUI.reloadMode();
     }
 }

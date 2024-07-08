@@ -129,4 +129,8 @@ class Ship {
     getNameAndGRT() {
         return this.name + " - " + this.GRT;  
     }
+
+    getType() {
+        return this.type;
+    }
 }

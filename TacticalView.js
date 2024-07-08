@@ -5,7 +5,7 @@ class TacticalView{
         this.gm = new GameManager(this);
         this.mainUI = null;
         this.scene = startScene;
-        this.isUnpaused = true;
+        this.isPaused = false;
         this.reloadMode = false;
         this.isInEncounter = false;
         this.isDeparted = false; //used to track after reloading whether the boat leaves port, or simply finishes reload
@@ -32,12 +32,8 @@ class TacticalView{
         this.setNewTranslation();
     }
 
-    pauseGame(){
-        this.isUnpaused = false;
-    }
-
-    unpauseGame(){
-        this.isUnpaused = true;
+    pauseGame(state){
+        this.isPaused = state;
     }
 
     enterReloadMode() {
@@ -101,10 +97,10 @@ class TacticalView{
         this.time = time;
 
         if (time == "Day") {
-            this.lowerImage.src = "images/scrollingwater_spritesheet.png"
+            this.lowerImage.src = "images/scrollingwater_spritesheet.png";
         }
         else {
-            this.lowerImage.src = "images/scrollingwater_NIGHT_spritesheet.png"
+            this.lowerImage.src = "images/scrollingwater_NIGHT_spritesheet.png";
         }
     }
 
@@ -140,7 +136,7 @@ class TacticalView{
 
     updateAnimationProgress(){
         //check to animate if the game is not in a paused state
-        if (this.isUnpaused == true) {
+        if (this.isPaused == false) {
             //Downtick frame progress
             this.animationFrameProgress -= 1;
             //Check to see if frame limit is 0, if it is, roll to next frame
@@ -219,7 +215,7 @@ class TacticalView{
                 this.gameObjects = {
                     uboat: new GameObject({
                         x: 0,
-                        y: 280,
+                        y: 200,
                         src: "images/ships/Uboat_VIIC_spritesheet2.png",
                         width: 803,
                         height: 95,
@@ -243,7 +239,7 @@ class TacticalView{
                 this.gameObjects = {
                     uboat: new GameObject({
                         x: 0,
-                        y: 280,
+                        y: 200,
                         src: "images/ships/Uboat_VIIC_spritesheet2.png",
                         width: 803,
                         height: 95,

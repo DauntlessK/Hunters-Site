@@ -161,7 +161,7 @@ class UI{
     uiIsOn(){
         //checks if UI should be on or off
 
-        if (this.tv.scene.includes("Ship") || this.tv.reloadMode == true){
+        if (!this.tv.scene.includes("Port") || this.tv.reloadMode == true){
             return true;
         }
         else {

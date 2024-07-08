@@ -85,6 +85,10 @@ class GameManager{
         this.sub.torpedoResupply();        
     }
 
+    setEventResolved(state) {
+        this.eventResolved = state;
+    }
+
     getFullUboatID(){
         return "U-" + this.id;
     }
@@ -237,16 +241,18 @@ class GameManager{
 
     beginPatrol() {
         this.patrolling = true;
-        this.currentBox = 1;
-        this.advancePatrol(true);
+        this.currentBox = 0;
+        this.advancePatrol();
     }
 
-    async advancePatrol(begin) {
-        //patrol sequence to go through patrol
-        if (! begin) {
+    //patrol sequence to go through patrol
+    async advancePatrol() {
+    
+        //close previous box and move to next square
+        if (this.currentBox > 0) {
             this.encPop.done();
-            this.currentBox++;
         }
+        this.currentBox++;
 
         console.log("Patrol Advance---------- step #" + this.currentBox);
 
@@ -321,7 +327,7 @@ class GameManager{
     }
 
     //When any type of ship/convoy is rolled as an encounter
-    encounterAttack(enc, existingShips) {
+    async encounterAttack(enc, existingShips) {
         console.log("ALARRRRM!  " + enc);
         var shipList = [];
         if (existingShips == null) {
@@ -330,15 +336,55 @@ class GameManager{
         else {
             shipList = existingShips;
         }
-
         
-        //create popup based on that encounter
-        this.encPop = new EncounterPopup(this.tv, this, enc, shipList);
-
         this.tv.enterEncounter();
-        this.tv.changeScene("Ship", this.getTimeOfDay(false));
-        this.eventResolved = false;
-        this.tv.pauseGame();
+        var timeOfDay = this.getTimeOfDay(false)
+        this.tv.changeScene(enc, timeOfDay);
+        //this.tv.pauseGame(true);
+        this.setEventResolved(false);
+
+        //create popup based on that encounter to begin encounter
+        this.encPop = new EncounterPopup(this.tv, this, enc, shipList);
+        await until(_ => this.eventResolved == true);
+
+        //check if ignoring ship(s)
+        var waitRoll = d6Roll();
+        if (this.encPop.getChoice() == "ignore") {
+            this.tv.changeScene("", timeOfDay);
+            this.tv.finishEncounter();
+            return;
+        }
+        //check if waiting - see if roll to wait is successful
+        else if (this.encPop.getChoice() == "wait") {
+            if (waitRoll >= 5) {
+                console.log("TODO deal with lost them!");
+                this.tv.finishEncounter();
+                return;
+            }
+            else {
+                console.log("Successfully followed!");
+                if (timeOfDay == "Night") {
+                    timeOfDay = "Day";
+                    this.tv.changeScene(enc, timeOfDay);
+                }
+                else {
+                    timeOfDay = "Night";
+                    this.tv.changeScene(enc, timeOfDay);
+                }
+            }
+        }
+
+        //next popup to get depth
+        this.setEventResolved(false);
+        var ADpopup = new AttackDepthPopup(this.tv, this, this.enc, shipList);
+        await until(_ => this.eventResolved == true);
+
+        var depth = ADpopup.getDepth();
+        if (depth == "Periscope Depth") {
+            this.tv.gameObjects.sprite.uboat.dive();
+        }
+
+        //next popup to choose range
         
     }
 

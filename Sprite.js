@@ -15,6 +15,7 @@ class Sprite {
     this.isPlayer = config.isPlayer;
 
     this.depth = 0;
+    this.diving = false;
     this.surface();
 
     //Configure Animation & Initial State
@@ -57,6 +58,16 @@ class Sprite {
     }
     else if (!this.isPlayer) {
       this.currentFrame = 0;
+    }
+
+    //player diving animation
+    if (this.diving && this.isPlayer) {
+      if (this.animationFrameProgress == o) {
+        this.depth += 1;
+      }
+      if (this.depth >= 85) {
+        this.diving = false;
+      }
     }
 
     //player sprite
@@ -131,8 +142,9 @@ class Sprite {
   }
 
   dive(){
-    this.depth = 85;
-    this.height = 150;
+    this.diving = true;
+    //this.depth = 85;
+    //this.height = 150;   ?????
   }
 
   surface(){

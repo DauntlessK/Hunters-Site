@@ -204,6 +204,6 @@ class Popup{
 
     done(){
         this.element.remove();
-        this.tv.unpauseGame();
+        this.tv.pauseGame(false);
     }
 }

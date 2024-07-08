@@ -4,6 +4,8 @@ class EncounterPopup{
         this.gm = gm;
         this.enc = enc;
         this.shipList = shipList;
+        
+        this.choice = null;
 
         this.container = document.querySelector(".game-container");
 
@@ -95,18 +97,14 @@ class EncounterPopup{
             </p>
             <button class="AttackPopup_button" id="attack">Attack</button>
             <button class="WaitPopup_button" id="wait">Follow Until ${oppositeTime}</button>
-            <button class="PassPopup_button" id="pass">Ignore</button>
+            <button class="PassPopup_button" id="ignore">Ignore</button>
         `)
 
         this.element.addEventListener("click", ()=> {
             var action = null;
-            if (event.target.id == "attack" || event.target.id == "wait"){
-                //close popup, move to next attack popup
-                //const attackPopup = new AttackStartPopup();
-                this.continueAttack(event.target.id);
-            }
-            else if (event.target.id == "ignore") {
-                this.done()
+            if (event.target.id == "attack" || event.target.id == "wait" || event.target.id == "ignore"){
+                //close popup
+                this.done(event.target.id);
             }
         })
 
@@ -117,13 +115,13 @@ class EncounterPopup{
         console.log("TODO2");
     }
     
-    done(){
+    done(id){
         this.element.remove();
+        this.gm.setEventResolved(true);
+        this.choice = id;
     }
 
-    continueAttack(){
-        this.element.remove();
-        var ADpopup = new AttackDepthPopup(this.tv, this.gm, this.enc, this.shipList);
+    getChoice() {
+        return this.choice;
     }
-
 }

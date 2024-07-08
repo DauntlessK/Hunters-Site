@@ -7,7 +7,7 @@ class StatusPopup{
         if (this.tv.isUnpaused == false) {
             this.gameWasAlreadyPaused = true;
         }
-        this.tv.pauseGame();
+        this.tv.pauseGame(true);
 
         this.container = document.querySelector(".game-container");
 
@@ -115,7 +115,7 @@ class StatusPopup{
     done(){
         this.element.remove();
         if (!this.gameWasAlreadyPaused) {
-            this.tv.unpauseGame();
+            this.tv.pauseGame(false);
         }
     }
 }
