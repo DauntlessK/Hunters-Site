@@ -60,24 +60,21 @@ class Sprite {
       this.currentFrame = 0;
     }
 
-    //player diving animation
-    if (this.diving && this.isPlayer) {
-      if (this.animationFrameProgress == o) {
-        this.depth += 1;
-      }
-      if (this.depth >= 85) {
-        this.diving = false;
-      }
-    }
-
     //player sprite
-    if (this.tv.isUnpaused == true && this.depth > 0 && this.isPlayer){
+    if (this.tv.isPaused == false && this.depth > 0 && this.isPlayer){
       this.animationFrameProgress -= 1;
       //Check to see if frame limit is 0, if it is, roll to next frame
       if (this.animationFrameProgress === 0 && this.currentAnimation === "cruise"){
           this.currentFrame += 1;
           if (this.currentFrame == this.frames -1){
               this.currentFrame = 1;
+          }
+          //player diving animation
+          if (this.diving && this.isPlayer) {
+            this.depth += 1;
+            if (this.depth >= 85) {
+              this.diving = false;
+            }
           }
           this.animationFrameProgress = this.animationFrameLimit;
       }
@@ -143,7 +140,7 @@ class Sprite {
 
   dive(){
     this.diving = true;
-    //this.depth = 85;
+    this.depth = 1;
     //this.height = 150;   ?????
   }
 

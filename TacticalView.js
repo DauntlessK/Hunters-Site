@@ -7,6 +7,7 @@ class TacticalView{
         this.scene = startScene;
         this.isPaused = false;
         this.reloadMode = false;
+        this.statusMode = false;
         this.isInEncounter = false;
         this.isDeparted = false; //used to track after reloading whether the boat leaves port, or simply finishes reload
 
@@ -56,6 +57,10 @@ class TacticalView{
 
     finishEncounter() {
         this.isInEncounter = false;
+    }
+
+    setStatusMode(state) {
+        this.statusMode = state;
     }
 
     handleEvent(){
@@ -224,7 +229,7 @@ class TacticalView{
                     }),
                     ship1: new GameObject({
                         x: 300,
-                        y: 200,
+                        y: 120,
                         src: "images/ships/CargoShip1.png",
                         width: 200,
                         height: 55,

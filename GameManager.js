@@ -381,7 +381,7 @@ class GameManager{
 
         var depth = ADpopup.getDepth();
         if (depth == "Periscope Depth") {
-            this.tv.gameObjects.sprite.uboat.dive();
+            this.tv.gameObjects.uboat.sprite.dive();
         }
 
         //next popup to choose range

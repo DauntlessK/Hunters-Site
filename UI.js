@@ -142,8 +142,8 @@ class UI{
         })
     }
 
+    //passes events from UI to individual buttons
     handleEvent(){
-        //passes events from UI to individual buttons
 
         for (let i = 1; i < 7; i++) {
             this.tubeButtonArray[i].handleEvent(event);
@@ -153,13 +153,13 @@ class UI{
             this.beginPatrolButton.handleEvent(event);
         }
         this.statusButton.handleEvent(event);
-        if (!this.tv.isInEncounter) {
+        if (!this.tv.isInEncounter && !this.tv.statusMode) {
             this.continueButton.handleEvent(event);
         }
     }
     
+    //checks if UI should be on or off
     uiIsOn(){
-        //checks if UI should be on or off
 
         if (!this.tv.scene.includes("Port") || this.tv.reloadMode == true){
             return true;
@@ -169,8 +169,8 @@ class UI{
         }
     }
 
+    //draws elemnts of UI
     draw(ctx){
-        //draws elemnts of UI
 
         if (this.uiIsOn()){
             this.drawBgd(ctx);
@@ -184,7 +184,7 @@ class UI{
             this.drawHeaderTxt(ctx);
             if (!this.tv.reloadMode && this.gm.patrolling){
                 this.telegraph.draw(ctx);
-                if (!this.tv.isInEncounter) {
+                if (!this.tv.isInEncounter && !this.tv.statusMode) {
                     this.continueButton.draw(ctx);
                 }
             }
