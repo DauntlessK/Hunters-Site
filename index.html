@@ -21,45 +21,28 @@
             <input type="number" id="SubNum" placeholder="Enter sub #" maxlength="4">
           </td>
           <td>
+            <select name="uboat" id="uboat">
+              <optgroup label="Start Date: Sept 1939">
+                <option value="VIIA">Type VIIA</option>
+                <option value="VIIB">Type VIIB</option>
+                <option value="IXA">Type IXA</option>
+              </optgroup>
+              <optgroup label="Start Date: Apr 1940">
+                <option value="IXB">Type IXB</option>
+              </optgroup>
+              <optgroup label="Start Date: Oct 1940">
+                <option value="VIIC">Type VIIC</option>
+              </optgroup>
+              <optgroup label="Start Date: May 1941">
+                <option value="IXC">Type IXC</option>
+              </optgroup>
+              <optgroup label="Start Date: Sept 1942">
+                <option value="VIID">Type VIID</option>
+              </optgroup>
+            </select>
+          </td>
+          <td>
             <input type="button" id="StartButton" value="Start Game">
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <input type="radio" id="VIIA" name="uboat" value="VIIA" checked="checked">
-            <label for="VIIA">Type VIIA (Sept - 1939)</label>
-          </td>
-          <td>
-            <input type="radio" id="IXA" name="uboat" value="IXA">
-            <label for="IXA">Type IXA (Sept - 1939)</label><br>
-          </td>
-          <td>
-            <input type="radio" id="VIIC" name="uboat" value="VIIC">
-            <label for="VIIC">Type VIIC (Oct - 1940)</label>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <input type="radio" id="VIIB" name="uboat" value="VIIB">
-            <label for="VIIB">Type VIIB (Sept - 1939)</label>
-          </td>
-          <td>
-            <input type="radio" id="IXB" name="uboat" value="IXB">
-            <label for="IXB">Type IXB (Apr - 1940)</label>
-          </td>
-          <td>
-            <input type="radio" id="VIID" name="uboat" value="VIID">
-            <label for="VIID">Type VIID (Sept - 1942)</label>
-          </td>
-        </tr>
-        <tr>
-          <td>
-          </td>
-          <td>
-            <input type="radio" id="IXC" name="uboat" value="IXC">
-            <label for="IXC">Type IXC (May - 1941)</label>
-          </td>
-          <td>
           </td>
         </tr>
       </table>
@@ -80,7 +63,7 @@
     <script src="popups/OrdersPopup.js"></script>
     <script src="popups/EncounterPopup.js"></script>
     <script src="popups/StatusPopup.js"></script>
-    <script src="popups/AttackDepthPopup.js"></script>
+    <script src="popups/AttackDepthAndRangePopup.js"></script>
     <script src="popups/ResupplyPopup.js"></script>
     <script src="GameManager.js"></script>
     <script src="Uboat.js"></script>

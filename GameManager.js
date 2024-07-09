@@ -236,7 +236,7 @@ class GameManager{
         this.eventResolved = false;
         const ordersPopUp = new OrdersPopup(this.tv, this, onlyUnique, isPicking);
         await until(_ => this.eventResolved == true);
-        this.tv.changeScene("NoShip", "Day");
+        this.tv.changeScene("NoShip", "Day", null, false);
     }
 
     beginPatrol() {
@@ -339,7 +339,7 @@ class GameManager{
         
         this.tv.enterEncounter();
         var timeOfDay = this.getTimeOfDay(false)
-        this.tv.changeScene(enc, timeOfDay);
+        this.tv.changeScene(enc, timeOfDay, shipList, false);
         //this.tv.pauseGame(true);
         this.setEventResolved(false);
 
@@ -350,7 +350,7 @@ class GameManager{
         //check if ignoring ship(s)
         var waitRoll = d6Roll();
         if (this.encPop.getChoice() == "ignore") {
-            this.tv.changeScene("", timeOfDay);
+            this.tv.changeScene("", timeOfDay, null, false);
             this.tv.finishEncounter();
             return;
         }
@@ -365,27 +365,33 @@ class GameManager{
                 console.log("Successfully followed!");
                 if (timeOfDay == "Night") {
                     timeOfDay = "Day";
-                    this.tv.changeScene(enc, timeOfDay);
+                    this.tv.changeScene(enc, timeOfDay, shipList, true);
                 }
                 else {
                     timeOfDay = "Night";
-                    this.tv.changeScene(enc, timeOfDay);
+                    this.tv.changeScene(enc, timeOfDay, shipList, true);
                 }
             }
         }
 
-        //next popup to get depth
+        //next popup to get depth and range
         this.setEventResolved(false);
-        var ADpopup = new AttackDepthPopup(this.tv, this, this.enc, shipList);
+        var attackPopup = new AttackDepthAndRangePopup(this.tv, this, this.enc, shipList, timeOfDay);
         await until(_ => this.eventResolved == true);
 
-        var depth = ADpopup.getDepth();
+        var depth = attackPopup.getDepth();
+        var range = attackPopup.getRange();
         if (depth == "Periscope Depth") {
             this.tv.gameObjects.uboat.sprite.dive();
         }
+        Object.values(this.tv.gameObjects).forEach(object => {
+            object.sprite.setRange(range);
+          })
 
-        //next popup to choose range
-        
+        //Allow for firing (selecting target and tubes)
+        this.tv.setFiringMode(true);
+
+
     }
 
     //creates and returns a list of ship object(s) for a given encounter

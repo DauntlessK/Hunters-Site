@@ -149,12 +149,17 @@ class UI{
             this.tubeButtonArray[i].handleEvent(event);
         }
         this.reloadButton.handleEvent(event);
-        if (!this.gm.patrolling) {
+        if (!this.gm.patrolling && !this.tv.reloadMode) {
             this.beginPatrolButton.handleEvent(event);
         }
         this.statusButton.handleEvent(event);
-        if (!this.tv.isInEncounter && !this.tv.statusMode) {
+        if (this.gm.patrolling && !this.tv.isInEncounter && !this.tv.statusMode && !this.tv.reloadMode) {
             this.continueButton.handleEvent(event);
+        }
+        if (this.tv.firingMode) {
+            Object.values(this.tv.gameObjects).forEach(object => {
+                object.sprite.handleEvent(event);
+              })
         }
     }
     

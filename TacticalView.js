@@ -7,6 +7,7 @@ class TacticalView{
         this.scene = startScene;
         this.isPaused = false;
         this.reloadMode = false;
+        this.firingMode = false;
         this.statusMode = false;
         this.isInEncounter = false;
         this.isDeparted = false; //used to track after reloading whether the boat leaves port, or simply finishes reload
@@ -63,6 +64,10 @@ class TacticalView{
         this.statusMode = state;
     }
 
+    setFiringMode(state) {
+        this.firingMode = state;
+    }
+
     handleEvent(){
         if (this.mainUI != null){
             this.mainUI.handleEvent(event);
@@ -109,8 +114,8 @@ class TacticalView{
         }
     }
 
+    //draw lowest layer of background
     drawLowerImage(ctx){
-        //draw lowest layer of background
         ctx.drawImage(this.lowerImage,
             this.currentFrame * 1280, 0,
             1280, 720,
@@ -119,8 +124,8 @@ class TacticalView{
           )
     }
 
+    //draw layer above background
     drawUpperImage(ctx){
-        //draw layer above background
         ctx.drawImage(this.upperImage,
             0, 0,
             1280, 720,
@@ -134,8 +139,8 @@ class TacticalView{
 
     }
 
+    //calls UI to draw elements (buttons, text, UI bgd)
     drawUI(ctx){
-        //calls UI to draw elements (buttons, text, UI bgd)
         this.mainUI.draw(ctx);
     }
 
@@ -154,12 +159,14 @@ class TacticalView{
             }
         }
     }
-
-    changeScene(newScene, newTime){
-        //called to change the scene, responsible for background and sprites on background
+    //called to change the scene, responsible for background and sprites on background
+    changeScene(newScene, newTime, shipList, timeChangeOnly){
 
         if (newScene != "IntroPort" || newScene != "Port") {
             this.setTimeOfDay(newTime);
+            if (timeChangeOnly) {
+                return;
+            }
         }
 
         this.scene = newScene;
@@ -224,17 +231,19 @@ class TacticalView{
                         src: "images/ships/Uboat_VIIC_spritesheet2.png",
                         width: 803,
                         height: 95,
-                        frames: 1,
+                        frames: 49,
                         isPlayer: true
                     }),
-                    ship1: new GameObject({
+                    ship0: new GameObject({
                         x: 300,
                         y: 120,
-                        src: "images/ships/CargoShip1.png",
-                        width: 200,
-                        height: 55,
-                        frames: 1,
-                        isPlayer: true
+                        src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
+                        shipNum: 0,
+                        width: 150,
+                        height: 50,
+                        frames: 3,
+                        isPlayer: false,
+                        shipList: shipList
                     })
                 }
                 break;

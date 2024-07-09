@@ -1,11 +1,13 @@
-class AttackDepthPopup{
-    constructor(tv, gm, enc, shipList) {
+class AttackDepthAndRangePopup{
+    constructor(tv, gm, enc, shipList, timeOfDay) {
         this.tv = tv;
         this.gm = gm;
         this.enc = enc
         this.shipList = shipList;
+        this.timeOfDay = timeOfDay;
 
         this.depth = null;
+        this.range = null;
 
         this.container = document.querySelector(".game-container");
 
@@ -13,11 +15,16 @@ class AttackDepthPopup{
         this.element = document.createElement("div");
 
         this.element.classList.add("PatrolMessage");
-        this.getDepthPopup();
+        this.getDepthAndRangePopup();
     }
     
     //Popup to allow the player to choose depth, disallowing certain selections
-    getDepthPopup(){
+    getDepthAndRangePopup(){
+        var shortRange = "Short Range";
+        //determine if a surface attack is possible (escorted or not, etc)
+        if (this.shipList[0].getType() == "Escort") {
+            shortRange = "WARNING! Short Range"
+        }
 
         //determine if a surface attack is possible (escorted or not, etc)
         if (this.shipList[0].getType() == "Escort") {
@@ -27,12 +34,18 @@ class AttackDepthPopup{
 
         //new div to add
         this.element.innerHTML = (`
-            <h3 class="HeaderMessage_h3">How will we attack?</h3>
+            <h3 class="HeaderMessage_h3">How should we engage?</h3>
             <p class="PatrolMessage_p">
             <input type="radio" id="PeriscopeDepth" name="depth" value="Periscope Depth" checked="checked">
             <label for="Periscope Depth">Periscore Depth</label>
             <input type="radio" id="SufaceDepth" name="depth" value="Surfaced">
-            <label for="Surfaced">Surfaced</label>
+            <label for="Surfaced">Surfaced</label><br>
+            <input type="radio" id="RangeShort" name="range" value="Short Range">
+            <label for="Short Range">${shortRange}</label>
+            <input type="radio" id="RangeMedium" name="range" value="Medium Range" checked="checked">
+            <label for="Medium Range">Medium Range</label>
+            <input type="radio" id="RangeLong" name="range" value="Long Range">
+            <label for="Long Range">Long Range</label>
             <button class="AttackPopup_button" id="attack">Continue</button>
             </p>
         `)
@@ -49,12 +62,17 @@ class AttackDepthPopup{
     
     done(){
         this.depth = document.querySelector('input[name="depth"]:checked').value;
+        this.range = document.querySelector('input[name="range"]:checked').value;
         this.element.remove();
         this.gm.setEventResolved(true);
     }
 
     getDepth() {
         return this.depth;
+    }
+
+    getRange() {
+        return this.range;
     }
 
 }

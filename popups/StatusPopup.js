@@ -24,6 +24,12 @@ class StatusPopup{
     startGameTextElement() {
         //Message to announce starting rank, sub, date, etc
 
+        const healthShort = ["OK", "LW", "SW", "KIA"];
+        var reload = "Reload";
+        if (this.tv.isInEncounter) {
+            reload = "";
+        }
+
         //new div to add
         this.element.innerHTML = (`
             <img src = "images/ui/Status.png">
@@ -52,7 +58,7 @@ class StatusPopup{
             <tr>
                 <td>KMDT</td>
                 <td>${this.gm.sub.crew_levels["Kommandant"]}</td>
-                <td>${this.gm.sub.crew_health["Kommandant"]}</td>
+                <td>${healthShort[this.gm.sub.crew_health["Kommandant"]]}</td>
             </tr>
             <tr>
                 <td>WO1</td>
@@ -95,7 +101,7 @@ class StatusPopup{
                 <td>${this.gm.sub.crew_health["Crew 4"]}</td>
             </tr>
             <button class="CloseStatus_button" id="close">Close</button>
-            <button class="ReloadStatus_button" id="reload">Reload</button>
+            <button class="ReloadStatus_button" id="reload">${reload}</button>
         `)
 
         this.element.addEventListener("click", ()=> {

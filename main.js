@@ -1,6 +1,6 @@
 class Main{
   constructor(config){
-      this.version = .402
+      this.version = .408
       this.element = config.element;
       this.canvas = this.element.querySelector(".game-canvas");
       this.ctx = this.canvas.getContext("2d");
@@ -50,11 +50,14 @@ class Main{
         this.numField.style.backgroundColor = "red";
       }
       else{
+        var e = document.getElementById("uboat");
+        var type = e.options[e.selectedIndex].text;
+        type = type.replace("Type ", "");
         document.getElementById("Commander").style.visibility = "hidden";
         document.getElementById("SubNum").style.visibility = "hidden";
         document.getElementById("StartButton").style.visibility = "hidden";
         document.getElementById("subSelectTable").style.visibility = "hidden";
-        this.tv.startGame(this.kmdtTextField.value, this.numField.value, document.querySelector('input[name="uboat"]:checked').value);
+        this.tv.startGame(this.kmdtTextField.value, this.numField.value, type);
       }
     }
   }

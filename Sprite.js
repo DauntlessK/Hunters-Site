@@ -16,7 +16,23 @@ class Sprite {
 
     this.depth = 0;
     this.diving = false;
+    this.surfacing = false;
     this.surface();
+
+    //for non-player ships
+    this.shipNum = config.shipNum;
+    this.shipList = config.shipList;
+    this.shipType = null;
+    var imageVariation = d6Roll();
+    //get image variation for enemy ships
+    if (this.shipNum >=0){
+      this.shipType = this.shipList[this.shipNum].getType();
+      this.shipType = this.shipType.replace(" ", "");
+
+      //this.image.src = "images/ships/" + this.shipType + imageVariation + ".png";
+      //console.log(this.image.src);
+      this.image.src = "images/ships/SmallFreighter1.png";
+    }
 
     //Configure Animation & Initial State
     this.animations = config.animations || {
@@ -40,13 +56,52 @@ class Sprite {
 
     //Reference the game object
     this.gameObject = config.gameObject;
+
+    //Boundaries
+    this.xBoundMin = this.x;
+    this.xBoundMax = this.xBoundMin + this.width;
+    this.yBoundMin = this.y;
+    this.yBoundMax = this.yBoundMin + this.height;
   }
 
+  handleEvent(event){
+    if (this.isPlayer || !this.tv.firingMode) {
+      return;
+    }
+    const xPos = event.offsetX;
+    const yPos = event.offsetY;
+    if (event.type == "click" && this.currentFrame != 3){
+        if (this.withinBounds(xPos, yPos)) {
+            this[this.onClick]();
+        }
+    }
+    else if (event.type == "mousemove" && this.currentFrame != 3)
+        if (this.withinBounds(xPos, yPos) && this.currentFrame == 0){
+            this.currentFrame = 1;
+        }
+        else if (!this.withinBounds(xPos, yPos) && this.currentFrame == 1){
+            this.currentFrame = 0;
+        }
+  }
+
+  withinBounds(xPos, yPos){
+      //returns true if x and y pos are within the bounds of the width and height
+
+      if (xPos > this.xBoundMin && xPos < this.xBoundMax &&
+          yPos > this.yBoundMin && yPos < this.yBoundMax) {
+          return true;
+      }
+      else {
+          return false;
+      }
+  }
+
+  //Checks current progress towards the next frame in animation
   updateAnimationProgress(){
     //Downtick frame progress if game is unpaused
 
     //non-player sprite
-    if (this.tv.isUnpaused && !this.isPlayer){
+    /**if (this.tv.isUnpaused && !this.isPlayer){
       this.animationFrameProgress -= 1;
       if (this.animationFrameProgress === 0){
         this.currentFrame++;
@@ -58,7 +113,7 @@ class Sprite {
     }
     else if (!this.isPlayer) {
       this.currentFrame = 0;
-    }
+    }*/
 
     //player sprite
     if (this.tv.isPaused == false && this.depth > 0 && this.isPlayer){
@@ -71,8 +126,8 @@ class Sprite {
           }
           //player diving animation
           if (this.diving && this.isPlayer) {
-            this.depth += 1;
-            if (this.depth >= 85) {
+            this.depth += 2;
+            if (this.depth >= 110) {
               this.diving = false;
             }
           }
@@ -87,17 +142,16 @@ class Sprite {
     }
   }
 
+  //Gets a value to add to the sprite's Y-value. If it's at it, it gets a new one to move towards
   randomUpAndDown(){
     //currently uses hard-coded 10 and neg 10 as the Y min and max
-    if (this.tv.isUnpaused == true){
+    if (!this.tv.isPaused && (this.tv.scene.includes("Port") || this.depth > 109)){
       if (this.currentTranslation === this.tv.getTotalTranslation() ){
         if (this.nextTranslationTimer != 0){
           this.nextTranslationTimer -= 1;
           return this.currentTranslation;
         }
         else{
-          //this.nextTranslationTimer = Math.floor(Math.random() * (250 - 100)) + 100;
-          //this.totalTranslation = Math.floor(Math.random() * (10 - -10)) + -10;
           this.tv.setNewTranslation();
         }
       }
@@ -138,14 +192,35 @@ class Sprite {
     this.tv = tv;
   }
 
+  //sets the sprite to start dive and fully draw sprite
   dive(){
     this.diving = true;
     this.depth = 1;
-    //this.height = 150;   ?????
+    this.height = 150;
   }
 
+  //puts the sprite back on normal X, depth 0
   surface(){
+    //this.surfacing = true;
     this.depth = 0;
+    this.height = 95;
+  }
+
+  setRange(range) {
+    if (this.isPlayer) {
+      return;
+    }
+    switch (range) {
+      case "Short Range":
+        this.currentFrame = 2;
+        break;
+      case "Medium Range":
+        this.currentFrame = 1;
+        break;
+      case "Long Range":
+        this.currentFrame = 0;
+        break;
+    } 
   }
 
   //Draw sprite
@@ -158,6 +233,8 @@ class Sprite {
     x = this.gameObject.x + this.depart();
     y = this.gameObject.y + this.randomUpAndDown() + this.depth;
 
+
+    //work out width and height
     var swidth = 0;
     var sheight = 0;
 
