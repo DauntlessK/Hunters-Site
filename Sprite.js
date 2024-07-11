@@ -40,7 +40,12 @@ class Sprite {
       "cruise": 49
     }
     this.currentAnimation = "cruise";//config.currentAnimation || "idle";
-    this.currentFrame = 1;
+    if (this.isPlayer) {
+      this.currentFrame = 1;
+    }
+    else {
+      this.currentFrame = 0;
+    }
 
     this.animationFrameLimit = 8;
     this.animationFrameProgress = 8;
@@ -58,9 +63,9 @@ class Sprite {
     this.gameObject = config.gameObject;
 
     //Boundaries
-    this.xBoundMin = this.x;
+    this.xBoundMin = this.gameObject.x;
     this.xBoundMax = this.xBoundMin + this.width;
-    this.yBoundMin = this.y;
+    this.yBoundMin = this.gameObject.y;
     this.yBoundMax = this.yBoundMin + this.height;
   }
 
@@ -70,17 +75,27 @@ class Sprite {
     }
     const xPos = event.offsetX;
     const yPos = event.offsetY;
-    if (event.type == "click" && this.currentFrame != 3){
+    if (event.type == "click"){
         if (this.withinBounds(xPos, yPos)) {
-            this[this.onClick]();
+            //if currently selected, deselect
+            if (this.isSelected()) {
+              this.currentFrame--;
+              this.gm.selectTarget(0);
+            }
+            //else if it is not the selected target, select it
+            else {
+              this.currentFrame++;
+              this.gm.selectTarget(this.shipNum);
+            }
+
         }
     }
-    else if (event.type == "mousemove" && this.currentFrame != 3)
-        if (this.withinBounds(xPos, yPos) && this.currentFrame == 0){
-            this.currentFrame = 1;
+    else if (event.type == "mousemove")
+        if (this.withinBounds(xPos, yPos)) {
+            console.log("Hover");
         }
-        else if (!this.withinBounds(xPos, yPos) && this.currentFrame == 1){
-            this.currentFrame = 0;
+        else if (!this.withinBounds(xPos, yPos)) {
+            //console.log("Not hover");
         }
   }
 
@@ -94,6 +109,15 @@ class Sprite {
       else {
           return false;
       }
+  }
+
+  isSelected() {
+    if (this.isPlayer || this.currentFrame % 2 != 0) {
+      return false;
+    }
+    else {
+      return true;
+    }
   }
 
   //Checks current progress towards the next frame in animation

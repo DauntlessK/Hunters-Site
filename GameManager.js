@@ -340,7 +340,6 @@ class GameManager{
         this.tv.enterEncounter();
         var timeOfDay = this.getTimeOfDay(false)
         this.tv.changeScene(enc, timeOfDay, shipList, false);
-        //this.tv.pauseGame(true);
         this.setEventResolved(false);
 
         //create popup based on that encounter to begin encounter

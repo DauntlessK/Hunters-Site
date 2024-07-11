@@ -29,32 +29,41 @@ class TorpedoButton extends Button{
                     this.currentFrame = 5;
                 }
         }
+
+        if (this.tv.firingMode) {
+            if (this.tv.currenTarget == 0) {
+
+            }
+        }
     }
 
     clickedButton(){
         if (this.tv.reloadMode) {
-            if (this.tv.reloadMode == true){
-                if (this.gm.sub.tube[this.tube] == 0){
-                    if (this.tube <= 4 && this.gm.sub.reloads_forward_G7a > 0){
-                        this.gm.sub.loadTube(this.tube, 1);
-                    }
-                    else if (this.tube <=4 && this.gm.sub.reloads_forward_G7e > 0){
-                        this.gm.sub.loadTube(this.tube, 2);
-                    }
-                    else if (this.tube > 4 && this.gm.sub.reloads_aft_G7a > 0){
-                        this.gm.sub.loadTube(this.tube, 1);
-                    }
-                    else if (this.tube > 4 && this.gm.sub.reloads_aft_G7e > 0){
-                        this.gm.sub.loadTube(this.tube, 2);
-                    }
-                }
-                else if (this.gm.sub.tube[this.tube] == 1){
-                    this.gm.sub.loadTube(this.tube, 2);
-                }
-                else if (this.gm.sub.tube[this.tube] == 2){
+            if (this.gm.sub.tube[this.tube] == 0){
+                if (this.tube <= 4 && this.gm.sub.reloads_forward_G7a > 0){
                     this.gm.sub.loadTube(this.tube, 1);
                 }
+                else if (this.tube <=4 && this.gm.sub.reloads_forward_G7e > 0){
+                    this.gm.sub.loadTube(this.tube, 2);
+                }
+                else if (this.tube > 4 && this.gm.sub.reloads_aft_G7a > 0){
+                    this.gm.sub.loadTube(this.tube, 1);
+                }
+                else if (this.tube > 4 && this.gm.sub.reloads_aft_G7e > 0){
+                    this.gm.sub.loadTube(this.tube, 2);
+                }
             }
+            else if (this.gm.sub.tube[this.tube] == 1){
+                this.gm.sub.loadTube(this.tube, 2);
+            }
+            else if (this.gm.sub.tube[this.tube] == 2){
+                this.gm.sub.loadTube(this.tube, 1);
+            }
+        }
+        else if (this.tv.firingMode) {
+            console.log(this.currentFrame);
+            this.currentFrame=2;
+            console.log(this.currentFrame); //current frame being reset?
         }
     }
 

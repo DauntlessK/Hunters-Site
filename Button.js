@@ -33,7 +33,7 @@ class Button {
         const xPos = event.offsetX;
         const yPos = event.offsetY;
         if (event.type == "click" && this.currentFrame != 3){
-            if (this.withinBounds(xPos, yPos)) {
+            if (this.withinBounds(xPos, yPos)) {  
                 this[this.onClick]();
             }
         }

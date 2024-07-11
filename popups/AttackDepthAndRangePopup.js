@@ -37,7 +37,7 @@ class AttackDepthAndRangePopup{
             <h3 class="HeaderMessage_h3">How should we engage?</h3>
             <p class="PatrolMessage_p">
             <input type="radio" id="PeriscopeDepth" name="depth" value="Periscope Depth" checked="checked">
-            <label for="Periscope Depth">Periscore Depth</label>
+            <label for="Periscope Depth">Periscope Depth</label>
             <input type="radio" id="SufaceDepth" name="depth" value="Surfaced">
             <label for="Surfaced">Surfaced</label><br>
             <input type="radio" id="RangeShort" name="range" value="Short Range">

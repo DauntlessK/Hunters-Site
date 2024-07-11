@@ -63,42 +63,42 @@ class StatusPopup{
             <tr>
                 <td>WO1</td>
                 <td>${this.gm.sub.crew_levels["Watch Officer 1"]}</td>
-                <td>${this.gm.sub.crew_health["Watch Officer 1"]}</td>
+                <td>${healthShort[this.gm.sub.crew_health["Watch Officer 1"]]}</td>
             </tr>
             <tr>
                 <td>WO2</td>
                 <td>${this.gm.sub.crew_levels["Watch Officer 2"]}</td>
-                <td>${this.gm.sub.crew_health["Watch Officer 2"]}</td>
+                <td>${healthShort[this.gm.sub.crew_health["Watch Officer 2"]]}</td>
             </tr>
             <tr>
                 <td>ENG</td>
                 <td>${this.gm.sub.crew_levels["Engineer"]}</td>
-                <td>${this.gm.sub.crew_health["Engineer"]}</td>
+                <td>${healthShort[this.gm.sub.crew_health["Engineer"]]}</td>
             </tr>
             <tr>
                 <td>DOC</td>
                 <td>${this.gm.sub.crew_levels["Doctor"]}</td>
-                <td>${this.gm.sub.crew_health["Doctor"]}</td>
+                <td>${healthShort[this.gm.sub.crew_health["Doctor"]]}</td>
             </tr>
             <tr>
                 <td>CREW 1</td>
                 <td>${this.gm.sub.crew_levels["Crew"]}</td>
-                <td>${this.gm.sub.crew_health["Crew 1"]}</td>
+                <td>${healthShort[this.gm.sub.crew_health["Crew 1"]]}</td>
             </tr>
              <tr>
                 <td>CREW 2</td>
                 <td>${this.gm.sub.crew_levels["Crew"]}</td>
-                <td>${this.gm.sub.crew_health["Crew 2"]}</td>
+                <td>${healthShort[this.gm.sub.crew_health["Crew 2"]]}</td>
             </tr>
             <tr>
                 <td>CREW 3</td>
                 <td>${this.gm.sub.crew_levels["Crew"]}</td>
-                <td>${this.gm.sub.crew_health["Crew 3"]}</td>
+                <td>${healthShort[this.gm.sub.crew_health["Crew 3"]]}</td>
             </tr>
             <tr>
                 <td>CREW 4</td>
                 <td>${this.gm.sub.crew_levels["Crew"]}</td>
-                <td>${this.gm.sub.crew_health["Crew 4"]}</td>
+                <td>${healthShort[this.gm.sub.crew_health["Crew 4"]]}</td>
             </tr>
             <button class="CloseStatus_button" id="close">Close</button>
             <button class="ReloadStatus_button" id="reload">${reload}</button>

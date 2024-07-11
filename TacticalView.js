@@ -11,6 +11,7 @@ class TacticalView{
         this.statusMode = false;
         this.isInEncounter = false;
         this.isDeparted = false; //used to track after reloading whether the boat leaves port, or simply finishes reload
+        this.currentTarget = 0;
 
         this.lowerImage = new Image();
         this.upperImage = new Image();
@@ -66,6 +67,16 @@ class TacticalView{
 
     setFiringMode(state) {
         this.firingMode = state;
+        if (state == true) {
+            for (let i = 1; i < 7; i++) {
+                this.mainUI.tubeButtonArray[i].enableButton();
+            }
+        }
+    }
+
+    //sets the currently selected target in which to assign torpedoes to
+    selectTarget(shipNum) {
+        this.currentTarget = shipNum;
     }
 
     handleEvent(){

@@ -4,7 +4,7 @@ class Popup{
         this.tv = tv;
         this.gm = gm;
 
-        this.tv.pauseGame();
+        this.tv.pauseGame(true);
 
         this.container = document.querySelector(".game-container");
 
