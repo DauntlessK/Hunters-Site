@@ -11,7 +11,7 @@ class TacticalView{
         this.statusMode = false;
         this.isInEncounter = false;
         this.isDeparted = false; //used to track after reloading whether the boat leaves port, or simply finishes reload
-        this.currentTarget = 0;
+        this.currentTarget = -1;
 
         this.lowerImage = new Image();
         this.upperImage = new Image();
@@ -76,7 +76,17 @@ class TacticalView{
 
     //sets the currently selected target in which to assign torpedoes to
     selectTarget(shipNum) {
-        this.currentTarget = shipNum;
+        if (this.currentTarget == shipNum) {
+            this.currentTarget = -1;
+        }
+        else {
+            this.currentTarget = shipNum;
+        }
+    }
+
+    //Returns the currently selected target
+    getSelectedTarget() {
+        return this.currentTarget;
     }
 
     handleEvent(){
@@ -247,12 +257,12 @@ class TacticalView{
                     }),
                     ship0: new GameObject({
                         x: 300,
-                        y: 120,
+                        y: 10,
                         src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
                         shipNum: 0,
-                        width: 150,
-                        height: 50,
-                        frames: 3,
+                        width: 201,
+                        height: 158,
+                        frames: 6,
                         isPlayer: false,
                         shipList: shipList
                     })

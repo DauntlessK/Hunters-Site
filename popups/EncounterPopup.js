@@ -66,6 +66,18 @@ class EncounterPopup{
         this.container.appendChild(this.element);
     }
 
+    //Popup for aircraft attack
+    encounterAircraft(){
+
+        //new div to add
+        this.element.innerHTML = (`
+            <p class="PatrolMessage_p">Aircraft!<br>
+            </p>
+        `)
+
+        this.container.appendChild(this.element);
+    }
+
     //Popup for lone ship encounter
     Ship() {
         var encounterAttackShipArray = [];

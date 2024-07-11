@@ -8,9 +8,10 @@ class TorpedoButton extends Button{
         this.currentFrame = this.baseFrame;
     }
 
+    //Gets torpedo tube state based on the mode / what is allowable
     getLatestState(){
-        //figure out how many G7a or G7e are loaded forward. First go for G7a
 
+        //If in reload mode
         if (this.tv.reloadMode){
             this.baseFrame = 4;
             if (this.gm.sub.tube[this.tube] == 1){
@@ -20,24 +21,28 @@ class TorpedoButton extends Button{
                 this.currentFrame = 7;
             }
         }
+        //If in firing mode
+        else if (this.tv.firingMode) {
+            if (this.tv.currentTarget >= 0) {
+                
+            }
+        }
+        //Normal mode (not interactable)
         else {
             this.baseFrame = 0;
-                if (this.gm.sub.tube[this.tube] > 0){
-                    this.currentFrame = this.baseFrame;
-                }
-                else{
-                    this.currentFrame = 5;
-                }
-        }
-
-        if (this.tv.firingMode) {
-            if (this.tv.currenTarget == 0) {
-
+            //if current tube is not empty
+            if (this.gm.sub.tube[this.tube] > 0){
+                this.currentFrame = this.baseFrame;
+            }
+            //else if tube is empty
+            else{
+                this.currentFrame = 5;
             }
         }
     }
 
     clickedButton(){
+        //If pressed when in reload mode
         if (this.tv.reloadMode) {
             if (this.gm.sub.tube[this.tube] == 0){
                 if (this.tube <= 4 && this.gm.sub.reloads_forward_G7a > 0){
@@ -60,10 +65,39 @@ class TorpedoButton extends Button{
                 this.gm.sub.loadTube(this.tube, 1);
             }
         }
-        else if (this.tv.firingMode) {
-            console.log(this.currentFrame);
-            this.currentFrame=2;
-            console.log(this.currentFrame); //current frame being reset?
+        //When pressed when in firing mode, and a target is selected
+        else if (this.tv.firingMode && this.tv.currentTarget >= 0) {
+            //If selected, deselect tube
+            if (this.currentFrame == 2) {
+                this.currentFrame = 0;
+
+                //Check type in tube to assign to ship
+                if (this.gm.sub[this.tube] == 1) {
+                    this.gm.shipList[this.tv.getSelectedTarget()].unassignG7a();
+                }
+                else if (this.gm.sub[this.tube] == 2){
+                    this.gm.shipList[this.tv.getSelectedTarget()].unassignG7e();
+                }
+                
+                //Set tube to firing in Uboat object
+                this.gm.sub.tubeFiring[this.tube] = false;
+            }
+            //Otherwise select tube
+            else {
+                this.currentFrame = 2;
+
+                //Check type in tube to assign to ship
+                if (this.gm.sub.tube[this.tube] == 1) {
+                    console.log(this.gm.shipList[this.tv.getSelectedTarget()]);   //WHAT IS GOING ON??????
+                    this.gm.shipList[this.tv.getSelectedTarget()].assignG7a();
+                }
+                else if (this.gm.sub.tube[this.tube] == 2){
+                    this.gm.shipList[this.tv.getSelectedTarget()].assignG7e();
+                }
+                
+                //Set tube to firing in Uboat object
+                this.gm.sub.tubeFiring[this.tube] = true;
+            }
         }
     }
 

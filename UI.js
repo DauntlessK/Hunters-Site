@@ -165,7 +165,6 @@ class UI{
     
     //checks if UI should be on or off
     uiIsOn(){
-
         if (!this.tv.scene.includes("Port") || this.tv.reloadMode == true){
             return true;
         }
@@ -176,7 +175,6 @@ class UI{
 
     //draws elemnts of UI
     draw(ctx){
-
         if (this.uiIsOn()){
             this.drawBgd(ctx);
             this.statusButton.draw(ctx);
@@ -198,6 +196,13 @@ class UI{
             }
             this.floodGauge.draw(ctx);
             this.damageGauge.draw(ctx);
+            if (this.tv.isInEncounter) {
+                Object.values(this.tv.gameObjects).forEach(object => {
+                    if (!object.sprite.isPlayer) {
+                        object.sprite.drawShipInfo(ctx);
+                    }
+                  })
+            }
         }
     }
 
@@ -207,7 +212,6 @@ class UI{
             0, 0
           )
     }
-
     drawHeaderTxt(ctx){
         //draws all text-based UI elements
         //Sub #

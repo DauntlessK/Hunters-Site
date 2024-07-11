@@ -133,4 +133,21 @@ class Ship {
     getType() {
         return this.type;
     }
+
+    assignG7a() {
+        this.G7aINCOMING++;
+        console.log(this.G7aINCOMING);
+    }
+
+    unassignG7a() {
+        this.G7aINCOMING--;
+    }
+
+    assignG7a() {
+        this.G7eINCOMING++;
+    }
+
+    unassignG7a() {
+        this.G7eINCOMING--;
+    }
 }

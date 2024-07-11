@@ -25,6 +25,7 @@ class Uboat{
 
         //---------------Tubes 1-6 (0=empty, 1=G7a, 2=G7e, 3=Mines)
         this.tube = [null, 0, 0, 0, 0, 0, 0]
+        this.tubeFiring = [null, false, false, false, false, false, false]
 
         //set type-specific values for u-boat
         switch (this.subClass){
@@ -42,6 +43,7 @@ class Uboat{
                 this.reserves_aft = 0;                       // number of aft torpedo reloads
                 this.systems["3.7 Flak"] = -1;               // large (3.7) flak (-1 means not present)
                 this.tube[6] = null;                         // tube 6 (second aft tube)
+                this.tubeFiring[6] = null;
                 break;
             case "VIIB":
             case "VIIC":
@@ -58,6 +60,7 @@ class Uboat{
                 this.reserves_aft = 1;
                 this.systems["3.7 Flak"] = -1;
                 this.tube[6] = null; 
+                this.tubeFiring[6] = null;
                 break;
             case "IXA":
                 this.patrol_length = 5;  
@@ -73,6 +76,7 @@ class Uboat{
                 this.reserves_aft = 2;
                 this.systems["3.7 Flak"] = 0;
                 this.tube[6] = 0; 
+                this.tubeFiring[6] = false;
                 break;
             case "IXB":
                 this.patrol_length = 6;  
@@ -87,7 +91,8 @@ class Uboat{
                 this.deck_gun_cap = 5;
                 this.reserves_aft = 2;
                 this.systems["3.7 Flak"] = 0;
-                this.tube[6] = 0; 
+                this.tube[6] = 0;
+                this.tubeFiring[6] = false;
                 break;
             case "IXC":
                 this.patrol_length = 7;  
@@ -102,7 +107,8 @@ class Uboat{
                 this.deck_gun_cap = 5;
                 this.reserves_aft = 2;
                 this.systems["3.7 Flak"] = 0;
-                this.tube[6] = 0; 
+                this.tube[6] = 0;
+                this.tubeFiring[6] = false;
                 break;
             case "VIID":
                 this.patrol_length = 5;  
@@ -118,6 +124,7 @@ class Uboat{
                 this.reserves_aft = 1;
                 this.systems["3.7 Flak"] = -1;
                 this.tube[6] = null;
+                this.tubeFiring[6] = null;
                 break;
             }
         this.reserves_fore = this.G7aStarting + this.G7eStarting - this.reserves_aft - this.aft_tubes;

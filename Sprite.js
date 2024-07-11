@@ -2,7 +2,7 @@ class Sprite {
   constructor(config) {
 
     this.tv = null;
-    
+
     //Set up the image
     this.image = new Image();
     this.image.src = config.src;
@@ -25,13 +25,13 @@ class Sprite {
     this.shipType = null;
     var imageVariation = d6Roll();
     //get image variation for enemy ships
-    if (this.shipNum >=0){
+    if (this.shipNum >= 0) {
       this.shipType = this.shipList[this.shipNum].getType();
       this.shipType = this.shipType.replace(" ", "");
 
-      //this.image.src = "images/ships/" + this.shipType + imageVariation + ".png";
+      //this.image.src = "images/ships/" + this.shipType + imageVariation + ".png";        //to set imagepath to shiptype
       //console.log(this.image.src);
-      this.image.src = "images/ships/SmallFreighter1.png";
+      this.image.src = "images/ships/CargoShip1.png";
     }
 
     //Configure Animation & Initial State
@@ -69,50 +69,50 @@ class Sprite {
     this.yBoundMax = this.yBoundMin + this.height;
   }
 
-  handleEvent(event){
+  handleEvent(event) {
     if (this.isPlayer || !this.tv.firingMode) {
       return;
     }
     const xPos = event.offsetX;
     const yPos = event.offsetY;
-    if (event.type == "click"){
-        if (this.withinBounds(xPos, yPos)) {
-            //if currently selected, deselect
-            if (this.isSelected()) {
-              this.currentFrame--;
-              this.gm.selectTarget(0);
-            }
-            //else if it is not the selected target, select it
-            else {
-              this.currentFrame++;
-              this.gm.selectTarget(this.shipNum);
-            }
-
+    if (event.type == "click") {
+      if (this.withinBounds(xPos, yPos) && this.shipType != "Escort") {
+        //if currently selected, deselect
+        if (this.isSelected()) {
+          this.currentFrame--;
+          this.tv.selectTarget(-1);
         }
+        //else if it is not the selected target, select it
+        else {
+          this.currentFrame++;
+          this.tv.selectTarget(this.shipNum);
+        }
+
+      }
     }
     else if (event.type == "mousemove")
-        if (this.withinBounds(xPos, yPos)) {
-            console.log("Hover");
-        }
-        else if (!this.withinBounds(xPos, yPos)) {
-            //console.log("Not hover");
-        }
+      if (this.withinBounds(xPos, yPos)) {
+        //console.log("Hover");
+      }
+      else if (!this.withinBounds(xPos, yPos)) {
+        //console.log("Not hover");
+      }
   }
 
-  withinBounds(xPos, yPos){
-      //returns true if x and y pos are within the bounds of the width and height
+  withinBounds(xPos, yPos) {
+    //returns true if x and y pos are within the bounds of the width and height
 
-      if (xPos > this.xBoundMin && xPos < this.xBoundMax &&
-          yPos > this.yBoundMin && yPos < this.yBoundMax) {
-          return true;
-      }
-      else {
-          return false;
-      }
+    if (xPos > this.xBoundMin && xPos < this.xBoundMax &&
+      yPos > this.yBoundMin && yPos < this.yBoundMax) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
   isSelected() {
-    if (this.isPlayer || this.currentFrame % 2 != 0) {
+    if (this.isPlayer || this.currentFrame % 2 == 0) {
       return false;
     }
     else {
@@ -121,7 +121,7 @@ class Sprite {
   }
 
   //Checks current progress towards the next frame in animation
-  updateAnimationProgress(){
+  updateAnimationProgress() {
     //Downtick frame progress if game is unpaused
 
     //non-player sprite
@@ -140,24 +140,24 @@ class Sprite {
     }*/
 
     //player sprite
-    if (this.tv.isPaused == false && this.depth > 0 && this.isPlayer){
+    if (this.tv.isPaused == false && this.depth > 0 && this.isPlayer) {
       this.animationFrameProgress -= 1;
       //Check to see if frame limit is 0, if it is, roll to next frame
-      if (this.animationFrameProgress === 0 && this.currentAnimation === "cruise"){
-          this.currentFrame += 1;
-          if (this.currentFrame == this.frames -1){
-              this.currentFrame = 1;
+      if (this.animationFrameProgress === 0 && this.currentAnimation === "cruise") {
+        this.currentFrame += 1;
+        if (this.currentFrame == this.frames - 1) {
+          this.currentFrame = 1;
+        }
+        //player diving animation
+        if (this.diving && this.isPlayer) {
+          this.depth += 2;
+          if (this.depth >= 110) {
+            this.diving = false;
           }
-          //player diving animation
-          if (this.diving && this.isPlayer) {
-            this.depth += 2;
-            if (this.depth >= 110) {
-              this.diving = false;
-            }
-          }
-          this.animationFrameProgress = this.animationFrameLimit;
+        }
+        this.animationFrameProgress = this.animationFrameLimit;
       }
-      else if (this.currentAnimation === "idle"){
+      else if (this.currentAnimation === "idle") {
         this.currentAnimationFrame = 0;
       }
     }
@@ -167,64 +167,67 @@ class Sprite {
   }
 
   //Gets a value to add to the sprite's Y-value. If it's at it, it gets a new one to move towards
-  randomUpAndDown(){
+  randomUpAndDown() {
     //currently uses hard-coded 10 and neg 10 as the Y min and max
-    if (!this.tv.isPaused && (this.tv.scene.includes("Port") || this.depth > 109)){
-      if (this.currentTranslation === this.tv.getTotalTranslation() ){
-        if (this.nextTranslationTimer != 0){
+    if (!this.tv.isPaused && (this.tv.scene.includes("Port") || this.depth > 109)) {
+      if (this.currentTranslation === this.tv.getTotalTranslation()) {
+        if (this.nextTranslationTimer != 0) {
           this.nextTranslationTimer -= 1;
           return this.currentTranslation;
         }
-        else{
+        else {
           this.tv.setNewTranslation();
         }
       }
-      else{
-          if (this.translationProgress != 0) {
-              this.translationProgress -= 1;
+      else {
+        if (this.translationProgress != 0) {
+          this.translationProgress -= 1;
+        }
+        else {
+          //reset translation progress
+          this.translationProgress = 40;   //hard-coded limit in between moves
+          if (this.currentTranslation > this.tv.getTotalTranslation()) {
+            this.currentTranslation -= 1;
           }
-          else{
-              //reset translation progress
-              this.translationProgress = 40;   //hard-coded limit in between moves
-              if (this.currentTranslation > this.tv.getTotalTranslation()){
-                  this.currentTranslation -= 1;
-              }
-              else if (this.currentTranslation < this.tv.getTotalTranslation()) {
-                  this.currentTranslation += 1;
-              }
+          else if (this.currentTranslation < this.tv.getTotalTranslation()) {
+            this.currentTranslation += 1;
           }
+        }
       }
     }
-      return this.currentTranslation;
+    return this.currentTranslation;
   }
 
-  setDeparted(){
+  setDeparted() {
     this.departed = true;
   }
 
-  depart(){
-    if (this.departed && this.tv.scene == "Port"){
+  depart() {
+    if (this.departed && this.tv.scene == "Port") {
       this.departTranslation++;
       return this.departTranslation;
     }
-    else{
+    else {
       return 0;
     }
   }
 
-  updateTV(tv){
+  updateTV(tv) {
     this.tv = tv;
   }
 
   //sets the sprite to start dive and fully draw sprite
-  dive(){
+  dive() {
     this.diving = true;
     this.depth = 1;
     this.height = 150;
   }
 
   //puts the sprite back on normal X, depth 0
-  surface(){
+  surface() {
+    if (!this.isPlayer) {
+      return;
+    }
     //this.surfacing = true;
     this.depth = 0;
     this.height = 95;
@@ -236,15 +239,15 @@ class Sprite {
     }
     switch (range) {
       case "Short Range":
-        this.currentFrame = 2;
+        this.currentFrame = 4;
         break;
       case "Medium Range":
-        this.currentFrame = 1;
+        this.currentFrame = 2;
         break;
       case "Long Range":
         this.currentFrame = 0;
         break;
-    } 
+    }
   }
 
   //Draw sprite
@@ -263,11 +266,11 @@ class Sprite {
     var sheight = 0;
 
     //increased size of sprite if its the player and at port
-    if ((this.tv.scene == "Port" || this.tv.scene == "IntroPort")){
+    if ((this.tv.scene == "Port" || this.tv.scene == "IntroPort")) {
       swidth = this.width + 150;
       sheight = this.height + 20;
     }
-    else{
+    else {
       swidth = this.width;
       sheight = this.height;
     }
@@ -279,5 +282,32 @@ class Sprite {
       swidth, sheight
     )
     this.updateAnimationProgress();
+  }
+
+  drawShipInfo(ctx) {
+    //figure out x and y
+    var x = this.gameObject.x + 101;
+    var y = this.gameObject.y + 20;
+
+    //Draw name, ship type and GRT
+    ctx.font = "bold 12px courier";
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+    ctx.fillText(this.shipList[this.shipNum].getName(), x, y);
+
+    var secondLine = this.shipList[this.shipNum].getType() + " - GRT: " + this.shipList[this.shipNum].getGRT();
+    ctx.font = "9px courier";
+    ctx.fillText(secondLine, x, y + 10);
+
+    //Draw Torpedo Assignment Indicators
+    var numOfG7a = this.shipList[this.shipNum].G7aINCOMING;
+    var stringG7a = "";
+    for (let i = 0; i < numOfG7a; i++) {
+      stringG7a = stringG7a + "•"
+    }
+
+    ctx.fillStyle = "blue";
+    ctx.textAlign = "left";
+    ctx.fillText(stringG7a, this.gameObject.x + 10, y + 70);
   }
 }

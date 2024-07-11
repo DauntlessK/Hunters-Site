@@ -63,6 +63,7 @@ class GameManager{
         this.pastSubs = [];
 
         this.encPop = null;
+        this.shipList = null; //current list of ships for the current encounter
     }
 
     async startGame(name, num, subType){
@@ -321,6 +322,9 @@ class GameManager{
             case "encounterAttackShipEscort":
                 this.encounterAttack("Ship");
                 break;
+            case "encounterAircraft":
+                this.encPop = new EncounterPopup(this.tv, this, currentEncounter, null);
+                break;
         }
 
         console.log("End Encounter");
@@ -331,19 +335,19 @@ class GameManager{
         console.log("ALARRRRM!  " + enc);
         var shipList = [];
         if (existingShips == null) {
-            shipList = this.getShips(enc);
+            this.shipList = this.getShips(enc);
         }
         else {
-            shipList = existingShips;
+            this.shipList = existingShips;
         }
         
         this.tv.enterEncounter();
         var timeOfDay = this.getTimeOfDay(false)
-        this.tv.changeScene(enc, timeOfDay, shipList, false);
+        this.tv.changeScene(enc, timeOfDay, this.shipList, false);
         this.setEventResolved(false);
 
         //create popup based on that encounter to begin encounter
-        this.encPop = new EncounterPopup(this.tv, this, enc, shipList);
+        this.encPop = new EncounterPopup(this.tv, this, enc, this.shipList);
         await until(_ => this.eventResolved == true);
 
         //check if ignoring ship(s)
@@ -364,18 +368,18 @@ class GameManager{
                 console.log("Successfully followed!");
                 if (timeOfDay == "Night") {
                     timeOfDay = "Day";
-                    this.tv.changeScene(enc, timeOfDay, shipList, true);
+                    this.tv.changeScene(enc, timeOfDay, this.shipList, true);
                 }
                 else {
                     timeOfDay = "Night";
-                    this.tv.changeScene(enc, timeOfDay, shipList, true);
+                    this.tv.changeScene(enc, timeOfDay, this.shipList, true);
                 }
             }
         }
 
         //next popup to get depth and range
         this.setEventResolved(false);
-        var attackPopup = new AttackDepthAndRangePopup(this.tv, this, this.enc, shipList, timeOfDay);
+        var attackPopup = new AttackDepthAndRangePopup(this.tv, this, this.enc, this.shipList, timeOfDay);
         await until(_ => this.eventResolved == true);
 
         var depth = attackPopup.getDepth();
