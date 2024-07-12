@@ -97,6 +97,10 @@ class Button {
         this.currentFrame = 0;
     }
 
+    fireTorpedoes(){
+        this.gm.resolveTorpedoes();
+    }
+
     //Draw Button
     draw(ctx) {
         this.isLoaded && ctx.drawImage(

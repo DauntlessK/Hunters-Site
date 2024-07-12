@@ -29,7 +29,7 @@ class AttackDepthAndRangePopup{
         //new div to add
 
         //determine if a surface attack is possible (escorted or not, etc)
-        if (this.shipList[0].getType() == "Escort") {
+        if (this.shipList[0].getType() == "Escort" && this.timeOfDay == "Day") {
             this.element.innerHTML = (`
             <h3 class="HeaderMessage_h3">How should we engage?</h3>
             <p class="PatrolMessage_p">
@@ -44,6 +44,7 @@ class AttackDepthAndRangePopup{
             <button class="AttackPopup_button" id="attack">Continue</button>
             </p>
         `)}
+        //not escorted or it is night
         else {
             this.element.innerHTML = (`
             <h3 class="HeaderMessage_h3">How should we engage?</h3>

@@ -84,8 +84,18 @@ class UI{
             tv: this.tv,
             onClick: "openStatus"
         });
-
-
+        this.deckGunButton = new Button({
+            src: "images/ui/DeckGunButton.png",
+            x: 965,
+            y: 580,
+            width: 50,
+            height: 50,
+            frames: 3,
+            tube: null,
+            gm: this.gm,
+            tv: this.tv,
+            onClick: "fireDeckGun"
+        });
         this.continueButton = new Button({
             src: "images/ui/ContinuePatrolButton.png",
             x: 1210,
@@ -140,6 +150,20 @@ class UI{
             tv: this.tv,
             subItem: "this.gm.currentBox"
         })
+
+        //Fire Weapons button
+        this.fireButton = new Button({
+            src: "images/ui/CommitButton.png",
+            x: 1250,
+            y: 700,
+            width: 50,
+            height: 50,
+            frames: 1,
+            tube: null,
+            gm: this.gm,
+            tv: this.tv,
+            onClick: "fireTorpedoes"
+        });
     }
 
     //passes events from UI to individual buttons
@@ -160,6 +184,10 @@ class UI{
             Object.values(this.tv.gameObjects).forEach(object => {
                 object.sprite.handleEvent(event);
               })
+            this.deckGunButton.handleEvent(event);
+        }
+        if (this.tv.firingMode && this.gm.sub.isReadyToFire()) {
+            this.fireButton.handleEvent(event);
         }
     }
     
@@ -187,6 +215,7 @@ class UI{
             this.drawHeaderTxt(ctx);
             if (!this.tv.reloadMode && this.gm.patrolling){
                 this.telegraph.draw(ctx);
+                this.deckGunButton.draw(ctx);
                 if (!this.tv.isInEncounter && !this.tv.statusMode) {
                     this.continueButton.draw(ctx);
                 }
@@ -202,6 +231,9 @@ class UI{
                         object.sprite.drawShipInfo(ctx);
                     }
                   })
+            }
+            if (this.gm.sub.isReadyToFire()) {
+                this.fireButton.draw(ctx);
             }
         }
     }

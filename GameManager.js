@@ -317,10 +317,10 @@ class GameManager{
                 this.encPop = new EncounterPopup(this.tv, this, currentEncounter, null);
                 break;
             case "encounterAttackShip":
-                this.encounterAttack("Convoy");
+                this.encounterAttack("Ship");
                 break;
             case "encounterAttackShipEscort":
-                this.encounterAttack("Convoy");
+                this.encounterAttack("Ship + Escort");
                 break;
             case "encounterAircraft":
                 this.encPop = new EncounterPopup(this.tv, this, currentEncounter, null);
@@ -353,14 +353,16 @@ class GameManager{
         var depth = "";
         var range = "";
 
-        if (this.shipList[0].getType() == "Escort") {
-            this.depth = "Periscope Depth";
-            this.tv.gameObjects.uboat.sprite.dive();
-        }
-
         //create popup based on that encounter to begin encounter
         this.encPop = new EncounterPopup(this.tv, this, enc, this.shipList);
         await until(_ => this.eventResolved == true);
+
+        //If mines are on the boat, ignore encounter
+        if (this.sub.hasMinesLoaded() && this.shipList[0].getType() == "Escort") {
+            console.log("TODO - MINES LOADED!");
+            this.tv.finishEncounter();
+            return;
+        }
 
         //check if ignoring ship(s)
         var waitRoll = d6Roll();
@@ -394,9 +396,7 @@ class GameManager{
         var attackPopup = new AttackDepthAndRangePopup(this.tv, this, this.enc, this.shipList, timeOfDay);
         await until(_ => this.eventResolved == true);
 
-        if (depth != "") {
-            depth = attackPopup.getDepth();
-        }
+        depth = attackPopup.getDepth();
         range = attackPopup.getRange();
         if (depth == "Periscope Depth") {
             this.tv.gameObjects.uboat.sprite.dive();

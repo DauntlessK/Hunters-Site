@@ -58,6 +58,7 @@ class TacticalView{
     }
 
     finishEncounter() {
+        this.currentTarget = -1;
         this.isInEncounter = false;
     }
 
@@ -282,8 +283,8 @@ class TacticalView{
                         isPlayer: true
                     }),
                     ship0: new GameObject({
-                        x: 500,
-                        y: 10,
+                        x: 740,
+                        y: 50,
                         src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
                         shipNum: 0,
                         width: 201,
@@ -293,7 +294,7 @@ class TacticalView{
                         shipList: shipList
                     }),
                     ship1: new GameObject({
-                        x: 150,
+                        x: 500,
                         y: 10,
                         src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
                         shipNum: 1,

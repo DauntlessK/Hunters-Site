@@ -353,4 +353,15 @@ class Uboat{
             return false;
         }
     }
+
+    //Returns true if at least one of the torpedo tubes is marked true to fire
+    isReadyToFire() {
+        var toReturn = false;
+        for (let i = 0; i < 7; i++) {
+            if (this.tubeFiring[i] == true) {
+                toReturn = true;
+            }
+        }
+        return toReturn;
+    }
 }
