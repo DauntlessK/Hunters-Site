@@ -268,6 +268,113 @@ class TacticalView{
                     })
                 }
                 break;
+            case "Ship + Escort":
+                this.upperImage.src = "images/deepwater.png",
+                this.bgdFrames = 49,
+                this.gameObjects = {
+                    uboat: new GameObject({
+                        x: 0,
+                        y: 200,
+                        src: "images/ships/Uboat_VIIC_spritesheet2.png",
+                        width: 803,
+                        height: 95,
+                        frames: 49,
+                        isPlayer: true
+                    }),
+                    ship0: new GameObject({
+                        x: 500,
+                        y: 10,
+                        src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
+                        shipNum: 0,
+                        width: 201,
+                        height: 158,
+                        frames: 6,
+                        isPlayer: false,
+                        shipList: shipList
+                    }),
+                    ship1: new GameObject({
+                        x: 150,
+                        y: 10,
+                        src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
+                        shipNum: 1,
+                        width: 201,
+                        height: 158,
+                        frames: 6,
+                        isPlayer: false,
+                        shipList: shipList
+                    })
+                }
+                break;
+            case "Convoy":
+                this.upperImage.src = "images/deepwater.png",
+                this.bgdFrames = 49,
+                this.gameObjects = {
+                    uboat: new GameObject({
+                        x: 0,
+                        y: 200,
+                        src: "images/ships/Uboat_VIIC_spritesheet2.png",
+                        width: 803,
+                        height: 95,
+                        frames: 49,
+                        isPlayer: true
+                    }),
+                    ship0: new GameObject({
+                        x: 740,
+                        y: 50,
+                        src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
+                        shipNum: 0,
+                        width: 201,
+                        height: 158,
+                        frames: 6,
+                        isPlayer: false,
+                        shipList: shipList
+                    }),
+                    ship1: new GameObject({
+                        x: 680,
+                        y: 10,
+                        src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
+                        shipNum: 1,
+                        width: 201,
+                        height: 158,
+                        frames: 6,
+                        isPlayer: false,
+                        shipList: shipList
+                    }),
+                    ship2: new GameObject({
+                        x: 460,
+                        y: 10,
+                        src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
+                        shipNum: 2,
+                        width: 201,
+                        height: 158,
+                        frames: 6,
+                        isPlayer: false,
+                        shipList: shipList
+                    }),
+                    ship3: new GameObject({
+                        x: 240,
+                        y: 10,
+                        src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
+                        shipNum: 3,
+                        width: 201,
+                        height: 158,
+                        frames: 6,
+                        isPlayer: false,
+                        shipList: shipList
+                    }),
+                    ship4: new GameObject({
+                        x: 20,
+                        y: 10,
+                        src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
+                        shipNum: 4,
+                        width: 201,
+                        height: 158,
+                        frames: 6,
+                        isPlayer: false,
+                        shipList: shipList
+                    })
+                }
+                break;
             default:
                 this.upperImage.src = "images/deepwater.png",
                 this.bgdFrames = 49,

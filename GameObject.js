@@ -2,7 +2,7 @@ class GameObject {
   constructor(config) {
     
     if (config.shipNum == null) {
-      this.shipNum = -1;
+      this.shipNum = -2;
     }
     else {
       this.shipNum = config.shipNum;

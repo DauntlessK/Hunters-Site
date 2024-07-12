@@ -23,6 +23,7 @@ class Sprite {
     this.shipNum = config.shipNum;
     this.shipList = config.shipList;
     this.shipType = null;
+    this.isSelected = false;
     var imageVariation = d6Roll();
     //get image variation for enemy ships
     if (this.shipNum >= 0) {
@@ -30,8 +31,16 @@ class Sprite {
       this.shipType = this.shipType.replace(" ", "");
 
       //this.image.src = "images/ships/" + this.shipType + imageVariation + ".png";        //to set imagepath to shiptype
-      //console.log(this.image.src);
-      this.image.src = "images/ships/CargoShip1.png";
+
+      //USED TO TEST ---- PRESET PNGs
+      if (this.shipType == "Escort") {
+        this.image.src = "images/ships/EscortShip1.png";
+      }
+      else {
+        this.image.src = "images/ships/CargoShip1.png";
+      }
+
+      //need to also get a health bar image appropriate to the given ship
     }
 
     //Configure Animation & Initial State
@@ -78,13 +87,13 @@ class Sprite {
     if (event.type == "click") {
       if (this.withinBounds(xPos, yPos) && this.shipType != "Escort") {
         //if currently selected, deselect
-        if (this.isSelected()) {
-          this.currentFrame--;
+        if (this.isSelected && !this.isPlayer && this.shipType != "Escort") {
+          //this.currentFrame--;
           this.tv.selectTarget(-1);
         }
         //else if it is not the selected target, select it
         else {
-          this.currentFrame++;
+          //this.currentFrame++;
           this.tv.selectTarget(this.shipNum);
         }
 
@@ -111,12 +120,13 @@ class Sprite {
     }
   }
 
-  isSelected() {
-    if (this.isPlayer || this.currentFrame % 2 == 0) {
-      return false;
+  select() {
+    if (this.isSelected || this.isPlayer || this.shipType == "Escort") {
+      return;
     }
     else {
-      return true;
+      this.currentFrame++;
+      this.isSelected = true;
     }
   }
 
@@ -281,9 +291,21 @@ class Sprite {
       x, y,
       swidth, sheight
     )
+
+    //Update selections to get correct frame
+    if (this.tv.getSelectedTarget() == this.shipNum) {
+      this.select();
+    }
+    else {
+      if (this.isSelected) {
+        this.isSelected = false;
+        this.currentFrame--;
+      }
+    }
     this.updateAnimationProgress();
   }
 
+  //Draws ship name, type GRT, health bar, & torpedo indicators for cargo [targetable] ships
   drawShipInfo(ctx) {
     //figure out x and y
     var x = this.gameObject.x + 101;
@@ -300,6 +322,7 @@ class Sprite {
     ctx.fillText(secondLine, x, y + 10);
 
     //Draw Torpedo Assignment Indicators
+    ctx.font = "30px courier";
     var numOfG7a = this.shipList[this.shipNum].G7aINCOMING;
     var stringG7a = "";
     for (let i = 0; i < numOfG7a; i++) {
@@ -308,6 +331,16 @@ class Sprite {
 
     ctx.fillStyle = "blue";
     ctx.textAlign = "left";
-    ctx.fillText(stringG7a, this.gameObject.x + 10, y + 70);
+    ctx.fillText(stringG7a, this.gameObject.x + 10, y + 80);
+
+    var numOfG7e = this.shipList[this.shipNum].G7eINCOMING;
+    var stringG7e = "";
+    for (let i = 0; i < numOfG7e; i++) {
+      stringG7e = stringG7e + "•"
+    }
+
+    ctx.fillStyle = "darkred";
+    ctx.textAlign = "right";
+    ctx.fillText(stringG7e, this.gameObject.x + 190, y + 80);
   }
 }

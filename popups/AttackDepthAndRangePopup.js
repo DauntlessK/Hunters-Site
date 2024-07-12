@@ -26,19 +26,31 @@ class AttackDepthAndRangePopup{
             shortRange = "WARNING! Short Range"
         }
 
+        //new div to add
+
         //determine if a surface attack is possible (escorted or not, etc)
         if (this.shipList[0].getType() == "Escort") {
-            console.log("Disabling Surface due to Escort");
-            document.getElementById("SurfaceDepth").disabled = true;
-        }
-
-        //new div to add
-        this.element.innerHTML = (`
+            this.element.innerHTML = (`
+            <h3 class="HeaderMessage_h3">How should we engage?</h3>
+            <p class="PatrolMessage_p">
+            <input type="radio" id="PeriscopeDepth" name="depth" value="Periscope Depth" checked="checked">
+            <label for="Periscope Depth">Periscope Depth</label><br>
+            <input type="radio" id="RangeShort" name="range" value="Short Range">
+            <label for="Short Range">${shortRange}</label>
+            <input type="radio" id="RangeMedium" name="range" value="Medium Range" checked="checked">
+            <label for="Medium Range">Medium Range</label>
+            <input type="radio" id="RangeLong" name="range" value="Long Range">
+            <label for="Long Range">Long Range</label>
+            <button class="AttackPopup_button" id="attack">Continue</button>
+            </p>
+        `)}
+        else {
+            this.element.innerHTML = (`
             <h3 class="HeaderMessage_h3">How should we engage?</h3>
             <p class="PatrolMessage_p">
             <input type="radio" id="PeriscopeDepth" name="depth" value="Periscope Depth" checked="checked">
             <label for="Periscope Depth">Periscope Depth</label>
-            <input type="radio" id="SufaceDepth" name="depth" value="Surfaced">
+            <input type="radio" id="SurfaceDepth" name="depth" value="Surfaced">
             <label for="Surfaced">Surfaced</label><br>
             <input type="radio" id="RangeShort" name="range" value="Short Range">
             <label for="Short Range">${shortRange}</label>
@@ -48,7 +60,7 @@ class AttackDepthAndRangePopup{
             <label for="Long Range">Long Range</label>
             <button class="AttackPopup_button" id="attack">Continue</button>
             </p>
-        `)
+        `)}
 
         this.element.addEventListener("click", ()=> {
             if (event.target.id == "attack"){

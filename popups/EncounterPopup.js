@@ -13,7 +13,18 @@ class EncounterPopup{
         this.element = document.createElement("div");
 
         this.element.classList.add("PatrolMessage");
-        this[enc]();
+        
+        switch (enc) {
+            case "noEncounter":
+                this.noEncounter();
+                break;
+            case "encounterAircraft":
+                this.encounterAircraft();
+                break;
+            default:
+                this.ships();
+                break;
+        }
     }
     
     //Popup when encounter is "noEncounter"
@@ -79,7 +90,7 @@ class EncounterPopup{
     }
 
     //Popup for lone ship encounter
-    Ship() {
+    ships() {
         var encounterAttackShipArray = [];
         const bearing = randomNum(0, 359);
         const course = ["N", "NNW", "NW", "WNW", "W", "WSW", "SW", "SSW", "S", "SSE", "SE", "ESE", "E", "ENE", "NE", "NNE"];
@@ -121,10 +132,6 @@ class EncounterPopup{
         })
 
         this.container.appendChild(this.element);
-    }
-
-    encounterAttackShipEscort() {
-        console.log("TODO2");
     }
     
     done(id){

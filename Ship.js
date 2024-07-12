@@ -136,18 +136,17 @@ class Ship {
 
     assignG7a() {
         this.G7aINCOMING++;
-        console.log(this.G7aINCOMING);
     }
 
     unassignG7a() {
         this.G7aINCOMING--;
     }
 
-    assignG7a() {
+    assignG7e() {
         this.G7eINCOMING++;
     }
 
-    unassignG7a() {
+    unassignG7e() {
         this.G7eINCOMING--;
     }
 }

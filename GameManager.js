@@ -317,13 +317,16 @@ class GameManager{
                 this.encPop = new EncounterPopup(this.tv, this, currentEncounter, null);
                 break;
             case "encounterAttackShip":
-                this.encounterAttack("Ship");
+                this.encounterAttack("Convoy");
                 break;
             case "encounterAttackShipEscort":
-                this.encounterAttack("Ship");
+                this.encounterAttack("Convoy");
                 break;
             case "encounterAircraft":
                 this.encPop = new EncounterPopup(this.tv, this, currentEncounter, null);
+                break;
+            case "encounterAttackConvoy":
+                this.encounterAttack("Convoy");
                 break;
         }
 
@@ -345,6 +348,15 @@ class GameManager{
         var timeOfDay = this.getTimeOfDay(false)
         this.tv.changeScene(enc, timeOfDay, this.shipList, false);
         this.setEventResolved(false);
+
+        //intial value decs
+        var depth = "";
+        var range = "";
+
+        if (this.shipList[0].getType() == "Escort") {
+            this.depth = "Periscope Depth";
+            this.tv.gameObjects.uboat.sprite.dive();
+        }
 
         //create popup based on that encounter to begin encounter
         this.encPop = new EncounterPopup(this.tv, this, enc, this.shipList);
@@ -382,8 +394,10 @@ class GameManager{
         var attackPopup = new AttackDepthAndRangePopup(this.tv, this, this.enc, this.shipList, timeOfDay);
         await until(_ => this.eventResolved == true);
 
-        var depth = attackPopup.getDepth();
-        var range = attackPopup.getRange();
+        if (depth != "") {
+            depth = attackPopup.getDepth();
+        }
+        range = attackPopup.getRange();
         if (depth == "Periscope Depth") {
             this.tv.gameObjects.uboat.sprite.dive();
         }
