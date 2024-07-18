@@ -48,65 +48,66 @@ class UI{
         }
 
         //create buttons
-        this.reloadButton = new Button({
+        this.reloadButton = new ReloadButton({
             src: "images/ui/CommitButton.png",
             x: 1057,
             y: 650,
             width: 100,
             height: 50,
             frames: 2,
-            tube: null,
             gm: this.gm,
             tv: this.tv,
-            onClick: "commitReload"
         });
-        this.beginPatrolButton = new Button({
+        this.beginPatrolButton = new BeginPatrolButton({
             src: "images/ui/BeginPatrolButton.png",
             x: 1057,
             y: 600,
             width: 100,
             height: 50,
             frames: 2,
-            tube: null,
             gm: this.gm,
             tv: this.tv,
-            onClick: "beginPatrol"
         });
-        this.statusButton = new Button({
+        this.statusButton = new OpenStatusButton({
             src: "images/ui/StatusButton.png",
             x: 1150,
             y: 120,
             width: 100,
             height: 100,
             frames: 2,
-            tube: null,
             gm: this.gm,
             tv: this.tv,
-            onClick: "openStatus"
         });
-        this.deckGunButton = new Button({
+        this.deckGunButton = new DeckGunButton({
             src: "images/ui/DeckGunButton.png",
             x: 965,
             y: 580,
             width: 50,
             height: 50,
-            frames: 3,
-            tube: null,
+            frames: 5,
             gm: this.gm,
             tv: this.tv,
-            onClick: "fireDeckGun"
         });
-        this.continueButton = new Button({
+        this.continueButton = new ContinuePatrolButton({
             src: "images/ui/ContinuePatrolButton.png",
             x: 1210,
             y: 590,
             width: 50,
             height: 120,
             frames: 2,
-            tube: null,
             gm: this.gm,
             tv: this.tv,
-            onClick: "continuePatrol"
+        });
+        //Fire Weapons button
+        this.fireButton = new FireAttackButton({
+            src: "images/ui/CommitButton.png",
+            x: 1200,
+            y: 580,
+            width: 50,
+            height: 50,
+            frames: 2,
+            gm: this.gm,
+            tv: this.tv,
         });
 
         //flood gauge
@@ -150,20 +151,6 @@ class UI{
             tv: this.tv,
             subItem: "this.gm.currentBox"
         })
-
-        //Fire Weapons button
-        this.fireButton = new Button({
-            src: "images/ui/CommitButton.png",
-            x: 1250,
-            y: 700,
-            width: 50,
-            height: 50,
-            frames: 1,
-            tube: null,
-            gm: this.gm,
-            tv: this.tv,
-            onClick: "fireTorpedoes"
-        });
     }
 
     //passes events from UI to individual buttons
@@ -186,7 +173,7 @@ class UI{
               })
             this.deckGunButton.handleEvent(event);
         }
-        if (this.tv.firingMode && this.gm.sub.isReadyToFire()) {
+        if (this.tv.firingMode && this.gm.sub.isFiring()) {
             this.fireButton.handleEvent(event);
         }
     }
@@ -227,12 +214,15 @@ class UI{
             this.damageGauge.draw(ctx);
             if (this.tv.isInEncounter) {
                 Object.values(this.tv.gameObjects).forEach(object => {
-                    if (!object.sprite.isPlayer) {
-                        object.sprite.drawShipInfo(ctx);
+                    if (!object.sprite.isPlayer && object.sprite.shipType == "Escort") {
+                        object.sprite.drawEscortShipInfo(ctx);
+                    }
+                    else if (!object.sprite.isPlayer) {
+                        object.sprite.drawTargetShipInfo(ctx);
                     }
                   })
             }
-            if (this.gm.sub.isReadyToFire()) {
+            if (this.gm.sub.isFiring()) {
                 this.fireButton.draw(ctx);
             }
         }

@@ -306,7 +306,7 @@ class Sprite {
   }
 
   //Draws ship name, type GRT, health bar, & torpedo indicators for cargo [targetable] ships
-  drawShipInfo(ctx) {
+  drawTargetShipInfo(ctx) {
     //figure out x and y
     var x = this.gameObject.x + 101;
     var y = this.gameObject.y + 20;
@@ -329,6 +329,7 @@ class Sprite {
       stringG7a = stringG7a + "•"
     }
 
+    //G7a
     ctx.fillStyle = "blue";
     ctx.textAlign = "left";
     ctx.fillText(stringG7a, this.gameObject.x + 10, y + 80);
@@ -339,8 +340,31 @@ class Sprite {
       stringG7e = stringG7e + "•"
     }
 
+    //G7e
     ctx.fillStyle = "darkred";
     ctx.textAlign = "right";
     ctx.fillText(stringG7e, this.gameObject.x + 190, y + 80);
+
+    //Draw Deck Gun Assignment Indicator
+    ctx.fillStyle = "black";
+    ctx.textAlign = "left";
+    ctx.fillText(stringG7a, this.gameObject.x + 10, y + 80);
+  }
+
+  //Draws ship name, type GRT, for escort ships
+  drawEscortShipInfo(ctx) {
+    //figure out x and y
+    var x = this.gameObject.x - 50;
+    var y = this.gameObject.y + 150;
+
+    //Draw name, ship type and GRT
+    ctx.font = "bold 12px courier";
+    ctx.fillStyle = "black";
+    ctx.textAlign = "center";
+    ctx.fillText(this.shipList[this.shipNum].getName(), x, y);
+
+    var secondLine = this.shipList[this.shipNum].clss + " - GRT: " + this.shipList[this.shipNum].getGRT();
+    ctx.font = "9px courier";
+    ctx.fillText(secondLine, x, y + 10);
   }
 }

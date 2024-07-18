@@ -2,6 +2,7 @@ class TorpedoButton extends Button{
     constructor(...args){
         super(...args);
         this.tubeState = "emptyAndReloading";    //can be empty, empty and reloading, and ready
+
         this.baseFrameEmpty = 4;
         this.baseFrameReady = 0;
         this.baseFrame = 4;
@@ -24,7 +25,7 @@ class TorpedoButton extends Button{
         //If in firing mode
         else if (this.tv.firingMode) {
             if (this.tv.currentTarget >= 0) {
-                
+                //TODO NEED TO DEAL WITH BROKEN TORPEDO DOORS
             }
         }
         //Normal mode (not interactable)
@@ -41,7 +42,7 @@ class TorpedoButton extends Button{
         }
     }
 
-    clickedButton(){
+    click(){
         //If pressed when in reload mode
         if (this.tv.reloadMode) {
             //If tube is empty
@@ -68,8 +69,8 @@ class TorpedoButton extends Button{
                 this.gm.sub.loadTube(this.tube, 1);
             }
         }
-        //When pressed when in firing mode, and a target is selected
-        else if (this.tv.firingMode && this.tv.currentTarget >= 0) {
+        //When pressed when in firing mode, and a target is selected, AND not firing deck gun
+        else if (this.tv.firingMode && this.tv.currentTarget >= 0 && this.gm.sub.isFiringDeckGun == false) {
             //If torpedo button selected
             if (this.currentFrame == 2) {
                 //Check type in tube and ensure the selected target has one of that type assigned
@@ -83,7 +84,7 @@ class TorpedoButton extends Button{
                 }
                 
                 //Set tube to NOT firing in Uboat object
-                this.gm.sub.tubeFiring[this.tube] = false;
+                this.gm.sub.assignTubeForFiring(this.tube, null)
             }
             //Otherwise select tube
             else {
@@ -92,13 +93,12 @@ class TorpedoButton extends Button{
                 //Check type in tube to assign to ship
                 if (this.gm.sub.tube[this.tube] == 1) {
                     this.gm.shipList[this.tv.getSelectedTarget()].assignG7a();
+                    this.gm.sub.assignTubeForFiring(this.tube, "G7a")
                 }
                 else if (this.gm.sub.tube[this.tube] == 2){
                     this.gm.shipList[this.tv.getSelectedTarget()].assignG7e();
+                    this.gm.sub.assignTubeForFiring(this.tube, "G7e")
                 }
-                
-                //Set tube to firing in Uboat object
-                this.gm.sub.tubeFiring[this.tube] = true;
             }
         }
     }
@@ -108,7 +108,7 @@ class TorpedoButton extends Button{
         const yPos = event.offsetY;
         if (event.type == "click"){
             if (this.withinBounds(xPos, yPos)) {
-                this.clickedButton();
+                this.click();
             }
         }
         else if (event.type == "mousemove"){

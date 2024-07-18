@@ -15,10 +15,10 @@ class EncounterPopup{
         this.element.classList.add("PatrolMessage");
         
         switch (enc) {
-            case "noEncounter":
+            case "No Encounter":
                 this.noEncounter();
                 break;
-            case "encounterAircraft":
+            case "Aircraft":
                 this.encounterAircraft();
                 break;
             default:
@@ -75,6 +75,8 @@ class EncounterPopup{
         `)
 
         this.container.appendChild(this.element);
+        this.gm.setEventResolved(true);
+        this.tv.finishEncounter();
     }
 
     //Popup for aircraft attack
@@ -87,9 +89,11 @@ class EncounterPopup{
         `)
 
         this.container.appendChild(this.element);
+        this.gm.setEventResolved(true);
+        this.tv.finishEncounter();
     }
 
-    //Popup for lone ship encounter
+    //Popup for ships encounter
     ships() {
         var encounterAttackShipArray = [];
         const bearing = randomNum(0, 359);
@@ -104,7 +108,7 @@ class EncounterPopup{
         else {
             oppositeTime = "Day";
         }
-
+        //NEED OTHER ENCOUNTER ARRAYS
         encounterAttackShipArray = ["", 
             "Smoke on the horizon, bearing ",
             "Lone ship bearing ",

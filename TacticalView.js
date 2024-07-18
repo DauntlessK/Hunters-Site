@@ -7,8 +7,10 @@ class TacticalView{
         this.scene = startScene;
         this.isPaused = false;
         this.reloadMode = false;
-        this.firingMode = false;
         this.statusMode = false;
+
+        //For encounter attacking
+        this.firingMode = false;
         this.isInEncounter = false;
         this.isDeparted = false; //used to track after reloading whether the boat leaves port, or simply finishes reload
         this.currentTarget = -1;
@@ -41,7 +43,7 @@ class TacticalView{
 
     enterReloadMode() {
         this.reloadMode = true;
-        this.mainUI.reloadButton.enableButton()
+        this.mainUI.reloadButton.changeState("Enable")
     }
 
     commitReload() {
@@ -53,7 +55,6 @@ class TacticalView{
     }
 
     enterEncounter(){
-        console.log("Entered Encounter");
         this.isInEncounter = true;
     }
 
@@ -70,7 +71,7 @@ class TacticalView{
         this.firingMode = state;
         if (state == true) {
             for (let i = 1; i < 7; i++) {
-                this.mainUI.tubeButtonArray[i].enableButton();
+                this.mainUI.tubeButtonArray[i].changeState("Enabled");
             }
         }
     }

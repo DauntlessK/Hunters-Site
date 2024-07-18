@@ -250,183 +250,183 @@ class Patrol{
                     case 2:
                     case 3:
                         //aircraft
-                        return "encounterAircraft";
+                        return "Aircraft";
                     case 12:
-                        return "encounterAttackShip";
+                        return "Ship";
                     default:
-                        return "noEncounter";
+                        return "No Encounter";
                 }
                 break;
             case "Arctic":
                 switch (roll){
                     case 2:
-                        return "encounterAttackCapitalShip";
+                        return "Capital Ship";
                         break;
                     case 3:
-                        return "encounterAttackShip";
+                        return "Ship";
                         break;
                     case 6:
                     case 7:
                     case 8:
-                        return "encounterAttackConvoy";
+                        return "Convoy";
                         break;
                     case 12:
-                        return "encounterAircraft";
+                        return "Aircraft";
                         break;
                     default:
-                        return "noEncounter";                 
+                        return "No Encounter";                 
                 }
                 break;
             case "Atlantic":
             case "Atlantic (Wolfpack)":
                 switch (roll){
                     case 2:
-                        return "encounterAttackCapitalShip";
+                        return "Capital Ship";
                         break;
                     case 3:
-                        return "encounterAttackShip";
+                        return "Ship";
                         break;
                     case 6:
                     case 7:
                     case 9:
                     case 12:
-                        return "encounterAttackConvoy";
+                        return "Convoy";
                         break;
                     default:
-                        return "noEncounter";
+                        return "No Encounter";
                 }
                 break;
             case "British Isles":
                 switch (roll) {
                     case 2:
-                        return "encounterAttackCapitalShip";
+                        return "Capital Ship";
                         break;
                     case 5:
                     case 8:
-                        return "encounterAttackShip";
+                        return "Ship";
                         break;
                     case 6:
-                        return "encounterAttackShipEscort";
+                        return "Ship + Escort";
                         break;
                     case 10:
-                        return "encounterAttackConvoy";
+                        return "Convoy";
                         break;
                     case 12:
-                        return "encounterAircraft";
+                        return "Aircraft";
                         break;
                     default:
-                        return "noEncounter";
+                        return "No Encounter";
                 }
                 break;
             case "Caribbean":
                 switch (roll) {
                     case 2:
                     case 12:
-                        return "encounterAircraft";
+                        return "Aircraft";
                         break;
                     case 4:
-                        return "encounterAttackCapitalShip";
+                        return "Capital Ship";
                         break;
                     case 7:
-                        return "encounterAttackShip";
+                        return "Ship";
                         break;
                     case 8:
-                        return "encounterAttackConvoy";
+                        return "Convoy";
                         break;
                     case 10:
-                        return "encounterAttackTwoShipsEscort";
+                        return "Two Ships + Escort";
                         break;
                     default:
-                        return "noEncounter";
+                        return "No Encounter";
                 }
                 break;
             case "North America":
                 switch (roll){
                     case 2:
-                        return "encounterAircraft";
+                        return "Aircraft";
                         break;
                     case 4:
                     case 6:
-                        return "encounterAttackShip";
+                        return "Ship";
                         break;
                     case 5:
-                        return "encounterAttackTwoShipsEscort";
+                        return "Two Ships + Escort";
                         break;
                     case 8:
-                        return "encounterAttackTwoShips";
+                        return "Two Ships";
                         break;
                     case 9:
                     case 12:
-                        return "encounterAttackTanker";
+                        return "Tanker";
                         break;
                     case 11:
-                        return "encounterAttackConvoy";
+                        return "Convoy";
                         break;
                     default:
-                        return "noEncounter";
+                        return "No Encounter";
                 }
                 break;
             case "Norway":
                 switch (roll) {
                     case 2:
                     case 12:
-                        return "encounterAircraft";
+                        return "Aircraft";
                         break;
                     case 3:
                     case 11:
-                        return "encounterAttackCapitalShip";
+                        return "Capital Ship";
                         break;
                     case 4:
                     case 9:
                     case 10:
-                        return "encounterAttackShipEscort";
+                        return "Ship + Escort";
                         break;
                     default:
-                        return "noEncounter"
+                        return "No Encounter"
                 }
                 break;
             case "Spanish Coast":
                 switch (roll) {
                     case 2:
                     case 12:
-                        return "encounterAircraft";
+                        return "Aircraft";
                         break;
                     case 5:
-                        return "encounterAttackShipEscort";
+                        return "Ship + Escort";
                         break;
                     case 6:
                     case 7:
-                        return "encounterAttackShip";
+                        return "Ship";
                         break;
                     case 10:
                     case 11:
-                        return "encounterAttackConvoy";
+                        return "Convoy";
                         break;
                     default:
-                        return "noEncounter" 
+                        return "No Encounter" 
                 }
                 break;
             case "West African Coast":
                 switch (roll) {
                     case 2:
-                        return "encounterAircraft";
+                        return "Aircraft";
                         break;
                     case 3:
                     case 7:
-                        return "encounterAttackShip";
+                        return "Ship";
                         break;
                     case 6:
                     case 10:
-                        return "encounterAttackConvoy";
+                        return "Convoy";
                         break;
                     case 9:
-                        return "encounterAttackShipEscort";
+                        return "Ship + Escort";
                         break;
                     case 12:
-                        return "encounterAircraft";
+                        return "Aircraft";
                         break;
                     default:
-                        return "noEncounter" 
+                        return "No Encounter" 
                 }
                 break;
             case "Additional Round of Combat":

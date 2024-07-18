@@ -8,6 +8,7 @@ class Ship {
         
         this.G7aINCOMING = 0;
         this.G7eINCOMING = 0;
+        this.deckGunINCOMING = 0;
 
         this.dateSunk = "";
         this.monthSunk = month;
@@ -149,4 +150,9 @@ class Ship {
     unassignG7e() {
         this.G7eINCOMING--;
     }
+
+    assignDeckGun(num) {
+        this.deckGunINCOMING = num;
+    }
+
 }

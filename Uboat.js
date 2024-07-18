@@ -26,6 +26,8 @@ class Uboat{
         //---------------Tubes 1-6 (0=empty, 1=G7a, 2=G7e, 3=Mines)
         this.tube = [null, 0, 0, 0, 0, 0, 0]
         this.tubeFiring = [null, false, false, false, false, false, false]
+        this.isFiringTorpedoes = false;
+        this.isFiringDeckGun = false;
 
         //set type-specific values for u-boat
         switch (this.subClass){
@@ -212,16 +214,16 @@ class Uboat{
     torpedoResupply(){
         //Called in port to allow user to select torpedoes to load given the spread parameters
 
-        this.forward_G7a = 0
-        this.forward_G7e = 0
-        this.aft_G7a = 0
-        this.aft_G7e = 0
-        this.reloads_forward_G7a = 0
-        this.reloads_forward_G7e = 0
-        this.reloads_aft_G7a = 0
-        this.reloads_aft_G7e = 0
-        this.minesLoadedForward = true
-        this.minesLoadedAft = true
+        this.forward_G7a = 0;
+        this.forward_G7e = 0;
+        this.aft_G7a = 0;
+        this.aft_G7e = 0;
+        this.reloads_forward_G7a = 0;
+        this.reloads_forward_G7e = 0;
+        this.reloads_aft_G7a = 0;
+        this.reloads_aft_G7e = 0;
+        //this.minesLoadedForward = true
+        //this.minesLoadedAft = true
 
         const subResupply = new ResupplyPopup(this.tv, this.gm, this.G7aStarting, this.G7eStarting, this.reserves_aft + this.aft_tubes, 0);
 
@@ -318,8 +320,8 @@ class Uboat{
         }
     }
 
+    //changes all current tubes to mines
     loadMines(){
-        //changes all current tubes to mines
         for (let i = 1; i < 5 + this.aft_tubes; i++){
             this.tube[i] = 3;
         }
@@ -347,6 +349,7 @@ class Uboat{
     //Returns true if the boat has any mines loaded and thus cannot engage in escorted ships
     hasMinesLoaded() {
         if (this.minesLoadedForward == true || this.minesLoadedAft == true) {
+            console.log("LOADED MINES");
             return true;
         }
         else {
@@ -354,14 +357,41 @@ class Uboat{
         }
     }
 
-    //Returns true if at least one of the torpedo tubes is marked true to fire
-    isReadyToFire() {
-        var toReturn = false;
+    //Adds (or removes) a torpedo from a given tube
+    assignTubeForFiring(tubeNum, type) {
+        if (this.tube[tubeNum] == 3) {
+            console.log("ERROR - tube has mines");
+            return;
+        }
+
+        var torp = 0
+        if (type == "G7a") {
+            torp = 1;
+        }
+        else if (type == "G7e") {
+            torp = 2;
+        }
+
+        this.tubeFiring[tubeNum] = torp;
+        this.updateIsFiringTorpedoes();
+    }
+
+    //Updates the firingTorpedoes flag
+    updateIsFiringTorpedoes() {
+        this.isFiringTorpedoes = false;
         for (let i = 0; i < 7; i++) {
             if (this.tubeFiring[i] == true) {
-                toReturn = true;
+                this.isFiringTorpedoes = true;
             }
         }
-        return toReturn;
+    }
+
+    isFiring() {
+        if (this.isFiringDeckGun || this.isFiringTorpedoes) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }
