@@ -48,6 +48,9 @@ class TacticalView{
 
     commitReload() {
         this.reloadMode = false;
+        for (let i = 1; i < 7; i++) {
+            this.mainUI.tubeButtonArray[i].getLatestState();
+        }
     }
 
     setDeparted(val) {

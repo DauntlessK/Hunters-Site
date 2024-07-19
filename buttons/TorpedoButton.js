@@ -3,23 +3,54 @@ class TorpedoButton extends Button{
         super(...args);
         this.tubeState = "emptyAndReloading";    //can be empty, empty and reloading, and ready
 
-        this.baseFrameEmpty = 4;
-        this.baseFrameReady = 0;
-        this.baseFrame = 4;
-        this.currentFrame = this.baseFrame;
+        this.currentStateOptions = ["Enabled", "Hover", "Pressed", "Disabled", "Empty", "Empty Hover", "G7a", "G7e"];
+    }
+
+    //Pass in a given state (Active, Hover, etc) and changes the frame and state
+    changeState(state) {
+        switch (state) {
+            case "Active":
+            case "Enable":
+            case "Enabled":
+                this.currentFrame = 0;
+                break;
+            case "Hover":
+                this.currentFrame = 1;
+                break;
+            case "Pressed":
+            case "Press":
+                this.currentFrame = 2;
+                break;
+            case "Disabled":
+            case "Disable":
+                this.currentFrame = 3;
+                break;
+            case "Empty":
+                this.currentFrame = 4;
+                break;
+            case "Empty Hover":
+                this.currentFrame = 5;
+                break;
+            case "G7a":
+                this.currentFrame = 6;
+                break;
+            case "G7e":
+                this.currentFrame = 7;
+                break;
+        }
+
+        this.currentState = this.currentStateOptions[this.currentFrame];
     }
 
     //Gets torpedo tube state based on the mode / what is allowable
     getLatestState(){
-
         //If in reload mode
         if (this.tv.reloadMode){
-            this.baseFrame = 4;
             if (this.gm.sub.tube[this.tube] == 1){
-                this.currentFrame = 6
+                this.changeState("G7a");
             }
             else if (this.gm.sub.tube[this.tube] == 2){
-                this.currentFrame = 7;
+                this.changeState("G7e");
             }
         }
         //If in firing mode
@@ -30,14 +61,13 @@ class TorpedoButton extends Button{
         }
         //Normal mode (not interactable)
         else {
-            this.baseFrame = 0;
             //if current tube is not empty
             if (this.gm.sub.tube[this.tube] > 0){
-                this.currentFrame = this.baseFrame;
+                this.changeState("Active");
             }
             //else if tube is empty
             else{
-                this.currentFrame = 5;
+                this.changeState("Empty");
             }
         }
     }
@@ -112,11 +142,22 @@ class TorpedoButton extends Button{
             }
         }
         else if (event.type == "mousemove"){
-            if (this.withinBounds(xPos, yPos) && this.currentFrame == this.baseFrame){
-                this.currentFrame = this.baseFrame + 1;
+            //Hover and Unhover for firing mode
+            if (this.tv.firingMode) {
+                if (this.withinBounds(xPos, yPos) && this.currentState == "Active"){
+                    this.changeState("Hover");
+                }
+                else if (!this.withinBounds(xPos, yPos) && this.currentState == "Hover"){
+                    this.changeState("Active");
+                }
             }
-            else if (!this.withinBounds(xPos, yPos) && this.currentFrame == this.baseFrame + 1){
-                this.currentFrame = this.baseFrame;
+            else if (this.tv.reloadMode) {
+                if (this.withinBounds(xPos, yPos) && this.currentState == "Empty"){
+                    this.changeState("Empty Hover");
+                }
+                else if (!this.withinBounds(xPos, yPos) && this.currentState == "Empty Hover"){
+                    this.changeState("Empty");
+                }
             }
         }
         this.getLatestState()
