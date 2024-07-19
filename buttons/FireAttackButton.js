@@ -9,6 +9,6 @@ class FireAttackButton extends Button {
 
     //Resolve 
     fire(){
-        this.gm.resolveAttack();
+        this.gm.setEventResolved(true);
     }
 }

@@ -3,7 +3,8 @@ class TorpedoButton extends Button{
         super(...args);
         this.tubeState = "emptyAndReloading";    //can be empty, empty and reloading, and ready
 
-        this.currentStateOptions = ["Enabled", "Hover", "Pressed", "Disabled", "Empty", "Empty Hover", "G7a", "G7e"];
+        this.currentStateOptions = ["Active", "Hover", "Pressed", "Disabled", "Empty", "Empty Hover", "G7a", "G7e"];
+        this.currentState = this.currentStateOptions[this.currentFrame];
     }
 
     //Pass in a given state (Active, Hover, etc) and changes the frame and state
@@ -100,17 +101,32 @@ class TorpedoButton extends Button{
             }
         }
         //When pressed when in firing mode, and a target is selected, AND not firing deck gun
-        else if (this.tv.firingMode && this.tv.currentTarget >= 0 && this.gm.sub.isFiringDeckGun == false) {
+        else if (this.tv.firingMode && this.tv.currentTarget >= 0 && this.gm.sub.isFiringDeckGun == 0) {
+            //First check to ensure the tube pressed can be fired
+            //Check Torpedo Doors are operational
+            if (this.gm.sub.systems["Forward Torpedo Doors"] > 0 && this.tube <= 4) {
+                console.log("Forward Torpedo Doors Broken");
+            }
+            else if (this.gm.sub.systems["Aft Torpedo Doors"] > 0 && this.tube >= 5) {
+                console.log("Aft Torpedo Doors Broken");
+            }
+            //Check if trying to fire other end torpedoes when not allowed to fire fore and aft
+            else if (this.gm.sub.isFiringFore && this.gm.currentEncounter.canFireForeAndAft && this.tube >= 5) {
+                console.log("Cannot fire aft torpedoes now when already firing forward torpedoes.")
+            }
+            else if (this.gm.sub.isFiringAft && this.gm.currentEncounter.canFireForeAndAft && this.tube <= 4) {
+                console.log("Cannot fire forward torpedoes now when already firing aft torpedoes.")
+            }
             //If torpedo button selected
-            if (this.currentFrame == 2) {
+            else if (this.currentState == "Pressed") {
                 //Check type in tube and ensure the selected target has one of that type assigned
-                if (this.gm.sub.tube[this.tube] == 1 && this.gm.shipList[this.tv.getSelectedTarget()].G7aINCOMING > 0) {
-                    this.currentFrame = 0;
-                    this.gm.shipList[this.tv.getSelectedTarget()].unassignG7a();
+                if (this.gm.sub.tube[this.tube] == 1 && this.gm.currentEncounter.shipList[this.tv.getSelectedTarget()].G7aINCOMING > 0) {
+                    this.changeState("Active");
+                    this.gm.currentEncounter.shipList[this.tv.getSelectedTarget()].unassignG7a();
                 }
-                else if (this.gm.sub.tube[this.tube] == 2 && this.gm.shipList[this.tv.getSelectedTarget()].G7eINCOMING > 0){
-                    this.currentFrame = 0;
-                    this.gm.shipList[this.tv.getSelectedTarget()].unassignG7e();
+                else if (this.gm.sub.tube[this.tube] == 2 && this.gm.currentEncounter.shipList[this.tv.getSelectedTarget()].G7eINCOMING > 0){
+                    this.changeState("Active");
+                    this.gm.currentEncounter.shipList[this.tv.getSelectedTarget()].unassignG7e();
                 }
                 
                 //Set tube to NOT firing in Uboat object
@@ -118,15 +134,15 @@ class TorpedoButton extends Button{
             }
             //Otherwise select tube
             else {
-                this.currentFrame = 2;
+                this.changeState("Pressed");
 
                 //Check type in tube to assign to ship
                 if (this.gm.sub.tube[this.tube] == 1) {
-                    this.gm.shipList[this.tv.getSelectedTarget()].assignG7a();
+                    this.gm.currentEncounter.shipList[this.tv.getSelectedTarget()].assignG7a();
                     this.gm.sub.assignTubeForFiring(this.tube, "G7a")
                 }
                 else if (this.gm.sub.tube[this.tube] == 2){
-                    this.gm.shipList[this.tv.getSelectedTarget()].assignG7e();
+                    this.gm.currentEncounter.shipList[this.tv.getSelectedTarget()].assignG7e();
                     this.gm.sub.assignTubeForFiring(this.tube, "G7e")
                 }
             }

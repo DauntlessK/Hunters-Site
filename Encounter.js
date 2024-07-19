@@ -23,6 +23,8 @@ class Encounter {
 
         this.depth = "";
         this.range = "";
+        this.rangeNum = 0;
+        this.canFireForeAndAft = false;
 
         this.encPop = null;
         this.event();
@@ -172,13 +174,18 @@ class Encounter {
         this.encPop = new EncounterPopup(this.tv, this.gm, this.encounterType, this.shipList);
         await until(_ => this.gm.eventResolved == true);
 
-        if (this.encounterType != "No Encounter") {
-            this.engage();
+        console.log(this.encounterType);
+        if (this.encounterType == "No Encounter" || this.encounterType == "Aircraft") {
+            //not sure what is needed here
+        }
+        else {
+            this.attackRound();
         }
     }
 
-    async engage() {
-        //If mines are on the boat, ignore encounter
+    async attackRound() {
+        console.log("Attack Round started");
+        //If mines are on the boat, ignore encounter TODO FIX
         if (this.gm.sub.hasMinesLoaded() && this.shipList[0].getType() == "Escort") {
             console.log("MINES LOADED");
             this.endEncounter();
@@ -223,20 +230,100 @@ class Encounter {
         //next popup to get depth and range
         this.gm.setEventResolved(false);
         var attackPopup = new AttackDepthAndRangePopup(this.tv, this.gm, this.encounterType, this.shipList, this.timeOfDay);
-        await until(_ => this.eventResolved == true);
+        await until(_ => this.gm.eventResolved == true);
 
         this.depth = attackPopup.getDepth();
         this.range = attackPopup.getRange();
+        switch (this.range) {
+            case "Short Range":
+                this.rangeNum = 8;     //NEED TO CHECK THESE VALUES-----------------------------------
+                break;
+            case "Medium Range":
+                this.rangeNum = 7;
+                break;
+            case "Long Range":
+                this.rangeNum = 6;
+                break;
+        }
         if (this.depth == "Periscope Depth") {
             this.tv.gameObjects.uboat.sprite.dive();
             this.tv.mainUI.deckGunButton.changeState("Disabled");
+            this.canFireForeAndAft = true;
         }
         Object.values(this.tv.gameObjects).forEach(object => {
-            object.sprite.setRange(range);
+            object.sprite.setRange(this.range);
           })
+        //Force update Deck Gun Button
+        this.tv.mainUI.deckGunButton.getLatestState();
 
         //Allow for firing (selecting target and tubes)
         this.tv.setFiringMode(true);
+
+        //Await for at least one type of firing before moving on
+        this.gm.setEventResolved(false);
+        await until(_ => this.gm.eventResolved == true);
+
+        this.resolveRound();
+    }
+
+    resolveRound() {
+        if (this.gm.sub.isFiringDeckGun > 0) {
+            this.resolveDeckGun(this.gm.sub.isFiringDeckGun);
+        }
+        else {
+            this.resolveTorpedoes();
+        }
+
+        this.gm.sub.fire();
+    }
+
+    resolveDeckGun(numShots) {
+        //Performed for each shot
+        for (let i = 0; i < numShots; i++) {
+            var gunRoll = d6Rollx2();
+            var rollMod = 0;
+
+            //Apply mods
+            if (this.gm.sub.sub.knightsCross >= 2){
+                rollMod -= 1;
+            }
+            if (this.gm.sub.sub.crew_levels["Crew"] == 0) {
+                rollMod += 1;
+            }
+            if (this.gm.sub.sub.crewKnockedOut()) {
+                rollMod += 1;
+            }
+            if (this.gm.sub.sub.crew_health["Kommandant"] > 1) {
+                if (this.gm.sub.sub.crew_health["Watch Officer"] > 1) {
+                    rollMod += 2;
+                }    
+                else {
+                    rollMod += 1;
+                }
+            }
+
+            //Check roll and mods
+            var damage = 1;
+            if (gunRoll + rollMod <= this.rangeNum) {
+                var damRoll = d6Roll();
+                var damMod = 0;
+                if (self.sub.getType().includes("IX")) {
+                    damMod -= 1;
+                }
+                if (damRoll <= 1) {
+                    damage = 2;
+                }
+                    
+                ship[target].takeDamage(damage)
+                //self.damageDone += damage  ????
+            }
+            else{
+                console.log("Deck Gun Missed");
+            }
+        }
+    }
+
+    resolveTorpedoes() {
 
     }
 }

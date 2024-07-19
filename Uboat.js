@@ -27,7 +27,10 @@ class Uboat{
         this.tube = [null, 0, 0, 0, 0, 0, 0]
         this.tubeFiring = [null, false, false, false, false, false, false]
         this.isFiringTorpedoes = false;
-        this.isFiringDeckGun = false;
+        this.isFiringFore = false;
+        this.isFiringAft = false;
+        this.isFiringForeAndAft = false;
+        this.isFiringDeckGun = 0;  //num of shots deck gun is firing this round
 
         //set type-specific values for u-boat
         switch (this.subClass){
@@ -367,31 +370,69 @@ class Uboat{
         var torp = 0
         if (type == "G7a") {
             torp = 1;
+            this.tubeFiring[tubeNum] = true;
         }
         else if (type == "G7e") {
             torp = 2;
+            this.tubeFiring[tubeNum] = true;
+        }
+        else {
+            this.tubeFiring[tubeNum] = false;
         }
 
-        this.tubeFiring[tubeNum] = torp;
         this.updateIsFiringTorpedoes();
+        this.tv.mainUI.deckGunButton.getLatestState();
     }
 
     //Updates the firingTorpedoes flag
     updateIsFiringTorpedoes() {
+        this.isFiringFore = false;
+        this.isFiringAft = false;
         this.isFiringTorpedoes = false;
         for (let i = 0; i < 7; i++) {
             if (this.tubeFiring[i] == true) {
                 this.isFiringTorpedoes = true;
+                if (i <= 4) {
+                    this.isFiringFore = true;
+                }
+                else if (i >= 5) {
+                    this.isFiringAft = true;
+                }
             }
+        }
+
+        if (this.isFiringFore && this.isFiringAft) {
+            this.isFiringForeAndAft = true;
+        }
+        else {
+            this.isFiringForeAndAft = false;
         }
     }
 
+    assignDeckGunForFiring(num) {
+        this.isFiringDeckGun = num;
+    }
+
     isFiring() {
-        if (this.isFiringDeckGun || this.isFiringTorpedoes) {
+        if (this.isFiringDeckGun > 0 || this.isFiringTorpedoes) {
             return true;
         }
         else {
             return false;
+        }
+    }
+
+    //Empties Tubes and removes deck gun shots as part of the resolve step
+    fire() {
+        if (this.isFiringDeckGun > 0) {
+            this.deck_gun_ammo = this.deck_gun_ammo - this.isFiringDeckGun;
+            this.isFiringDeckGun = 0;
+        }
+        else {
+            this.isFiringTorpedoes = false;
+            for (let i = 0; i < 7; i++) {
+                this.tubeFiring[i] == false;
+            }
         }
     }
 }

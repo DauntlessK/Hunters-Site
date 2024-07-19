@@ -307,6 +307,12 @@ class UI{
             ctx.fillText("LOADING TORPEDOES", 1108, 640);
         }
 
+        //Ammo for Deck Gun
+        if (!this.tv.reloadMode && this.gm.patrolling) {
+            ctx.fillStyle = "black";
+            ctx.font = "12px Courier"
+            ctx.fillText(this.gm.sub.deck_gun_ammo, 990, 645);
+        }
     }
 
     reloadMode(){

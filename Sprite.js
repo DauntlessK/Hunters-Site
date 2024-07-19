@@ -347,8 +347,12 @@ class Sprite {
 
     //Draw Deck Gun Assignment Indicator
     ctx.fillStyle = "black";
-    ctx.textAlign = "left";
-    ctx.fillText(stringG7a, this.gameObject.x + 10, y + 80);
+    ctx.textAlign = "center";
+    ctx.font = "bold 10px courier";
+    //Only draw if there is 1 or more shots incoming
+    if (this.shipList[this.shipNum].deckGunINCOMING > 0) {
+      ctx.fillText(this.shipList[this.shipNum].deckGunINCOMING, this.gameObject.x + 100, y + 74);
+    }
   }
 
   //Draws ship name, type GRT, for escort ships
