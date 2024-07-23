@@ -50,11 +50,6 @@ class GameManager{
         this.francePost = false
         this.patrolArray = [];
         this.currentBox = 0;
-        this.G7aFired = 0;
-        this.G7eFired = 0;
-        this.firedForward = false;
-        this.firedAft = false;
-        this.firedDeckGun = false;
         this.shipsSunk = [];
         this.shipsSunkOnCurrentPatrol = [];
         this.damageDone = 0;

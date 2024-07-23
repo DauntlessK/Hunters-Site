@@ -21,13 +21,15 @@ class Sprite {
 
     //for non-player ships
     this.shipNum = config.shipNum;
-    this.shipList = config.shipList;
+    this.encounter = config.encounter;
     this.shipType = null;
     this.isSelected = false;
     var imageVariation = d6Roll();
+
     //get image variation for enemy ships
     if (this.shipNum >= 0) {
-      this.shipType = this.shipList[this.shipNum].getType();
+      console.log(this.encounter);
+      this.shipType = this.encounter.shipList[this.shipNum].getType();
       this.shipType = this.shipType.replace(" ", "");
 
       //this.image.src = "images/ships/" + this.shipType + imageVariation + ".png";        //to set imagepath to shiptype
@@ -40,7 +42,19 @@ class Sprite {
         this.image.src = "images/ships/CargoShip1.png";
       }
 
-      //need to also get a health bar image appropriate to the given ship
+      //Get Health Bar Image
+      if (this.shipType != "Escort") {
+        this.healthBarImage = new Image();
+        this.hisLoaded = false;
+        this.healthBarImage.onload = () => {
+          this.hisLoaded = true;
+        }
+        console.log(this.encounter.shipList);
+        console.log(this.encounter.shipList[this.shipNum]);
+        console.log(this.encounter.shipList[this.shipNum].hp);
+        var shipHP = this.encounter.shipList[this.shipNum].hp.toString();
+        this.healthBarImage.src = "images/ui/shiphealthbars/ShipHealthBar_" + shipHP + ".png";
+      }
     }
 
     //Configure Animation & Initial State
@@ -85,9 +99,9 @@ class Sprite {
     const xPos = event.offsetX;
     const yPos = event.offsetY;
     if (event.type == "click") {
-      if (this.withinBounds(xPos, yPos) && this.shipType != "Escort") {
+      if (this.withinBounds(xPos, yPos) && this.encounter.shipList[this.shipNum].getType() != "Escort") {
         //if currently selected, deselect
-        if (this.isSelected && !this.isPlayer && this.shipType != "Escort") {
+        if (this.isSelected && !this.isPlayer && this.encounter.shipList[this.shipNum].getType() != "Escort") {
           //this.currentFrame--;
           this.tv.selectTarget(-1);
         }
@@ -121,7 +135,7 @@ class Sprite {
   }
 
   select() {
-    if (this.isSelected || this.isPlayer || this.shipType == "Escort") {
+    if (this.isSelected || this.isPlayer || this.encounter.shipList[this.shipNum].getType() == "Escort") {
       return;
     }
     else {
@@ -302,6 +316,14 @@ class Sprite {
         this.currentFrame--;
       }
     }
+
+    //Draw Health bar if not player or escort
+    if (!this.isPlayer && this.encounter != null) {
+      if (this.encounter.shipList[this.shipNum].getType() != "Escort") {
+        this.drawHealthBar(ctx);
+      }
+    }
+    
     this.updateAnimationProgress();
   }
 
@@ -315,15 +337,15 @@ class Sprite {
     ctx.font = "bold 12px courier";
     ctx.fillStyle = "white";
     ctx.textAlign = "center";
-    ctx.fillText(this.shipList[this.shipNum].getName(), x, y);
+    ctx.fillText(this.encounter.shipList[this.shipNum].getName(), x, y);
 
-    var secondLine = this.shipList[this.shipNum].getType() + " - GRT: " + this.shipList[this.shipNum].getGRT();
+    var secondLine = this.encounter.shipList[this.shipNum].getType() + " - GRT: " + this.encounter.shipList[this.shipNum].getGRT();
     ctx.font = "9px courier";
     ctx.fillText(secondLine, x, y + 10);
 
     //Draw Torpedo Assignment Indicators
     ctx.font = "30px courier";
-    var numOfG7a = this.shipList[this.shipNum].G7aINCOMING;
+    var numOfG7a = this.encounter.shipList[this.shipNum].G7aINCOMING;
     var stringG7a = "";
     for (let i = 0; i < numOfG7a; i++) {
       stringG7a = stringG7a + "•"
@@ -334,7 +356,7 @@ class Sprite {
     ctx.textAlign = "left";
     ctx.fillText(stringG7a, this.gameObject.x + 10, y + 80);
 
-    var numOfG7e = this.shipList[this.shipNum].G7eINCOMING;
+    var numOfG7e = this.encounter.shipList[this.shipNum].G7eINCOMING;
     var stringG7e = "";
     for (let i = 0; i < numOfG7e; i++) {
       stringG7e = stringG7e + "•"
@@ -350,8 +372,8 @@ class Sprite {
     ctx.textAlign = "center";
     ctx.font = "bold 10px courier";
     //Only draw if there is 1 or more shots incoming
-    if (this.shipList[this.shipNum].deckGunINCOMING > 0) {
-      ctx.fillText(this.shipList[this.shipNum].deckGunINCOMING, this.gameObject.x + 100, y + 74);
+    if (this.encounter.shipList[this.shipNum].deckGunINCOMING > 0) {
+      ctx.fillText(this.encounter.shipList[this.shipNum].deckGunINCOMING, this.gameObject.x + 100, y + 74);
     }
   }
 
@@ -365,10 +387,33 @@ class Sprite {
     ctx.font = "bold 12px courier";
     ctx.fillStyle = "black";
     ctx.textAlign = "center";
-    ctx.fillText(this.shipList[this.shipNum].getName(), x, y);
+    ctx.fillText(this.encounter.shipList[this.shipNum].getName(), x, y);
 
-    var secondLine = this.shipList[this.shipNum].clss + " - GRT: " + this.shipList[this.shipNum].getGRT();
+    var secondLine = this.encounter.shipList[this.shipNum].clss + " - GRT: " + this.encounter.shipList[this.shipNum].getGRT();
     ctx.font = "9px courier";
     ctx.fillText(secondLine, x, y + 10);
+  }
+
+  //Responsible for drawing the health bar and correct frame based on HP
+  drawHealthBar(ctx) {
+    var x = 0;
+    var y = 0;
+
+    //figure out x and y
+    x = this.gameObject.x + 30;
+    y = this.gameObject.y + 50;
+
+    //Get current damage of ship
+    var dam = this.encounter.shipList[this.shipNum].damage;
+    if (dam > this.encounter.shipList[this.shipNum].hp) {
+      dam = this.encounter.shipList[this.shipNum].hp;
+    }
+
+    this.hisLoaded && ctx.drawImage(this.healthBarImage,
+      dam * 140, 0,
+      140, 35,
+      x, y,
+      140, 35
+    )
   }
 }

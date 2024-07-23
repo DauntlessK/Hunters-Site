@@ -17,14 +17,16 @@ class Encounter {
 
         this.tv.enterEncounter();
         this.timeOfDay = this.getTimeOfDay(false)
-        this.tv.changeScene(this.encounterType, this.timeOfDay, this.shipList, false);
+        this.tv.changeScene(this.encounterType, this.timeOfDay, this, false);
 
         this.gm.setEventResolved(false);
 
-        this.depth = "";
-        this.range = "";
-        this.rangeNum = 0;
+        this.depth = "";               //Surfaced, Periscope Depth, or Deep
+        this.range = "";               //Close, Medium, or Long
+        this.rangeNum = 0;             //8, 7, 6
         this.canFireForeAndAft = false;
+        this.firedForeAndAft = false;
+        this.firedG7a = false;
 
         this.encPop = null;
         this.event();
@@ -163,7 +165,14 @@ class Encounter {
                 }
             }
         }
-    }  
+    }
+    
+    isEscorted() {
+        if (this.shipList[0].type == "Escort") {
+            return true;
+        }
+        return false;
+    }
 
     endEncounter() {
         this.tv.finishEncounter();
@@ -218,11 +227,11 @@ class Encounter {
                 console.log("Successfully followed!");
                 if (this.timeOfDay == "Night") {
                     this.timeOfDay = "Day";
-                    this.tv.changeScene(this.encounterType, this.timeOfDay, this.shipList, true);
+                    this.tv.changeScene(this.encounterType, this.timeOfDay, this, true);
                 }
                 else {
                     this.timeOfDay = "Night";
-                    this.tv.changeScene(this.encounterType, this.timeOfDay, this.shipList, true);
+                    this.tv.changeScene(this.encounterType, this.timeOfDay, this, true);
                 }
             }
         }
@@ -236,7 +245,7 @@ class Encounter {
         this.range = attackPopup.getRange();
         switch (this.range) {
             case "Short Range":
-                this.rangeNum = 8;     //NEED TO CHECK THESE VALUES-----------------------------------
+                this.rangeNum = 8;
                 break;
             case "Medium Range":
                 this.rangeNum = 7;
@@ -263,10 +272,12 @@ class Encounter {
         this.gm.setEventResolved(false);
         await until(_ => this.gm.eventResolved == true);
 
-        this.resolveRound();
+        this.resolveUboatAttack();
+
+
     }
 
-    resolveRound() {
+    resolveUboatAttack() {
         if (this.gm.sub.isFiringDeckGun > 0) {
             this.resolveDeckGun(this.gm.sub.isFiringDeckGun);
         }
@@ -315,7 +326,7 @@ class Encounter {
                 }
                     
                 ship[target].takeDamage(damage)
-                //self.damageDone += damage  ????
+                console.log("Deck Gun did " + damage + " damage!");
             }
             else{
                 console.log("Deck Gun Missed");
@@ -324,6 +335,75 @@ class Encounter {
     }
 
     resolveTorpedoes() {
+        //loop through each ship and resolve incoming torpedoes
+        for (let i = 0; i < this.shipList.length; i++) {
+            while (this.shipList[i].hasTorpedoesIncoming()) {
+                var currentShip = this.shipList[i];
+                var torpRoll = d6Rollx2();
+                var rollMod = 0;
 
+                //Apply all modifiers to roll
+                if (this.depth == "Surfaced") {
+                    rollMod -= 1;
+                }
+                if (this.gm.sub.knightsCross >= 2) {
+                    rollMod -= 1;
+                }
+                if (this.gm.sub.crew_levels["Crew"] == 0) {
+                    rollMod += 1;
+                }
+                if (this.gm.sub.isCrewKnockedOut()) {
+                    rollMod += 1;
+                }
+                if (this.gm.sub.crew_health["Kommandant"] > 1) {
+                    if (this.gm.sub.crew_health["Watch Officer 1"] > 1) {
+                        rollMod += 2;
+                    }
+                    else {
+                        rollMod += 1;
+                    }
+                }
+                if (this.gm.sub.isFiringForeAndAft && this.gm.sub.knightsCross == 0) {
+                    rollMod += 1;
+                    this.firedForeAndAft = true;
+                }
+                
+                //Resolve G7a Torpedo
+                if (currentShip.G7aINCOMING > 0) {
+                    this.firedG7a = true;
+                    console.log("Resolving G7a on " + currentShip.name);
+
+                    if (torpRoll + rollMod <= this.rangeNum) {
+                        console.log("HIT!")
+                    }
+                    else {
+                        console.log("MISS");
+                    }
+                    currentShip.G7aINCOMING--;
+                }
+
+                //Resolve G7e Torpedo
+                if (currentShip.G7eINCOMING > 0) {
+                    //Additional Mod for G7e at range
+                    if (this.range == "Medium") {
+                        rollMod += 1;
+                    }
+                    else if (this.range == "Long") {
+                        rollMod += 2;
+                    }
+
+                    console.log("Resolving G7e on " + currentShip.name);
+
+                    if (torpRoll + rollMod <= this.rangeNum) {
+                        console.log("HIT!")
+                    }
+                    else {
+                        console.log("MISS");
+                    }
+                    currentShip.G7eINCOMING--;
+                }
+            }
+        }
+        console.log("All ships resolved.");
     }
 }

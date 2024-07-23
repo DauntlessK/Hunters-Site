@@ -186,7 +186,7 @@ class TacticalView{
         }
     }
     //called to change the scene, responsible for background and sprites on background
-    changeScene(newScene, newTime, shipList, timeChangeOnly){
+    changeScene(newScene, newTime, enc, timeChangeOnly){
 
         if (newScene != "IntroPort" || newScene != "Port") {
             this.setTimeOfDay(newTime);
@@ -269,7 +269,7 @@ class TacticalView{
                         height: 158,
                         frames: 6,
                         isPlayer: false,
-                        shipList: shipList
+                        encounter: enc
                     })
                 }
                 break;
@@ -295,7 +295,7 @@ class TacticalView{
                         height: 158,
                         frames: 6,
                         isPlayer: false,
-                        shipList: shipList
+                        encounter: enc
                     }),
                     ship1: new GameObject({
                         x: 500,
@@ -306,7 +306,7 @@ class TacticalView{
                         height: 158,
                         frames: 6,
                         isPlayer: false,
-                        shipList: shipList
+                        encounter: enc
                     })
                 }
                 break;
@@ -332,7 +332,7 @@ class TacticalView{
                         height: 158,
                         frames: 6,
                         isPlayer: false,
-                        shipList: shipList
+                        encounter: enc
                     }),
                     ship1: new GameObject({
                         x: 680,
@@ -343,7 +343,7 @@ class TacticalView{
                         height: 158,
                         frames: 6,
                         isPlayer: false,
-                        shipList: shipList
+                        encounter: enc
                     }),
                     ship2: new GameObject({
                         x: 460,
@@ -354,7 +354,7 @@ class TacticalView{
                         height: 158,
                         frames: 6,
                         isPlayer: false,
-                        shipList: shipList
+                        encounter: enc
                     }),
                     ship3: new GameObject({
                         x: 240,
@@ -365,7 +365,7 @@ class TacticalView{
                         height: 158,
                         frames: 6,
                         isPlayer: false,
-                        shipList: shipList
+                        encounter: enc
                     }),
                     ship4: new GameObject({
                         x: 20,
@@ -376,7 +376,7 @@ class TacticalView{
                         height: 158,
                         frames: 6,
                         isPlayer: false,
-                        shipList: shipList
+                        encounter: enc
                     })
                 }
                 break;

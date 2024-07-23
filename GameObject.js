@@ -19,7 +19,7 @@ class GameObject {
       height: config.height,
       frames: config.frames,
       isPlayer: config.isPlayer,
-      shipList: config.shipList
+      encounter: config.encounter
     });
   }
 }

@@ -2,8 +2,9 @@ class Ship {
     constructor(type, month, year, shipsSunk, currentOrders) {
         this.type = type;
         this.name = name;
-        this.hp = 0;
+        this.hp = 5;
         this.damage = 0;
+        this.sunk = false;
         this.GRT = 0;
         
         this.G7aINCOMING = 0;
@@ -28,7 +29,6 @@ class Ship {
             case "Small Freighter":
                 this.damage = 0;
                 this.hp = 2;
-                this.sunk = false;
                 this.clss = this.type;                
 
                 //Get freighter name & GRT
@@ -46,7 +46,6 @@ class Ship {
             case "Large Freighter":
             case "Tanker":
                 this.clss = this.type;
-                this.sunk = false;
                 this.damage = 0;
 
                 //get correct name list
@@ -78,8 +77,7 @@ class Ship {
                 break;
             case "Escort":
                 this.damage = 0;
-                this.hp = 4;
-                this.sunk = false;                
+                this.hp = 4;            
 
                 //Get name & GRT
                 var names = await getDataFromTxt("data/Escort.txt");
@@ -96,8 +94,7 @@ class Ship {
                 break;
             case "Capital Ship":
                 this.damage = 0;
-                this.hp = 5;
-                this.sunk = false;                
+                this.hp = 5;              
 
                 //Get name & GRT
                 var names = await getDataFromTxt("data/CapitalShip.txt");
@@ -153,6 +150,22 @@ class Ship {
 
     assignDeckGun(num) {
         this.deckGunINCOMING = num;
+    }
+
+    hasTorpedoesIncoming() {
+        if (this.G7aINCOMING > 0 || this.G7eINCOMING > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    //Assigns damage to the ship, then checks for sinking
+    takeDamage(num) {
+        this.damage = self.damage + num;
+        this.gm.damageDone += num;   //update global damage count
+        if (this.damage >= this.hp) {
+            this.sunk = true;
+        }
     }
 
 }

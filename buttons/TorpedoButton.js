@@ -53,6 +53,9 @@ class TorpedoButton extends Button{
             else if (this.gm.sub.tube[this.tube] == 2){
                 this.changeState("G7e");
             }
+            else {
+                this.changeState("Empty");
+            }
         }
         //If in firing mode
         else if (this.tv.firingMode) {

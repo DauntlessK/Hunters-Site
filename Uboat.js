@@ -431,8 +431,27 @@ class Uboat{
         else {
             this.isFiringTorpedoes = false;
             for (let i = 0; i < 7; i++) {
+                if (this.tubeFiring[i] == true) {
+                    this.tube[i] = 0;
+                }
                 this.tubeFiring[i] == false;
             }
         }
+        this.isFiringFore = false;
+        this.isFiringAft = false;
+        this.isFiringForeAndAft = false;
+    }
+
+    isCrewKnockedOut() {
+        var numOfKO = 0;
+        for (let i = 0; i < 4; i++) {
+            if (this.crew_health[i] > 0) {
+                numOfKO++;
+            }
+        }
+        if (numOfKO == 4) {
+            return true;
+        }
+        return false;
     }
 }
