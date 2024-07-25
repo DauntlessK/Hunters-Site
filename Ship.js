@@ -6,6 +6,8 @@ class Ship {
         this.damage = 0;
         this.sunk = false;
         this.GRT = 0;
+
+        this.isLoaded = false;
         
         this.G7aINCOMING = 0;
         this.G7eINCOMING = 0;
@@ -114,6 +116,8 @@ class Ship {
                 }
             }
         }
+
+        this.isLoaded = true;
     }
 
     getName() {

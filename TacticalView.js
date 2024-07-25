@@ -186,7 +186,7 @@ class TacticalView{
         }
     }
     //called to change the scene, responsible for background and sprites on background
-    changeScene(newScene, newTime, enc, timeChangeOnly){
+    async changeScene(newScene, newTime, enc, timeChangeOnly){
 
         if (newScene != "IntroPort" || newScene != "Port") {
             this.setTimeOfDay(newTime);
@@ -195,6 +195,8 @@ class TacticalView{
             }
         }
 
+        sleep(1000);
+        
         this.scene = newScene;
         switch (newScene){
             case "IntroPort":

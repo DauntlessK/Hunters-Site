@@ -1,5 +1,6 @@
 class Encounter {
     constructor(tv, gm, encounterType, existingShips) {
+        this.shipListLoaded = false;
         if (encounterType != "No Encounter") { console.log("ALARRRRM!  " + encounterType); }
 
         this.tv = tv;
@@ -14,6 +15,8 @@ class Encounter {
         else {
             this.shipList = existingShips;
         }
+
+        this.shipListLoaded = true;
 
         this.tv.enterEncounter();
         this.timeOfDay = this.getTimeOfDay(false)
