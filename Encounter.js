@@ -45,33 +45,33 @@ class Encounter {
 
         //First add escort if applicable
         if (enc == "Convoy" || enc == "Capital Ship" || enc.includes("Escort")) {
-            var esc = new Ship("Escort", this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders);
+            var esc = new Ship(this.gm, "Escort", this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders);
             tgt.push(esc);
         }
 
         if (enc == "Tanker") {
-            var ship1 = new Ship("Tanker", this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders);
+            var ship1 = new Ship(this.gm, "Tanker", this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders);
             tgt.push(ship1);
         }
 
         if (enc == "Capital Ship") {
-            var ship1 = new Ship("Tanker", this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders);
+            var ship1 = new Ship(this.gm, "Tanker", this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders);
             tgt.push(ship1);
         }
 
         if (enc == "Ship" || enc == "Two Ships" || enc == "Convoy" || enc == "Ship + Escort" || enc == "Two Ships + Escort") {
-            var ship1 = new Ship(this.getTargetShipType(), this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders);
+            var ship1 = new Ship(this.gm, this.getTargetShipType(), this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders);
             tgt.push(ship1);
         }
 
         if (enc == "Two Ships" || enc == "Two Ships + Escort" || enc == "Convoy") {
-            var ship2 = new Ship(this.getTargetShipType(), this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders);
+            var ship2 = new Ship(this.gm, this.getTargetShipType(), this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders);
             tgt.push(ship2);
         }
 
         if (enc == "Convoy") {
-            var ship3 = new Ship(this.getTargetShipType(), this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders);
-            var ship4 = new Ship(this.getTargetShipType(), this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders);
+            var ship3 = new Ship(this.gm, this.getTargetShipType(), this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders);
+            var ship4 = new Ship(this.gm, this.getTargetShipType(), this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders);
             tgt.push(ship3);
             tgt.push(ship4);
         }
@@ -258,7 +258,7 @@ class Encounter {
                 break;
         }
         if (this.depth == "Periscope Depth") {
-            this.tv.gameObjects.uboat.sprite.dive();
+            this.tv.uboat.sprite.dive();
             this.tv.mainUI.deckGunButton.changeState("Disabled");
             this.canFireForeAndAft = true;
         }
@@ -339,6 +339,9 @@ class Encounter {
 
     resolveTorpedoes() {
         //loop through each ship and resolve incoming torpedoes
+        var numHits = 0;
+        var numDuds = 0;
+        var numMissed = 0;
         for (let i = 0; i < this.shipList.length; i++) {
             while (this.shipList[i].hasTorpedoesIncoming()) {
                 var currentShip = this.shipList[i];
@@ -376,11 +379,31 @@ class Encounter {
                     this.firedG7a = true;
                     console.log("Resolving G7a on " + currentShip.name);
 
+                    //Determine if hit or miss
                     if (torpRoll + rollMod <= this.rangeNum) {
-                        console.log("HIT!")
+                        if (this.wasDud("G7a")) {
+                            numDuds++;
+                        }
+                        else {
+                            numHits++;
+                            var damRoll = d6Roll();
+                            switch (damRoll) {
+                                case 1:
+                                    currentShip.takeDamage(4);
+                                    break;
+                                case 2:
+                                    currentShip.takeDamage(3);
+                                    break;
+                                case 3:
+                                    currentShip.takeDamage(2);
+                                    break;
+                                default:
+                                    currentShip.takeDamage(1);
+                            }   
+                        }
                     }
                     else {
-                        console.log("MISS");
+                        numMissed++;
                     }
                     currentShip.G7aINCOMING--;
                 }
@@ -397,16 +420,74 @@ class Encounter {
 
                     console.log("Resolving G7e on " + currentShip.name);
 
+                    //Determine if hit or miss
                     if (torpRoll + rollMod <= this.rangeNum) {
-                        console.log("HIT!")
+                        if (this.wasDud("G7e")) {
+                            numDuds++;
+                        }
+                        else {
+                            numHits++;
+                            var damRoll = d6Roll();
+                            switch (damRoll) {
+                                case 1:
+                                    currentShip.takeDamage(4);
+                                    break;
+                                case 2:
+                                    currentShip.takeDamage(3);
+                                    break;
+                                case 3:
+                                    currentShip.takeDamage(2);
+                                    break;
+                                default:
+                                    currentShip.takeDamage(1);
+                            }   
+                        }
                     }
                     else {
-                        console.log("MISS");
+                        numMissed++;
                     }
-                    currentShip.G7eINCOMING--;
+                    currentShip.G7aINCOMING--;
                 }
             }
         }
         console.log("All ships resolved.");
+        var roundResults = new RoundResultsPopup(this.tv, this.gm, enc, numHits, numDuds, numMissed);
+    }
+
+    //Determines if the torpedo that hit was a dud based on year and D6 roll
+    wasDud(torpType) {
+        var dudRoll = d6Roll();
+
+        if (this.gm.superiorTorpedoes) {
+            dudRoll -= 1;
+        }
+
+        if (this.gm.getYear() >= 1941) {
+            if (dudRoll == 1) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else if (this.gm.getYear() == 1940 && this.gm.getMonth() >= 6) {
+            if (dudRoll >= 2) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            if (torpType == "G7a" && dudRoll >= 2) {
+                return false;
+            }
+            else if (torpType == "G7e" && dudRoll >= 3) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
     }
 }

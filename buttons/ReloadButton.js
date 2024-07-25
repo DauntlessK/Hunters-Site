@@ -14,8 +14,8 @@ class ReloadButton extends Button {
 
         if (!this.tv.isDeparted) {
             this.gm.newPatrol();
-            this.tv.gameObjects.uboat.sprite.setDeparted();
-            this.tv.gameObjects.waterline.sprite.setDeparted();
+            this.tv.uboat.sprite.setDeparted();
+            this.tv.uboatwake.sprite.setDeparted();
             this.tv.setDeparted(true);
         }
 

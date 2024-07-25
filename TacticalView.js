@@ -17,6 +17,33 @@ class TacticalView{
 
         this.lowerImage = new Image();
         this.upperImage = new Image();
+        this.timeOverlayImage = new Image();
+
+        //create uboat player object- (Initial state is large for port)
+        this.uboat = new GameObject({
+            tv: this,
+            gm: this.gm,
+            x: 137,
+            y: 392,
+            src: "images/ships/Uboat_VIIC_spritesheet2.png",
+            width: 803,
+            height: 95,
+            frames: 1,
+            isPlayer: true
+        });
+
+        //create wake water object
+        this.uboatwake = new GameObject({
+            tv: this,
+            gm: this.gm,
+            x: -58,
+            y: -5,
+            src: "images/portscene_waterline_spritesheet.png",
+            width: 1280,
+            height: 720,
+            frames: 24,
+            isPlayer: false
+        })
 
         this.currentFrame = 0;
         this.animationFrameLimit = 16;
@@ -133,10 +160,10 @@ class TacticalView{
         this.time = time;
 
         if (time == "Day") {
-            this.lowerImage.src = "images/scrollingwater_spritesheet.png";
+            this.timeOverlayImage.src = "images/blank.png";
         }
         else {
-            this.lowerImage.src = "images/scrollingwater_NIGHT_spritesheet.png";
+            this.timeOverlayImage.src = "images/night_overlay.png";
         }
     }
 
@@ -159,6 +186,40 @@ class TacticalView{
             1280, 720
           )   
     }
+
+    //Draws dark layer for night
+    drawNightOverlayImage(ctx) {
+        ctx.drawImage(this.timeOverlayImage,
+            0, 0,
+            1280, 720,
+            0, 0,
+            1280, 720
+          ) 
+    }
+
+    /**OLD CREATION OF UBOAT OBJECTS
+    drawUboat(ctx) {
+        if (this.scene == "Port" || this.scene == "IntroPort") {
+            this.uboat = new GameObject({
+                x: 137,
+                y: 392,
+                src: "images/ships/Uboat_VIIC_spritesheet2.png",
+                width: 803,
+                height: 95,
+                frames: 1,
+                isPlayer: true
+            })
+        }
+        this.uboat = new GameObject({
+            x: 0,
+            y: 200,
+            src: "images/ships/Uboat_VIIC_spritesheet2.png",
+            width: 803,
+            height: 95,
+            frames: 49,
+            isPlayer: true
+        })
+    } */
 
     //draws weather layers
     drawWeather(ctx) {
@@ -188,81 +249,49 @@ class TacticalView{
     //called to change the scene, responsible for background and sprites on background
     async changeScene(newScene, newTime, enc, timeChangeOnly){
 
+        //If last (current) scene was Port and changing scenes, set background to scrolling water and set new uboat
+        if (this.scene == "Port") {
+            this.lowerImage.src = "images/scrollingwater_spritesheet.png";
+            this.uboat.x = 0;
+            this.uboat.y = 200;
+            this.uboat.sprite.frames = 49;
+            this.uboatwake.x = -200;
+            this.uboatwake.y = -204;
+        }
+
+        //If scene is not port, configure time of day
         if (newScene != "IntroPort" || newScene != "Port") {
             this.setTimeOfDay(newTime);
             if (timeChangeOnly) {
                 return;
             }
         }
+        else {
+            this.timeOverlayImage.src = "images/blank.png";
+        }
 
-        sleep(1000);
+        //sleep(1000);
         
         this.scene = newScene;
         switch (newScene){
             case "IntroPort":
                 this.lowerImage.src = "images/portscene_spritesheet.png";
                 this.upperImage.src = "images/logo.png";
-                this.bgdFrames = 30,
-                this.gameObjects = {
-                    uboat: new GameObject({
-                        x: 137,
-                        y: 392,
-                        src: "images/ships/Uboat_VIIC_spritesheet2.png",
-                        width: 803,
-                        height: 95,
-                        frames: 1,
-                        isPlayer: true
-                    }),
-                    waterline: new GameObject({
-                        x: -58,
-                        y: -5,
-                        src: "images/portscene_waterline_spritesheet.png",
-                        width: 1280,
-                        height: 720,
-                        frames: 24,
-                        isPlayer: false
-                    })
-                }
+                this.timeOverlayImage.src = "images/blank.png";
+                this.bgdFrames = 30;
                 break;
             case "Port":
                 this.lowerImage.src = "images/portscene_spritesheet.png";
                 this.upperImage.src = "images/blank.png";
-                this.bgdFrames = 30,
-                this.gameObjects = {
-                    uboat: new GameObject({
-                        x: 137,
-                        y: 392,
-                        src: "images/ships/Uboat_VIIC_spritesheet2.png",
-                        width: 803,
-                        height: 95,
-                        frames: 1,
-                        isPlayer: true
-                    }),
-                    waterline: new GameObject({
-                        x: -58,
-                        y: -5,
-                        src: "images/portscene_waterline_spritesheet.png",
-                        width: 1280,
-                        height: 720,
-                        frames: 24,
-                        isPlayer: false
-                    })
-                }
+                this.timeOverlayImage.src = "images/blank.png";
                 break;
             case "Ship":
-                this.upperImage.src = "images/deepwater.png",
-                this.bgdFrames = 49,
+                this.upperImage.src = "images/deepwater.png";
+                this.bgdFrames = 49;
                 this.gameObjects = {
-                    uboat: new GameObject({
-                        x: 0,
-                        y: 200,
-                        src: "images/ships/Uboat_VIIC_spritesheet2.png",
-                        width: 803,
-                        height: 95,
-                        frames: 49,
-                        isPlayer: true
-                    }),
                     ship0: new GameObject({
+                        tv: this,
+                        gm: this.gm,
                         x: 300,
                         y: 10,
                         src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
@@ -276,19 +305,12 @@ class TacticalView{
                 }
                 break;
             case "Ship + Escort":
-                this.upperImage.src = "images/deepwater.png",
-                this.bgdFrames = 49,
+                this.upperImage.src = "images/deepwater.png";
+                this.bgdFrames = 49;
                 this.gameObjects = {
-                    uboat: new GameObject({
-                        x: 0,
-                        y: 200,
-                        src: "images/ships/Uboat_VIIC_spritesheet2.png",
-                        width: 803,
-                        height: 95,
-                        frames: 49,
-                        isPlayer: true
-                    }),
                     ship0: new GameObject({
+                        tv: this,
+                        gm: this.gm,
                         x: 740,
                         y: 50,
                         src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
@@ -300,6 +322,8 @@ class TacticalView{
                         encounter: enc
                     }),
                     ship1: new GameObject({
+                        tv: this,
+                        gm: this.gm,
                         x: 500,
                         y: 10,
                         src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
@@ -313,19 +337,12 @@ class TacticalView{
                 }
                 break;
             case "Convoy":
-                this.upperImage.src = "images/deepwater.png",
-                this.bgdFrames = 49,
+                this.upperImage.src = "images/deepwater.png";
+                this.bgdFrames = 49;
                 this.gameObjects = {
-                    uboat: new GameObject({
-                        x: 0,
-                        y: 200,
-                        src: "images/ships/Uboat_VIIC_spritesheet2.png",
-                        width: 803,
-                        height: 95,
-                        frames: 49,
-                        isPlayer: true
-                    }),
                     ship0: new GameObject({
+                        tv: this,
+                        gm: this.gm,
                         x: 740,
                         y: 50,
                         src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
@@ -337,6 +354,8 @@ class TacticalView{
                         encounter: enc
                     }),
                     ship1: new GameObject({
+                        tv: this,
+                        gm: this.gm,
                         x: 680,
                         y: 10,
                         src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
@@ -348,6 +367,8 @@ class TacticalView{
                         encounter: enc
                     }),
                     ship2: new GameObject({
+                        tv: this,
+                        gm: this.gm,
                         x: 460,
                         y: 10,
                         src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
@@ -359,6 +380,8 @@ class TacticalView{
                         encounter: enc
                     }),
                     ship3: new GameObject({
+                        tv: this,
+                        gm: this.gm,
                         x: 240,
                         y: 10,
                         src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
@@ -370,6 +393,8 @@ class TacticalView{
                         encounter: enc
                     }),
                     ship4: new GameObject({
+                        tv: this,
+                        gm: this.gm,
                         x: 20,
                         y: 10,
                         src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
@@ -383,24 +408,10 @@ class TacticalView{
                 }
                 break;
             default:
-                this.upperImage.src = "images/deepwater.png",
-                this.bgdFrames = 49,
-                this.gameObjects = {
-                    uboat: new GameObject({
-                        x: 0,
-                        y: 200,
-                        src: "images/ships/Uboat_VIIC_spritesheet2.png",
-                        width: 803,
-                        height: 95,
-                        frames: 1,
-                        isPlayer: true
-                    })
-                }
+                this.upperImage.src = "images/deepwater.png";
+                this.bgdFrames = 49;
+                this.gameObjects = null;
                 break;
         }
-        //update tv on each sprite
-        Object.values(this.gameObjects).forEach(object => {
-            object.sprite.updateTV(this);
-        })
     }
 }

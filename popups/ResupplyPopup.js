@@ -13,7 +13,7 @@ class ResupplyPopup{
         this.currentForeG7a = this.currentG7a - this.current_aftG7a;
         this.currentForeG7e = this.currentG7e - this.current_aftG7e;
 
-        this.tv.pauseGame();
+        this.tv.pauseGame(true);
 
         const container = document.querySelector(".game-container");
 

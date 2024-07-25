@@ -13,6 +13,8 @@ class GameObject {
     this.y = config.y || 0;
     this.sprite = new Sprite({
       gameObject: this,
+      tv: config.tv,
+      gm: config.gm,
       src: config.src,
       shipNum: this.shipNum,
       width: config.width,

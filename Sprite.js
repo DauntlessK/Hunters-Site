@@ -1,7 +1,8 @@
 class Sprite {
   constructor(config) {
 
-    this.tv = null;
+    this.tv = config.tv;
+    this.gm = config.gm;
 
     //Set up the image
     this.image = new Image();
@@ -52,8 +53,8 @@ class Sprite {
         console.log(this.encounter.shipList);
         console.log(this.encounter.shipList[this.shipNum]);
         console.log(this.encounter.shipList[this.shipNum].hp);
-        var shipHP = this.encounter.shipList[this.shipNum].hp.toString();
-        this.healthBarImage.src = "images/ui/shiphealthbars/ShipHealthBar_" + shipHP + ".png";
+        this.shipHP = this.encounter.shipList[this.shipNum].hp.toString();
+        this.healthBarImage.src = "images/ui/shiphealthbars/ShipHealthBar_" + this.shipHP + ".png";
       }
     }
 
@@ -166,12 +167,15 @@ class Sprite {
     //player sprite
     if (this.tv.isPaused == false && this.depth > 0 && this.isPlayer) {
       this.animationFrameProgress -= 1;
-      //Check to see if frame limit is 0, if it is, roll to next frame
-      if (this.animationFrameProgress === 0 && this.currentAnimation === "cruise") {
+      //Check to see if animiation frame progress is 0, roll to next frame
+      if (this.animationFrameProgress === 0) {
         this.currentFrame += 1;
+
+        //If at last frame
         if (this.currentFrame == this.frames - 1) {
           this.currentFrame = 1;
         }
+
         //player diving animation
         if (this.diving && this.isPlayer) {
           this.depth += 2;
@@ -179,10 +183,8 @@ class Sprite {
             this.diving = false;
           }
         }
+
         this.animationFrameProgress = this.animationFrameLimit;
-      }
-      else if (this.currentAnimation === "idle") {
-        this.currentAnimationFrame = 0;
       }
     }
     else if (this.isPlayer) {
@@ -281,8 +283,8 @@ class Sprite {
     var y = 0;
 
     //figure out x and y
-    x = this.gameObject.x + this.depart();
-    y = this.gameObject.y + this.randomUpAndDown() + this.depth;
+    x = this.gameObject.x + this.depart(); 
+    y = this.gameObject.y + this.randomUpAndDown() + this.depth;    
 
 
     //work out width and height
@@ -405,8 +407,15 @@ class Sprite {
 
     //Get current damage of ship
     var dam = this.encounter.shipList[this.shipNum].damage;
+    console.log(dam);
     if (dam > this.encounter.shipList[this.shipNum].hp) {
       dam = this.encounter.shipList[this.shipNum].hp;
+    }
+
+    //Doublecheck if HP is different than current HP bar
+    if (this.encounter.shipList[this.shipNum].hp != this.shipHP) {
+      this.shipHP = this.encounter.shipList[this.shipNum].hp.toString();
+      this.healthBarImage.src = "images/ui/shiphealthbars/ShipHealthBar_" + this.shipHP + ".png";
     }
 
     this.hisLoaded && ctx.drawImage(this.healthBarImage,

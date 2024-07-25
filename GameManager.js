@@ -96,6 +96,10 @@ class GameManager{
         return this.date_year;
     }
 
+    getMonth() {
+        return this.date_month;
+    }
+
     getLRankAndName(){
         return this.rankLong[this.sub.crew_levels["Kommandant"]] + " " + this.kmdt;
     }
@@ -231,7 +235,7 @@ class GameManager{
         this.setEventResolved(false);
         const ordersPopUp = new OrdersPopup(this.tv, this, onlyUnique, isPicking);
         await until(_ => this.eventResolved == true);
-        this.tv.changeScene("NoShip", "Day", null, false);
+        this.tv.changeScene("NoEnc", "Day", null, false);
     }
 
     beginPatrol() {

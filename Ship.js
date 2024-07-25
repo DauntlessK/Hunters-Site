@@ -1,5 +1,7 @@
 class Ship {
-    constructor(type, month, year, shipsSunk, currentOrders) {
+    constructor(gm, type, month, year, shipsSunk, currentOrders) {
+        this.gm = gm;
+
         this.type = type;
         this.name = name;
         this.hp = 5;
@@ -165,7 +167,7 @@ class Ship {
 
     //Assigns damage to the ship, then checks for sinking
     takeDamage(num) {
-        this.damage = self.damage + num;
+        this.damage = this.damage + num;
         this.gm.damageDone += num;   //update global damage count
         if (this.damage >= this.hp) {
             this.sunk = true;
