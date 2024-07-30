@@ -1,4 +1,4 @@
-class RoundResultsPopup{
+class RoundFollowUpPopup{
     constructor(tv, gm, enc) {
         this.tv = tv;
         this.gm = gm;
@@ -11,52 +11,12 @@ class RoundResultsPopup{
 
         this.element.classList.add("PatrolMessage");
 
-        if (this.enc.roundFired > 0) {
+        if (this.enc.firedFore || this.enc.firedAft) {
             this.showResultsTorpedo();
         }
         else {
             this.showResultsDeckGun();
         }
-    }
-
-    //Shows hits / damage if deck gun hits
-    showResultsDeckGun() {
-        var hitMessage = "";
-
-        if (this.enc.roundDam == 0) {
-            hitMessage = "Deck gun fire ineffective! No damage!"
-        }
-        else {
-            for (let i = 0; i < this.enc.shipList.length; i++) {
-                if (this.enc.shipList[i].roundHits == 2) {
-                    hitMessage = "2 hits on " + this.enc.shipList[i].name + "! She's taken " + this.enc.shipList[i].roundDam + " damage! ";
-                }
-                else {
-                    hitMessage = "1 hit on " + this.enc.shipList[i].name + "! She's taken " + this.enc.shipList[i].roundDam + " damage! ";
-                }
-                if (this.enc.shipList[i].roundSunk) {
-                    hitMessage = hitMessage + "She's sinking!";
-                }
-            }
-        }
-
-        this.element.innerHTML = (`
-            <p class="PatrolMessage_p">
-            ${hitMessage}
-            <button class="AttackPopup_button" id="continue">Continue</button>
-            </p>
-        `)
-    
-
-        this.element.addEventListener("click", ()=> {
-            if (event.target.id == "continue"){
-                //get selected value and close popup
-                this.done();
-            }
-        })
-
-        this.container.appendChild(this.element);
-
     }
     
     //Popup to show number of hits, missed and duds from resolution of torpedoes

@@ -39,7 +39,6 @@ class TorpedoButton extends Button{
                 this.currentFrame = 7;
                 break;
         }
-
         this.currentState = this.currentStateOptions[this.currentFrame];
     }
 
@@ -53,14 +52,20 @@ class TorpedoButton extends Button{
             else if (this.gm.sub.tube[this.tube] == 2){
                 this.changeState("G7e");
             }
-            else {
-                this.changeState("Empty");
-            }
         }
         //If in firing mode
         else if (this.tv.firingMode) {
-            if (this.tv.currentTarget >= 0) {
-                //TODO NEED TO DEAL WITH BROKEN TORPEDO DOORS
+            //Disable conditions - first if already fired that side of the boat
+            if ((this.gm.currentEncounter.firedFore && this.tube <= 4) || (this.gm.currentEncounter.firedAft) && this.tube >= 5) {
+                this.changeState("Disabled");
+            }
+            //Disable if that side of the boat's torpedo doors are broken
+            else if ((this.tube <= 4 && this.gm.sub.systems["Forward Torpedo Doors"] > 0) || (this.tube >= 5 && this.gm.sub.systems["Aft Torpedo Doors"] > 0)) {
+                this.changeState("Disabled");
+            }
+            //Disable if mines are loaded on that side of the boat
+            else if ((this.tube <= 4 && this.gm.sub.minesLoadedForward) || (this.tube >= 5 && this.gm.sub.minesLoadedForwardAft)) {
+                this.changeState("Disabled");
             }
         }
         //Normal mode (not interactable)
@@ -137,16 +142,18 @@ class TorpedoButton extends Button{
             }
             //Otherwise select tube
             else {
-                this.changeState("Pressed");
+                if ((!this.gm.currentEncounter.firedFore && this.tube <= 4) || (!this.gm.currentEncounter.firedAft) && this.tube >= 5) {
+                    this.changeState("Pressed");
 
-                //Check type in tube to assign to ship
-                if (this.gm.sub.tube[this.tube] == 1) {
-                    this.gm.currentEncounter.shipList[this.tv.getSelectedTarget()].assignG7a();
-                    this.gm.sub.assignTubeForFiring(this.tube, "G7a")
-                }
-                else if (this.gm.sub.tube[this.tube] == 2){
-                    this.gm.currentEncounter.shipList[this.tv.getSelectedTarget()].assignG7e();
-                    this.gm.sub.assignTubeForFiring(this.tube, "G7e")
+                    //Check type in tube to assign to ship
+                    if (this.gm.sub.tube[this.tube] == 1) {
+                        this.gm.currentEncounter.shipList[this.tv.getSelectedTarget()].assignG7a();
+                        this.gm.sub.assignTubeForFiring(this.tube, "G7a")
+                    }
+                    else if (this.gm.sub.tube[this.tube] == 2){
+                        this.gm.currentEncounter.shipList[this.tv.getSelectedTarget()].assignG7e();
+                        this.gm.sub.assignTubeForFiring(this.tube, "G7e")
+                    }
                 }
             }
         }
@@ -163,11 +170,13 @@ class TorpedoButton extends Button{
         else if (event.type == "mousemove"){
             //Hover and Unhover for firing mode
             if (this.tv.firingMode) {
-                if (this.withinBounds(xPos, yPos) && this.currentState == "Active"){
-                    this.changeState("Hover");
-                }
-                else if (!this.withinBounds(xPos, yPos) && this.currentState == "Hover"){
-                    this.changeState("Active");
+                if ((!this.gm.currentEncounter.firedFore && this.tube <= 4) || (!this.gm.currentEncounter.firedAft) && this.tube >= 5) {
+                    if (this.withinBounds(xPos, yPos) && this.currentState == "Active"){
+                        this.changeState("Hover");
+                    }
+                    else if (!this.withinBounds(xPos, yPos) && this.currentState == "Hover"){
+                        this.changeState("Active");
+                    }
                 }
             }
             else if (this.tv.reloadMode) {
@@ -179,6 +188,18 @@ class TorpedoButton extends Button{
                 }
             }
         }
-        this.getLatestState()
+        this.getLatestState();
+    }
+
+    //Draw Button
+    draw(ctx) {
+        this.isLoaded && ctx.drawImage(
+            this.image,
+            this.currentFrame * this.width, 0,
+            this.width, this.height,
+            this.x, this.y,
+            this.width, this.height
+        )
+        this.getLatestState();
     }
 }

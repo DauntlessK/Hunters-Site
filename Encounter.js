@@ -17,6 +17,7 @@ class Encounter {
         this.numSunk = 0;
 
         //Round "Scoreboard"
+        this.roundFired = 0;
         this.roundHits = 0;
         this.roundDuds = 0;
         this.roundDam = 0;
@@ -44,6 +45,7 @@ class Encounter {
 
         this.gm.setEventResolved(false);
 
+        this.attackDepth = "";
         this.depth = "";               //Surfaced, Periscope Depth, or Deep
         this.range = "";               //Close, Medium, or Long
         this.rangeNum = 0;             //8, 7, 6
@@ -220,7 +222,16 @@ class Encounter {
         }
     }
 
+    //Clean up after firings
+    endRound() {
+        this.clearRoundStats();
+    }
+
     endEncounter() {
+        this.tv.changeScene("", this.timeOfDay, null, false);
+        if (this.depth != "Surfaced") {
+            this.tv.uboat.sprite.surface();
+        }
         this.tv.finishEncounter();
     }
 
@@ -234,15 +245,17 @@ class Encounter {
             //not sure what is needed here
         }
         else {
-            this.attackRound();
+            this.attackRound(true);
         }
     }
 
     //Starts one round (one engagement of a single weapon)
-    async attackRound() {
+    async attackRound(isFirstRound) {
         console.log("Attack Round started");
-        //If mines are on the boat, ignore encounter TODO FIX
-        if (this.gm.sub.hasMinesLoaded() && this.shipList[0].getType() == "Escort") {
+
+        if (isFirstRound) {
+            //If mines are on the boat, ignore encounter TODO FIX
+        if (this.gm.sub.minesLoadedForward && this.gm.sub.minesLoadedAft && this.shipList[0].getType() == "Escort") {
             console.log("MINES LOADED");
             this.endEncounter();
             return;
@@ -251,7 +264,6 @@ class Encounter {
         //check if ignoring ship(s)
         var waitRoll = d6Roll();
         if (this.encPop.getChoice() == "ignore") {
-            this.tv.changeScene("", this.timeOfDay, null, false);
             this.endEncounter();
             return;
         }
@@ -294,7 +306,7 @@ class Encounter {
             case "Short Range":
                 this.rangeNum = 8;
                 if (this.isEscorted()) {
-                    //check for detection TODO======================================
+                    this.escortDetection(false, 0);
                 }
                 break;
             case "Medium Range":
@@ -314,6 +326,7 @@ class Encounter {
           })
         //Force update Deck Gun Button
         this.tv.mainUI.deckGunButton.getLatestState();
+        }
 
         //Allow for firing (selecting target and tubes)
         this.tv.setFiringMode(true);
@@ -323,10 +336,31 @@ class Encounter {
         await until(_ => this.gm.eventResolved == true);
 
         //Resolve fired weapons in this round then display results --- leads into escort detection or engaging again or following
+        this.tv.setFiringMode(false);
         this.resolveUboatAttack();
         this.gm.setEventResolved(false);
-        var roundResults = new RoundResultsPopup(this.tv, this.gm, enc);
+        var roundResults = new RoundResultsPopup(this.tv, this.gm, this);
         await until(_ => this.gm.eventResolved == true);
+
+        if (this.isEscorted()) {
+            if (this.depth == "Surfaced") {
+                this.tv.uboat.sprite.dive();
+                this.tv.mainUI.deckGunButton.changeState("Disabled");
+                this.depth = "Periscope Depth";
+            }
+            this.escortDetection(false, 0);
+        }
+
+        this.endRound();
+
+        if (this.hasSinkableShip()) {
+            //Need to get input from player to see if attack will continue, follow, or leave
+            this.attackRound(false);
+        }
+        else {
+            this.tv.enterReloadMode();
+            this.tv.finishEncounter();
+        }
 
     }
 
@@ -338,52 +372,56 @@ class Encounter {
         else {
             this.resolveTorpedoes();
         }
-
+        this.attackDepth = this.depth;
         this.gm.sub.fire();
     }
 
     resolveDeckGun(numShots) {
         //Performed for each shot
-        for (let i = 0; i < numShots; i++) {
-            var gunRoll = d6Rollx2();
-            var rollMod = 0;
+        for (let i = 0; i < this.shipList.length; i++) {
+            while (this.shipList[i].deckGunINCOMING > 0) {
+                var gunRoll = d6Rollx2();
+                var rollMod = 0;
 
-            //Apply mods
-            if (this.gm.sub.sub.knightsCross >= 2){
-                rollMod -= 1;
-            }
-            if (this.gm.sub.sub.crew_levels["Crew"] == 0) {
-                rollMod += 1;
-            }
-            if (this.gm.sub.sub.crewKnockedOut()) {
-                rollMod += 1;
-            }
-            if (this.gm.sub.sub.crew_health["Kommandant"] > 1) {
-                if (this.gm.sub.sub.crew_health["Watch Officer"] > 1) {
-                    rollMod += 2;
-                }    
-                else {
+                //Apply mods
+                if (this.gm.sub.knightsCross >= 2){
+                    rollMod -= 1;
+                }
+                if (this.gm.sub.crew_levels["Crew"] == 0) {
                     rollMod += 1;
                 }
-            }
+                if (this.gm.sub.isCrewKnockedOut()) {
+                    rollMod += 1;
+                }
+                if (this.gm.sub.crew_health["Kommandant"] > 1) {
+                    if (this.gm.sub.sub.crew_health["Watch Officer"] > 1) {
+                        rollMod += 2;
+                    }    
+                    else {
+                        rollMod += 1;
+                    }
+                }
 
-            //Check roll and mods
-            var damage = 1;
-            if (gunRoll + rollMod <= this.rangeNum) {
-                var damRoll = d6Roll();
-                var damMod = 0;
-                if (self.sub.getType().includes("IX")) {
-                    damMod -= 1;
+                //Check roll and mods
+                var damage = 1;
+                if (gunRoll + rollMod <= this.rangeNum) {
+                    var damRoll = d6Roll();
+                    var damMod = 0;
+                    if (this.gm.sub.getType().includes("IX")) {
+                        damMod -= 1;
+                    }
+                    if (damRoll <= 1) {
+                        damage = 2;
+                    }
+                        
+                    this.shipList[i].takeDamage(damage)
+                    this.roundDam += damage;
+                    console.log("Deck Gun did " + damage + " damage!");
                 }
-                if (damRoll <= 1) {
-                    damage = 2;
+                else{
+                    console.log("Deck Gun Missed");
                 }
-                    
-                ship[target].takeDamage(damage)
-                console.log("Deck Gun did " + damage + " damage!");
-            }
-            else{
-                console.log("Deck Gun Missed");
+                this.shipList[i].deckGunINCOMING--;
             }
         }
     }
@@ -444,6 +482,7 @@ class Encounter {
                 //Resolve G7a Torpedo
                 if (currentShip.G7aINCOMING > 0) {
                     this.numFired++;
+                    this.roundFired++;
                     this.firedG7a = true;
                     console.log("Resolving G7a on " + currentShip.name);
 
@@ -471,8 +510,6 @@ class Encounter {
                                     break;
                             }
                             currentShip.takeDamage(damage);
-                            currentShip.roundHits++;
-                            currentShip.roundDamage += damage;   
                             this.roundDam += damage;
                         }
                     }
@@ -485,6 +522,7 @@ class Encounter {
                 //Resolve G7e Torpedo
                 if (currentShip.G7eINCOMING > 0) {
                     this.numFired++;
+                    this.roundFired++;
                     //Additional Mod for G7e at range
                     if (this.range == "Medium") {
                         rollMod += 1;
@@ -519,15 +557,13 @@ class Encounter {
                                     break;
                             }
                             currentShip.takeDamage(damage);
-                            currentShip.roundHits++;
-                            currentShip.roundDamage += damage;  
                             this.roundDam += damage;
                         }
                     }
                     else {
                         this.numMissed++;
                     }
-                    currentShip.G7aINCOMING--;
+                    currentShip.G7eINCOMING--;
                 }
             }
         }
@@ -544,6 +580,7 @@ class Encounter {
         this.roundHits = 0;
         this.roundDuds = 0;
         this.roundDam = 0;
+        this.roundFired = 0;
     }
 
     //Determines if a combat round can be conducted - returns "All", "Fore", "Aft", "Deck Gun", "None"
@@ -608,6 +645,95 @@ class Encounter {
             else {
                 return true;
             }
+        }
+    }
+
+    //Called when escort detection roll is required to see if Uboat was detected
+    escortDetection(previouslyDetected, wpMod) {
+        var escortRoll = d6Rollx2();
+        var escortMods = 0;
+        var canTestDive = false;
+
+        //Check if in Wolfpack
+        if (this.gm.currentOrders.includes("Wolfpack") && wpMod == 0 && this.encounterType == "Convoy") {
+            wolfpackRoll = d6Roll();
+            if (wolfpackRoll <= 5) {
+                wpMod = -1;
+            }
+            else {
+                wpMod = 1;
+            }
+            escortMods += wpMod;
+        }
+
+        if (this.gm.getYear() >= 1941 && this.rangeNum == 8) {
+            escortMods = escortMods + (this.gm.getYear() - 1940)
+        }
+        if (this.gm.sub.knightsCross >= 3) {
+            escortMods -= 1;
+        }
+
+        //Deal with close range detection (Before Firing)
+        if (this.rangeNum == 8 && this.roundFired == 0 && !previouslyDetected) {
+            escortMods -= 2;
+        }
+        else {
+            //Check if player can dive to test depth
+            if (this.depth != "Surfaced" || previouslyDetected) {
+                canTestDive = true;
+            }
+            if (this.gm.sub.crew_health["Kommandant"] >= 2 && this.gm.sub.crew_health["Watch Officer 1"] >= 2) {
+                escortMods += 2;
+            }
+            else if (this.gm.sub.crew_health["Kommandant"] == 2) {
+                escortMods += 1;
+            }
+            if (this.gm.sub.systems["Fuel Tanks"] > 0) {
+                escortMods += 1;
+            }
+            if (this.gm.sub.systems["Dive Planes"] > 0) {
+                escortMods += 1;
+            }
+            if (this.encounterType == "Capital Ship") {
+                escortMods += 1;
+            }
+            if (this.firedG7a && this.timeOfDay == "Day") {
+                escortMods += 1;
+            }
+            if (previouslyDetected) {
+                escortMods += 1;
+            }
+            if (this.angeNum == 8 && (this.firedFore || this.firedAft)) {
+                escortMods += 1;
+            }
+            if (this.attackDepth == "Surfaced" && this.timeOfDay == "Night" && this.gm.getYear() >= 1941) {
+                escortMods += 1;
+            }
+            if (this.firedForeAndAft && !previouslyDetected) {
+                escortMods += 1;
+            }
+            if (this.rangeNum == 6) {
+                escortMods -=1;
+            }
+            if (this.depth == "Deep") {
+                escortMods -= 1;
+            }
+        }
+
+        console.log("Escort Roll: " + escortRoll + " | Escort Mods: " + escortMods);
+        sleep(1000);
+
+        if (escortRoll == 2) {
+            console.log("Completely avoided detection!");
+        }
+        if (escortRoll + escortMods <= 8) {
+            console.log("We slipped away!");
+        }
+        else if (escortRoll + escortMods <= 11) {
+            console.log("Detected!");
+        }
+        else if (escortRoll + escortMods >= 12) {
+            console.log("Detected! Big Problems!!");
         }
     }
 }

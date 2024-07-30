@@ -104,6 +104,7 @@ class TacticalView{
                 this.mainUI.tubeButtonArray[i].changeState("Enabled");
             }
         }
+        this.currentTarget = -1;
     }
 
     //sets the currently selected target in which to assign torpedoes to

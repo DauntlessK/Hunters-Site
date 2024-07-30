@@ -17,6 +17,7 @@ class Ship {
         this.roundDuds = 0;
         this.roundHits = 0;
         this.roundDam = 0;
+        this.roundSunk = false;
 
         this.dateSunk = "";
         this.monthSunk = month;
@@ -172,8 +173,12 @@ class Ship {
     takeDamage(num) {
         this.damage = this.damage + num;
         this.gm.damageDone += num;   //update global damage count
-        if (this.damage >= this.hp) {
+        this.roundDam += num;
+        this.roundHits++;
+        if (this.damage >= this.hp && !this.sunk) {
             this.sunk = true;
+            this.roundSunk = true;
+            this.gm.shipsSunk.push(this);
         }
     }
     
@@ -181,5 +186,6 @@ class Ship {
         this.roundDuds = 0;
         this.roundHits = 0;
         this.roundDam = 0;
+        this.roundSunk = false;
     }
 }

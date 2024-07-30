@@ -82,6 +82,9 @@ class DeckGunButton extends Button {
         else if (!this.gm.sub.isFiringTorpedoes && this.currentShots == 0) {
             this.changeState("Enabled");
         }
+        else if (this.gm.currentEncounter.firedDeckGun) {
+            this.changeState("Disabled");
+        }
 
     }
 }

@@ -349,17 +349,6 @@ class Uboat{
         return numInOp
     }
 
-    //Returns true if the boat has any mines loaded and thus cannot engage in escorted ships
-    hasMinesLoaded() {
-        if (this.minesLoadedForward == true || this.minesLoadedAft == true) {
-            console.log("LOADED MINES");
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
     //Returns true if the given weapon has ammo
     canFire(location) {
         if (location == "Fore") {

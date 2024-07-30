@@ -29,7 +29,6 @@ class Sprite {
 
     //get image variation for enemy ships
     if (this.shipNum >= 0) {
-      console.log(this.encounter);
       this.shipType = this.encounter.shipList[this.shipNum].getType();
       this.shipType = this.shipType.replace(" ", "");
 
@@ -50,9 +49,6 @@ class Sprite {
         this.healthBarImage.onload = () => {
           this.hisLoaded = true;
         }
-        console.log(this.encounter.shipList);
-        console.log(this.encounter.shipList[this.shipNum]);
-        console.log(this.encounter.shipList[this.shipNum].hp);
         this.shipHP = this.encounter.shipList[this.shipNum].hp.toString();
         this.healthBarImage.src = "images/ui/shiphealthbars/ShipHealthBar_" + this.shipHP + ".png";
       }
@@ -407,7 +403,6 @@ class Sprite {
 
     //Get current damage of ship
     var dam = this.encounter.shipList[this.shipNum].damage;
-    console.log(dam);
     if (dam > this.encounter.shipList[this.shipNum].hp) {
       dam = this.encounter.shipList[this.shipNum].hp;
     }
