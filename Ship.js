@@ -14,6 +14,9 @@ class Ship {
         this.G7aINCOMING = 0;
         this.G7eINCOMING = 0;
         this.deckGunINCOMING = 0;
+        this.roundDuds = 0;
+        this.roundHits = 0;
+        this.roundDam = 0;
 
         this.dateSunk = "";
         this.monthSunk = month;
@@ -173,5 +176,10 @@ class Ship {
             this.sunk = true;
         }
     }
-
+    
+    clearRoundStats() {
+        this.roundDuds = 0;
+        this.roundHits = 0;
+        this.roundDam = 0;
+    }
 }

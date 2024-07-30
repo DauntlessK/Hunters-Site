@@ -9,11 +9,31 @@ class Encounter {
         this.encounterType = encounterType;
         this.shipList = [];
 
+        //Encounter "Scoreboard" for results
+        this.numHits = 0;
+        this.numDuds = 0;
+        this.numMissed = 0;
+        this.numFired = 0;
+        this.numSunk = 0;
+
+        //Round "Scoreboard"
+        this.roundHits = 0;
+        this.roundDuds = 0;
+        this.roundDam = 0;
+
+        //Get ships
         if (existingShips == null) {
             this.shipList = this.getShips(encounterType);
         }
         else {
             this.shipList = existingShips;
+
+            //Remove already sunk ship from numSunk count so when they're counted later, they're not counted as sunk THIS enc
+            for (let i = 0; i < this.shipList.length; i++) {
+                if (this.shipList[i].sunk) {
+                    this.numSunk--;
+                }
+            }
         }
 
         this.shipListLoaded = true;
@@ -29,6 +49,9 @@ class Encounter {
         this.rangeNum = 0;             //8, 7, 6
         this.canFireForeAndAft = false;
         this.firedForeAndAft = false;
+        this.firedFore = false;
+        this.firedAft = false;
+        this.firedDeckGun = false;
         this.firedG7a = false;
 
         this.encPop = null;
@@ -177,6 +200,26 @@ class Encounter {
         return false;
     }
 
+    //Returns true if the encounter still has a ship that can be sunk (non-escort)
+    hasSinkableShip() {
+        var numShipsSunk = 0;
+        //If escorted, "ignore" escort when checking
+        if (this.isEscorted()) {
+            numShipsSunk++;
+        }
+        for (let i = 0; i < this.shipList.length; i++) {
+            if (this.shipList[i].sunk) {
+                numShipsSunk++;
+            }
+        }
+        if (numShipsSunk == this.shipList.length) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
     endEncounter() {
         this.tv.finishEncounter();
     }
@@ -195,6 +238,7 @@ class Encounter {
         }
     }
 
+    //Starts one round (one engagement of a single weapon)
     async attackRound() {
         console.log("Attack Round started");
         //If mines are on the boat, ignore encounter TODO FIX
@@ -249,6 +293,9 @@ class Encounter {
         switch (this.range) {
             case "Short Range":
                 this.rangeNum = 8;
+                if (this.isEscorted()) {
+                    //check for detection TODO======================================
+                }
                 break;
             case "Medium Range":
                 this.rangeNum = 7;
@@ -275,14 +322,18 @@ class Encounter {
         this.gm.setEventResolved(false);
         await until(_ => this.gm.eventResolved == true);
 
+        //Resolve fired weapons in this round then display results --- leads into escort detection or engaging again or following
         this.resolveUboatAttack();
-
+        this.gm.setEventResolved(false);
+        var roundResults = new RoundResultsPopup(this.tv, this.gm, enc);
+        await until(_ => this.gm.eventResolved == true);
 
     }
 
     resolveUboatAttack() {
         if (this.gm.sub.isFiringDeckGun > 0) {
             this.resolveDeckGun(this.gm.sub.isFiringDeckGun);
+            this.firedDeckGun = true;
         }
         else {
             this.resolveTorpedoes();
@@ -338,10 +389,26 @@ class Encounter {
     }
 
     resolveTorpedoes() {
+        //First check which sections (fore and/or aft or both) that fired
+        //Check fore tubes first
+        for (let i = 1; i < 5; i++) {
+            if (this.gm.sub.tubeFiring[i] == true) {
+                this.firedFore = true;
+            }
+        }
+        //Check aft tubes first
+        for (let i = 5; i < 7; i++) {
+            if (this.gm.sub.tubeFiring[i] == true) {
+                this.firedAft = true;
+            }
+        }
+        //Check if fore and aft both fired
+        if (this.firedFore && this.firedAft) {
+            this.firedForeAndAft = true;
+        }
+
+
         //loop through each ship and resolve incoming torpedoes
-        var numHits = 0;
-        var numDuds = 0;
-        var numMissed = 0;
         for (let i = 0; i < this.shipList.length; i++) {
             while (this.shipList[i].hasTorpedoesIncoming()) {
                 var currentShip = this.shipList[i];
@@ -376,40 +443,48 @@ class Encounter {
                 
                 //Resolve G7a Torpedo
                 if (currentShip.G7aINCOMING > 0) {
+                    this.numFired++;
                     this.firedG7a = true;
                     console.log("Resolving G7a on " + currentShip.name);
 
                     //Determine if hit or miss
                     if (torpRoll + rollMod <= this.rangeNum) {
                         if (this.wasDud("G7a")) {
-                            numDuds++;
+                            this.numDuds++;
+                            this.roundDuds++;
+                            currentShip.roundDuds++;
                         }
                         else {
-                            numHits++;
+                            this.numHits++;
+                            this.roundHits++;
                             var damRoll = d6Roll();
+                            var damage = 1;
                             switch (damRoll) {
                                 case 1:
-                                    currentShip.takeDamage(4);
+                                    damage = 4;
                                     break;
                                 case 2:
-                                    currentShip.takeDamage(3);
+                                    damage = 3;
                                     break;
                                 case 3:
-                                    currentShip.takeDamage(2);
+                                    damage = 2;
                                     break;
-                                default:
-                                    currentShip.takeDamage(1);
-                            }   
+                            }
+                            currentShip.takeDamage(damage);
+                            currentShip.roundHits++;
+                            currentShip.roundDamage += damage;   
+                            this.roundDam += damage;
                         }
                     }
                     else {
-                        numMissed++;
+                        this.numMissed++;
                     }
                     currentShip.G7aINCOMING--;
                 }
 
                 //Resolve G7e Torpedo
                 if (currentShip.G7eINCOMING > 0) {
+                    this.numFired++;
                     //Additional Mod for G7e at range
                     if (this.range == "Medium") {
                         rollMod += 1;
@@ -423,35 +498,80 @@ class Encounter {
                     //Determine if hit or miss
                     if (torpRoll + rollMod <= this.rangeNum) {
                         if (this.wasDud("G7e")) {
-                            numDuds++;
+                            this.numDuds++;
+                            this.roundDuds++;
+                            currentShip.roundDuds++;
                         }
                         else {
-                            numHits++;
+                            this.numHits++;
+                            this.roundHits++;
                             var damRoll = d6Roll();
+                            var damage = 1;
                             switch (damRoll) {
                                 case 1:
-                                    currentShip.takeDamage(4);
+                                    damage = 4;
                                     break;
                                 case 2:
-                                    currentShip.takeDamage(3);
+                                    damage = 3;
                                     break;
                                 case 3:
-                                    currentShip.takeDamage(2);
+                                    damage = 2;
                                     break;
-                                default:
-                                    currentShip.takeDamage(1);
-                            }   
+                            }
+                            currentShip.takeDamage(damage);
+                            currentShip.roundHits++;
+                            currentShip.roundDamage += damage;  
+                            this.roundDam += damage;
                         }
                     }
                     else {
-                        numMissed++;
+                        this.numMissed++;
                     }
                     currentShip.G7aINCOMING--;
                 }
             }
         }
+        //Count sunk ships
+        for (let i = 0; i < this.shipList.length; i++) {
+            if (this.shipList[i].sunk) {
+                this.numSunk++;
+            }
+        }
         console.log("All ships resolved.");
-        var roundResults = new RoundResultsPopup(this.tv, this.gm, enc, numHits, numDuds, numMissed);
+    }
+
+    clearRoundStats() {
+        this.roundHits = 0;
+        this.roundDuds = 0;
+        this.roundDam = 0;
+    }
+
+    //Determines if a combat round can be conducted - returns "All", "Fore", "Aft", "Deck Gun", "None"
+    canContinueAttack(){
+        var canFireFore = true;
+        var canFireAft = true;
+        var canFireDeckGun = true;
+
+        if (this.firedFore && this.firedAft && this.firedDeckGun) {
+            //Fired all weapons already
+            return false;
+        }
+
+        if (this.firedFore && this.firedAft)
+        
+        if (this.gm.sub.systems["Forward Torpedo Doors"] > 0 || this.gm.sub.minesLoadedForward || !this.gm.sub.canFire("Fore")) {
+            canFireFore = false;
+        }
+        if (this.gm.sub.systems["Aft Torpedo Doors"] > 0 || this.gm.sub.minesLoadedAft || !this.gm.sub.canFire("Aft")) {
+            canFireAft = false;
+        }
+        if (this.gm.sub.systems["Deck Gun"] > 0 || this.isEscorted() || !this.gm.sub.canFire("Deck Gun")) {
+            canFireDeckGun = false;
+        }
+
+        if (canFireFore && canFireAft && canFireDeckGun) {
+            return "All"
+        }
     }
 
     //Determines if the torpedo that hit was a dud based on year and D6 roll

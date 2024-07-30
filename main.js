@@ -1,6 +1,6 @@
 class Main{
   constructor(config){
-      this.version = .425
+      this.version = .426
       this.element = config.element;
       this.canvas = this.element.querySelector(".game-canvas");
       this.ctx = this.canvas.getContext("2d");
@@ -15,6 +15,7 @@ class Main{
 
   startGameLoop() {
     const step = () => {
+
 
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 

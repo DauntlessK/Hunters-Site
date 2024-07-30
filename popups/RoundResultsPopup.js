@@ -1,8 +1,8 @@
 class RoundResultsPopup{
-    constructor(tv, gm, enc, shipList, timeOfDay) {
+    constructor(tv, gm, enc) {
         this.tv = tv;
         this.gm = gm;
-        this.enc = enc
+        this.enc = enc;
 
         this.container = document.querySelector(".game-container");
 
@@ -10,18 +10,23 @@ class RoundResultsPopup{
         this.element = document.createElement("div");
 
         this.element.classList.add("PatrolMessage");
-        this.showResults();
+
+        if (this.enc.firedFore || this.enc.firedAft) {
+            this.showResultsTorpedo();
+        }
+        else {
+            this.showResultsDeckGun();
+        }
     }
     
     //Popup to show number of hits, missed and duds from resolution of torpedoes
-    showResults(){
-        var shortRange = "Short Range";
-        //determine if a surface attack is possible (escorted or not, etc)
-        if (this.shipList[0].getType() == "Escort") {
-            shortRange = "WARNING! Short Range"
-        }
-
+    showResultsTorpedo(){
         //new div to add
+
+        //See if all torpedoes missed first
+        if (this.enc.roundHits == 0) {
+            //Show message on all shots missed - vary between 1, 2 and 3+ torpedoes missing (Torpedo missed / both torpedoes missed / all missed)
+        }
 
         //determine if a surface attack is possible (escorted or not, etc)
         if (this.shipList[0].getType() == "Escort" && this.timeOfDay == "Day") {

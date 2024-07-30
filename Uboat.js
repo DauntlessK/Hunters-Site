@@ -360,6 +360,30 @@ class Uboat{
         }
     }
 
+    //Returns true if the given weapon has ammo
+    canFire(location) {
+        if (location == "Fore") {
+            for (let i = 1; i < 5; i++) {
+                if (this.tube[i] > 0) {
+                    return true;
+                }
+            }
+        }
+        else if (location == "Aft") {
+            for (let i = 5; i < 7; i++) {
+                if (this.tube[i] > 0) {
+                    return true;
+                }
+            }
+        }
+        else {
+            if (this.deck_gun_ammo > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     //Adds (or removes) a torpedo from a given tube
     assignTubeForFiring(tubeNum, type) {
         if (this.tube[tubeNum] == 3) {
