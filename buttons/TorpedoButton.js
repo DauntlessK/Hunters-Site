@@ -67,6 +67,23 @@ class TorpedoButton extends Button{
             else if ((this.tube <= 4 && this.gm.sub.minesLoadedForward) || (this.tube >= 5 && this.gm.sub.minesLoadedForwardAft)) {
                 this.changeState("Disabled");
             }
+
+            if (this.gm.currentEncounter.depth == "Periscope Depth") {
+                //Disable Aft if submerged and fore is selected
+                if (this.tube >= 5 && this.gm.sub.isFiringFore) {
+                    this.changeState("Disabled");
+                }
+                else if (this.tube >= 5 && !this.gm.sub.isFiringFore && this.currentState != "Pressed") {
+                    this.changeState("Enable");
+                }
+                //Disable Fore if submerged and aft is selected
+                else if (this.tube <= 4 && this.gm.sub.isFiringAft) {
+                    this.changeState("Disabled");
+                }
+                else if (this.tube <= 4 && !this.gm.sub.isFiringAft && this.currentState != "Pressed") {
+                    this.changeState("Enable");
+                }
+            }
         }
         //Normal mode (not interactable)
         else {
@@ -142,18 +159,16 @@ class TorpedoButton extends Button{
             }
             //Otherwise select tube
             else {
-                if ((!this.gm.currentEncounter.firedFore && this.tube <= 4) || (!this.gm.currentEncounter.firedAft) && this.tube >= 5) {
-                    this.changeState("Pressed");
+                this.changeState("Pressed");
 
-                    //Check type in tube to assign to ship
-                    if (this.gm.sub.tube[this.tube] == 1) {
-                        this.gm.currentEncounter.shipList[this.tv.getSelectedTarget()].assignG7a();
-                        this.gm.sub.assignTubeForFiring(this.tube, "G7a")
-                    }
-                    else if (this.gm.sub.tube[this.tube] == 2){
-                        this.gm.currentEncounter.shipList[this.tv.getSelectedTarget()].assignG7e();
-                        this.gm.sub.assignTubeForFiring(this.tube, "G7e")
-                    }
+                //Check type in tube to assign to ship
+                if (this.gm.sub.tube[this.tube] == 1) {
+                    this.gm.currentEncounter.shipList[this.tv.getSelectedTarget()].assignG7a();
+                    this.gm.sub.assignTubeForFiring(this.tube, "G7a")
+                }
+                else if (this.gm.sub.tube[this.tube] == 2){
+                    this.gm.currentEncounter.shipList[this.tv.getSelectedTarget()].assignG7e();
+                    this.gm.sub.assignTubeForFiring(this.tube, "G7e")
                 }
             }
         }

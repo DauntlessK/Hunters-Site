@@ -1,5 +1,5 @@
 NOSHIP
-HMS Ark Royal#Ark Royak-class Carrier#22000
+HMS Ark Royal#Ark Royal-class Carrier#22000
 HMS Royal Oak#Revenge-class Battleship#29100
 HMS Courageous#Courageous-class Battlecruiser#18600
 HMS Belfast#Town-class Light Cruiser#10000

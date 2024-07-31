@@ -225,14 +225,22 @@ class Encounter {
     //Clean up after firings
     endRound() {
         this.clearRoundStats();
+        for (let i = 0; i < this.shipList.length; i++) {
+            this.shipList[i].clearRoundStats();
+        }
     }
 
     endEncounter() {
+        console.log("Changing scene");
         this.tv.changeScene("", this.timeOfDay, null, false);
         if (this.depth != "Surfaced") {
             this.tv.uboat.sprite.surface();
         }
         this.tv.finishEncounter();
+        //Prompt for reloads if torpedoes were fired
+        if (this.numFired > 0) {
+            this.tv.enterReloadMode();
+        }
     }
 
     async event() {
@@ -358,8 +366,7 @@ class Encounter {
             this.attackRound(false);
         }
         else {
-            this.tv.enterReloadMode();
-            this.tv.finishEncounter();
+            this.endEncounter();
         }
 
     }
