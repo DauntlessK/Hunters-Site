@@ -80,77 +80,77 @@ class Encounter {
 
         if (isFirstRound) {
             //If mines are on the boat, ignore encounter TODO FIX
-        if (this.gm.sub.minesLoadedForward && this.gm.sub.minesLoadedAft && this.shipList[0].getType() == "Escort") {
-            console.log("MINES LOADED");
-            this.endEncounter();
-            return;
-        }
-
-        //check if ignoring ship(s)
-        var waitRoll = d6Roll();
-        if (this.encPop.getChoice() == "ignore") {
-            this.endEncounter();
-            return;
-        }
-        //check if waiting - see if roll to wait is successful
-        else if (this.encPop.getChoice() == "wait") {
-            if (waitRoll >= 5) {
-                console.log("TODO deal with lost them!");
-                if (this.timeOfDay == "Night") {
-                    this.timeOfDay = "Day";
-                    this.tv.changeScene(this.encounterType, this.timeOfDay, null, true);
-                }
-                else {
-                    this.timeOfDay = "Night";
-                    this.tv.changeScene(this.encounterType, this.timeOfDay, null, true);
-                }
+            if (this.gm.sub.minesLoadedForward && this.gm.sub.minesLoadedAft && this.shipList[0].getType() == "Escort") {
+                console.log("MINES LOADED");
                 this.endEncounter();
                 return;
             }
-            else {
-                console.log("Successfully followed!");
-                if (this.timeOfDay == "Night") {
-                    this.timeOfDay = "Day";
-                    this.tv.changeScene(this.encounterType, this.timeOfDay, this, true);
+
+            //check if ignoring ship(s)
+            var waitRoll = d6Roll();
+            if (this.encPop.getChoice() == "ignore") {
+                this.endEncounter();
+                return;
+            }
+            //check if waiting - see if roll to wait is successful
+            else if (this.encPop.getChoice() == "wait") {
+                if (waitRoll >= 5) {
+                    console.log("TODO deal with lost them!");
+                    if (this.timeOfDay == "Night") {
+                        this.timeOfDay = "Day";
+                        this.tv.changeScene(this.encounterType, this.timeOfDay, null, true);
+                    }
+                    else {
+                        this.timeOfDay = "Night";
+                        this.tv.changeScene(this.encounterType, this.timeOfDay, null, true);
+                    }
+                    this.endEncounter();
+                    return;
                 }
                 else {
-                    this.timeOfDay = "Night";
-                    this.tv.changeScene(this.encounterType, this.timeOfDay, this, true);
+                    console.log("Successfully followed!");
+                    if (this.timeOfDay == "Night") {
+                        this.timeOfDay = "Day";
+                        this.tv.changeScene(this.encounterType, this.timeOfDay, this, true);
+                    }
+                    else {
+                        this.timeOfDay = "Night";
+                        this.tv.changeScene(this.encounterType, this.timeOfDay, this, true);
+                    }
                 }
             }
-        }
 
-        //next popup to get depth and range
-        this.gm.setEventResolved(false);
-        var attackPopup = new AttackDepthAndRangePopup(this.tv, this.gm, this.encounterType, this.shipList, this.timeOfDay);
-        await until(_ => this.gm.eventResolved == true);
+            //next popup to get depth and range
+            this.gm.setEventResolved(false);
+            var attackPopup = new AttackDepthAndRangePopup(this.tv, this.gm, this.encounterType, this.shipList, this.timeOfDay);
+            await until(_ => this.gm.eventResolved == true);
 
-        this.depth = attackPopup.getDepth();
-        this.range = attackPopup.getRange();
-        switch (this.range) {
-            case "Short Range":
-                this.rangeNum = 8;
-                if (this.isEscorted()) {
-                    this.escortDetection(false, 0);
-                }
-                break;
-            case "Medium Range":
-                this.rangeNum = 7;
-                break;
-            case "Long Range":
-                this.rangeNum = 6;
-                break;
-        }
-        if (this.depth == "Periscope Depth") {
-            this.tv.uboat.sprite.dive();
-            this.tv.mainUI.deckGunButton.changeState("Disabled");
-            this.canFireForeAndAft = true;
-        }
-        Object.values(this.tv.gameObjects).forEach(object => {
-            object.sprite.setRange(this.range);
-          })
-        //Force update Deck Gun Button
-        this.tv.mainUI.deckGunButton.getLatestState();
+            this.depth = attackPopup.getDepth();
+            this.range = attackPopup.getRange();
+            switch (this.range) {
+                case "Short Range":
+                    this.rangeNum = 8;
+                    if (this.isEscorted()) {
+                        this.escortDetection(false, 0);
+                    }
+                    break;
+                case "Medium Range":
+                    this.rangeNum = 7;
+                    break;
+                case "Long Range":
+                    this.rangeNum = 6;
+                    break;
+            }
+            if (this.depth == "Periscope Depth") {
+                this.tv.uboat.sprite.dive();
+                this.tv.mainUI.deckGunButton.changeState("Disabled");
+                this.canFireForeAndAft = true;
+            }
+            Object.values(this.tv.gameObjects).forEach(object => {
+                object.sprite.setRange(this.range);
+            })
+            //Force update Deck Gun Button === don't think this is needed anymore
+            //this.tv.mainUI.deckGunButton.getLatestState();
         }
 
         //Allow for firing (selecting target and tubes)
