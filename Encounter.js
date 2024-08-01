@@ -57,7 +57,156 @@ class Encounter {
         this.firedG7a = false;
 
         this.encPop = null;
-        this.event();
+        this.start();
+    }
+
+    async start() {
+        //create popup based on that encounter to begin encounter
+        this.encPop = new EncounterPopup(this.tv, this.gm, this.encounterType, this.shipList);
+        await until(_ => this.gm.eventResolved == true);
+
+        console.log(this.encounterType);
+        if (this.encounterType == "No Encounter" || this.encounterType == "Aircraft") {
+            //not sure what is needed here
+        }
+        else {
+            this.attackRound(true);
+        }
+    }
+
+    //Starts one round (one engagement of a single weapon)
+    async attackRound(isFirstRound) {
+        console.log("Attack Round started");
+
+        if (isFirstRound) {
+            //If mines are on the boat, ignore encounter TODO FIX
+        if (this.gm.sub.minesLoadedForward && this.gm.sub.minesLoadedAft && this.shipList[0].getType() == "Escort") {
+            console.log("MINES LOADED");
+            this.endEncounter();
+            return;
+        }
+
+        //check if ignoring ship(s)
+        var waitRoll = d6Roll();
+        if (this.encPop.getChoice() == "ignore") {
+            this.endEncounter();
+            return;
+        }
+        //check if waiting - see if roll to wait is successful
+        else if (this.encPop.getChoice() == "wait") {
+            if (waitRoll >= 5) {
+                console.log("TODO deal with lost them!");
+                if (this.timeOfDay == "Night") {
+                    this.timeOfDay = "Day";
+                    this.tv.changeScene(this.encounterType, this.timeOfDay, null, true);
+                }
+                else {
+                    this.timeOfDay = "Night";
+                    this.tv.changeScene(this.encounterType, this.timeOfDay, null, true);
+                }
+                this.endEncounter();
+                return;
+            }
+            else {
+                console.log("Successfully followed!");
+                if (this.timeOfDay == "Night") {
+                    this.timeOfDay = "Day";
+                    this.tv.changeScene(this.encounterType, this.timeOfDay, this, true);
+                }
+                else {
+                    this.timeOfDay = "Night";
+                    this.tv.changeScene(this.encounterType, this.timeOfDay, this, true);
+                }
+            }
+        }
+
+        //next popup to get depth and range
+        this.gm.setEventResolved(false);
+        var attackPopup = new AttackDepthAndRangePopup(this.tv, this.gm, this.encounterType, this.shipList, this.timeOfDay);
+        await until(_ => this.gm.eventResolved == true);
+
+        this.depth = attackPopup.getDepth();
+        this.range = attackPopup.getRange();
+        switch (this.range) {
+            case "Short Range":
+                this.rangeNum = 8;
+                if (this.isEscorted()) {
+                    this.escortDetection(false, 0);
+                }
+                break;
+            case "Medium Range":
+                this.rangeNum = 7;
+                break;
+            case "Long Range":
+                this.rangeNum = 6;
+                break;
+        }
+        if (this.depth == "Periscope Depth") {
+            this.tv.uboat.sprite.dive();
+            this.tv.mainUI.deckGunButton.changeState("Disabled");
+            this.canFireForeAndAft = true;
+        }
+        Object.values(this.tv.gameObjects).forEach(object => {
+            object.sprite.setRange(this.range);
+          })
+        //Force update Deck Gun Button
+        this.tv.mainUI.deckGunButton.getLatestState();
+        }
+
+        //Allow for firing (selecting target and tubes)
+        this.tv.setFiringMode(true);
+
+        //Await for at least one type of firing before moving on
+        this.gm.setEventResolved(false);
+        await until(_ => this.gm.eventResolved == true);
+
+        //Resolve fired weapons in this round then display results --- leads into escort detection or engaging again or following
+        this.tv.setFiringMode(false);
+        this.resolveUboatAttack();
+        this.gm.setEventResolved(false);
+        var roundResults = new RoundResultsPopup(this.tv, this.gm, this);
+        await until(_ => this.gm.eventResolved == true);
+
+        if (this.isEscorted()) {
+            if (this.depth == "Surfaced") {
+                this.tv.uboat.sprite.dive();
+                this.tv.mainUI.deckGunButton.changeState("Disabled");
+                this.depth = "Periscope Depth";
+            }
+            this.escortDetection(false, 0);
+        }
+
+        this.endRound();
+
+        if (this.hasSinkableShip()) {
+            //Need to get input from player to see if attack will continue, follow, or leave
+            this.attackRound(false);
+        }
+        else {
+            this.endEncounter();
+        }
+
+    }
+
+    //Clean up after firings
+    endRound() {
+        this.clearRoundStats();
+        for (let i = 0; i < this.shipList.length; i++) {
+            this.shipList[i].clearRoundStats();
+        }
+    }
+
+    endEncounter() {
+        console.log("Changing scene");
+        this.tv.changeScene("", this.timeOfDay, null, false);
+        if (this.depth != "Surfaced") {
+            this.tv.uboat.sprite.surface();
+        }
+        this.tv.finishEncounter();
+        //Prompt for reloads if torpedoes were fired
+        if (this.numFired > 0) {
+            this.tv.enterReloadMode();
+        }
     }
 
     //Creates and returns a list of ship object(s) for a given encounter
@@ -220,155 +369,6 @@ class Encounter {
         else {
             return true;
         }
-    }
-
-    //Clean up after firings
-    endRound() {
-        this.clearRoundStats();
-        for (let i = 0; i < this.shipList.length; i++) {
-            this.shipList[i].clearRoundStats();
-        }
-    }
-
-    endEncounter() {
-        console.log("Changing scene");
-        this.tv.changeScene("", this.timeOfDay, null, false);
-        if (this.depth != "Surfaced") {
-            this.tv.uboat.sprite.surface();
-        }
-        this.tv.finishEncounter();
-        //Prompt for reloads if torpedoes were fired
-        if (this.numFired > 0) {
-            this.tv.enterReloadMode();
-        }
-    }
-
-    async event() {
-        //create popup based on that encounter to begin encounter
-        this.encPop = new EncounterPopup(this.tv, this.gm, this.encounterType, this.shipList);
-        await until(_ => this.gm.eventResolved == true);
-
-        console.log(this.encounterType);
-        if (this.encounterType == "No Encounter" || this.encounterType == "Aircraft") {
-            //not sure what is needed here
-        }
-        else {
-            this.attackRound(true);
-        }
-    }
-
-    //Starts one round (one engagement of a single weapon)
-    async attackRound(isFirstRound) {
-        console.log("Attack Round started");
-
-        if (isFirstRound) {
-            //If mines are on the boat, ignore encounter TODO FIX
-        if (this.gm.sub.minesLoadedForward && this.gm.sub.minesLoadedAft && this.shipList[0].getType() == "Escort") {
-            console.log("MINES LOADED");
-            this.endEncounter();
-            return;
-        }
-
-        //check if ignoring ship(s)
-        var waitRoll = d6Roll();
-        if (this.encPop.getChoice() == "ignore") {
-            this.endEncounter();
-            return;
-        }
-        //check if waiting - see if roll to wait is successful
-        else if (this.encPop.getChoice() == "wait") {
-            if (waitRoll >= 5) {
-                console.log("TODO deal with lost them!");
-                if (this.timeOfDay == "Night") {
-                    this.timeOfDay = "Day";
-                    this.tv.changeScene(this.encounterType, this.timeOfDay, null, true);
-                }
-                else {
-                    this.timeOfDay = "Night";
-                    this.tv.changeScene(this.encounterType, this.timeOfDay, null, true);
-                }
-                this.endEncounter();
-                return;
-            }
-            else {
-                console.log("Successfully followed!");
-                if (this.timeOfDay == "Night") {
-                    this.timeOfDay = "Day";
-                    this.tv.changeScene(this.encounterType, this.timeOfDay, this, true);
-                }
-                else {
-                    this.timeOfDay = "Night";
-                    this.tv.changeScene(this.encounterType, this.timeOfDay, this, true);
-                }
-            }
-        }
-
-        //next popup to get depth and range
-        this.gm.setEventResolved(false);
-        var attackPopup = new AttackDepthAndRangePopup(this.tv, this.gm, this.encounterType, this.shipList, this.timeOfDay);
-        await until(_ => this.gm.eventResolved == true);
-
-        this.depth = attackPopup.getDepth();
-        this.range = attackPopup.getRange();
-        switch (this.range) {
-            case "Short Range":
-                this.rangeNum = 8;
-                if (this.isEscorted()) {
-                    this.escortDetection(false, 0);
-                }
-                break;
-            case "Medium Range":
-                this.rangeNum = 7;
-                break;
-            case "Long Range":
-                this.rangeNum = 6;
-                break;
-        }
-        if (this.depth == "Periscope Depth") {
-            this.tv.uboat.sprite.dive();
-            this.tv.mainUI.deckGunButton.changeState("Disabled");
-            this.canFireForeAndAft = true;
-        }
-        Object.values(this.tv.gameObjects).forEach(object => {
-            object.sprite.setRange(this.range);
-          })
-        //Force update Deck Gun Button
-        this.tv.mainUI.deckGunButton.getLatestState();
-        }
-
-        //Allow for firing (selecting target and tubes)
-        this.tv.setFiringMode(true);
-
-        //Await for at least one type of firing before moving on
-        this.gm.setEventResolved(false);
-        await until(_ => this.gm.eventResolved == true);
-
-        //Resolve fired weapons in this round then display results --- leads into escort detection or engaging again or following
-        this.tv.setFiringMode(false);
-        this.resolveUboatAttack();
-        this.gm.setEventResolved(false);
-        var roundResults = new RoundResultsPopup(this.tv, this.gm, this);
-        await until(_ => this.gm.eventResolved == true);
-
-        if (this.isEscorted()) {
-            if (this.depth == "Surfaced") {
-                this.tv.uboat.sprite.dive();
-                this.tv.mainUI.deckGunButton.changeState("Disabled");
-                this.depth = "Periscope Depth";
-            }
-            this.escortDetection(false, 0);
-        }
-
-        this.endRound();
-
-        if (this.hasSinkableShip()) {
-            //Need to get input from player to see if attack will continue, follow, or leave
-            this.attackRound(false);
-        }
-        else {
-            this.endEncounter();
-        }
-
     }
 
     resolveUboatAttack() {
@@ -710,7 +710,7 @@ class Encounter {
             if (previouslyDetected) {
                 escortMods += 1;
             }
-            if (this.angeNum == 8 && (this.firedFore || this.firedAft)) {
+            if (this.rangeNum == 8 && (this.firedFore || this.firedAft)) {
                 escortMods += 1;
             }
             if (this.attackDepth == "Surfaced" && this.timeOfDay == "Night" && this.gm.getYear() >= 1941) {

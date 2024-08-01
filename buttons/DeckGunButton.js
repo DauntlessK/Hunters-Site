@@ -67,24 +67,40 @@ class DeckGunButton extends Button {
 
     //Updates state based on Uboat's status / ammo etc
     getLatestState() {
-        //First check if surfaced
-        if (this.gm.currentEncounter.depth == "Periscope Depth") {
+        if (!this.tv.firingMode && this.currentState != "Active") {
+            this.changeState("Active");
+        }
+        //Check if surfaced
+        else if (this.gm.currentEncounter.depth == "Periscope Depth") {
             this.changeState("Disabled");
         }
         //Ensure there is ammo and not broken, or torpedoes are being fired, disable
-        else if (this.gm.sub.deck_gun_ammo == 0 || this.gm.sub.systems["Deck Gun"] > 0 || 
-            this.gm.currentEncounter.shipList[0].getType() == "Escort" || this.gm.sub.isFiringTorpedoes) {
-            this.changeState("Disabled");
+        else if (this.tv.firingMode){
+            if (this.gm.sub.deck_gun_ammo == 0 || this.gm.sub.systems["Deck Gun"] > 0 || 
+                this.gm.currentEncounter.shipList[0].getType() == "Escort" || this.gm.sub.isFiringTorpedoes) {
+                this.changeState("Disabled");
+            }
+            else if (this.currentState == "Hover" && this.tv.currentTarget < 0) {
+                //ignore
+            }
+            else if (!this.gm.sub.isFiringTorpedoes && this.currentShots == 0) {
+                this.changeState("Enabled");
+            }
+            else if (this.gm.currentEncounter.firedDeckGun) {
+                this.changeState("Disabled");
+            }
         }
-        else if (this.currentState == "Hover" && this.tv.currentTarget < 0) {
-            //ignore
-        }
-        else if (!this.gm.sub.isFiringTorpedoes && this.currentShots == 0) {
-            this.changeState("Enabled");
-        }
-        else if (this.gm.currentEncounter.firedDeckGun) {
-            this.changeState("Disabled");
-        }
-
     }
+
+        //Draw Button
+        draw(ctx) {
+            this.isLoaded && ctx.drawImage(
+                this.image,
+                this.currentFrame * this.width, 0,
+                this.width, this.height,
+                this.x, this.y,
+                this.width, this.height
+            )
+            this.getLatestState()
+        }
 }

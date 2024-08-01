@@ -99,11 +99,6 @@ class TacticalView{
 
     setFiringMode(state) {
         this.firingMode = state;
-        if (state == true) {
-            for (let i = 1; i < 7; i++) {
-                this.mainUI.tubeButtonArray[i].changeState("Enabled");
-            }
-        }
         this.currentTarget = -1;
     }
 
