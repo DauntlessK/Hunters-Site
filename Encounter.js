@@ -17,6 +17,7 @@ class Encounter {
         this.numSunk = 0;
 
         //Round "Scoreboard"
+        this.round = 1;
         this.roundFired = 0;
         this.roundHits = 0;
         this.roundDuds = 0;
@@ -131,7 +132,7 @@ class Encounter {
                 case "Short Range":
                     this.rangeNum = 8;
                     if (this.isEscorted()) {
-                        this.escortDetection(false, 0);
+                        this.escortDetection(false, 0, true);
                     }
                     break;
                 case "Medium Range":
@@ -144,7 +145,6 @@ class Encounter {
             if (this.depth == "Periscope Depth") {
                 this.tv.uboat.sprite.dive();
                 this.tv.mainUI.deckGunButton.changeState("Disabled");
-                this.canFireForeAndAft = true;
             }
             Object.values(this.tv.gameObjects).forEach(object => {
                 object.sprite.setRange(this.range);
@@ -157,8 +157,10 @@ class Encounter {
         this.tv.setFiringMode(true);
 
         //Await for at least one type of firing before moving on
+        console.log("Before");
         this.gm.setEventResolved(false);
         await until(_ => this.gm.eventResolved == true);
+        console.log("After");
 
         //Resolve fired weapons in this round then display results --- leads into escort detection or engaging again or following
         this.tv.setFiringMode(false);
@@ -173,7 +175,7 @@ class Encounter {
                 this.tv.mainUI.deckGunButton.changeState("Disabled");
                 this.depth = "Periscope Depth";
             }
-            this.escortDetection(false, 0);
+            this.escortDetection(false, 0, false);
         }
 
         this.endRound();
@@ -193,6 +195,9 @@ class Encounter {
         this.clearRoundStats();
         for (let i = 0; i < this.shipList.length; i++) {
             this.shipList[i].clearRoundStats();
+        }
+        if (this.depth = "Deep") {
+            this.depth = "Periscope Depth";
         }
     }
 
@@ -369,6 +374,10 @@ class Encounter {
         else {
             return true;
         }
+    }
+
+    diveDeep() {
+        this.depth = "Deep";
     }
 
     resolveUboatAttack() {
@@ -588,6 +597,7 @@ class Encounter {
         this.roundDuds = 0;
         this.roundDam = 0;
         this.roundFired = 0;
+        this.round++;
     }
 
     //Determines if a combat round can be conducted - returns "All", "Fore", "Aft", "Deck Gun", "None"
@@ -656,10 +666,14 @@ class Encounter {
     }
 
     //Called when escort detection roll is required to see if Uboat was detected
-    escortDetection(previouslyDetected, wpMod) {
+    async escortDetection(previouslyDetected, wpMod, closeRangeCheck) {
         var escortRoll = d6Rollx2();
         var escortMods = 0;
         var canTestDive = false;
+        this.gm.setEventResolved(false);
+
+        var escortDetectionPopup = new EscortDetectionPopup(this.tv, this.gm, this, closeRangeCheck);
+        await until(_ => this.gm.eventResolved == true);
 
         //Check if in Wolfpack
         if (this.gm.currentOrders.includes("Wolfpack") && wpMod == 0 && this.encounterType == "Convoy") {
@@ -728,19 +742,27 @@ class Encounter {
         }
 
         console.log("Escort Roll: " + escortRoll + " | Escort Mods: " + escortMods);
-        sleep(1000);
 
+        var results = "";
         if (escortRoll == 2) {
             console.log("Completely avoided detection!");
+            results = "Completely Undetected";
         }
         if (escortRoll + escortMods <= 8) {
             console.log("We slipped away!");
+            results = "Undetected";
         }
         else if (escortRoll + escortMods <= 11) {
             console.log("Detected!");
+            results = "Detected";
         }
         else if (escortRoll + escortMods >= 12) {
             console.log("Detected! Big Problems!!");
+            results = "Detectedx2";
         }
+
+        this.gm.setEventResolved(false);
+        escortDetectionPopup.escortResults(results)
+        await until(_ => this.gm.eventResolved == true);
     }
 }

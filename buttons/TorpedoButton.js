@@ -55,6 +55,23 @@ class TorpedoButton extends Button{
         }
         //If in firing mode
         else if (this.tv.firingMode) {
+            //Disable conditions if boat is submerged (cannot fire fore and aft)
+            if (this.gm.currentEncounter.depth == "Periscope Depth") {
+                //Disable Aft if submerged and fore is selected
+                if (this.tube >= 5 && this.gm.sub.isFiringFore) {
+                    this.changeState("Disabled");
+                }
+                else if (this.tube >= 5 && !this.gm.sub.isFiringFore && this.currentState == "Disabled") {
+                    this.changeState("Enable");
+                }
+                //Disable Fore if submerged and aft is selected
+                else if (this.tube <= 4 && this.gm.sub.isFiringAft) {
+                    this.changeState("Disabled");
+                }
+                else if (this.tube <= 4 && !this.gm.sub.isFiringAft && this.currentState == "Disabled") {
+                    this.changeState("Enable");
+                }
+            }
             //Disable conditions - first if already fired that side of the boat
             if ((this.gm.currentEncounter.firedFore && this.tube <= 4) || (this.gm.currentEncounter.firedAft) && this.tube >= 5) {
                 this.changeState("Disabled");
@@ -66,23 +83,6 @@ class TorpedoButton extends Button{
             //Disable if mines are loaded on that side of the boat
             else if ((this.tube <= 4 && this.gm.sub.minesLoadedForward) || (this.tube >= 5 && this.gm.sub.minesLoadedForwardAft)) {
                 this.changeState("Disabled");
-            }
-
-            if (this.gm.currentEncounter.depth == "Periscope Depth") {
-                //Disable Aft if submerged and fore is selected
-                if (this.tube >= 5 && this.gm.sub.isFiringFore) {
-                    this.changeState("Disabled");
-                }
-                else if (this.tube >= 5 && !this.gm.sub.isFiringFore && this.currentState != "Pressed") {
-                    this.changeState("Enable");
-                }
-                //Disable Fore if submerged and aft is selected
-                else if (this.tube <= 4 && this.gm.sub.isFiringAft) {
-                    this.changeState("Disabled");
-                }
-                else if (this.tube <= 4 && !this.gm.sub.isFiringAft && this.currentState != "Pressed") {
-                    this.changeState("Enable");
-                }
             }
         }
         //Normal mode (not interactable)
