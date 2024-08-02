@@ -4,6 +4,7 @@ class GameManager{
         this.tv = tv;
         this.sub = null;
         this.eventResolved = true;
+        this.subEventResolved = true;
 
         this.kmdt = "";
         this.id = "";
@@ -82,6 +83,10 @@ class GameManager{
 
     setEventResolved(state) {
         this.eventResolved = state;
+    }
+
+    setSubEventResolved(state) {
+        this.subEventResolved = state;
     }
 
     getFullUboatID(){

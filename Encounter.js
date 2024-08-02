@@ -144,7 +144,7 @@ class Encounter {
             }
             if (this.depth == "Periscope Depth") {
                 this.tv.uboat.sprite.dive();
-                this.tv.mainUI.deckGunButton.changeState("Disabled");
+                //this.tv.mainUI.deckGunButton.changeState("Disabled");
             }
             Object.values(this.tv.gameObjects).forEach(object => {
                 object.sprite.setRange(this.range);
@@ -153,6 +153,7 @@ class Encounter {
             //this.tv.mainUI.deckGunButton.getLatestState();
         }
 
+        await until(_ => this.gm.subEventResolved == true);
         //Allow for firing (selecting target and tubes)
         this.tv.setFiringMode(true);
 
@@ -172,7 +173,7 @@ class Encounter {
         if (this.isEscorted()) {
             if (this.depth == "Surfaced") {
                 this.tv.uboat.sprite.dive();
-                this.tv.mainUI.deckGunButton.changeState("Disabled");
+                //this.tv.mainUI.deckGunButton.changeState("Disabled");
                 this.depth = "Periscope Depth";
             }
             this.escortDetection(false, 0, false);
@@ -670,10 +671,10 @@ class Encounter {
         var escortRoll = d6Rollx2();
         var escortMods = 0;
         var canTestDive = false;
-        this.gm.setEventResolved(false);
 
+        this.gm.setSubEventResolved(false);
         var escortDetectionPopup = new EscortDetectionPopup(this.tv, this.gm, this, closeRangeCheck);
-        await until(_ => this.gm.eventResolved == true);
+        await until(_ => this.gm.subEventResolved == true);
 
         //Check if in Wolfpack
         if (this.gm.currentOrders.includes("Wolfpack") && wpMod == 0 && this.encounterType == "Convoy") {
@@ -761,8 +762,8 @@ class Encounter {
             results = "Detectedx2";
         }
 
-        this.gm.setEventResolved(false);
+        this.gm.setSubEventResolved(false);
         escortDetectionPopup.escortResults(results)
-        await until(_ => this.gm.eventResolved == true);
+        await until(_ => this.gm.subEventResolved == true);
     }
 }

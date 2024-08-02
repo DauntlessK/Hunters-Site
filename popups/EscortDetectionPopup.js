@@ -50,11 +50,11 @@ class EscortDetectionPopup{
         this.element.addEventListener("click", ()=> {
             if (event.target.id == "continue") {
                 //get selected value and close popup
-                this.firstPopupDone();
+                this.done();
             }
             else if (event.target.id == "dive") {
                 this.enc.diveDeep();
-                this.firstPopupDone();
+                this.done();
             }
         })
 
@@ -108,14 +108,9 @@ class EscortDetectionPopup{
         this.container.appendChild(this.element);
 
     }
-
-    firstPopupDone() {
-        this.element.remove();
-        this.gm.setEventResolved(true);
-    }
     
     done(){
         this.element.remove();
-        this.gm.setEventResolved(true);
+        this.gm.setSubEventResolved(true);
     }
 }

@@ -67,7 +67,8 @@ class DeckGunButton extends Button {
 
     //Updates state based on Uboat's status / ammo etc
     getLatestState() {
-        if (!this.tv.firingMode && this.currentState != "Active") {
+        //First state- For not firing mode (no event)
+        if (!this.tv.isInEncounter) {
             this.changeState("Active");
         }
         //Check if surfaced

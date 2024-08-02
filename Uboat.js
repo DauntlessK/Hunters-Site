@@ -467,4 +467,119 @@ class Uboat{
         }
         return false;
     }
+
+    damage(numHits) {
+        this.gm.hitsTaken += numOfHits
+        //tookFloodingThisRound = False   ?????????
+        for (let x = 0; x < numHits; x++) {
+            damage = this.damageChart[random.randint(0, 35)]
+            switch (damage) {
+                case "crew injury":
+                    //print("Crew injured!")
+                    if (this.gm.halsUndBeinbruch > 0){
+                        //deal with hals TODO
+                    }
+                    this.crewInjury(game, attacker, airAttack)
+                case "crew injuryx2":
+                    //print("Two crew injured!")
+                    if (this.gm.halsUndBeinbruch > 0){
+                        //deal with hals TODO
+                    }
+                    this.crewInjury(game, attacker, airAttack)
+                    this.crewInjury(game, attacker, airAttack)
+                case "flooding":
+                    //print("Flooding!")
+                    if (this.gm.halsUndBeinbruch > 0){
+                        //deal with hals TODO
+                    }
+                    this.flooding_Damage += 1
+                    this.tookFloodingThisRound = True
+                case "floodingx2":
+                    print("Major flooding!")
+                    if game.halsUndBeinbruch > 0:
+                        if verifyYorN("Reroll damage? ") == "Y":
+                            game.halsUndBeinbruch -= 1
+                            continue
+                    self.flooding_Damage += 2
+                    tookFloodingThisRound = True
+                case "hull":
+                    print("Hull damage!")
+                    if game.halsUndBeinbruch > 0:
+                        if verifyYorN("Reroll damage? ") == "Y":
+                            game.halsUndBeinbruch -= 1
+                            continue
+                    self.hull_Damage += 1
+                case "hullx2":
+                    print("Major hull damage!")
+                    if game.halsUndBeinbruch > 0:
+                        if verifyYorN("Reroll damage? ") == "Y":
+                            game.halsUndBeinbruch -= 1
+                            continue
+                    self.hull_Damage += 2
+                case "Flak Guns":
+                    if self.systems["3.7 Flak"] >= 0:
+                        print("Both flak guns have been damaged!")
+                        if game.halsUndBeinbruch > 0:
+                            if verifyYorN("Reroll damage? ") == "Y":
+                                game.halsUndBeinbruch -= 1
+                                continue
+                        if self.systems["3.7 Flak"] != 2:
+                            self.systems.update({"3.7 Flak": 1})
+                    else:
+                        print("Flak gun has been hit!")
+                        if game.halsUndBeinbruch > 0:
+                            if verifyYorN("Reroll damage? ") == "Y":
+                                game.halsUndBeinbruch -= 1
+                                continue
+                        if self.systems["Flak Gun"] != 2:
+                            self.systems.update({"Flak Gun": 1})
+                case "minor":
+                    print("Damage is minor, nothing to report!")
+                case _:
+                    print("The " + damage + " has taken damage!")
+                    if game.halsUndBeinbruch > 0:
+                        if verifyYorN("Reroll damage? ") == "Y":
+                            game.halsUndBeinbruch -= 1
+                            continue
+                    # TODO damageVariation text
+                    if self.systems[damage] != 2:
+                        self.systems.update({damage: 1})
+            }
+        }
+
+        time.sleep(2)
+        # check if flooding took place this round and roll for additional flooding chance
+        if tookFloodingThisRound:
+            addlFlooding = d6Roll()
+            floodingMods = 0
+            if self.crew_health["Engineer"] >= 2:
+                floodingMods += 1
+            elif self.crew_levels["Engineer"] == 1:
+                floodingMods -= 1
+
+            #printRollandMods(addlFlooding, floodingMods)
+
+            if addlFlooding + floodingMods <= 4:
+                print("Leaks have been patched- no more flooding.")
+            else:
+                print("Leaks weren't contained quickly enough! Additional flooding!")
+                self.flooding_Damage = self.flooding_Damage + 1
+
+        # check to see if sunk from hull damage
+        if self.hull_Damage >= self.hull_hp:
+            print("The hull continues to groan and buckle until...")
+            if not airAttack:
+                causeText =  "Sunk " + game.getFullDate() + " - Hull destroyed by depth charges by the " + attacker
+                gameover(game, causeText)
+            else:
+                causeText = "Sunk " + game.getFullDate() + " - Hull destroyed by attack by a " + attacker
+                gameover(game, causeText)
+        if self.flooding_Damage >= self.flooding_hp:
+            print("The ship is taking on too much water, we must blow the ballast tanks and surface.")
+            scuttleFromFlooding(game, attacker, airAttack)
+    }
+
+    crewInjury() {
+        console.log("TODO");
+    }
 }
