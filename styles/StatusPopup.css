@@ -79,7 +79,7 @@
     text-align: center;
 }
 
-.EEngine1 {
+#ElectricEngine1 {
     font-size: 11px;
     font-family: courier;
     position: absolute;
@@ -87,7 +87,7 @@
     top: 201px;
 }
 
-.EEngine2 {
+#ElectricEngine2 {
     font-size: 11px;
     font-family: courier;
     position: absolute;
@@ -95,7 +95,7 @@
     top: 233px;
 }
 
-.DEngine1 {
+#DieselEngine1 {
     font-size: 11px;
     font-family: courier;
     position: absolute;
@@ -103,7 +103,7 @@
     top: 213px;
 }
 
-.DEngine2 {
+#DieselEngine2 {
     font-size: 11px;
     font-family: courier;
     position: absolute;
@@ -111,7 +111,7 @@
     top: 237px;
 }
 
-.Periscope {
+#Periscope {
     font-size: 11px;
     font-family: courier;
     position: absolute;
@@ -119,7 +119,7 @@
     top: 20px;
 }
 
-.Radio {
+#Radio {
     font-size: 11px;
     font-family: courier;
     position: absolute;
@@ -127,7 +127,7 @@
     top: 15px;
 }
 
-.Hydrophones {
+#Hydrophones {
     font-size: 11px;
     font-family: courier;
     position: absolute;
@@ -135,7 +135,7 @@
     top: 204px;
 }
 
-.Batteries {
+#Batteries {
     font-size: 11px;
     font-family: courier;
     position: absolute;
@@ -143,7 +143,7 @@
     top: 235px;
 }
 
-.FTDoors {
+#ForwardTorpedoDoors {
     font-size: 11px;
     font-family: courier;
     position: absolute;
@@ -151,7 +151,7 @@
     top: 61px;
 }
 
-.ATDoors {
+#AftTorpedoDoors {
     font-size: 11px;
     font-family: courier;
     position: absolute;
@@ -159,7 +159,7 @@
     top: 93px;
 }
 
-.DivePlanes {
+#DivePlanes {
     font-size: 11px;
     font-family: courier;
     position: absolute;
@@ -167,7 +167,7 @@
     top: 187px;
 }
 
-.FuelTanks {
+#FuelTanks {
     font-size: 11px;
     font-family: courier;
     position: absolute;
@@ -175,7 +175,7 @@
     top: 80px;
 }
 
-.DeckGun {
+#DeckGun {
     font-size: 11px;
     font-family: courier;
     position: absolute;
@@ -183,7 +183,7 @@
     top: 67px;
 }
 
-.FlakGun {
+#FlakGun {
     font-size: 11px;
     font-family: courier;
     position: absolute;

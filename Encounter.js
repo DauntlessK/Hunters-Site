@@ -599,6 +599,7 @@ class Encounter {
         this.roundDam = 0;
         this.roundFired = 0;
         this.round++;
+        this.roundTookFlooding = false;
     }
 
     //Determines if a combat round can be conducted - returns "All", "Fore", "Aft", "Deck Gun", "None"
@@ -668,7 +669,8 @@ class Encounter {
 
     //Called when escort detection roll is required to see if Uboat was detected
     async escortDetection(previouslyDetected, wpMod, closeRangeCheck) {
-        var escortRoll = d6Rollx2();
+        //var escortRoll = d6Rollx2();
+        var escortRoll = 11;
         var escortMods = 0;
         var canTestDive = false;
 
@@ -742,28 +744,31 @@ class Encounter {
             }
         }
 
-        console.log("Escort Roll: " + escortRoll + " | Escort Mods: " + escortMods);
+        console.log("Escort Roll: " + escortRoll + " | Escort Mods: " + escortMods + " ||| Total: " + escortRoll + escortMods);
 
         var results = "";
+        var majorDetection = false;
         if (escortRoll == 2) {
-            console.log("Completely avoided detection!");
             results = "Completely Undetected";
         }
         if (escortRoll + escortMods <= 8) {
-            console.log("We slipped away!");
             results = "Undetected";
+            console.log("Undetected");
         }
         else if (escortRoll + escortMods <= 11) {
-            console.log("Detected!");
-            results = "Detected";
+            results = this.gm.sub.damage(1);
         }
         else if (escortRoll + escortMods >= 12) {
-            console.log("Detected! Big Problems!!");
-            results = "Detectedx2";
+            results = this.gm.sub.damage(2);
+            majorDetection = true;
         }
 
         this.gm.setSubEventResolved(false);
-        escortDetectionPopup.escortResults(results)
+        escortDetectionPopup.escortResults(results, majorDetection)
         await until(_ => this.gm.subEventResolved == true);
+
+        if (results != "Completely Undetected" || "Undetected") {
+            this.escortDetection(true, 0, false);   //WPMOD instead of 0?
+        }
     }
 }

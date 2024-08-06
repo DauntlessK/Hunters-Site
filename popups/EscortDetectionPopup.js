@@ -61,14 +61,16 @@ class EscortDetectionPopup{
         this.container.appendChild(this.element);
     }
 
-    escortResults(results) {
+    escortResults(results, majorDetection) {
         if (this.closeRangeCheck) {
-            if (results == "Completely Undetected" || "Undetected")
-            this.element.innerHTML = (`
-                <p class="TextMessage_p">We've managed to remain undetected.
-                <button class="WaitPopup_button" id="continue2">Continue</button>
-                </p>
-                `)
+            console.log(results)
+            if (results == "Completely Undetected" || results == "Undetected") {
+                this.element.innerHTML = (`
+                    <p class="TextMessage_p">We've managed to remain undetected.
+                    <button class="WaitPopup_button" id="continue2">Continue</button>
+                    </p>
+                    `)
+            }
             else {
                 this.element.innerHTML = (`
                     <h3 class="HeaderMessage_h3">We've been detected!</h3>
@@ -77,14 +79,14 @@ class EscortDetectionPopup{
             }
         }
         else {
-            if (results == "Completely Undetected" || "Undetected") {
+            if (results == "Completely Undetected" || results == "Undetected") {
                 this.element.innerHTML = (`
                     <p class="TextMessage_p">We've slipped away!
                     <button class="WaitPopup_button" id="continue2">Continue</button>
                     </p>
                     `)
             }
-            else if (results == "Detected"){
+            else if (!majorDetection){
                 this.element.innerHTML = (`
                     <h3 class="HeaderMessage_h3">We've been detected! Depth charges in the water!</h3>
                     <button class="WaitPopup_button" id="continue2">Continue</button>
@@ -100,13 +102,30 @@ class EscortDetectionPopup{
 
         this.element.addEventListener("click", ()=> {
             if (event.target.id == "continue2") {
-                //get selected value and close popup
-                this.done();
+                if (results == "Completely Undetected" || results == "Undetected") {
+                    this.done();
+                }
+                else {
+                    this.getDamageResults(results);
+                }
             }
         })
 
         this.container.appendChild(this.element);
 
+    }
+
+    //Displays third popup for damage results - only when detected
+    getDamageResults(results) {
+        this.element.innerHTML = (`
+            <h3 class="HeaderMessage_h3">Damage Report! </h3>
+            <p class="TextMessage_p">${results} <br><br>
+            <button class="WaitPopup_button" id="continue2">Continue</button>
+            </p>`)
+
+        this.element.addEventListener("click", ()=> {
+            this.done();
+        })
     }
     
     done(){

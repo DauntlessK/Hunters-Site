@@ -35,20 +35,20 @@ class StatusPopup{
             <img src = "images/ui/Status.png">
             <p class="Type">Type: ${this.gm.sub.getType()}</p>
             <p class="Patrol">Patrol # ${this.gm.patrolNum}</p>
-            <p class="EEngine1">Electric Engine #1</p>
-            <p class="EEngine2">Electric Engine #2</p>
-            <p class="DEngine1">Diesel Engine #1</p>
-            <p class="DEngine2">Diesel Engine #2</p>
-            <p class="Periscope">Periscope</p>
-            <p class="Radio">Radio</p>
-            <p class="Hydrophones">Hydrophones</p>
-            <p class="Batteries">Batteries</p>
-            <p class="FTDoors">Forward Torpedo Doors</p>
-            <p class="ATDoors">Aft Torpedo Doors</p>
-            <p class="DivePlanes">Dive Planes</p>
-            <p class="FuelTanks">Fuel Tanks</p>
-            <p class="DeckGun">Deck Gun</p>
-            <p class="FlakGun">Flak Gun</p>
+            <p id="ElectricEngine1">Electric Engine #1</p>
+            <p id="ElectricEngine2">Electric Engine #2</p>
+            <p id="DieselEngine1">Diesel Engine #1</p>
+            <p id="DieselEngine2">Diesel Engine #2</p>
+            <p id="Periscope">Periscope</p>
+            <p id="Radio">Radio</p>
+            <p id="Hydrophones">Hydrophones</p>
+            <p id="Batteries">Batteries</p>
+            <p id="ForwardTorpedoDoors">Forward Torpedo Doors</p>
+            <p id="AftTorpedoDoors">Aft Torpedo Doors</p>
+            <p id="DivePlanes">Dive Planes</p>
+            <p id="FuelTanks">Fuel Tanks</p>
+            <p id="DeckGun">Deck Gun</p>
+            <p id="FlakGun">Flak Gun</p>
             <table class = "UboatCrew">
             <tr>
                 <th>Crew</th>
@@ -103,6 +103,31 @@ class StatusPopup{
             <button class="CloseStatus_button" id="close">Close</button>
             <button class="ReloadStatus_button" id="reload">${reload}</button>
         `)
+
+        //Update all systems classes with text indicating they are broken if so
+        for (var key in this.gm.sub.systems) {
+            if (this.gm.sub.systems[key] == 1) {
+                var system = key;
+                system = system.replace(/\s/g, "");
+                system = system.replace("#", "");
+                console.log(system);
+
+                var elementSys = document.getElementById(system);
+                console.log(elementSys);
+                elementSys.style.backgroundColor="orange";
+            }
+            else if (this.gm.sub.systems[key] == 2) {
+                var system = key;
+                system = system.replace(/\s/g, "");
+                system = system.replace("#", "");
+                console.log(system);
+
+                var elementSys = document.getElementById(system);
+                console.log(elementSys);
+                elementSys.style.backgroundColor="red";
+                elementSys.style.color="white";
+            }
+        }
 
         this.element.addEventListener("click", ()=> {
             if (event.target.id == "close"){

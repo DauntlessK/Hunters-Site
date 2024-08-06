@@ -337,8 +337,8 @@ class Uboat{
         this.aft_G7a = 0;
         this.aft_G7e = 0;
         
-        this.gm.sub.minesLoadedForward = true;
-        this.gm.sub.minesLoadedAft = true;
+        this.minesLoadedForward = true;
+        this.minesLoadedAft = true;
     }
 
     //Returns int of how many inoperative diesel engines U-boat has
@@ -469,103 +469,126 @@ class Uboat{
     }
 
     damage(numHits) {
-        this.gm.hitsTaken += numOfHits
-        //tookFloodingThisRound = False   ?????????
+        this.gm.hitsTaken += numHits;
+        var tookFloodingThisRound = false;
+        var damage = "";
+        var messageToReturn = "";
+        console.log(numHits);
+
         for (let x = 0; x < numHits; x++) {
-            damage = this.damageChart[random.randint(0, 35)]
+            damage = this.damageChart[randomNum(0, 35)];
             switch (damage) {
                 case "crew injury":
-                    //print("Crew injured!")
+                    messageToReturn = messageToReturn + "Crew injured! ";
                     if (this.gm.halsUndBeinbruch > 0){
                         //deal with hals TODO
                     }
-                    this.crewInjury(game, attacker, airAttack)
+                    this.crewInjury()
+                    break;
                 case "crew injuryx2":
-                    //print("Two crew injured!")
+                    messageToReturn = messageToReturn + "Two crew injured! ";
                     if (this.gm.halsUndBeinbruch > 0){
                         //deal with hals TODO
                     }
-                    this.crewInjury(game, attacker, airAttack)
-                    this.crewInjury(game, attacker, airAttack)
+                    this.crewInjury();
+                    this.crewInjury();
+                    break;
                 case "flooding":
-                    //print("Flooding!")
+                    var compartments = ["", "forward compartment", "officer's quarters", "control room", "galley", "diesel engine compartment", "aft compartment"]
+                    messageToReturn = messageToReturn + "Hole in the " + compartments[d6Roll()] +"! Flooding! ";
                     if (this.gm.halsUndBeinbruch > 0){
                         //deal with hals TODO
                     }
-                    this.flooding_Damage += 1
-                    this.tookFloodingThisRound = True
+                    this.flooding_Damage += 1;
+                    tookFloodingThisRound = true;
+                    break;
                 case "floodingx2":
-                    print("Major flooding!")
-                    if game.halsUndBeinbruch > 0:
-                        if verifyYorN("Reroll damage? ") == "Y":
-                            game.halsUndBeinbruch -= 1
-                            continue
-                    self.flooding_Damage += 2
-                    tookFloodingThisRound = True
+                    var compartments = ["", "Forward Compartment", "Officer's Quarters", "Control Room", "Galley", "Diesel Engine Compartment", "Aft Compartment"]
+                    messageToReturn = messageToReturn + "Hole in the " + compartments[d6Roll()] +"! ";
+                    messageToReturn = messageToReturn + "A second hole in the " + compartments[d6Roll()] +"! ";
+                    if (this.gm.halsUndBeinbruch > 0){
+                        //deal with hals TODO
+                    }
+                    this.flooding_Damage += 2;
+                    tookFloodingThisRound = true;
+                    break;
                 case "hull":
-                    print("Hull damage!")
-                    if game.halsUndBeinbruch > 0:
-                        if verifyYorN("Reroll damage? ") == "Y":
-                            game.halsUndBeinbruch -= 1
-                            continue
-                    self.hull_Damage += 1
+                    messageToReturn = messageToReturn + "The hull has taken damage! ";
+                    if (this.gm.halsUndBeinbruch > 0){
+                        //deal with hals TODO
+                    }
+                    this.hull_Damage += 1;
+                    break;
                 case "hullx2":
-                    print("Major hull damage!")
-                    if game.halsUndBeinbruch > 0:
-                        if verifyYorN("Reroll damage? ") == "Y":
-                            game.halsUndBeinbruch -= 1
-                            continue
-                    self.hull_Damage += 2
+                    messageToReturn = messageToReturn + "The hull has taken major damage! ";
+                    if (this.gm.halsUndBeinbruch > 0){
+                        //deal with hals TODO
+                    }
+                    this.hull_Damage += 2;
+                    break;
                 case "Flak Guns":
-                    if self.systems["3.7 Flak"] >= 0:
-                        print("Both flak guns have been damaged!")
-                        if game.halsUndBeinbruch > 0:
-                            if verifyYorN("Reroll damage? ") == "Y":
-                                game.halsUndBeinbruch -= 1
-                                continue
-                        if self.systems["3.7 Flak"] != 2:
-                            self.systems.update({"3.7 Flak": 1})
-                    else:
-                        print("Flak gun has been hit!")
-                        if game.halsUndBeinbruch > 0:
-                            if verifyYorN("Reroll damage? ") == "Y":
-                                game.halsUndBeinbruch -= 1
-                                continue
-                        if self.systems["Flak Gun"] != 2:
-                            self.systems.update({"Flak Gun": 1})
+                    if (this.systems["3.7 Flak"] >= 0) {
+                        messageToReturn = messageToReturn + "Both flak guns have been damaged! ";
+                        if (this.gm.halsUndBeinbruch > 0){
+                            //deal with hals TODO
+                        }
+                        if (this.systems["3.7 Flak"] != 2) {
+                            this.systems["3.7 Flak"] = 1;
+                            //this.systems.set("3.7 Flak", 1);
+                        }
+                    }
+                    else {
+                        messageToReturn = messageToReturn + "Flak gun has been hit! ";
+                        if (this.gm.halsUndBeinbruch > 0){
+                            //deal with hals TODO
+                        }
+                        if (this.systems["Flak Gun"] != 2) {
+                            this.systems["Flak Gun"] = 1;
+                            //this.systems.set("Flak Gun", 1);
+                        }
+                    }
+                    break;
                 case "minor":
-                    print("Damage is minor, nothing to report!")
-                case _:
-                    print("The " + damage + " has taken damage!")
-                    if game.halsUndBeinbruch > 0:
-                        if verifyYorN("Reroll damage? ") == "Y":
-                            game.halsUndBeinbruch -= 1
-                            continue
-                    # TODO damageVariation text
-                    if self.systems[damage] != 2:
-                        self.systems.update({damage: 1})
+                    messageToReturn = messageToReturn + "Depth charges ineffective! No damage. ";
+                    break;
+                default:
+                    messageToReturn = messageToReturn + "The " + damage + " has taken damage! ";
+                    if (this.gm.halsUndBeinbruch > 0){
+                        //deal with hals TODO
+                    }
+                    //TODO damageVariation text
+                    if (this.systems[damage] != 2) {
+                        this.systems[damage] = 1;
+                        //this.systems.set(damage, 1);
+                    }
+                    break;
             }
         }
 
-        time.sleep(2)
-        # check if flooding took place this round and roll for additional flooding chance
-        if tookFloodingThisRound:
-            addlFlooding = d6Roll()
-            floodingMods = 0
-            if self.crew_health["Engineer"] >= 2:
+        //check if flooding took place this round and roll for additional flooding chance
+        if (tookFloodingThisRound) {
+            var addlFlooding = d6Roll();
+            var floodingMods = 0;
+            if (this.crew_health["Engineer"] >= 2) {
                 floodingMods += 1
-            elif self.crew_levels["Engineer"] == 1:
+            }
+            else if (this.crew_levels["Engineer"] == 1) {
                 floodingMods -= 1
+            }
 
-            #printRollandMods(addlFlooding, floodingMods)
+            if (addlFlooding + floodingMods <= 4) {
+                messageToReturn = messageToReturn + "Leaks have been patched- no more flooding. ";
+            }
+            else {
+                messageToReturn = messageToReturn + "Leaks weren't contained quickly enough! Additional flooding! ";
+                this.flooding_Damage = this.flooding_Damage + 1;
+            }
+        }
 
-            if addlFlooding + floodingMods <= 4:
-                print("Leaks have been patched- no more flooding.")
-            else:
-                print("Leaks weren't contained quickly enough! Additional flooding!")
-                self.flooding_Damage = self.flooding_Damage + 1
+        return messageToReturn;
 
-        # check to see if sunk from hull damage
+        //check to see if sunk from hull damage
+        /** 
         if self.hull_Damage >= self.hull_hp:
             print("The hull continues to groan and buckle until...")
             if not airAttack:
@@ -577,6 +600,7 @@ class Uboat{
         if self.flooding_Damage >= self.flooding_hp:
             print("The ship is taking on too much water, we must blow the ballast tanks and surface.")
             scuttleFromFlooding(game, attacker, airAttack)
+            */
     }
 
     crewInjury() {
