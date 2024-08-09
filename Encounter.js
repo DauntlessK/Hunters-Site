@@ -256,8 +256,6 @@ class Encounter {
             tgt.push(ship4);
         }
 
-        console.log("Encounter ships:");
-        console.log(tgt);
         return tgt;
     }
 
@@ -669,8 +667,7 @@ class Encounter {
 
     //Called when escort detection roll is required to see if Uboat was detected
     async escortDetection(previouslyDetected, wpMod, closeRangeCheck) {
-        //var escortRoll = d6Rollx2();
-        var escortRoll = 11;
+        var escortRoll = d6Rollx2();
         var escortMods = 0;
         var canTestDive = false;
 
@@ -678,7 +675,7 @@ class Encounter {
         var escortDetectionPopup = new EscortDetectionPopup(this.tv, this.gm, this, closeRangeCheck);
         await until(_ => this.gm.subEventResolved == true);
 
-        //Check if in Wolfpack
+        //Check if in Wolfpack - only checked once if wolfpack. Otherwise stays 0
         if (this.gm.currentOrders.includes("Wolfpack") && wpMod == 0 && this.encounterType == "Convoy") {
             wolfpackRoll = d6Roll();
             if (wolfpackRoll <= 5) {
@@ -744,8 +741,6 @@ class Encounter {
             }
         }
 
-        console.log("Escort Roll: " + escortRoll + " | Escort Mods: " + escortMods + " ||| Total: " + escortRoll + escortMods);
-
         var results = "";
         var majorDetection = false;
         if (escortRoll == 2) {
@@ -753,22 +748,37 @@ class Encounter {
         }
         if (escortRoll + escortMods <= 8) {
             results = "Undetected";
-            console.log("Undetected");
         }
-        else if (escortRoll + escortMods <= 11) {
-            results = this.gm.sub.damage(1);
+        if (escortRoll + escortMods <= 11) {
+            //results = this.gm.sub.damage(1);
         }
         else if (escortRoll + escortMods >= 12) {
-            results = this.gm.sub.damage(2);
+            //results = this.gm.sub.damage(2);
             majorDetection = true;
         }
 
+        //Show if detected or not popup
         this.gm.setSubEventResolved(false);
         escortDetectionPopup.escortResults(results, majorDetection)
         await until(_ => this.gm.subEventResolved == true);
 
+        //Show damage results popup
+        if (results != "Completely Undetected" || results != "Undetected") {
+            this.gm.setSubEventResolved(false);
+            if (majorDetection) {
+                results = this.gm.sub.damage(2, "Depth Charges");
+            }
+            else {
+                results = this.gm.sub.damage(1, "Depth Charges");
+            }
+            escortDetectionPopup.damageResults(results, majorDetection)
+            await until(_ => this.gm.subEventResolved == true);
+        }
+
+        //If detected, check detection again
         if (results != "Completely Undetected" || "Undetected") {
-            this.escortDetection(true, 0, false);   //WPMOD instead of 0?
+            this.depth = "Periscope Depth";  //reset depth (in case "Deep" was selected)
+            this.escortDetection(true, wpMod, false);
         }
     }
 }

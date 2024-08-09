@@ -26,7 +26,7 @@ class EscortDetectionPopup{
             message = "Approaching ships - attempting to remain undetected.";
             this.element.innerHTML = (`
                 <p class="TextMessage_p">${message}
-                <button class="WaitPopup_button" id="continue">Continue</button>
+                <button class="ContinuePopup_button" id="continue">Continue</button>
                 </p>
                 `)
         }
@@ -36,14 +36,14 @@ class EscortDetectionPopup{
                 message = "Escort is pinging us!";
                 this.element.innerHTML = (`
                     <h3 class="HeaderMessage_h3">${message}</h3>
-                    <button class="WaitPopup_button" id="continue">Continue</button>
+                    <button class="ContinuePopup_button" id="continue">Continue</button>
                     `)
             }
             message = "Escort is pinging us!";
             this.element.innerHTML = (`
                 <h3 class="HeaderMessage_h3">${message}</h3>
-                <button class="WaitPopup_button" id="continue">Continue</button>
-                <button class="AttackPopup_button" id="dive">Dive Deep</button>
+                <button class="DiveDeepPopup_button" id="dive">Dive Deep</button>
+                <button class="ContinuePopup_button" id="continue">Continue</button>
                 `)
         }
 
@@ -63,18 +63,17 @@ class EscortDetectionPopup{
 
     escortResults(results, majorDetection) {
         if (this.closeRangeCheck) {
-            console.log(results)
             if (results == "Completely Undetected" || results == "Undetected") {
                 this.element.innerHTML = (`
                     <p class="TextMessage_p">We've managed to remain undetected.
-                    <button class="WaitPopup_button" id="continue2">Continue</button>
+                    <button class="ContinuePopup_button" id="continue2">Continue</button>
                     </p>
                     `)
             }
             else {
                 this.element.innerHTML = (`
                     <h3 class="HeaderMessage_h3">We've been detected!</h3>
-                    <button class="WaitPopup_button" id="continue2">Continue</button>
+                    <button class="ContinuePopup_button" id="continue2">Continue</button>
                     `)
             }
         }
@@ -89,25 +88,20 @@ class EscortDetectionPopup{
             else if (!majorDetection){
                 this.element.innerHTML = (`
                     <h3 class="HeaderMessage_h3">We've been detected! Depth charges in the water!</h3>
-                    <button class="WaitPopup_button" id="continue2">Continue</button>
+                    <button class="ContinuePopup_button" id="continue2">Continue</button>
                     `)
             }
             else {
                 this.element.innerHTML = (`
                     <h3 class="HeaderMessage_h3">Brace! Escort directly above us!</h3>
-                    <button class="WaitPopup_button" id="continue2">Continue</button>
+                    <button class="ContinuePopup_button" id="continue2">Continue</button>
                     `)
             }
         }
 
         this.element.addEventListener("click", ()=> {
             if (event.target.id == "continue2") {
-                if (results == "Completely Undetected" || results == "Undetected") {
-                    this.done();
-                }
-                else {
-                    this.getDamageResults(results);
-                }
+                this.done();
             }
         })
 
@@ -116,16 +110,18 @@ class EscortDetectionPopup{
     }
 
     //Displays third popup for damage results - only when detected
-    getDamageResults(results) {
+    damageResults(results) {
         this.element.innerHTML = (`
             <h3 class="HeaderMessage_h3">Damage Report! </h3>
-            <p class="TextMessage_p">${results} <br><br>
-            <button class="WaitPopup_button" id="continue2">Continue</button>
+            <p class="DetectionTextMessage_p">${results} <br><br>
+            <button class="ContinuePopup_button" id="continue2">Continue</button>
             </p>`)
 
         this.element.addEventListener("click", ()=> {
             this.done();
         })
+
+        this.container.appendChild(this.element);
     }
     
     done(){

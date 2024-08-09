@@ -20,7 +20,8 @@ class Uboat{
             "Dive Planes": 0,
             "Fuel Tanks": 0,
             "Deck Gun": 0,
-            "Flak Gun": 0
+            "Flak Gun": 0,
+            "3.7 Flak": 0
         }
 
         //---------------Tubes 1-6 (0=empty, 1=G7a, 2=G7e, 3=Mines)
@@ -468,12 +469,11 @@ class Uboat{
         return false;
     }
 
-    damage(numHits) {
+    damage(numHits, attack) {
         this.gm.hitsTaken += numHits;
         var tookFloodingThisRound = false;
         var damage = "";
         var messageToReturn = "";
-        console.log(numHits);
 
         for (let x = 0; x < numHits; x++) {
             damage = this.damageChart[randomNum(0, 35)];
@@ -483,15 +483,16 @@ class Uboat{
                     if (this.gm.halsUndBeinbruch > 0){
                         //deal with hals TODO
                     }
-                    this.crewInjury()
+                    messageToReturn = this.crewInjury(attack);
                     break;
                 case "crew injuryx2":
                     messageToReturn = messageToReturn + "Two crew injured! ";
                     if (this.gm.halsUndBeinbruch > 0){
                         //deal with hals TODO
                     }
-                    this.crewInjury();
-                    this.crewInjury();
+                    messageToReturn = this.crewInjury(attack);
+                    messageToReturn += " ";
+                    messageToReturn += this.crewInjury(attack);
                     break;
                 case "flooding":
                     var compartments = ["", "forward compartment", "officer's quarters", "control room", "galley", "diesel engine compartment", "aft compartment"]
@@ -536,6 +537,9 @@ class Uboat{
                             this.systems["3.7 Flak"] = 1;
                             //this.systems.set("3.7 Flak", 1);
                         }
+                        if (this.systems["Flak Gun"] != 2) {
+                            this.systems["Flak Gun"] = 1;
+                        }
                     }
                     else {
                         messageToReturn = messageToReturn + "Flak gun has been hit! ";
@@ -552,7 +556,12 @@ class Uboat{
                     messageToReturn = messageToReturn + "Depth charges ineffective! No damage. ";
                     break;
                 default:
-                    messageToReturn = messageToReturn + "The " + damage + " has taken damage! ";
+                    if (damage.slice(-1) == "s") {
+                        messageToReturn = messageToReturn + "The " + damage + " have taken damage! ";
+                    }
+                    else {
+                        messageToReturn = messageToReturn + "The " + damage + " has taken damage! ";
+                    }
                     if (this.gm.halsUndBeinbruch > 0){
                         //deal with hals TODO
                     }
@@ -603,7 +612,141 @@ class Uboat{
             */
     }
 
-    crewInjury() {
-        console.log("TODO");
+    crewInjury(attack) {
+        var sevText = "";
+        var wounds;
+        var toReturn = "";
+        var person;
+
+        if (attack == "Torpedo Incident") {
+            //deal with TI
+        } 
+        else {
+            var crewInjuryRoll = d6Rollx2();
+            var severity = d6Roll();
+        }
+        if (this.gm.sub.crew_health["Doctor"] <= 1 && this.gm.sub.crew_levels["Doctor"] > 0) {
+            severity -= 1;
+        }
+        if (severity <= 3) {
+            sevText = "lightly wounded! ";
+            wounds = 1;
+        }
+        else if (severity <= 5) {
+            sevText = "severely wounded! ";
+            wounds = 2;
+        }
+        else {
+            sevText = "killed in action! ";
+            wounds = 3;
+        }
+
+        //save for KMDT if killed, reroll to new crew injury
+        while (crewInjuryRoll == 2 && severity == 6 && this.gm.halsUndBeinbruch > 0) {
+            crewInjuryRoll = d6Rollx2();
+            this.gm.halsUndBeinbruch--;
+        }
+
+        //assign wounds and finish return text
+        switch (crewInjuryRoll) {
+            case 2:
+                toReturn = "Kmdt has been " + sevText;
+                this.crew_health["Kommandant"] += wounds;
+                if (self.crew_health["Kommandant"] == 3) {
+                    //deal with end of game text TODO=======================
+                }
+                //GAME OVER TODO =====================
+                break;
+            case 3:
+                toReturn = "The First Officer has been " + sevText;
+                person = "Watch Officer 1";
+                this.gm.sub.crew_health[person] += wounds;
+                break;
+            case 4:
+            case 11:
+                toReturn = "The Engineer has been " + sevText;
+                person = "Engineer";
+                this.gm.sub.crew_health[person] += wounds;
+                break;
+            case 5:
+                toReturn = "The Doctor has been " + sevText;
+                person = "Doctor";
+                this.gm.sub.crew_health[person] += wounds;
+                break;
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+                toReturn = "A crew member has been " + sevText;
+                var injuryAllocated = false;
+                for (var key in this.gm.sub.crew_health) {
+                    if (key.includes("Crew")) {
+                        //find uninjured crew to allocate first
+                        if (this.gm.sub.crew_health[key] == 0) {
+                            this.gm.sub.crew_health[key] += wounds;
+                            injuryAllocated = true;
+                            break;
+                        }
+                        else {
+                            continue;
+                        }
+                    }
+                }
+
+                //if no crew member is uninjured and injury still unallocated, find a LW crew member and make them SW
+                if (!injuryAllocated) {
+                    for (var key in this.gm.sub.crew_health) {
+                        if (key.includes("Crew")) { 
+                            //find SW crew first
+                            if (this.gm.sub.crew_health[key] == 1) {
+                                this.gm.sub.crew_health += wounds;
+                                injuryAllocated = true;
+                                break;
+                            }
+                            else {
+                                continue;
+                            }
+                        }
+                    }
+                }
+
+                //if no crew member is LW and injury still unallocated, find a SW crew member and make them KIA
+                if (!injuryAllocated) {
+                    for (var key in this.gm.sub.crew_health) {
+                        if (key.includes("Crew")) { 
+                            //find SW crew first
+                            if (this.gm.sub.crew_health[key] == 2) {
+                                this.gm.sub.crew_health += wounds;
+                                injuryAllocated = true;
+                                break;
+                            }
+                            else {
+                                continue;
+                            }
+                        }
+                    }
+                }
+
+                if (!injuryAllocated) {
+                    console.log("Injury not able to be allocated to crew member.");
+                }
+                break;
+            case 10:
+                toReturn = "The Second Officer has been " + sevText;
+                person = "Watch Officer 2";
+                this.gm.sub.crew_health[person] += wounds;
+                break;
+            case 12:
+                if (this.gm.sub.crew_health["Abwehr Agent"] >= 0) {
+                    toReturn = "The Abwehr Agent has been " + sevText;
+                    person = "Abwehr Agent";
+                    this.gm.sub.crew_health[person] += wounds;
+                }
+                else {
+                    toReturn = "Our crew narrowly avoided injury! ";
+                }
+                break;
+        }
+        return toReturn;
     }
 }
