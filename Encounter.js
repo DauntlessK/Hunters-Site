@@ -8,6 +8,7 @@ class Encounter {
 
         this.encounterType = encounterType;
         this.shipList = [];
+        this.shipsSunk = [];
 
         //Encounter "Scoreboard" for results
         this.numHits = 0;
@@ -56,6 +57,7 @@ class Encounter {
         this.firedAft = false;
         this.firedDeckGun = false;
         this.firedG7a = false;
+        this.wasDetected = false;
 
         this.encPop = null;
         this.start();
@@ -66,7 +68,6 @@ class Encounter {
         this.encPop = new EncounterPopup(this.tv, this.gm, this.encounterType, this.shipList);
         await until(_ => this.gm.eventResolved == true);
 
-        console.log(this.encounterType);
         if (this.encounterType == "No Encounter" || this.encounterType == "Aircraft") {
             //not sure what is needed here
         }
@@ -766,9 +767,11 @@ class Encounter {
         if (results != "Completely Undetected" || results != "Undetected") {
             this.gm.setSubEventResolved(false);
             if (majorDetection) {
+                this.wasDetected = true;
                 results = this.gm.sub.damage(2, "Depth Charges");
             }
             else {
+                this.wasDetected = true;
                 results = this.gm.sub.damage(1, "Depth Charges");
             }
             escortDetectionPopup.damageResults(results, majorDetection)

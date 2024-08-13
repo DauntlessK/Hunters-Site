@@ -16,6 +16,17 @@ class StatusPopup{
         this.element = document.createElement("div");
         this.element.classList.add("StatusMessage");
 
+        if (this.gm.patrolling) {
+            console.log(this.gm.logBook);
+            this.patrolSummary = this.gm.logBook[this.gm.patrolNum].getPatrolSummary();
+        }
+        else {
+            //Header only with departure entry
+            this.patrolSummary = this.gm.getFullUboatID() + " - " + this.gm.getLRankAndName() + "<br>";
+            this.patrolSummary = this.patrolSummary + this.gm.getFullDate() + ", in port";
+            this.patrolSummary = this.patrolSummary + "<p>Reported to boat for immediate departure.</p>" 
+        }
+
         //create correct popup based on message
         this.statusWindow();
         this.container.appendChild(this.element);
@@ -103,8 +114,8 @@ class StatusPopup{
                 <td>${healthShort[this.gm.sub.crew_health["Crew 4"]]}</td>
             </tr>
 
-            <div class="PatrolLog">
-                Patrol Log - #${this.gm.patrolNum}
+            <div class="Patrol_Log">
+                ${this.patrolSummary}
             </div>
             <button class="CloseStatus_button" id="close">Close</button>
             <button class="ReloadStatus_button" id="reload">${reload}</button>

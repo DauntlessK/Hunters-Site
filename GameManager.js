@@ -53,6 +53,7 @@ class GameManager{
         this.currentBox = 0;
         this.shipsSunk = [];
         this.shipsSunkOnCurrentPatrol = [];
+        this.logBook = [];
         this.damageDone = 0;
         this.hitsTaken = 0;
         this.randomEvents = 0;
@@ -245,6 +246,11 @@ class GameManager{
 
     beginPatrol() {
         this.patrolling = true;
+        var patrol = new PatrolLog(this.tv, this);
+        this.logBook.push(patrol);
+        if (this.patrolNum == 1) {
+            this.logBook.push(patrol);
+        }
         this.currentBox = 0;
         this.advancePatrol();
     }
@@ -252,8 +258,9 @@ class GameManager{
     //patrol sequence to go through patrol
     async advancePatrol() {
     
-        //close previous box and move to next square
+        //close previous box and move to next square --- HERE ALSO UPDATE CURRENT PATROL LOG
         if (this.currentBox > 0) {
+            this.logBook[this.patrolNum].addLastEncounter(this.currentEncounter);
             this.currentEncounter.encPop.done();
         }
         this.currentBox++;
