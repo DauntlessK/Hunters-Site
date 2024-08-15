@@ -125,7 +125,9 @@ class EscortDetectionPopup{
     }
     
     done(){
-        this.element.remove();
-        this.gm.setSubEventResolved(true);
+        if (!this.tv.isPaused) {
+            this.element.remove();
+            this.gm.setSubEventResolved(true);
+        }
     }
 }

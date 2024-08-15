@@ -16,8 +16,7 @@ class StatusPopup{
         this.element = document.createElement("div");
         this.element.classList.add("StatusMessage");
 
-        if (this.gm.patrolling) {
-            console.log(this.gm.logBook);
+        /**if (this.gm.patrolling) {
             this.patrolSummary = this.gm.logBook[this.gm.patrolNum].getPatrolSummary();
         }
         else {
@@ -25,7 +24,11 @@ class StatusPopup{
             this.patrolSummary = this.gm.getFullUboatID() + " - " + this.gm.getLRankAndName() + "<br>";
             this.patrolSummary = this.patrolSummary + this.gm.getFullDate() + ", in port";
             this.patrolSummary = this.patrolSummary + "<p>Reported to boat for immediate departure.</p>" 
-        }
+        }*/
+
+        console.log(this.gm.logBook);
+        this.patrolSummaryHeader = this.gm.logBook[this.gm.patrolNum].getPatrolHeader();
+        this.patrolSummary = this.gm.logBook[this.gm.patrolNum].getPatrolSummary();
 
         //create correct popup based on message
         this.statusWindow();
@@ -115,6 +118,7 @@ class StatusPopup{
             </tr>
 
             <div class="Patrol_Log">
+                ${this.patrolSummaryHeader}<br>
                 ${this.patrolSummary}
             </div>
             <button class="CloseStatus_button" id="close">Close</button>
@@ -125,12 +129,10 @@ class StatusPopup{
             if (event.target.id == "close"){
                 //close popup
                 this.done();
-                this.gm.eventResolved = true;
             }
             else if (event.target.id == "reload" && ! this.tv.isInEncounter) {
                 this.tv.enterReloadMode();
                 this.done();
-                this.gm.eventResolved = true;
             }
         })
     }
@@ -212,5 +214,6 @@ class StatusPopup{
         if (!this.gameWasAlreadyPaused) {
             this.tv.pauseGame(false);
         }
+        this.gm.statusResolved = true;
     }
 }

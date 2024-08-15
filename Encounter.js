@@ -58,6 +58,7 @@ class Encounter {
         this.firedDeckGun = false;
         this.firedG7a = false;
         this.wasDetected = false;
+        this.ignored = false;
 
         this.encPop = null;
         this.start();
@@ -91,6 +92,7 @@ class Encounter {
             //check if ignoring ship(s)
             var waitRoll = d6Roll();
             if (this.encPop.getChoice() == "ignore") {
+                this.ignored = true;
                 this.endEncounter();
                 return;
             }
@@ -747,14 +749,14 @@ class Encounter {
         if (escortRoll == 2) {
             results = "Completely Undetected";
         }
-        if (escortRoll + escortMods <= 8) {
+        else if (escortRoll + escortMods <= 8) {
             results = "Undetected";
         }
-        if (escortRoll + escortMods <= 11) {
-            //results = this.gm.sub.damage(1);
+        else if (escortRoll + escortMods <= 11) {
+            results = "Detected";
         }
         else if (escortRoll + escortMods >= 12) {
-            //results = this.gm.sub.damage(2);
+            results = "Detected";
             majorDetection = true;
         }
 
@@ -764,7 +766,7 @@ class Encounter {
         await until(_ => this.gm.subEventResolved == true);
 
         //Show damage results popup
-        if (results != "Completely Undetected" || results != "Undetected") {
+        if (results == "Detected") {
             this.gm.setSubEventResolved(false);
             if (majorDetection) {
                 this.wasDetected = true;
@@ -776,10 +778,8 @@ class Encounter {
             }
             escortDetectionPopup.damageResults(results, majorDetection)
             await until(_ => this.gm.subEventResolved == true);
-        }
 
-        //If detected, check detection again
-        if (results != "Completely Undetected" || "Undetected") {
+            //If detected, check detection again
             this.depth = "Periscope Depth";  //reset depth (in case "Deep" was selected)
             this.escortDetection(true, wpMod, false);
         }

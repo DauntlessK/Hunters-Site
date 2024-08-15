@@ -9,7 +9,7 @@ class OpenStatusButton extends Button {
 
     //Opens Uboat Status Popup
     openStatus(){
-        this.gm.eventResolved = false;
+        this.gm.statusResolved = false;
         const popup = new StatusPopup(this.tv, this.gm);
     }
 }

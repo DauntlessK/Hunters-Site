@@ -3,30 +3,41 @@ class PatrolLog{
         this.tv = tv;
         this.gm = gm;
 
+        this.patrolSummaryHeader = "";
         this.patrolSummary = "";
         this.totalGRT = 0;
 
         this.currentDay = d6Roll();
 
-        this.setHeader();
     }
 
     getPatrolSummary() {
         return this.patrolSummary;
     }
 
-    setHeader() {
-        //Header
-        this.patrolSummary = this.patrolSummary + this.gm.getFullUboatID() + " - " + this.gm.getLRankAndName() + "<br>";
-        this.patrolSummary = this.patrolSummary + this.gm.getFullDate() + ", " + this.gm.patrolCount[this.gm.patrolNum] + " patrol<br>";
-        this.patrolSummary = this.patrolSummary + this.gm.currentOrdersLong;
-        //Subheader - GRT Summary
-        if (this.gm.shipsSunkOnCurrentPatrol.length == 1) {
-            this.patrolSummary = this.patrolSummary + "1 ship sunk for " + this.getTotalGRT() + " GRT <br>";
+    getPatrolHeader() {
+        this.patrolSummaryHeader = "";
+        //If not at the start of the game
+        if (this.gm.patrolNum > 0) {
+            //Header
+            this.patrolSummaryHeader = this.patrolSummaryHeader + this.gm.getFullUboatID() + " - " + this.gm.getLRankAndName() + "<br>";
+            this.patrolSummaryHeader = this.patrolSummaryHeader + this.gm.getFullDate() + ", " + this.gm.patrolCount[this.gm.patrolNum] + " patrol<br>";
+            this.patrolSummaryHeader = this.patrolSummaryHeader + this.gm.currentOrdersLong;
+            //Subheader - GRT Summary
+            if (this.gm.shipsSunkOnCurrentPatrol.length == 1) {
+                this.patrolSummaryHeader = this.patrolSummaryHeader + "<br>1 ship sunk for " + this.getTotalGRT() + " GRT <br>";
+            }
+            else if (this.gm.shipsSunkOnCurrentPatrol.length > 1) {
+                this.patrolSummaryHeader = this.patrolSummaryHeader + "<br>" + this.gm.shipsSunkOnCurrentPatrol.length.toString() +  " ships sunk totaling " + this.getTotalGRT() + " GRT <br>";
+            }
         }
-        else if (this.gm.shipsSunkOnCurrentPatrol.length > 1) {
-            this.patrolSummary = this.patrolSummary + this.gm.shipsSunkOnCurrentPatrol.length.toString() +  " ships sunk totaling " + this.getTotalGRT() + " GRT <br>";
+        else {
+            this.patrolSummaryHeader = this.gm.getFullUboatID() + " - " + this.gm.getLRankAndName() + "<br>";
+            this.patrolSummaryHeader = this.patrolSummaryHeader + this.gm.getFullDate() + ", in port";
+            this.patrolSummaryHeader = this.patrolSummaryHeader + "<p>Reported to boat for immediate departure.</p>" 
         }
+
+        return this.patrolSummaryHeader;
     }
 
     addLastEncounter(enc) {
@@ -58,8 +69,11 @@ class PatrolLog{
             }
 
             //Results of attack
-            if (enc.shipsSunk.length == 0) {
-                lineEntry = "Unable to sink any targets. "
+            if (enc.shipsSunk.length == 0 && enc.ignored) {
+                lineEntry = lineEntry + "Did not engage. "
+            }
+            else if (enc.shipsSunk.length == 0) {
+                lineEntry = lineEntry + "Unable to sink any targets. "
             }
             else {
                 //sunk any ships
@@ -94,12 +108,13 @@ class PatrolLog{
 
     //Gets current GRT sunk on this patrol
     getTotalGRT() {
+        this.totalGRT = 0;
         for (let i = 0; i < this.gm.shipsSunkOnCurrentPatrol.length; i++) {
-            console.log("Adding");
             this.totalGRT = this.totalGRT + this.gm.shipsSunkOnCurrentPatrol[i].getGRT();
         }
-
-        return this.totalGRT.toString();
+        var stringReturn = this.totalGRT.toString();
+        stringReturn.replace(/^0+/, "");
+        return stringReturn;
     }
 
     //No encounter for transit

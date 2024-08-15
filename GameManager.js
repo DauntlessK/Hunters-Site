@@ -4,6 +4,7 @@ class GameManager{
         this.tv = tv;
         this.sub = null;
         this.eventResolved = true;
+        this.statusResolved = true;
         this.subEventResolved = true;
 
         this.kmdt = "";
@@ -31,7 +32,7 @@ class GameManager{
                             "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth",
                             "seventeenth", "eighteenth", "nineteenth", "twentieth", "twenty-first", "twenty-second",
                             "twenty-third", "twenty-fourth"];
-        this.patrolNum = 1;
+        this.patrolNum = 0;
         this.missionComplete = false;
         this.successfulPatrols = 0;
         this.unsuccessfulPatrols = 0;
@@ -72,6 +73,10 @@ class GameManager{
             this.tv.mainUI.rank = this.rank[this.sub.crew_levels["Kommandant"]] + " " + this.kmdt;
             this.tv.mainUI.date = this.getFullDate();
         }
+
+        //Create first log
+        var patrol = new PatrolLog(this.tv, this);
+        this.logBook.push(patrol);
 
         //Popup to greet start of game
         this.setEventResolved(false);
@@ -246,11 +251,9 @@ class GameManager{
 
     beginPatrol() {
         this.patrolling = true;
+        this.patrolNum++;
         var patrol = new PatrolLog(this.tv, this);
         this.logBook.push(patrol);
-        if (this.patrolNum == 1) {
-            this.logBook.push(patrol);
-        }
         this.currentBox = 0;
         this.advancePatrol();
     }

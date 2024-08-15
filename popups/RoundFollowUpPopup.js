@@ -97,7 +97,9 @@ class RoundFollowUpPopup{
     }
     
     done(){
-        this.element.remove();
-        this.gm.setEventResolved(true);
+        if (!this.tv.isPaused) {
+            this.element.remove();
+            this.gm.setEventResolved(true);
+        }
     }
 }

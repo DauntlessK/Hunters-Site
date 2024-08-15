@@ -448,7 +448,7 @@ class Uboat{
                 if (this.tubeFiring[i] == true) {
                     this.tube[i] = 0;
                 }
-                this.tubeFiring[i] == false;
+                this.tubeFiring[i] = false;
             }
         }
         this.isFiringFore = false;

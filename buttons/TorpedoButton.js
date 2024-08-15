@@ -127,6 +127,9 @@ class TorpedoButton extends Button{
         }
         //When pressed when in firing mode, and a target is selected, AND not firing deck gun
         else if (this.tv.firingMode && this.tv.currentTarget >= 0 && this.gm.sub.isFiringDeckGun == 0) {
+            if (this.currentState == "Disabled") {
+                return;
+            }
             //First check to ensure the tube pressed can be fired
             //Check Torpedo Doors are operational
             if (this.gm.sub.systems["Forward Torpedo Doors"] > 0 && this.tube <= 4) {
