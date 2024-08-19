@@ -84,6 +84,16 @@ class TorpedoButton extends Button{
             else if ((this.tube <= 4 && this.gm.sub.minesLoadedForward) || (this.tube >= 5 && this.gm.sub.minesLoadedForwardAft)) {
                 this.changeState("Disabled");
             }
+            //Disable if firing deck gun
+            else if (this.gm.sub.isFiringDeckGun) {
+                this.changeState("Disabled");
+            }
+            else if (!this.gm.sub.isFiringDeckGun && this.gm.sub.canFire("Fore") && this.tube <= 4) {
+                this.changeState("Enable");
+            }
+            else if (!this.gm.sub.isFiringDeckGun && this.gm.sub.canFire("Aft") && this.tube >= 5) {
+                this.changeState("Enable");
+            }
         }
         //Normal mode (not interactable)
         else {

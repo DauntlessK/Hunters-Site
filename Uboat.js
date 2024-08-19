@@ -350,28 +350,38 @@ class Uboat{
         return numInOp
     }
 
-    //Returns true if the given weapon has ammo
+    //Returns true if the given weapon has ammo and is functional
     canFire(location) {
         if (location == "Fore") {
+            //check first 4 tubes
             for (let i = 1; i < 5; i++) {
-                if (this.tube[i] > 0) {
+                //Check if tube is 1 or 2 (G7a or G7e, not empty or mines)
+                if (this.tube[i] > 0 && this.tube[i] < 3 && this.systems["Forward Torpedo Doors"] == 0) {
                     return true;
                 }
             }
         }
         else if (location == "Aft") {
+            //check rest of tubes after tube 4
             for (let i = 5; i < 7; i++) {
-                if (this.tube[i] > 0) {
+                //Check if tube is 1 or 2 (G7a or G7e, not empty or mines)
+                if (this.tube[i] > 0 && this.tube[i] < 3 && this.systems["Aft Torpedo Doors"] == 0) {
                     return true;
                 }
             }
         }
         else {
-            if (this.deck_gun_ammo > 0) {
+            //check deck gun ammo
+            if (this.deck_gun_ammo > 0 && this.systems["Deck Gun"] == 0) {
                 return true;
             }
         }
         return false;
+    }
+
+    //returns true if the boat has 
+    hasAmmo() {
+
     }
 
     //Adds (or removes) a torpedo from a given tube
@@ -454,6 +464,8 @@ class Uboat{
         this.isFiringFore = false;
         this.isFiringAft = false;
         this.isFiringForeAndAft = false;
+        this.isFiringTorpedoes = false;
+        this.isFiringDeckGun = false;
     }
 
     isCrewKnockedOut() {
