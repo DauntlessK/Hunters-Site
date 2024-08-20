@@ -53,7 +53,7 @@ class PatrolLog{
                 lineEntry = lineEntry + "Successfully TBD--TODO"
             }
             else {
-                lineEntry = lineEntry + "Patrolled area - no ships found.";
+                lineEntry = lineEntry + "Patrolled area - no ships found";
             }
         }
         //If encounter is a ship / attack encounter
@@ -82,6 +82,9 @@ class PatrolLog{
                     sunkText = sunkText + enc.shipsSunk[i].getName() + ", " + enc.shipsSunk[i].getGRT() + "GRT";
                     if (i != enc.shipsSunk.length - 1) {
                         sunkText = sunkText + ", ";
+                    }
+                    else {
+                        sunkText = sunkText + ". ";
                     }
                 }
                 lineEntry = lineEntry + sunkText;

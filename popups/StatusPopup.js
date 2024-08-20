@@ -25,8 +25,7 @@ class StatusPopup{
             this.patrolSummary = this.patrolSummary + this.gm.getFullDate() + ", in port";
             this.patrolSummary = this.patrolSummary + "<p>Reported to boat for immediate departure.</p>" 
         }*/
-
-        console.log(this.gm.logBook);
+       
         this.patrolSummaryHeader = this.gm.logBook[this.gm.patrolNum].getPatrolHeader();
         this.patrolSummary = this.gm.logBook[this.gm.patrolNum].getPatrolSummary();
 

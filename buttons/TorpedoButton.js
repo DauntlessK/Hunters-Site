@@ -88,10 +88,11 @@ class TorpedoButton extends Button{
             else if (this.gm.sub.isFiringDeckGun) {
                 this.changeState("Disabled");
             }
-            else if (!this.gm.sub.isFiringDeckGun && this.gm.sub.canFire("Fore") && this.tube <= 4) {
+            //Re-enable if not firing deck gun and can fire that side of ship
+            else if (!this.gm.currentEncounter.depth == "Periscope Depth" && !this.gm.sub.isFiringDeckGun && this.gm.sub.canFire("Fore") && this.tube <= 4 && this.currentState == "Disabled") {
                 this.changeState("Enable");
             }
-            else if (!this.gm.sub.isFiringDeckGun && this.gm.sub.canFire("Aft") && this.tube >= 5) {
+            else if (!this.gm.currentEncounter.depth == "Periscope Depth" && !this.gm.sub.isFiringDeckGun && this.gm.sub.canFire("Aft") && this.tube >= 5  && this.currentState == "Disabled") {
                 this.changeState("Enable");
             }
         }
@@ -130,7 +131,7 @@ class TorpedoButton extends Button{
             else if (this.gm.sub.tube[this.tube] == 1){
                 this.gm.sub.loadTube(this.tube, 2);
             }
-            //If tube contains G73
+            //If tube contains G7e
             else if (this.gm.sub.tube[this.tube] == 2){
                 this.gm.sub.loadTube(this.tube, 1);
             }

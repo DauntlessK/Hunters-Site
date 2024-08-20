@@ -115,22 +115,30 @@
     padding-right: 200px;
 }
 
-#Convoy {
-    visibility: hidden;
+.FollowMessage {
+    font-size: 10;
+    position: absolute;
+    left: 25px;
+    right: 370px;
+    bottom: 25px;
+    padding: 15px;
+    font-family: courier;
+    background: var(--menu-background);
+    border-top: 1px solid var (--menu-font-color);
+    border-top: 1px solid var (--menu-border-color);
+    color: var(--menu-font-color);
+    outline: 2px solid #000;
+    max-height: 120px;
+    columns: 4;
+    column-gap: 20px;
 }
 
-#Ship1 {
-    visibility: hidden;
+h3 {
+    column-span: all;
 }
 
-#Ship2 {
-    visibility: hidden;
-}
-
-#Ship3 {
-    visibility: hidden;
-}
-
-#Ship4 {
-    visibility: hidden;
+.FollowMessage_p {
+    font-size: 12;
+    font-family: courier;
+    margin-top: 0px;
 }
