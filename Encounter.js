@@ -42,7 +42,7 @@ class Encounter {
         this.shipListLoaded = true;
 
         this.tv.enterEncounter();
-        this.timeOfDay = this.getTimeOfDay(false)
+        this.timeOfDay = this.getTimeOfDay(false);
         this.tv.changeScene(this.encounterType, this.timeOfDay, this, false);
 
         this.gm.setEventResolved(false);
@@ -60,14 +60,15 @@ class Encounter {
         this.wasDetected = false;
         this.wasDetectedAtCloseRange = false;
         this.ignored = false;
+        this.follow = "";
 
         this.encPop = null;
-        this.start();
+        this.start(this.encounterType);
     }
 
-    async start() {
+    async start(encType) {
         //create popup based on that encounter to begin encounter
-        this.encPop = new EncounterPopup(this.tv, this.gm, this.encounterType, this.shipList);
+        this.encPop = new EncounterPopup(this.tv, this.gm, encType, this.shipList);
         await until(_ => this.gm.eventResolved == true);
 
         if (this.encounterType == "No Encounter" || this.encounterType == "Aircraft") {
@@ -79,7 +80,7 @@ class Encounter {
     }
 
     //Starts engagement of ship or ship(s)
-    async attackFlow() {
+    async attackFlow(newAttack) {
 
         //If mines are on the boat, ignore encounter TODO FIX
         if (this.gm.sub.minesLoadedForward && this.gm.sub.minesLoadedAft && this.shipList[0].getType() == "Escort") {
@@ -88,37 +89,39 @@ class Encounter {
             return;
         }
 
-        //check if ignoring ship(s)
-        var waitRoll = d6Roll();
-        if (this.encPop.getChoice() == "ignore") {
-            this.ignored = true;
-            this.endEncounter();
-            return;
-        }
-        //check if waiting - see if roll to wait is successful
-        else if (this.encPop.getChoice() == "wait") {
-            if (waitRoll >= 5) {
-                console.log("TODO deal with lost them!");
-                if (this.timeOfDay == "Night") {
-                    this.timeOfDay = "Day";
-                    this.tv.changeScene(this.encounterType, this.timeOfDay, null, true);
-                }
-                else {
-                    this.timeOfDay = "Night";
-                    this.tv.changeScene(this.encounterType, this.timeOfDay, null, true);
-                }
+        if (newAttack){
+            //check if ignoring ship(s)
+            var waitRoll = d6Roll();
+            if (this.encPop.getChoice() == "ignore") {
+                this.ignored = true;
                 this.endEncounter();
                 return;
             }
-            else {
-                console.log("Successfully followed!");
-                if (this.timeOfDay == "Night") {
-                    this.timeOfDay = "Day";
-                    this.tv.changeScene(this.encounterType, this.timeOfDay, this, true);
+            //check if waiting - see if roll to wait is successful
+            else if (this.encPop.getChoice() == "wait") {
+                if (waitRoll >= 5) {
+                    console.log("TODO deal with lost them!");
+                    if (this.timeOfDay == "Night") {
+                        this.timeOfDay = "Day";
+                        this.tv.changeScene(this.encounterType, this.timeOfDay, null, true);
+                    }
+                    else {
+                        this.timeOfDay = "Night";
+                        this.tv.changeScene(this.encounterType, this.timeOfDay, null, true);
+                    }
+                    this.endEncounter();
+                    return;
                 }
                 else {
-                    this.timeOfDay = "Night";
-                    this.tv.changeScene(this.encounterType, this.timeOfDay, this, true);
+                    console.log("Successfully followed!");
+                    if (this.timeOfDay == "Night") {
+                        this.timeOfDay = "Day";
+                        this.tv.changeScene(this.encounterType, this.timeOfDay, this, true);
+                    }
+                    else {
+                        this.timeOfDay = "Night";
+                        this.tv.changeScene(this.encounterType, this.timeOfDay, this, true);
+                    }
                 }
             }
         }
@@ -205,8 +208,55 @@ class Encounter {
         if (this.hasSinkableShip() || this.encounterType == "Convoy") {
             //Need to get input from player to see if attack will continue, follow, or leave
             var choice = this.followCheck();
-            if (choice != "Ignore") {
-                console.log(choice);
+            
+            switch (choice) {
+                case "Ignore":
+                    this.endEncounter();
+                    break;
+                case "Lost Convoy":
+                    this.follow = " Attempted to follow convoy, but lost contact.";
+                    this.endEncounter();
+                    break;
+                case "Lost":
+                    this.follow = " Attempted to follow ship, but lost contact.";
+                    this.endEncounter();
+                    break;
+                case "Lost - Can't Follow":    //for Capital Ships
+                    this.follow = " Attempted to follow " + this.shipList[1].getName() + ", but lost her.";
+                    this.endEncounter();
+                    break;
+                case "Convoy":    //attack 4 new ships convoy
+                    this.tv.enterReloadMode();
+                    this.shipList = this.getShips("Convoy");
+                    this.timeOfDay = this.getTimeOfDay(false);
+                    this.attackDepth = "";
+                    this.depth = "";               //Surfaced, Periscope Depth, or Deep
+                    this.range = "";               //Close, Medium, or Long
+                    this.rangeNum = 0;             //8, 7, 6
+                    return;
+                case "Ship":
+                    this.tv.changeScene("Ship", this.timeOfDay, this, false);
+                    this.tv.enterReloadMode();
+                    this.attackDepth = "";
+                    this.depth = "";               //Surfaced, Periscope Depth, or Deep
+                    this.range = "";               //Close, Medium, or Long
+                    this.rangeNum = 0;             //8, 7, 6
+                    this.start("Ship");
+                    return;
+                case "Ship + Escort":
+                    this.timeOfDay = this.getTimeOfDay(false);
+                    this.tv.changeScene("Ship + Escort", this.timeOfDay, this, false);
+                    this.tv.enterReloadMode();
+                    this.attackDepth = "";
+                    this.depth = "";               //Surfaced, Periscope Depth, or Deep
+                    this.range = "";               //Close, Medium, or Long
+                    this.rangeNum = 0;             //8, 7, 6
+                    this.start("Ship + Escort");
+                    return
+                default:
+                    console.log("DEFAULT");
+
+
             }
         }
         else {
@@ -226,13 +276,13 @@ class Encounter {
         }
     }
 
-    resetEncounter(followChoice) {
+    /**NOT USED
+     * resetEncounter(followChoice) {
         if (this.depth != "Surfaced") {
             this.tv.uboat.sprite.surface();
         }
-
         this.attackFlow();
-    }
+    }*/ 
 
     endEncounter() {
         this.tv.changeScene("", this.timeOfDay, null, false);
@@ -669,6 +719,7 @@ class Encounter {
         }
     }
 
+    //Gets the choice from the player on what to follow, then checks if possible, rolls, etc
     async followCheck() {
         //First determine if player WANTS to follow
         this.gm.setEventResolved(false);
@@ -679,10 +730,16 @@ class Encounter {
         var shipToFollow = null;
 
         if (followChoice == "Ignore") {
-            return;
+            return followChoice;
         }
         else if (followChoice == "Convoy") {
-
+            var followRoll = d6Roll();
+            if (followRoll <= 4) {
+                return "Convoy";
+            }
+            else {
+                return "Lost Convoy";
+            }
         }
         else {
             switch (followChoice) {
@@ -704,10 +761,57 @@ class Encounter {
             }
         }
 
-        //Check first if capital ship
-
-
-        return followChoice;
+        //Check first if capital ship and undamaged
+        if (shipToFollow.getType() == "Capital Ship" && shipToFollow.damage == 0) {
+            return "Lost - Can't Follow";
+        }
+        //If following a ship
+        else {
+            //Check to see if aircraft or escort shows up (additional round roll)
+            if (!this.isEscorted()) {
+                var roll = d6Rollx2();
+                if (year == 1942) {roll = roll - 1;}
+                if (year == 1943) {roll = roll - 2;}
+                if (roll <= 3) {
+                    //escort shows up
+                    var newShipList = [];
+                    var esc = new Ship(this.gm, "Escort", this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders);
+                    newShipList.push(esc);
+                    newShipList.push(shipToFollow);
+                    this.shipList = newShipList;
+                    return "Ship";
+                }
+                else if (roll <= 5) {
+                    //aircraft encounter
+                    console.log("TODO AIRCRAFT");
+                    return "Ship"; //!!!!!!!!!!!!!!!
+                }
+                //No escort / aircraft show up, start attack flow again
+                else {
+                    return "Ship";
+                }
+            }
+            //Escorted
+            else {
+                var roll = d6Rollx2();
+                //Escort leaves
+                if (roll >= 5) {
+                    var newShipList = [];
+                    newShipList.push(shipToFollow);
+                    this.shipList = newShipList;
+                    return "Ship";
+                }
+                //Stays Escorted
+                else {
+                    var newShipList = [];
+                    newShipList.push(this.shipList[0]);
+                    newShipList.push(shipToFollow);
+                    this.shipList = newShipList;
+                    return "Ship + Escort";
+                }
+            }
+            //return shipToFollow;   ??
+        }
     }
 
     //Determines if the torpedo that hit was a dud based on year and D6 roll
