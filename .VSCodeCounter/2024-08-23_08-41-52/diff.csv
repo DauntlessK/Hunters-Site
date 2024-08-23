@@ -1,0 +1,24 @@
+"filename", "language", "JavaScript", "HTML", "CSS", "comment", "blank", "total"
+"c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\Encounter.js", "JavaScript", 198, 0, 0, 21, 13, 232
+"c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\GameManager.js", "JavaScript", 12, 0, 0, 1, 2, 15
+"c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\PatrolLog.js", "JavaScript", 102, 0, 0, 10, 15, 127
+"c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\Ship.js", "JavaScript", 2, 0, 0, 0, 0, 2
+"c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\TacticalView.js", "JavaScript", -5, 0, 0, 0, 0, -5
+"c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\Uboat.js", "JavaScript", 235, 0, 0, 44, 15, 294
+"c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\buttons\BeginPatrolButton.js", "JavaScript", 2, 0, 0, 0, 0, 2
+"c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\buttons\DeckGunButton.js", "JavaScript", 18, 0, 0, 2, 0, 20
+"c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\buttons\TorpedoButton.js", "JavaScript", 24, 0, 0, 5, 0, 29
+"c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\index.html", "HTML", 0, 3, 0, 0, 0, 3
+"c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\AttackDepthAndRangePopup.js", "JavaScript", 2, 0, 0, 0, 0, 2
+"c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\EncounterPopup.js", "JavaScript", 2, 0, 0, 0, 0, 2
+"c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\EscortDetectionPopup.js", "JavaScript", 111, 0, 0, 5, 17, 133
+"c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\EscortDetectionStartPopup.js", "JavaScript", -69, 0, 0, -7, -13, -89
+"c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\FollowPopup.js", "JavaScript", 54, 0, 0, 10, 14, 78
+"c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\FollowTimePopup.js", "JavaScript", 33, 0, 0, 3, 9, 45
+"c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\RoundFollowUpPopup.js", "JavaScript", 87, 0, 0, 7, 11, 105
+"c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\RoundResultsPopup.js", "JavaScript", 33, 0, 0, 2, 7, 42
+"c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\StatusPopup.js", "JavaScript", 56, 0, 0, 21, 12, 89
+"c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\styles\EncounterPopup.css", "CSS", 0, 0, 58, 0, 6, 64
+"c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\styles\Popup.css", "CSS", 0, 0, 1, 0, 0, 1
+"c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\styles\StatusPopup.css", "CSS", 0, 0, 19, 0, 2, 21
+"Total", "-", 897, 3, 78, 124, 110, 1212
