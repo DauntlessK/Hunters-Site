@@ -21,6 +21,9 @@ class EncounterPopup{
             case "Aircraft":
                 this.encounterAircraft();
                 break;
+            case "Mission":
+                this.mission();
+                break;
             default:
                 this.ships();
                 break;
@@ -87,6 +90,38 @@ class EncounterPopup{
             <p class="PatrolMessage_p">Aircraft!<br>
             </p>
         `)
+
+        this.container.appendChild(this.element);
+        this.gm.setEventResolved(true);
+        this.tv.finishEncounter();
+    }
+
+    //Popup for mission (abwehr agent or minelaying)
+    mission(){
+
+        //Determine if abwehr or minelaying
+        if (this.gm.currentOrders.includes("Minelaying")) {
+            this.element.innerHTML = (`
+                <p class="PatrolMessage_p">We are approaching our designated mine area.<br>
+                </p>
+                <button class="Continue_button" id="continue">Continue</button>
+            `)
+        }
+        else {
+            this.element.innerHTML = (`
+                <p class="PatrolMessage_p">We are approaching the coastline where we need to delivery the abwehr agent.<br>
+                </p>
+                <button class="Continue_button" id="continue">Continue</button>
+            `)
+        }
+
+        this.element.addEventListener("click", ()=> {
+            var action = null;
+            if (event.target.id == "continue"){
+                //close popup
+                this.done(event.target.id);
+            }
+        })
 
         this.container.appendChild(this.element);
         this.gm.setEventResolved(true);

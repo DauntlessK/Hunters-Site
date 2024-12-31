@@ -1,7 +1,7 @@
 class Encounter {
     constructor(tv, gm, encounterType, existingShips) {
         this.shipListLoaded = false;
-        if (encounterType != "No Encounter") { console.log("ALARRRRM!  " + encounterType); }
+        if (encounterType != "No Encounter" || encounterType != "Mission") { console.log("ALARRRRM!  " + encounterType); }
 
         this.tv = tv;
         this.gm = gm;
