@@ -100,15 +100,16 @@ class UI{
         });
         //Fire Weapons button
         this.fireButton = new FireAttackButton({
-            src: "images/ui/CommitButton.png",
+            src: "images/ui/FireButton.png",
             x: 1200,
             y: 580,
             width: 50,
             height: 50,
-            frames: 2,
+            frames: 4,
             gm: this.gm,
             tv: this.tv,
         });
+        this.fireButton.changeState("Disabled");  //initial setting for fireButton is disabled
 
         //flood gauge
         var fgaugeSrc = "images/ui/FloodGauge" + this.gm.sub.flooding_hp + ".png";
@@ -155,7 +156,6 @@ class UI{
 
     //passes events from UI to individual buttons
     handleEvent(){
-
         for (let i = 1; i < 7; i++) {
             this.tubeButtonArray[i].handleEvent(event);
         }
@@ -200,13 +200,20 @@ class UI{
                 this.reloadButton.draw(ctx);
             }
             this.drawHeaderTxt(ctx);
+
+            //If Patrolling and not in reload mode
             if (!this.tv.reloadMode && this.gm.patrolling){
                 this.telegraph.draw(ctx);
                 this.deckGunButton.draw(ctx);
                 if (!this.tv.isInEncounter && !this.tv.statusMode) {
                     this.continueButton.draw(ctx);
                 }
+                else {
+                    this.fireButton.draw(ctx);
+                }
             }
+
+            //To start patrol
             if (!this.tv.reloadMode && !this.gm.patrolling){
                 this.beginPatrolButton.draw(ctx);
             }
@@ -223,7 +230,15 @@ class UI{
                   })
             }
             if (this.gm.sub.isFiring()) {
+                if (this.fireButton.currentState != "Enabled" && this.fireButton.currentState != "Hover" && this.fireButton.currentState != "Active") {
+                    this.fireButton.changeState("Enabled");
+                }
                 this.fireButton.draw(ctx);
+            }
+            else {
+                if (this.fireButton.currentState != "Disabled") {
+                    this.fireButton.changeState("Disabled");
+                }
             }
         }
     }
@@ -234,6 +249,7 @@ class UI{
             0, 0
           )
     }
+
     drawHeaderTxt(ctx){
         //draws all text-based UI elements
         //Sub #

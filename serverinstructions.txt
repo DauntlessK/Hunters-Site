@@ -1,0 +1,5 @@
+To run a http-server (so JS works)
+
+run command prompt
+cd to folder
+run code: "http-server -1-c"
