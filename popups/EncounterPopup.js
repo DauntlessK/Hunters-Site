@@ -139,9 +139,11 @@ class EncounterPopup{
     }
     
     done(id){
-        this.element.remove();
-        this.gm.setEventResolved(true);
-        this.choice = id;
+        if (!this.tv.isPaused) {
+            this.element.remove();
+            this.gm.setEventResolved(true);
+            this.choice = id;
+        }
     }
 
     getChoice() {

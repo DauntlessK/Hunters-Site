@@ -70,7 +70,7 @@ class TacticalView{
 
     enterReloadMode() {
         this.reloadMode = true;
-        this.mainUI.reloadButton.changeState("Enable")
+        this.mainUI.reloadButton.changeState("Enable");
     }
 
     commitReload() {

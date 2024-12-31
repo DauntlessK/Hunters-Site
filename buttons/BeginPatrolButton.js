@@ -4,7 +4,9 @@ class BeginPatrolButton extends Button {
     }
 
     click() {
-        this.beginPatrol();
+        if (!this.tv.isPaused){
+            this.beginPatrol();
+        }
     }
 
     //for begin patrol button to start patrol loop

@@ -4,6 +4,8 @@ class GameManager{
         this.tv = tv;
         this.sub = null;
         this.eventResolved = true;
+        this.statusResolved = true;
+        this.subEventResolved = true;
 
         this.kmdt = "";
         this.id = "";
@@ -30,7 +32,7 @@ class GameManager{
                             "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth",
                             "seventeenth", "eighteenth", "nineteenth", "twentieth", "twenty-first", "twenty-second",
                             "twenty-third", "twenty-fourth"];
-        this.patrolNum = 1;
+        this.patrolNum = 0;
         this.missionComplete = false;
         this.successfulPatrols = 0;
         this.unsuccessfulPatrols = 0;
@@ -52,6 +54,7 @@ class GameManager{
         this.currentBox = 0;
         this.shipsSunk = [];
         this.shipsSunkOnCurrentPatrol = [];
+        this.logBook = [];
         this.damageDone = 0;
         this.hitsTaken = 0;
         this.randomEvents = 0;
@@ -71,6 +74,10 @@ class GameManager{
             this.tv.mainUI.date = this.getFullDate();
         }
 
+        //Create first log
+        var patrol = new PatrolLog(this.tv, this);
+        this.logBook.push(patrol);
+
         //Popup to greet start of game
         this.setEventResolved(false);
         this.setDate();
@@ -82,6 +89,10 @@ class GameManager{
 
     setEventResolved(state) {
         this.eventResolved = state;
+    }
+
+    setSubEventResolved(state) {
+        this.subEventResolved = state;
     }
 
     getFullUboatID(){
@@ -240,6 +251,9 @@ class GameManager{
 
     beginPatrol() {
         this.patrolling = true;
+        this.patrolNum++;
+        var patrol = new PatrolLog(this.tv, this);
+        this.logBook.push(patrol);
         this.currentBox = 0;
         this.advancePatrol();
     }
@@ -247,8 +261,9 @@ class GameManager{
     //patrol sequence to go through patrol
     async advancePatrol() {
     
-        //close previous box and move to next square
+        //close previous box and move to next square --- HERE ALSO UPDATE CURRENT PATROL LOG
         if (this.currentBox > 0) {
+            this.logBook[this.patrolNum].addLastEncounter(this.currentEncounter);
             this.currentEncounter.encPop.done();
         }
         this.currentBox++;

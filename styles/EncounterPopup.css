@@ -78,3 +78,67 @@
     bottom: 15px;
     width: 188px;
 }
+
+.ContinuePopup_button {
+    margin: 0;
+    background-color: lightyellow;
+    font-size: 16px;
+    padding: 5px;
+    -webkit-appearance: none;
+    font-family: inherit;
+    cursor: pointer;
+    position: absolute;
+    right: 15px;
+    bottom: 10px;
+    width: 150px;
+}
+
+.DiveDeepPopup_button {
+    margin: 0;
+    background-color: lightcoral;
+    font-size: 16px;
+    padding: 5px;
+    -webkit-appearance: none;
+    font-family: inherit;
+    cursor: pointer;
+    position: absolute;
+    right: 15px;
+    bottom: 46px;
+    width: 150px;
+}
+
+.DetectionTextMessage_p {
+    margin: 0;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    padding-right: 200px;
+}
+
+.FollowMessage {
+    font-size: 10;
+    position: absolute;
+    left: 25px;
+    right: 370px;
+    bottom: 25px;
+    padding: 15px;
+    font-family: courier;
+    background: var(--menu-background);
+    border-top: 1px solid var (--menu-font-color);
+    border-top: 1px solid var (--menu-border-color);
+    color: var(--menu-font-color);
+    outline: 2px solid #000;
+    max-height: 120px;
+    columns: 4;
+    column-gap: 20px;
+}
+
+h3 {
+    column-span: all;
+}
+
+.FollowMessage_p {
+    font-size: 12;
+    font-family: courier;
+    margin-top: 0px;
+}

@@ -16,12 +16,26 @@ class StatusPopup{
         this.element = document.createElement("div");
         this.element.classList.add("StatusMessage");
 
+        /**if (this.gm.patrolling) {
+            this.patrolSummary = this.gm.logBook[this.gm.patrolNum].getPatrolSummary();
+        }
+        else {
+            //Header only with departure entry
+            this.patrolSummary = this.gm.getFullUboatID() + " - " + this.gm.getLRankAndName() + "<br>";
+            this.patrolSummary = this.patrolSummary + this.gm.getFullDate() + ", in port";
+            this.patrolSummary = this.patrolSummary + "<p>Reported to boat for immediate departure.</p>" 
+        }*/
+       
+        this.patrolSummaryHeader = this.gm.logBook[this.gm.patrolNum].getPatrolHeader();
+        this.patrolSummary = this.gm.logBook[this.gm.patrolNum].getPatrolSummary();
+
         //create correct popup based on message
-        this.startGameTextElement();
+        this.statusWindow();
         this.container.appendChild(this.element);
+        this.updateSystems();
     }
 
-    startGameTextElement() {
+    statusWindow() {
         //Message to announce starting rank, sub, date, etc
 
         const healthShort = ["OK", "LW", "SW", "KIA"];
@@ -35,71 +49,77 @@ class StatusPopup{
             <img src = "images/ui/Status.png">
             <p class="Type">Type: ${this.gm.sub.getType()}</p>
             <p class="Patrol">Patrol # ${this.gm.patrolNum}</p>
-            <p class="EEngine1">Electric Engine #1</p>
-            <p class="EEngine2">Electric Engine #2</p>
-            <p class="DEngine1">Diesel Engine #1</p>
-            <p class="DEngine2">Diesel Engine #2</p>
-            <p class="Periscope">Periscope</p>
-            <p class="Radio">Radio</p>
-            <p class="Hydrophones">Hydrophones</p>
-            <p class="Batteries">Batteries</p>
-            <p class="FTDoors">Forward Torpedo Doors</p>
-            <p class="ATDoors">Aft Torpedo Doors</p>
-            <p class="DivePlanes">Dive Planes</p>
-            <p class="FuelTanks">Fuel Tanks</p>
-            <p class="DeckGun">Deck Gun</p>
-            <p class="FlakGun">Flak Gun</p>
+            <p id="ElectricEngine1">Electric Engine #1</p>
+            <p id="ElectricEngine2">Electric Engine #2</p>
+            <p id="DieselEngine1">Diesel Engine #1</p>
+            <p id="DieselEngine2">Diesel Engine #2</p>
+            <p id="Periscope">Periscope</p>
+            <p id="Radio">Radio</p>
+            <p id="Hydrophones">Hydrophones</p>
+            <p id="Batteries">Batteries</p>
+            <p id="ForwardTorpedoDoors">Forward Torpedo Doors</p>
+            <p id="AftTorpedoDoors">Aft Torpedo Doors</p>
+            <p id="DivePlanes">Dive Planes</p>
+            <p id="FuelTanks">Fuel Tanks</p>
+            <p id="DeckGun">Deck Gun</p>
+            <p id="FlakGun">Flak Gun</p>
+            <p id="Flak37">3.7 Flak</p>
             <table class = "UboatCrew">
             <tr>
                 <th>Crew</th>
                 <th>Level</th>
                 <th>Status</th>
             </tr>
-            <tr>
+            <tr id="Kommandant">
                 <td>KMDT</td>
                 <td>${this.gm.sub.crew_levels["Kommandant"]}</td>
                 <td>${healthShort[this.gm.sub.crew_health["Kommandant"]]}</td>
             </tr>
-            <tr>
+            <tr id="WatchOfficer1">
                 <td>WO1</td>
                 <td>${this.gm.sub.crew_levels["Watch Officer 1"]}</td>
                 <td>${healthShort[this.gm.sub.crew_health["Watch Officer 1"]]}</td>
             </tr>
-            <tr>
+            <tr id="WatchOfficer2">
                 <td>WO2</td>
                 <td>${this.gm.sub.crew_levels["Watch Officer 2"]}</td>
                 <td>${healthShort[this.gm.sub.crew_health["Watch Officer 2"]]}</td>
             </tr>
-            <tr>
+            <tr id="Engineer">
                 <td>ENG</td>
                 <td>${this.gm.sub.crew_levels["Engineer"]}</td>
                 <td>${healthShort[this.gm.sub.crew_health["Engineer"]]}</td>
             </tr>
-            <tr>
+            <tr id="Doctor">
                 <td>DOC</td>
                 <td>${this.gm.sub.crew_levels["Doctor"]}</td>
                 <td>${healthShort[this.gm.sub.crew_health["Doctor"]]}</td>
             </tr>
-            <tr>
+            <tr id="Crew1">
                 <td>CREW 1</td>
                 <td>${this.gm.sub.crew_levels["Crew"]}</td>
                 <td>${healthShort[this.gm.sub.crew_health["Crew 1"]]}</td>
             </tr>
-             <tr>
+            <tr id="Crew2">
                 <td>CREW 2</td>
                 <td>${this.gm.sub.crew_levels["Crew"]}</td>
                 <td>${healthShort[this.gm.sub.crew_health["Crew 2"]]}</td>
             </tr>
-            <tr>
+            <tr id="Crew3">
                 <td>CREW 3</td>
                 <td>${this.gm.sub.crew_levels["Crew"]}</td>
                 <td>${healthShort[this.gm.sub.crew_health["Crew 3"]]}</td>
             </tr>
-            <tr>
+            <tr id="Crew4">
                 <td>CREW 4</td>
                 <td>${this.gm.sub.crew_levels["Crew"]}</td>
                 <td>${healthShort[this.gm.sub.crew_health["Crew 4"]]}</td>
             </tr>
+
+            <div class="Patrol_Log">
+                ${this.patrolSummaryHeader}<br>
+                ${this.patrolSummary}
+            </div>
             <button class="CloseStatus_button" id="close">Close</button>
             <button class="ReloadStatus_button" id="reload">${reload}</button>
         `)
@@ -108,14 +128,82 @@ class StatusPopup{
             if (event.target.id == "close"){
                 //close popup
                 this.done();
-                this.gm.eventResolved = true;
             }
             else if (event.target.id == "reload" && ! this.tv.isInEncounter) {
                 this.tv.enterReloadMode();
                 this.done();
-                this.gm.eventResolved = true;
             }
         })
+    }
+
+    //Update all systems classes with text indicating they are broken if so, update health with color if wounded
+    updateSystems() {
+        //Remove 3.7 Flak if Type VII
+        if (this.gm.sub.getType().includes("VII")) {
+            var elementSys = document.getElementById("Flak37");
+            elementSys.style.visibility = "hidden";
+        }
+
+        //change text for systems
+        for (var key in this.gm.sub.systems) {
+            //If system is damaged
+            if (this.gm.sub.systems[key] == 1) {
+                var system = key;
+                //remove spaces and '#' and '.'
+                system = system.replace(/\s/g, "");
+                system = system.replace("#", "");
+                system = system.replace(".", "");
+                if (system == "37Flak") {
+                    system = "Flak37";
+                }
+
+                var elementSys = document.getElementById(system);
+                elementSys.style.backgroundColor="orange";
+            }
+            //If system is inoperable
+            else if (this.gm.sub.systems[key] == 2) {
+                var system = key;
+                //remove spaces and '#'
+                system = system.replace(/\s/g, "");
+                system = system.replace("#", "");
+
+                var elementSys = document.getElementById(system);
+                elementSys.style.backgroundColor="red";
+                elementSys.style.color="white";
+            }
+        }
+
+        //Change text for crew
+        for (var key in this.gm.sub.crew_health) {
+            //If member is LW
+            if (this.gm.sub.crew_health[key] == 1) {
+                var member = key;
+                //remove spaces
+                member = member.replace(/\s/g, "");
+
+                var elementSys = document.getElementById(member);
+                elementSys.style.backgroundColor="yellow";
+            }
+            else if (this.gm.sub.crew_health[key] == 2) {
+                var member = key;
+                //remove spaces
+                member = member.replace(/\s/g, "");
+
+                var elementSys = document.getElementById(member);
+                elementSys.style.backgroundColor="orange";
+            }
+            else if (this.gm.sub.crew_health[key] == 3) {
+                var member = key;
+                //remove spaces
+                member = member.replace(/\s/g, "");
+                console.log(member);
+
+                var elementSys = document.getElementById(member);
+                elementSys.style.backgroundColor="red";
+                elementSys.style.color="white";
+            }
+
+        }
     }
 
 
@@ -125,5 +213,6 @@ class StatusPopup{
         if (!this.gameWasAlreadyPaused) {
             this.tv.pauseGame(false);
         }
+        this.gm.statusResolved = true;
     }
 }

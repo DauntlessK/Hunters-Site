@@ -1,0 +1,11 @@
+U-505 - KMDT Name
+Sept - 1939, first patrol
+Patrol British Isles
+<<<IF SUNK SHIPS>>> Sunk 2 ships totaling 8000 GRT
+-
+Sept 5th- Departed Port
+Sept 9th- Transit uneventful
+Sept 12th- Transit uneventful
+Sept 15th- Reached patrol area, no ships nearby
+Sept 17th- Sunk Shipname, 3000 GRT
+Sept 19th- Sunk Shipname2, 5000 GRT, took depth charges from HMS Destroyer, escaped

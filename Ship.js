@@ -179,6 +179,8 @@ class Ship {
             this.sunk = true;
             this.roundSunk = true;
             this.gm.shipsSunk.push(this);
+            this.gm.shipsSunkOnCurrentPatrol.push(this);
+            this.gm.currentEncounter.shipsSunk.push(this);
         }
     }
     

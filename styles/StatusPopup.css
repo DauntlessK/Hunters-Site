@@ -44,6 +44,19 @@
     bottom: 15px;
 }
 
+.Patrol_Log {
+    position: absolute;
+    left: 30px;
+    bottom: 52px;
+    width: 470px;
+    height: 242px;
+    max-height: 250px;
+    padding: 5px;
+    overflow-y: scroll;
+    border-style: solid;
+    border-width: thin;
+}
+
 .UboatCrew {
     width: 200px;
     position: absolute;
@@ -79,7 +92,7 @@
     text-align: center;
 }
 
-.EEngine1 {
+#ElectricEngine1 {
     font-size: 11px;
     font-family: courier;
     position: absolute;
@@ -87,7 +100,7 @@
     top: 201px;
 }
 
-.EEngine2 {
+#ElectricEngine2 {
     font-size: 11px;
     font-family: courier;
     position: absolute;
@@ -95,7 +108,7 @@
     top: 233px;
 }
 
-.DEngine1 {
+#DieselEngine1 {
     font-size: 11px;
     font-family: courier;
     position: absolute;
@@ -103,7 +116,7 @@
     top: 213px;
 }
 
-.DEngine2 {
+#DieselEngine2 {
     font-size: 11px;
     font-family: courier;
     position: absolute;
@@ -111,7 +124,7 @@
     top: 237px;
 }
 
-.Periscope {
+#Periscope {
     font-size: 11px;
     font-family: courier;
     position: absolute;
@@ -119,7 +132,7 @@
     top: 20px;
 }
 
-.Radio {
+#Radio {
     font-size: 11px;
     font-family: courier;
     position: absolute;
@@ -127,7 +140,7 @@
     top: 15px;
 }
 
-.Hydrophones {
+#Hydrophones {
     font-size: 11px;
     font-family: courier;
     position: absolute;
@@ -135,7 +148,7 @@
     top: 204px;
 }
 
-.Batteries {
+#Batteries {
     font-size: 11px;
     font-family: courier;
     position: absolute;
@@ -143,7 +156,7 @@
     top: 235px;
 }
 
-.FTDoors {
+#ForwardTorpedoDoors {
     font-size: 11px;
     font-family: courier;
     position: absolute;
@@ -151,7 +164,7 @@
     top: 61px;
 }
 
-.ATDoors {
+#AftTorpedoDoors {
     font-size: 11px;
     font-family: courier;
     position: absolute;
@@ -159,7 +172,7 @@
     top: 93px;
 }
 
-.DivePlanes {
+#DivePlanes {
     font-size: 11px;
     font-family: courier;
     position: absolute;
@@ -167,7 +180,7 @@
     top: 187px;
 }
 
-.FuelTanks {
+#FuelTanks {
     font-size: 11px;
     font-family: courier;
     position: absolute;
@@ -175,7 +188,7 @@
     top: 80px;
 }
 
-.DeckGun {
+#DeckGun {
     font-size: 11px;
     font-family: courier;
     position: absolute;
@@ -183,10 +196,18 @@
     top: 67px;
 }
 
-.FlakGun {
+#FlakGun {
     font-size: 11px;
     font-family: courier;
     position: absolute;
     left: 340px;
     top: 60px;
+}
+
+#Flak37 {
+    font-size: 11px;
+    font-family: courier;
+    position: absolute;
+    left: 340px;
+    top: 48px;
 }

@@ -74,10 +74,12 @@ class AttackDepthAndRangePopup{
     }
     
     done(){
-        this.depth = document.querySelector('input[name="depth"]:checked').value;
-        this.range = document.querySelector('input[name="range"]:checked').value;
-        this.element.remove();
-        this.gm.setEventResolved(true);
+        if (!this.tv.isPaused) {
+            this.depth = document.querySelector('input[name="depth"]:checked').value;
+            this.range = document.querySelector('input[name="range"]:checked').value;
+            this.element.remove();
+            this.gm.setEventResolved(true);
+        }
     }
 
     getDepth() {

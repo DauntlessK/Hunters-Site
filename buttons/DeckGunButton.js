@@ -67,7 +67,8 @@ class DeckGunButton extends Button {
 
     //Updates state based on Uboat's status / ammo etc
     getLatestState() {
-        if (!this.tv.firingMode && this.currentState != "Active") {
+        //First state- For not firing mode (no event)
+        if (!this.tv.isInEncounter) {
             this.changeState("Active");
         }
         //Check if surfaced
@@ -80,14 +81,14 @@ class DeckGunButton extends Button {
                 this.gm.currentEncounter.shipList[0].getType() == "Escort" || this.gm.sub.isFiringTorpedoes) {
                 this.changeState("Disabled");
             }
+            else if (this.gm.currentEncounter.firedDeckGun) {
+                this.changeState("Disabled");
+            }
             else if (this.currentState == "Hover" && this.tv.currentTarget < 0) {
                 //ignore
             }
             else if (!this.gm.sub.isFiringTorpedoes && this.currentShots == 0) {
                 this.changeState("Enabled");
-            }
-            else if (this.gm.currentEncounter.firedDeckGun) {
-                this.changeState("Disabled");
             }
         }
     }

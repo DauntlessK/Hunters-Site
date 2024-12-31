@@ -18,7 +18,7 @@ class Sprite {
     this.depth = 0;
     this.diving = false;
     this.surfacing = false;
-    this.surface();
+    //this.surface();
 
     //for non-player ships
     this.shipNum = config.shipNum;
@@ -176,7 +176,17 @@ class Sprite {
         if (this.diving && this.isPlayer) {
           this.depth += 2;
           if (this.depth >= 110) {
+            this.depth = 110;
             this.diving = false;
+          }
+        }
+
+        //player surfacing animation
+        if (this.surfacing && this.isPlayer) {
+          this.depth -= 2;
+          if (this.depth <= 0) {
+            this.diving = false;
+            this.depth = 0;
           }
         }
 
@@ -250,7 +260,7 @@ class Sprite {
     if (!this.isPlayer) {
       return;
     }
-    //this.surfacing = true;
+    this.surfacing = true;
     this.depth = 0;
     this.height = 95;
   }
