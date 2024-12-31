@@ -256,23 +256,18 @@ class Patrol{
                     default:
                         return "No Encounter";
                 }
-                break;
             case "Arctic":
                 switch (roll){
                     case 2:
                         return "Capital Ship";
-                        break;
                     case 3:
                         return "Ship";
-                        break;
                     case 6:
                     case 7:
                     case 8:
                         return "Convoy";
-                        break;
                     case 12:
                         return "Aircraft";
-                        break;
                     default:
                         return "No Encounter";                 
                 }
@@ -282,16 +277,13 @@ class Patrol{
                 switch (roll){
                     case 2:
                         return "Capital Ship";
-                        break;
                     case 3:
                         return "Ship";
-                        break;
                     case 6:
                     case 7:
                     case 9:
                     case 12:
                         return "Convoy";
-                        break;
                     default:
                         return "No Encounter";
                 }
@@ -300,20 +292,15 @@ class Patrol{
                 switch (roll) {
                     case 2:
                         return "Capital Ship";
-                        break;
                     case 5:
                     case 8:
                         return "Ship";
-                        break;
                     case 6:
                         return "Ship + Escort";
-                        break;
                     case 10:
                         return "Convoy";
-                        break;
                     case 12:
                         return "Aircraft";
-                        break;
                     default:
                         return "No Encounter";
                 }
@@ -323,19 +310,14 @@ class Patrol{
                     case 2:
                     case 12:
                         return "Aircraft";
-                        break;
                     case 4:
                         return "Capital Ship";
-                        break;
                     case 7:
                         return "Ship";
-                        break;
                     case 8:
                         return "Convoy";
-                        break;
                     case 10:
                         return "Two Ships + Escort";
-                        break;
                     default:
                         return "No Encounter";
                 }
@@ -344,24 +326,18 @@ class Patrol{
                 switch (roll){
                     case 2:
                         return "Aircraft";
-                        break;
                     case 4:
                     case 6:
                         return "Ship";
-                        break;
                     case 5:
                         return "Two Ships + Escort";
-                        break;
                     case 8:
                         return "Two Ships";
-                        break;
                     case 9:
                     case 12:
                         return "Tanker";
-                        break;
                     case 11:
                         return "Convoy";
-                        break;
                     default:
                         return "No Encounter";
                 }
@@ -371,16 +347,13 @@ class Patrol{
                     case 2:
                     case 12:
                         return "Aircraft";
-                        break;
                     case 3:
                     case 11:
                         return "Capital Ship";
-                        break;
                     case 4:
                     case 9:
                     case 10:
                         return "Ship + Escort";
-                        break;
                     default:
                         return "No Encounter"
                 }
@@ -390,18 +363,14 @@ class Patrol{
                     case 2:
                     case 12:
                         return "Aircraft";
-                        break;
                     case 5:
                         return "Ship + Escort";
-                        break;
                     case 6:
                     case 7:
                         return "Ship";
-                        break;
                     case 10:
                     case 11:
                         return "Convoy";
-                        break;
                     default:
                         return "No Encounter" 
                 }
@@ -410,21 +379,16 @@ class Patrol{
                 switch (roll) {
                     case 2:
                         return "Aircraft";
-                        break;
                     case 3:
                     case 7:
                         return "Ship";
-                        break;
                     case 6:
                     case 10:
                         return "Convoy";
-                        break;
                     case 9:
                         return "Ship + Escort";
-                        break;
                     case 12:
                         return "Aircraft";
-                        break;
                     default:
                         return "No Encounter" 
                 }
@@ -434,7 +398,7 @@ class Patrol{
                 if (year == 1942) { roll = roll - 1;}
                 if (year == 1943) { roll = roll - 2;}
                 if (loc == "Gibraltar Passage") { roll = roll - 2;}
-
+                //NOTE : Not sure the distinction matters between Gibralter vs addl combat- both return the same enc
                 switch (roll) {
                     case -2:
                     case -1:
@@ -442,17 +406,46 @@ class Patrol{
                     case 1:
                     case 2:
                     case 3:
-                        if (loc == "Additional Round of Combat") {console.log("TO DO- Notify- An enemy escort has arrived!");}
-                        else { console.log("TO DO- Notify- An enemy escort has arrived!");}
+                        if (loc == "Additional Round of Combat") {
+                            console.log("TO DO- Notify- An enemy escort has arrived!");
+                            
+                        }
+                        else {
+                            console.log("TO DO- Notify- An enemy escort has arrived!");
+                        }
+                        break;
+                    case 4:
+                    case 5:
+                        if (loc == "Additional Round of Combat") {
+                            console.log("TO DO- Notify- An aircraft has arrived!");
+                            return "Aircraft";
+                        }
+                        else {
+                            console.log("TO DO- Notify- An aircraft has arrived!");
+                            return "Aircraft";
+                        }
+                    default:
+                        return "No Encounter";
                 }
                 break;
             case "Bay of Biscay":
             case "Mission":
             case "Resupply":
-                console.log("TODO - BoB / mission / resupply checks");
-                break;
-            
-
+                if (loc == "Bay of Biscay" && year == 1942) { roll = roll - 1;}
+                else if (loc == "Bay of Biscay" && year == 1943) { roll = roll - 2;}
+                switch (roll) {
+                    case -2:
+                    case -1:
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                        return "Aircraft";
+                    default:
+                        return "No Encounter" 
+                }
+                break;         
 
         }
     }

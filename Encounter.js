@@ -1,12 +1,12 @@
 class Encounter {
-    constructor(tv, gm, encounterType, existingShips) {
+    constructor(tv, gm, encounterType, currentBoxName, existingShips) {
         this.shipListLoaded = false;
         if (encounterType != "No Encounter" || encounterType != "Mission") { console.log("ALARRRRM!  " + encounterType); }
 
         this.tv = tv;
         this.gm = gm;
-
-        this.encounterType = encounterType;
+        this.currentBoxName = currentBoxName; //Current box- step of patrol (IE Mission, transit, British Isles, etc)
+        this.encounterType = encounterType;   //Rolled encounter (no encounter, aircraft, convoy, etc)
         this.shipList = [];
         this.shipsSunk = [];
 
@@ -71,11 +71,17 @@ class Encounter {
         this.encPop = new EncounterPopup(this.tv, this.gm, encType, this.shipList);
         await until(_ => this.gm.eventResolved == true);
 
-        if (this.encounterType == "No Encounter" || this.encounterType == "Aircraft") {
-            //not sure what is needed here
-        }
-        else {
-            this.attackFlow(true);
+        //deal with mission boxes first
+
+        switch (encType) {
+            case "No Encounter":
+                break;
+            case "Aircraft":
+                break;
+            case "Mission":
+                break;
+            default:
+                this.attackFlow(true);
         }
     }
 
