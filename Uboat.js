@@ -5,7 +5,7 @@ class Uboat{
         this.gm = gm;
 
         //-----SUBSYSTEM STATES
-        // states are: 0=operational, 1=damaged, 2=inoperational
+        // states are: 0=operational, 1=damaged, 2=inoperative
         this.systems = {
             "Electric Engine #1": 0,
             "Electric Engine #2": 0,
@@ -185,7 +185,7 @@ class Uboat{
         };
 
         //-------------CREW STATES
-        //states are 0 = fine, 1 = LW, 2 = SW, 3 = KIA • -1 indicates not present
+        //states are 0 = OK, 1 = LW, 2 = SW, 3 = KIA • -1 indicates not present
         this.crew_health = {
             "Crew 1": 0,
             "Crew 2": 0,
@@ -211,8 +211,62 @@ class Uboat{
         this.depth = 0;   //0=surfaced, 1=attack depth, 2=deep
     }
 
+    /**
+     * 
+     * @returns string of subclass (VIIA, VIIB, VIIC, VIID, IXA, IXB, IXC)
+     */
     getType(){
         return this.subClass;
+    }
+
+    /**
+     * Returns the NAME (Green, Trained, Veteran, Elite) of the current crewman skill level
+     * @param {string} crewman 
+     */
+    getCrewLevel(crewman) {
+        switch (this.crew_levels[crewman]) {
+            case 0:
+                return "Green";
+            case 1:
+                return "Trained";
+            case 2:
+                return "Veteran";
+            case 3:
+                return "Elite";
+        }
+    }
+    
+    /**
+     * Gets the health status of the crew member
+     * @param {string} crewman 
+     * @returns string (OK, LW, SW, or KIA)
+     */
+    getCrewHealth(crewman) {
+        switch (this.crew_health[crewman]) {
+            case 0:
+                return "OK";
+            case 1:
+                return "LW";
+            case 2:
+                return "SW";
+            case 3:
+                return "KIA";
+        }
+    }
+
+    /**
+     * Returns the status (Operational, Damaged, Inoperative) of the given system
+     * @param {string} system 
+     */
+    getSystemStatus(system) {
+        switch (this.systems(system)) {
+            case 0:
+                return "Operational";
+            case 1:
+                return "Damaged";
+            case 2:
+                return "Inoperative";
+        }
     }
 
     torpedoResupply(){
@@ -472,10 +526,14 @@ class Uboat{
         this.isFiringDeckGun = false;
     }
 
+    /**
+     * Used to check if all 4 generic crew members are SW or Dead
+     * @returns true if all 4 generic crew are dead or SW
+     */
     isCrewKnockedOut() {
         var numOfKO = 0;
         for (let i = 0; i < 4; i++) {
-            if (this.crew_health[i] > 0) {
+            if (this.crew_health[i] >= 2) {
                 numOfKO++;
             }
         }
@@ -483,6 +541,34 @@ class Uboat{
             return true;
         }
         return false;
+    }
+
+    //returns true if given crewman is not wounded, LW, or SW
+    isCrewmanAlive(crewman) {
+        if (this.gm.sub.crew_health[crewman] < 3) {
+            return true;
+        }
+        else if (this.gm.sub.crew_health[crewman] >= 3){
+            return false;
+        }
+        else {
+            console.log("Error getting " + crewman + " health status.");
+            return false;
+        }
+    }
+
+    //returns true if given crewman is not wounded, or LW
+    isCrewmanFunctional(crewman) {
+        if (this.gm.sub.crew_health[crewman] < 2) {
+            return true;
+        }
+        else if (this.gm.sub.crew_health[crewman] >= 2){
+            return false;
+        }
+        else {
+            console.log("Error getting " + crewman + " health status.");
+            return false;
+        }
     }
 
     damage(numHits, attack) {

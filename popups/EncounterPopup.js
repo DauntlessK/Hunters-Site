@@ -47,20 +47,6 @@ class EncounterPopup{
                     "You have an uneventful transit.",
                     "You continue to sail towards your destination, finding nothing along the way."];
                 break;
-            case "Mission":
-                if (this.currentOrders.includes("Minelaying")) {
-                    noEncounterArray = ["", 
-                        "Kommandant, approaching the designated mine area.",
-                        "We are approaching the target mining area, Kommandant.",
-                        "We are nearing the port we have been assigned to lay mines, Kommandant."];
-                }
-                else {
-                    noEncounterArray = ["", 
-                        "Kommandant, approaching the designated area to land our agent.",
-                        "The agent reports that the nearing bay is perfect to land him on.",
-                        "We are nearing the the shore to land our agent, Kommandant."];
-                }
-                break;
             case "Gibraltar":
                 noEncounterArray = ["", 
                     "In the cover of night you were able to slip through the Gibraltar patrols.",
@@ -104,22 +90,28 @@ class EncounterPopup{
 
     //Popup for mission (abwehr agent or minelaying)
     mission() {
+        var missionArray = [];
 
-        //Determine if abwehr or minelaying
-        if (this.gm.currentOrders.includes("Minelaying")) {
-            this.element.innerHTML = (`
-                <p class="PatrolMessage_p">We are approaching our designated mine area.<br>
-                </p>
-                <button class="Continue_button" id="continue">Continue</button>
-            `)
+        if (this.currentOrders.includes("Minelaying")) {
+            missionArray = ["", 
+                "Kommandant, approaching the designated mine area.",
+                "We are approaching the target mining area, Kommandant.",
+                "We are nearing the port we have been assigned to lay mines, Kommandant."];
         }
         else {
-            this.element.innerHTML = (`
-                <p class="PatrolMessage_p">We are approaching the coastline where we need to delivery the abwehr agent.<br>
-                </p>
-                <button class="Continue_button" id="continue">Continue</button>
-            `)
+            missionArray = ["", 
+                "Kommandant, approaching the designated area to land our agent.",
+                "The agent reports that the bay we are nearing is perfect to land him on.",
+                "We are nearing the the shore to land our agent, Kommandant."];
         }
+
+        const roll = d3Roll();
+
+        //new div to add
+        this.element.innerHTML = (`
+            <p class="PatrolMessage_p">${missionArray[roll]}<br>
+            </p>
+        `)
 
         this.element.addEventListener("click", ()=> {
             var action = null;
@@ -130,8 +122,6 @@ class EncounterPopup{
         })
 
         this.container.appendChild(this.element);
-        this.gm.setEventResolved(true);
-        this.tv.finishEncounter();
     }
 
     //Popup for ships encounter

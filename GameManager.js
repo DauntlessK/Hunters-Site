@@ -322,10 +322,10 @@ class GameManager{
         }
 
         //get current encounter (IE noEncounter, encounterAttackConvoy)
-        var currentEncounterType = this.patrol.getEncounter(currentBoxName, this.getYear(), this.randomEvent);
+        var currentEncounterType = this.patrol.getEncounterType(currentBoxName, this.getYear(), this.randomEvent);
         console.log("Current Encounter: " + currentEncounterType);
         
-        this.currentEncounter = new Encounter(this.tv, this, currentEncounterType, currentBoxName, null);
+        this.currentEncounter = new Encounter(this.tv, this, this.patrol, currentEncounterType, currentBoxName, null);
         await until(_ => this.tv.isInEncounter == false);
         console.log("End Encounter");
     }

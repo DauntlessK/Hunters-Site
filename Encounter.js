@@ -1,14 +1,16 @@
 class Encounter {
-    constructor(tv, gm, encounterType, currentBoxName, existingShips) {
+    constructor(tv, gm, patrol, encounterType, currentBoxName, existingShips) {
         this.shipListLoaded = false;
         if (encounterType != "No Encounter" && encounterType != "Mission") { console.log("ALARRRRM!  " + encounterType); }
 
         this.tv = tv;
         this.gm = gm;
+        this.patrol = patrol;
         this.currentBoxName = currentBoxName; //Current box- step of patrol (IE Mission, transit, British Isles, etc)
         this.encounterType = encounterType;   //Rolled encounter (no encounter, aircraft, convoy, etc)
         this.shipList = [];
         this.shipsSunk = [];
+        this.sub = this.sub;
 
         //Encounter "Scoreboard" for results
         this.numHits = 0;
@@ -73,17 +75,69 @@ class Encounter {
 
         //deal with mission boxes first
         if (this.currentBoxName == "Mission") {
-            //Abwehr Mission
-            if (this.gm.currentOrders.includes("Abwehr")) {
-                //DEAL WITH ABWEHR ROLL (already rolled - result is encounterType)
-                this.abwehrAgent();
-            }
-            else if (this.gm.currentOrders.includes("Minelaying")) {
-                //DEAL WITH MINELAYING ROLL (already rolled - result is encounterType)
-                this.minelaying();
-            }
-            else {
-                console.log("Error dealing with mission start.")
+            //loop to continue attempting mission (if at first unsuccessful but CAN succeed)
+            let looping = 0;
+            while (looping >= 0) {
+                console.log("Mission attempt!");
+                if (looping > 0) {
+                    //get new encounterType (mission attempt)
+                    this.encounterType = this.patrol.getEncounterType("Mission", this.gm.getYear(), this.gm.randomEvent());
+                }
+
+                //DEAL WITH ABWEHR or MINELAYING ROLL (already rolled - result is encounterType)
+                this.gm.setEventResolved(false);
+                var missionPopup = new MissionPopup(this.tv, this.gm, this.encounterType, this.gm.currentOrders);
+
+                //Establish if mission was successful or not
+                //Abwehr Missions
+                if (this.currentOrders.includes("Abwehr")){
+                    //Successful delivery
+                    if (this.encounterType == "No Encounter" && this.sub.isCrewmanFunctional("Abwehr Agent")) {
+                        //Success
+                        missionPopup.missionSuccess();
+                        this.gm.missionComplete = true;
+                        this.endEncounter();
+                        break;
+                    }
+                    else if (this.encounterType == "No Encounter") {
+                        //Unsucessful - Agent dead
+                        missionPopup.agentDeadFailure();
+                        this.gm.missionComplete = false;
+                        this.endEncounter();
+                        break;
+                    }
+                    else {
+                        //Aircraft
+                        this.aircraftFlow();
+                        looping++;
+                        continue;
+                    }
+                }
+                //Minelaying Missions
+                else {
+                    if (this.encounterType == "No Encounter") {
+                        //Success, at least SOME mines were deployed
+                        if (this.sub.getSystemStatus("Forward Torpedo Doors") == "Operational" || this.sub.getSystemStatus("Forward Torpedo Doors")) {
+                            missionPopup.missionSuccess();
+                            this.gm.missionComplete = true;
+                            this.endEncounter();
+                            break;
+                        }
+                        else {
+                            //no mines were deployed as doors were both broken. failure
+                            missionPopup.torpedoDoorFailure();
+                            this.gm.missionComplete = false;
+                            this.endEncounter();
+                            break;
+                        }                        
+                    }
+                    else {
+                        //Aircraft
+                        this.aircraftFlow();
+                        looping++;
+                        continue;
+                    }
+                }
             }
         }//else - for non-mission patrol boxes
         else {
@@ -91,6 +145,7 @@ class Encounter {
                 case "No Encounter":
                     break;
                 case "Aircraft":
+                    this.aircraftFlow();
                     break;
                 default:
                     this.attackFlow(true);
@@ -101,8 +156,8 @@ class Encounter {
     //Starts engagement of ship or ship(s)
     async attackFlow(newAttack) {
 
-        //If mines are on the boat, ignore encounter TODO FIX
-        if (this.gm.sub.minesLoadedForward && this.gm.sub.minesLoadedAft && this.shipList[0].getType() == "Escort") {
+        //If mines are on the boat and ship is escorted, ignore encounter TODO FIX
+        if (this.sub.minesLoadedForward && this.sub.minesLoadedAft && this.shipList[0].getType() == "Escort") {
             console.log("MINES LOADED");
             this.endEncounter();
             return;
@@ -380,6 +435,64 @@ class Encounter {
 
     }
 
+    //Starts attack from aircraft
+    async aircraftFlow() {
+        let a1Roll = d6Rollx2();   //roll on A1 chart
+        let year = this.gm.getYear();
+
+        //modifiers
+        let mods = 0;
+        if (this.sub.isCrewKnockedOut()) {
+            mods -= 1;
+        }
+        if (this.sub.getCrewLevel("Crew") == "Green") {
+            mods -= 1;
+        }
+        else if (this.sub.getCrewLevel("Crew") == "Elite") {
+            mods += 1;
+        }
+        if (this.sub.getSystemStatus("Dive Planes") == "Damaged" || this.sub.getSystemStatus("Dive Planes") == "Inoperative") {
+            mods -= 1;
+        }
+        if (this.sub.getType() == "VIID" || this.sub.getType().includes("IX")){
+            mods -=1;
+        }
+        if (year == 1939) {
+            mods += 1;
+        }
+        else if (year == 1942) {
+            mods -= 1;
+        }
+        else if (year == 1943) {
+            mods -= 2;
+        }
+        if (this.currentBoxName == "Mission") {
+            mods -= 1;
+        }
+
+        //Check results
+        let result = mods + a1Roll;
+        let result2 = "";
+        if (result >= 6) {
+            //Crash Dive successful, avoids air attack
+        }
+        else if (result >= 2) {
+            //1 Attack on E3 + 1 Crew Injury
+            result = this.sub.damage(1, "Aircraft");
+            result2 = this.gm.crewInjury("Aircraft");
+        }
+        else {
+            //1 Attack on E3*extra mod* + 1 Injury (and a second attack if flak did not down plane)
+
+        }
+
+        //Fire Flak if sub did not dive fast enough
+        //if did not dive and aircraft is still alive and result is 1 or less, resolve second attack on E3
+        //Ship dives
+        //if aircraft damaged, attack complete
+        //else, roll on additional round E1
+    }
+
     //Clean up after firings
     endRound() {
         this.clearRoundStats();
@@ -594,15 +707,15 @@ class Encounter {
     //Resolves damage and then displays results in popup
     resolveUboatAttack() {
         this.tv.setFiringMode(false);
-        if (this.gm.sub.isFiringDeckGun > 0) {
-            this.resolveDeckGun(this.gm.sub.isFiringDeckGun);
+        if (this.sub.isFiringDeckGun > 0) {
+            this.resolveDeckGun(this.sub.isFiringDeckGun);
             this.firedDeckGun = true;
         }
         else {
             this.resolveTorpedoes();
         }
         this.attackDepth = this.depth;
-        this.gm.sub.fire();
+        this.sub.fire();
 
         this.gm.setEventResolved(false);
         var roundResults = new RoundResultsPopup(this.tv, this.gm, this);
@@ -616,17 +729,17 @@ class Encounter {
                 var rollMod = 0;
 
                 //Apply mods
-                if (this.gm.sub.knightsCross >= 2){
+                if (this.sub.knightsCross >= 2){
                     rollMod -= 1;
                 }
-                if (this.gm.sub.crew_levels["Crew"] == 0) {
+                if (this.sub.crew_levels["Crew"] == 0) {
                     rollMod += 1;
                 }
-                if (this.gm.sub.isCrewKnockedOut()) {
+                if (this.sub.isCrewKnockedOut()) {
                     rollMod += 1;
                 }
-                if (this.gm.sub.crew_health["Kommandant"] > 1) {
-                    if (this.gm.sub.sub.crew_health["Watch Officer"] > 1) {
+                if (this.sub.crew_health["Kommandant"] > 1) {
+                    if (this.sub.sub.crew_health["Watch Officer"] > 1) {
                         rollMod += 2;
                     }    
                     else {
@@ -639,7 +752,7 @@ class Encounter {
                 if (gunRoll + rollMod <= this.rangeNum) {
                     var damRoll = d6Roll();
                     var damMod = 0;
-                    if (this.gm.sub.getType().includes("IX")) {
+                    if (this.sub.getType().includes("IX")) {
                         damMod -= 1;
                     }
                     if (damRoll <= 1) {
@@ -662,13 +775,13 @@ class Encounter {
         //First check which sections (fore and/or aft or both) that fired
         //Check fore tubes first
         for (let i = 1; i < 5; i++) {
-            if (this.gm.sub.tubeFiring[i] == true) {
+            if (this.sub.tubeFiring[i] == true) {
                 this.firedFore = true;
             }
         }
         //Check aft tubes first
         for (let i = 5; i < 7; i++) {
-            if (this.gm.sub.tubeFiring[i] == true) {
+            if (this.sub.tubeFiring[i] == true) {
                 this.firedAft = true;
             }
         }
@@ -689,24 +802,22 @@ class Encounter {
                 if (this.depth == "Surfaced") {
                     rollMod -= 1;
                 }
-                if (this.gm.sub.knightsCross >= 2) {
+                if (this.sub.knightsCross >= 2) {
                     rollMod -= 1;
                 }
-                if (this.gm.sub.crew_levels["Crew"] == 0) {
+                if (this.sub.getCrewLevel("Crew") == "Green") {
                     rollMod += 1;
                 }
-                if (this.gm.sub.isCrewKnockedOut()) {
+                if (this.sub.isCrewKnockedOut()) {
                     rollMod += 1;
                 }
-                if (this.gm.sub.crew_health["Kommandant"] > 1) {
-                    if (this.gm.sub.crew_health["Watch Officer 1"] > 1) {
-                        rollMod += 2;
-                    }
-                    else {
+                if (this.sub.getCrewHealth("Kommandant") == "SW") {
+                    if (this.sub.getCrewHealth("Watch Officer 1") == "SW") {
                         rollMod += 1;
                     }
+                    rollMod += 1;
                 }
-                if (this.gm.sub.isFiringForeAndAft && this.gm.sub.knightsCross == 0) {
+                if (this.sub.isFiringForeAndAft && this.sub.knightsCross == 0) {
                     rollMod += 1;
                     this.firedForeAndAft = true;
                 }
@@ -823,13 +934,13 @@ class Encounter {
         var canFireAft = true;
         var canFireDeckGun = true;
         
-        if (!this.gm.sub.canFire("Fore") || this.firedFore || this.firedForeAndAft) {
+        if (!this.sub.canFire("Fore") || this.firedFore || this.firedForeAndAft) {
             canFireFore = false;
         }
-        if (!this.gm.sub.canFire("Aft") || this.firedAft || this.firedForeAndAft) {
+        if (!this.sub.canFire("Aft") || this.firedAft || this.firedForeAndAft) {
             canFireAft = false;
         }
-        if (this.isEscorted() || !this.gm.sub.canFire("Deck Gun") || this.firedDeckGun) {
+        if (this.isEscorted() || !this.sub.canFire("Deck Gun") || this.firedDeckGun) {
             canFireDeckGun = false;
         }
 
@@ -983,7 +1094,7 @@ class Encounter {
 
         this.gm.setSubEventResolved(false);
         var escortDetectionPopup = new EscortDetectionPopup(this.tv, this.gm, this, closeRangeCheck);
-        await until(_ => this.gm.subEventResolved == true);
+        await until(_ => this.subEventResolved == true);
 
         //Check if in Wolfpack - only checked once if wolfpack. Otherwise stays 0
         if (this.gm.currentOrders.includes("Wolfpack") && wpMod == 0 && this.encounterType == "Convoy") {
@@ -1000,7 +1111,7 @@ class Encounter {
         if (this.gm.getYear() >= 1941 && this.rangeNum == 8) {
             escortMods = escortMods + (this.gm.getYear() - 1940)
         }
-        if (this.gm.sub.knightsCross >= 3) {
+        if (this.sub.knightsCross >= 3) {
             escortMods -= 1;
         }
 
@@ -1013,16 +1124,16 @@ class Encounter {
             if (this.depth != "Surfaced" || previouslyDetected) {
                 canTestDive = true;
             }
-            if (this.gm.sub.crew_health["Kommandant"] >= 2 && this.gm.sub.crew_health["Watch Officer 1"] >= 2) {
+            if (this.sub.crew_health["Kommandant"] >= 2 && this.sub.crew_health["Watch Officer 1"] >= 2) {
                 escortMods += 2;
             }
-            else if (this.gm.sub.crew_health["Kommandant"] == 2) {
+            else if (this.sub.crew_health["Kommandant"] == 2) {
                 escortMods += 1;
             }
-            if (this.gm.sub.systems["Fuel Tanks"] > 0) {
+            if (this.sub.systems["Fuel Tanks"] > 0) {
                 escortMods += 1;
             }
-            if (this.gm.sub.systems["Dive Planes"] > 0) {
+            if (this.sub.systems["Dive Planes"] > 0) {
                 escortMods += 1;
             }
             if (this.encounterType == "Capital Ship") {
@@ -1070,24 +1181,29 @@ class Encounter {
         //Show if detected or not popup
         this.gm.setSubEventResolved(false);
         escortDetectionPopup.escortResults(results, majorDetection)
-        await until(_ => this.gm.subEventResolved == true);
+        await until(_ => this.subEventResolved == true);
 
         //Show damage results popup
         if (results == "Detected") {
+            let nightSurfaceAttackFirstRound = false;
+            if (this.attackDepth == "Surfaced" && this.timeOfDay == "Night" && !previouslyDetected){
+                nightSurfaceAttackFirstRound = true;
+            }
             if (closeRangeCheck) {
                 this.wasDetectedAtCloseRange = true;
             }
             this.gm.setSubEventResolved(false);
             if (majorDetection) {
                 this.wasDetected = true;
-                results = this.gm.sub.damage(2, "Depth Charges");
+                let hitCount = this.escortAndAirAttackRoll(nightSurfaceAttackFirstRound, true, false);
+                results = this.sub.damage(hitCount, "Depth Charges");
             }
             else {
-                this.wasDetected = true;
-                results = this.gm.sub.damage(1, "Depth Charges");
+                let hitCount = this.escortAndAirAttackRoll(nightSurfaceAttackFirstRound, true, false);
+                results = this.sub.damage(hitCount, "Depth Charges");
             }
             escortDetectionPopup.damageResults(results, majorDetection)
-            await until(_ => this.gm.subEventResolved == true);
+            await until(_ => this.subEventResolved == true);
 
             //If detected, check detection again
             this.depth = "Periscope Depth";  //reset depth (in case "Deep" was selected)
@@ -1098,13 +1214,68 @@ class Encounter {
         }
     }
 
-    //Deal with Abwehr Agent Delivery - following announcement of encounter popup (approaching coast etc
-    abwehrAgent() {
+    /**
+     * E3 chart for rolling # of hits following a detection
+     * @param {boolean} nightSurfaceAttackFirstRound 
+     * @param {boolean} majorDetection 
+     * @param {boolean} airAttack 
+     * @returns int of number of hits on the sub following an escort / air attack
+     */
+    escortAndAirAttackRoll(nightSurfaceAttackFirstRound, majorDetection, airAttack) {
+        let e3roll = d6Rollx2();
+        let mods = 0;
 
-        //Successful delivery
-        if (this.encounterType == "No Encounter") {
-            this.gm.setEventResolved(false);
-            var missionPopup = new MissionPopup(this.tv, this.gm, this.encounterType);
+        if (this.sub.getSystemStatus("Fuel Tanks") != "Operational") {
+            mods += 1;
+        }
+        if (this.sub.getSystemStatus("Hydrophone") != "Operational") {
+            mods += 1;
+        }
+        if (this.sub.getSystemStatus("Batteries") != "Operational") {
+            mods += 1;
+        }
+        if (this.sub.getSystemStatus("Electric Engine #1") != "Operational") {
+            mods += 1;
+        }
+        if (this.sub.getSystemStatus("Electric Engine #2") != "Operational") {
+            mods += 1;
+        }
+        if (nightSurfaceAttackFirstRound) {
+            mods += 1;
+        }
+        if (majorDetection) {
+            mods += 1;
+        }
+        if (this.gm.getYear() == 1943) {
+            mods += 1;
+        }
+        if (airAttack) {
+            mods += 2;
+        }
+
+        result = e3roll + mods;
+
+        switch (result) {
+            case 2:
+            case 3:
+                return 0;
+            case 4:
+            case 5:
+            case 6:
+                return 1;
+            case 7:
+            case 8:
+                return 2;
+            case 9:
+            case 10:
+                return 3;
+            case 11:
+                return 4;
+            case 12:
+                return 5;
+            default:
+                console.log("GAME OVER");
+                return 20; //TODO FIX
         }
     }
 }

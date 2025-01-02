@@ -232,7 +232,7 @@ class Patrol{
         }
     }
 
-    getEncounter(loc, year, randomEvent){
+    getEncounterType(loc, year, randomEvent){
         roll = d6Rollx2();
 
         if (loc != "Additional Round of Combat"){
@@ -417,11 +417,9 @@ class Patrol{
                     case 4:
                     case 5:
                         if (loc == "Additional Round of Combat") {
-                            console.log("TO DO- Notify- An aircraft has arrived!");
                             return "Aircraft";
                         }
                         else {
-                            console.log("TO DO- Notify- An aircraft has arrived!");
                             return "Aircraft";
                         }
                     default:
