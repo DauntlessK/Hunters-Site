@@ -1,8 +1,9 @@
 class EncounterPopup{
-    constructor(tv, gm, enc, shipList) {
+    constructor(tv, gm, enc, currentBoxName, shipList) {
         this.tv = tv;
         this.gm = gm;
         this.enc = enc;
+        this.currentBoxName = currentBoxName;
         this.shipList = shipList;
         
         this.choice = null;
@@ -13,20 +14,25 @@ class EncounterPopup{
         this.element = document.createElement("div");
 
         this.element.classList.add("PatrolMessage");
-        
-        switch (enc) {
-            case "No Encounter":
-                this.noEncounter();
-                break;
-            case "Aircraft":
-                this.encounterAircraft();
-                break;
-            case "Mission":
-                this.mission();
-                break;
-            default:
-                this.ships();
-                break;
+
+        if (this.currentBoxName == "Mission") {
+            this.mission();
+        }
+        else {
+            switch (enc) {
+                case "No Encounter":
+                    this.noEncounter();
+                    break;
+                case "Aircraft":
+                    this.encounterAircraft();
+                    break;
+                case "Mission":
+                    this.mission();
+                    break;
+                default:
+                    this.ships();
+                    break;
+            }
         }
     }
     
@@ -97,7 +103,7 @@ class EncounterPopup{
     }
 
     //Popup for mission (abwehr agent or minelaying)
-    mission(){
+    mission() {
 
         //Determine if abwehr or minelaying
         if (this.gm.currentOrders.includes("Minelaying")) {

@@ -1,7 +1,7 @@
 class Encounter {
     constructor(tv, gm, encounterType, currentBoxName, existingShips) {
         this.shipListLoaded = false;
-        if (encounterType != "No Encounter" || encounterType != "Mission") { console.log("ALARRRRM!  " + encounterType); }
+        if (encounterType != "No Encounter" && encounterType != "Mission") { console.log("ALARRRRM!  " + encounterType); }
 
         this.tv = tv;
         this.gm = gm;
@@ -68,20 +68,33 @@ class Encounter {
 
     async start(encType) {
         //create popup based on that encounter to begin encounter
-        this.encPop = new EncounterPopup(this.tv, this.gm, encType, this.shipList);
+        this.encPop = new EncounterPopup(this.tv, this.gm, encType, this.currentBoxName, this.shipList);
         await until(_ => this.gm.eventResolved == true);
 
         //deal with mission boxes first
-
-        switch (encType) {
-            case "No Encounter":
-                break;
-            case "Aircraft":
-                break;
-            case "Mission":
-                break;
-            default:
-                this.attackFlow(true);
+        if (this.currentBoxName == "Mission") {
+            //Abwehr Mission
+            if (this.gm.currentOrders.includes("Abwehr")) {
+                //DEAL WITH ABWEHR ROLL (already rolled - result is encounterType)
+                this.abwehrAgent();
+            }
+            else if (this.gm.currentOrders.includes("Minelaying")) {
+                //DEAL WITH MINELAYING ROLL (already rolled - result is encounterType)
+                this.minelaying();
+            }
+            else {
+                console.log("Error dealing with mission start.")
+            }
+        }//else - for non-mission patrol boxes
+        else {
+            switch (encType) {
+                case "No Encounter":
+                    break;
+                case "Aircraft":
+                    break;
+                default:
+                    this.attackFlow(true);
+            }
         }
     }
 
@@ -1082,6 +1095,16 @@ class Encounter {
         }
         else {
             this.gm.setEventResolved(true);
+        }
+    }
+
+    //Deal with Abwehr Agent Delivery - following announcement of encounter popup (approaching coast etc
+    abwehrAgent() {
+
+        //Successful delivery
+        if (this.encounterType == "No Encounter") {
+            this.gm.setEventResolved(false);
+            var missionPopup = new MissionPopup(this.tv, this.gm, this.encounterType);
         }
     }
 }
