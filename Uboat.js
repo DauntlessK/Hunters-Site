@@ -259,7 +259,7 @@ class Uboat{
      * @param {string} system 
      */
     getSystemStatus(system) {
-        switch (this.systems(system)) {
+        switch (this.systems[system]) {
             case 0:
                 return "Operational";
             case 1:

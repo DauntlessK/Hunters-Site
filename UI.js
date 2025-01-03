@@ -219,7 +219,14 @@ class UI{
             }
             this.floodGauge.draw(ctx);
             this.damageGauge.draw(ctx);
-            if (this.tv.isInEncounter) {
+            let shipsInEnc = false;
+            if (this.gm.currentEncounter != null) {
+                let encounterType = this.gm.currentEncounter.encounterType;
+                if (encounterType.includes("Ship") || encounterType.includes("Tanker") || encounterType.includes("Convoy")) {
+                    shipsInEnc = true;
+                }
+            }
+            if (this.tv.isInEncounter && shipsInEnc) {
                 Object.values(this.tv.gameObjects).forEach(object => {
                     if (!object.sprite.isPlayer && object.sprite.shipType == "Escort") {
                         object.sprite.drawEscortShipInfo(ctx);

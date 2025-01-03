@@ -1,5 +1,5 @@
 class Encounter {
-    constructor(tv, gm, patrol, encounterType, currentBoxName, existingShips) {
+    constructor(tv, gm, patrol, sub, encounterType, currentBoxName, existingShips) {
         this.shipListLoaded = false;
         if (encounterType != "No Encounter" && encounterType != "Mission") { console.log("ALARRRRM!  " + encounterType); }
 
@@ -10,7 +10,7 @@ class Encounter {
         this.encounterType = encounterType;   //Rolled encounter (no encounter, aircraft, convoy, etc)
         this.shipList = [];
         this.shipsSunk = [];
-        this.sub = this.sub;
+        this.sub = sub;
 
         //Encounter "Scoreboard" for results
         this.numHits = 0;
@@ -479,7 +479,7 @@ class Encounter {
         else if (result >= 2) {
             //1 Attack on E3 + 1 Crew Injury
             result = this.sub.damage(1, "Aircraft");
-            result2 = this.gm.crewInjury("Aircraft");
+            result2 = this.sub.crewInjury("Aircraft");
         }
         else {
             //1 Attack on E3*extra mod* + 1 Injury (and a second attack if flak did not down plane)
@@ -707,6 +707,8 @@ class Encounter {
     //Resolves damage and then displays results in popup
     resolveUboatAttack() {
         this.tv.setFiringMode(false);
+        console.log(this.sub);
+        console.log(this.sub.isFiringDeckGun);
         if (this.sub.isFiringDeckGun > 0) {
             this.resolveDeckGun(this.sub.isFiringDeckGun);
             this.firedDeckGun = true;

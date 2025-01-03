@@ -81,18 +81,25 @@ class EncounterPopup{
         this.element.innerHTML = (`
             <p class="PatrolMessage_p">Aircraft!<br>
             </p>
+            <button class="AttackPopup_button" id="continue">Continue</button>
         `)
 
+        this.element.addEventListener("click", ()=> {
+            var action = null;
+            if (event.target.id == "continue"){
+                //close popup
+                this.done(event.target.id);
+            }
+        })
+
         this.container.appendChild(this.element);
-        this.gm.setEventResolved(true);
-        this.tv.finishEncounter();
     }
 
     //Popup for mission (abwehr agent or minelaying)
     mission() {
         var missionArray = [];
 
-        if (this.currentOrders.includes("Minelaying")) {
+        if (this.gm.currentOrders.includes("Minelaying")) {
             missionArray = ["", 
                 "Kommandant, approaching the designated mine area.",
                 "We are approaching the target mining area, Kommandant.",
@@ -111,6 +118,7 @@ class EncounterPopup{
         this.element.innerHTML = (`
             <p class="PatrolMessage_p">${missionArray[roll]}<br>
             </p>
+            <button class="AttackPopup_button" id="continue">Continue</button>
         `)
 
         this.element.addEventListener("click", ()=> {

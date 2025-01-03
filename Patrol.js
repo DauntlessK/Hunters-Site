@@ -9,7 +9,7 @@ class Patrol{
         //array of each "step" of a patrol, which includes port, transit and patrol/mission spots
         this.patrolArray = [];
 
-        //all patrol charts init
+        //all patrol charts init P1 Patrol Assignment
         this.patrolChart1 = ["", "", "Spanish Coast", "British Isles", "British Isles", "British Isles (Minelaying)", "British Isles",
             "British Isles", "British Isles", "British Isles (Minelaying)", "British Isles", "British Isles", "West African Coast"];
         this.patrolChart2 = ["", "", "Spanish Coast", "Norway", "British Isles", "British Isles (Minelaying)", "British Isles", "British Isles",
@@ -45,9 +45,10 @@ class Patrol{
             console.log("Error getting patrol array.");
         }
 
-        const pickOrderRoll = d6Roll();
+        var pickOrderRoll = d6Roll();
         var unique = this.ordersArray.filter(onlyUnique);
         var isPicking = false
+        if (this.gm.adminMode) {pickOrderRoll = 1;}
         if (pickOrderRoll <= this.gm.sub.crew_levels["Kommandant"] && !this.gm.permArcPost && !this.permMedPost){  //final should be <=
             isPicking = true;
             this.gm.ordersPopup(unique, isPicking);

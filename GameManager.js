@@ -59,6 +59,8 @@ class GameManager{
         this.hitsTaken = 0;
         this.randomEvents = 0;
         this.pastSubs = [];
+        this.adminMode = true;     //To choose orders
+        
 
         this.currentEncounter = null;
     }
@@ -79,6 +81,7 @@ class GameManager{
         this.logBook.push(patrol);
 
         //Popup to greet start of game
+        if (this.adminMode) { console.log("--ADMIN MODE--"); }
         this.setEventResolved(false);
         this.setDate();
         this.getStartingRank();
@@ -325,7 +328,7 @@ class GameManager{
         var currentEncounterType = this.patrol.getEncounterType(currentBoxName, this.getYear(), this.randomEvent);
         console.log("Current Encounter: " + currentEncounterType);
         
-        this.currentEncounter = new Encounter(this.tv, this, this.patrol, currentEncounterType, currentBoxName, null);
+        this.currentEncounter = new Encounter(this.tv, this, this.patrol, this.sub, currentEncounterType, currentBoxName, null);
         await until(_ => this.tv.isInEncounter == false);
         console.log("End Encounter");
     }
