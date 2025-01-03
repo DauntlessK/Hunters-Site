@@ -195,13 +195,13 @@ class Patrol{
             else{   //used to replace patrol array spots that have parentheses and should not (so location is only displayed)
                 var otherSpot = this.gm.currentOrders;
                 if (this.gm.currentOrders.includes("Abwehr")){
-                    otherSpot = this.gm.currentOrders.replace("(Abwehr Agent Delivery)", "")
+                    otherSpot = this.gm.currentOrders.replace(" (Abwehr Agent Delivery)", "")
                 }
                 else if (this.gm.currentOrders.includes("Minelaying")){
-                    otherSpot = this.gm.currentOrders.replace("(Minelaying)", "");
+                    otherSpot = this.gm.currentOrders.replace(" (Minelaying)", "");
                 }
                 else if (this.gm.currentOrders.includes("Wolfpack")){
-                    otherSpot = this.gm.currentOrders.replace("(Wolfpack)", "");
+                    otherSpot = this.gm.currentOrders.replace(" (Wolfpack)", "");
                 }
                 this.patrolArray.push(otherSpot);
             }

@@ -382,12 +382,14 @@ class Uboat{
         }
     }
 
-    //changes all current tubes to mines
-    loadMines(){
+    /**
+     * Changes all current tubes to mines.
+     */
+    loadMines() {
         for (let i = 1; i < 5 + this.aft_tubes; i++){
             this.tube[i] = 3;
         }
-        if (this.getType() == "IXA" || this.getType() == "IXB"){
+        if (this.getType().includes("IX")){
             this.tube[6] = 3;
         }
         //unsure if forward and aft type counts are needed anymore
@@ -398,6 +400,27 @@ class Uboat{
         
         this.minesLoadedForward = true;
         this.minesLoadedAft = true;
+    }
+
+    /**
+     * Removes mines from torpedo tubes following a successful mission, assuming appropriate door is operational.
+     */
+    deployMines() {
+        // deploy forward mines if doors work
+        if (this.getSystemStatus("Forward Torpedo Doors") == "Operational") {
+            for (let i = 1; i < 5; i++){
+                this.tube[i] = 0;
+            }
+            this.minesLoadedForward = false;
+        }
+        //deploy aft mines if doors work
+        if (this.getSystemStatus("Aft Torpedo Doors") == "Operational") {
+            this.tube[5] = 0;
+            if (this.getType().includes("IX")){
+                this.tube[6] = 0;
+            }
+            this.minesLoadedAft = false;
+        }        
     }
 
     //Returns int of how many inoperative diesel engines U-boat has
@@ -535,6 +558,9 @@ class Uboat{
         for (let i = 0; i < 4; i++) {
             if (this.crew_health[i] >= 2) {
                 numOfKO++;
+            }
+            else {
+                return false;
             }
         }
         if (numOfKO == 4) {

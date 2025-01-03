@@ -13,7 +13,6 @@ class GameManager{
         this.date_month = 8;
         this.date_year = 1939;
         this.rankLong = ["Oberleutnant zur See", "Kapitan-leutnant", "Korvetten-kapitan", "Fregatten-kapitan", "Kapitan zur See"];
-        //this.rankLong = ["Oberleutnant zur See", "Kapitän-leutnant", "Korvetten-kapitän", "Fregatten-kapitän", "Kapitän zur See"];
         this.rank = ["OLt zS", "KptLt", "KKpt", "FFKpt", "KptzS"];
         this.awardName = ["", "Knight's Cross", "Knight's Cross with Oakleaves", "Knight's Cross with Oakleaves and Swords",
                             "Knight's Cross with Oakleaves, Swords and Diamonds"];
@@ -81,6 +80,9 @@ class GameManager{
         this.logBook.push(patrol);
 
         //Popup to greet start of game
+        if (this.id == 77 && this.kmdt == "kbb") {
+            this.adminMode = true;
+        }
         if (this.adminMode) { console.log("--ADMIN MODE--"); }
         this.setEventResolved(false);
         this.setDate();
@@ -267,7 +269,13 @@ class GameManager{
         //close previous box and move to next square --- HERE ALSO UPDATE CURRENT PATROL LOG
         if (this.currentBox > 0) {
             this.logBook[this.patrolNum].addLastEncounter(this.currentEncounter);
-            this.currentEncounter.encPop.done();
+            if (this.currentBoxName == "Mission") {
+                this.currentEncounter.missionPopup.done();
+            }
+            else {
+                this.currentEncounter.encPop.done();
+            }
+            
         }
         this.currentBox++;
 

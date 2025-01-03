@@ -81,7 +81,7 @@ class Encounter {
                 console.log("Mission attempt!");
                 if (looping > 0) {
                     //get new encounterType (mission attempt)
-                    this.encounterType = this.patrol.getEncounterType("Mission", this.gm.getYear(), this.gm.randomEvent());
+                    this.encounterType = this.patrol.getEncounterType("Mission", this.gm.getYear(), this.gm.randomEvent);
                 }
 
                 //DEAL WITH ABWEHR or MINELAYING ROLL (already rolled - result is encounterType)
@@ -90,11 +90,11 @@ class Encounter {
 
                 //Establish if mission was successful or not
                 //Abwehr Missions
-                if (this.currentOrders.includes("Abwehr")){
+                if (this.gm.currentOrders.includes("Abwehr")){
                     //Successful delivery
                     if (this.encounterType == "No Encounter" && this.sub.isCrewmanFunctional("Abwehr Agent")) {
                         //Success
-                        missionPopup.missionSuccess();
+                        missionPopup.missionSuccess(this.gm.currentOrders);
                         this.gm.missionComplete = true;
                         this.endEncounter();
                         break;
@@ -118,7 +118,7 @@ class Encounter {
                     if (this.encounterType == "No Encounter") {
                         //Success, at least SOME mines were deployed
                         if (this.sub.getSystemStatus("Forward Torpedo Doors") == "Operational" || this.sub.getSystemStatus("Forward Torpedo Doors")) {
-                            missionPopup.missionSuccess();
+                            missionPopup.missionSuccess(this.gm.currentOrders);
                             this.gm.missionComplete = true;
                             this.endEncounter();
                             break;
@@ -535,7 +535,11 @@ class Encounter {
         }
         this.tv.finishEncounter();
         //Prompt for reloads if torpedoes were fired
-        if (this.numFired > 0) {
+        if (this.numFired > 0 || this.currentBoxName == "Mission") {
+            if (this.gm.currentOrders.includes("Minelaying")) {
+                this.sub.deployMines();
+                this.tv.mainUI.forceTorpedoButtonUpdate();
+            }
             this.tv.enterReloadMode();
         }
     }
@@ -707,8 +711,6 @@ class Encounter {
     //Resolves damage and then displays results in popup
     resolveUboatAttack() {
         this.tv.setFiringMode(false);
-        console.log(this.sub);
-        console.log(this.sub.isFiringDeckGun);
         if (this.sub.isFiringDeckGun > 0) {
             this.resolveDeckGun(this.sub.isFiringDeckGun);
             this.firedDeckGun = true;
@@ -779,12 +781,14 @@ class Encounter {
         for (let i = 1; i < 5; i++) {
             if (this.sub.tubeFiring[i] == true) {
                 this.firedFore = true;
+                break;
             }
         }
-        //Check aft tubes first
+        //Check aft tubes
         for (let i = 5; i < 7; i++) {
             if (this.sub.tubeFiring[i] == true) {
                 this.firedAft = true;
+                break;
             }
         }
         //Check if fore and aft both fired

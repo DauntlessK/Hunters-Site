@@ -188,6 +188,15 @@ class UI{
         }
     }
 
+    /**
+     * Forces torpedo button array to update()
+     */
+    forceTorpedoButtonUpdate() {
+        for (let i = 1; i < 7; i++) {
+            this.tubeButtonArray[i].getLatestState();
+        }
+    }
+
     //draws elemnts of UI
     draw(ctx){
         if (this.uiIsOn()){

@@ -46,11 +46,16 @@ class PatrolLog{
 
         if (enc.encounterType == "No Encounter") {
             if (this.gm.patrol.patrolArray[this.gm.currentBox] == "Transit") {
-                lineEntry = lineEntry + "Uneventful transit"
+                lineEntry = lineEntry + "Uneventful transit";
             }
             else if (this.gm.patrol.patrolArray[this.gm.currentBox] == "Mission") {
-                //TODO
-                lineEntry = lineEntry + "Successfully TBD--TODO"
+                if (this.gm.currentOrders.includes("Abwehr")) {
+                    lineEntry = lineEntry + "Successfully landed Abwehr Agent.";
+                }
+                else {
+                    lineEntry = lineEntry + "Successfully deployed mines.";
+                }
+                
             }
             else {
                 lineEntry = lineEntry + "Patrolled area - no ships found";
@@ -59,21 +64,21 @@ class PatrolLog{
         //If encounter is a ship / attack encounter
         else if (enc.encounterType.includes("Ship") || enc.encounterType == "Convoy" || enc.encounterType.includes("Tanker")) {
             if (enc.encounterType == "Convoy") {
-                lineEntry = lineEntry + "Encountered convoy; "
+                lineEntry = lineEntry + "Encountered convoy; ";
             }
             else if (enc.encounterType == "Ship") {
-                lineEntry = lineEntry + "Encountered lone ship; "
+                lineEntry = lineEntry + "Encountered lone ship; ";
             }
             else {
-                lineEntry = lineEntry + "Encountered ships; "
+                lineEntry = lineEntry + "Encountered ships; ";
             }
 
             //Results of attack
             if (enc.shipsSunk.length == 0 && enc.ignored) {
-                lineEntry = lineEntry + "Did not engage. "
+                lineEntry = lineEntry + "Did not engage. ";
             }
             else if (enc.shipsSunk.length == 0) {
-                lineEntry = lineEntry + "Unable to sink any targets. "
+                lineEntry = lineEntry + "Unable to sink any targets. ";
             }
             else {
                 //sunk any ships
@@ -96,15 +101,19 @@ class PatrolLog{
                     lineEntry = lineEntry + "Escaped depth charges from " + enc.shipList[0].getName();
                 }
                 else {
-                    lineEntry = lineEntry + "Evaded detection."
+                    lineEntry = lineEntry + "Evaded detection.";
                 }
             }
+        }
+        else if (enc.encounterType == "Aircraft") {
+            lineEntry = lineEntry + "Encountered Aircraft.";
+            //TODO add results of encounter
         }
         else {
             lineEntry = lineEntry + "unknown enc";
         }
 
-        this.lineEntry = this.lineEntry + "</p>"
+        this.lineEntry = this.lineEntry + "</p>";
 
         this.patrolSummary = this.patrolSummary + lineEntry;
     }

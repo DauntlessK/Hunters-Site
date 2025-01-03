@@ -40,7 +40,6 @@ class ResupplyPopup{
 
         this.element.addEventListener("click", ()=> {
             //determine which button was clicked
-            console.log(event.target.id);
             if (event.target.id == "G7aLoadout"){
                 this.gm.sub.G7a = this.maxG7a;
                 this.gm.sub.G7e = this.minG7e;
