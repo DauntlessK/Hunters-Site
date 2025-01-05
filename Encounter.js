@@ -473,18 +473,27 @@ class Encounter {
         //Check results
         let result = mods + a1Roll;
         let result2 = "";
+        console.log("Aircraft Roll: " + result);
         if (result >= 6) {
             //Crash Dive successful, avoids air attack
+            console.log("Successful Dive");
         }
         else if (result >= 2) {
             //1 Attack on E3 + 1 Crew Injury
-            result = this.sub.damage(1, "Aircraft");
+            let hitCount = this.escortAndAirAttackRoll(false, false, true);
+            result = this.sub.damage(hitCount, "Aircraft");
             result2 = this.sub.crewInjury("Aircraft");
+            console.log(result);
         }
         else {
             //1 Attack on E3*extra mod* + 1 Injury (and a second attack if flak did not down plane)
-
+            let hitCount = this.escortAndAirAttackRoll(false, false, true);
+            result = this.sub.damage(hitCount, "Aircraft");
+            result2 = this.sub.crewInjury("Aircraft");
+            console.log(result);
         }
+
+        flakResult = this.flakAttack();
 
         //Fire Flak if sub did not dive fast enough
         //if did not dive and aircraft is still alive and result is 1 or less, resolve second attack on E3
@@ -1282,6 +1291,37 @@ class Encounter {
             default:
                 console.log("GAME OVER");
                 return 20; //TODO FIX
+        }
+    }
+
+    /**
+     * A2 Chart roll for flak attacks following an aircraft attack
+     * @returns String of roll result ("Shot Down", "Damaged", or "Miss")
+     */
+    flakAttack() {
+        let a2roll = d6Rollx2();
+        let mods = 0;
+
+        if (this.sub.getType() == "VIIA") {
+            mods += 1;
+        }
+        if (this.sub.getType().includes("IX") && this.getSystemStatus("3.7 Flak") == "Functional") {
+            mods -= 1;
+        }
+        if (this.sub.crew_levels("Crew") >= 2) {
+            mods -= 1;
+        }
+        //TODO for Flak (if it is ever added) bonus (-2)
+
+        result = a2roll + mods;
+        if (result <= 3) {
+            return "Shot Down";
+        }
+        else if (result <= 5) {
+            return "Damaged";
+        }
+        else {
+            return "Miss";
         }
     }
 }
