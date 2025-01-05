@@ -101,10 +101,14 @@ class OrdersPopup{
                 this.gm.currentOrders = event.target.id;
                 console.log(event.target.id + " " + this.gm.currentOrders);
                 this.gm.ordersPopup(this.uniqueOrders, false)
-                this.done();
+                this.remove();
             }
 
         });
+    }
+
+    remove() {
+        this.element.remove();
     }
 
     done(){
