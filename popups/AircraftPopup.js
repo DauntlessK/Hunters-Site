@@ -1,39 +1,73 @@
-class EncounterPopup{
-    constructor(tv, gm, enc, currentBoxName, shipList) {
+class AircraftPopup{
+    constructor(tv, gm, enc, currentBoxName) {
         this.tv = tv;
         this.gm = gm;
         this.enc = enc;
         this.currentBoxName = currentBoxName;
-        this.shipList = shipList;
+        this.aircraftType = "";
         
-        this.choice = null;
+        this.getAircraft();
 
         this.container = document.querySelector(".game-container");
 
         //Create the element
         this.element = document.createElement("div");
 
-        this.element.classList.add("PatrolMessage");
+        this.element.classList.add("AircraftDamageMessage");
+    }
 
-        if (this.currentBoxName == "Mission") {
-            this.mission();
+    getAircraft() {
+        //var names = await getDataFromTxt("data/aircraft.txt");
+        //this.aircraftType = names[randomNum(0, 17)];
+        let aTypes = ["Lockheed Hudson", "de Havilland Mosquito", "Vickers Wellington", "Armstrong Whitworth Whitley",
+            "Lockheed Ventura and Harpoon", "B-25 Mitchell", "Vickers Warwick", "B-18 Bolo", "Avro Anson", "TBF Avenger",
+            "F4F Wildcat", "Fairey Swordfish", "Martin PBM Mariner", "Short Sunderland", "PBY Catalina", "Handley Page Halifax",
+            "B-17 Flying Fortress", "B-24 Liberator"]
+        this.aircraftType = aTypes[randomNum(0, 17)];
+    }
+
+    successfulDive() {
+
+        //new div to add
+        this.element.innerHTML = (`
+            <p class="PatrolMessage_p">After the chaos of the crash drive, the boat successfully slips beneath the waves.<br>
+            </p>
+        `)
+
+        this.container.appendChild(this.element);
+    }
+
+    /**
+     * Popup when an aircraft makes a successful attack that results in damage (and an injury) 
+     * @param {string} result 
+     * @param {string} result2 
+     * @param {boolean} twoHit 
+     */
+    hit(hitNum, result, result2, twoHit) {
+
+        //new div to add
+        if (twoHit) {
+            this.element.innerHTML = (`
+                <h3 class="HeaderMessage_h3">We've been caught with our pants down! Damage Report! </h3>
+                <p class="DetectionTextMessage_p">${this.aircraftType} has made an attack run! ${hitNum} hits!<br><br>
+                ${result} <br> ${result2}
+                <button class="ContinuePopup_button" id="continue2">Continue</button>
+                </p>`)
         }
         else {
-            switch (enc) {
-                case "No Encounter":
-                    this.noEncounter();
-                    break;
-                case "Aircraft":
-                    this.encounterAircraft();
-                    break;
-                case "Mission":
-                    this.mission();
-                    break;
-                default:
-                    this.ships();
-                    break;
-            }
+            this.element.innerHTML = (`
+                <h3 class="HeaderMessage_h3">Damage Report! </h3>
+                <p class="DetectionTextMessage_p">${this.aircraftType} has made an attack run!<br><br>
+                ${result} <br> ${result2}
+                <button class="ContinuePopup_button" id="continue2">Continue</button>
+                </p>`)
         }
+
+        this.element.addEventListener("click", ()=> {
+            this.done();
+        })
+
+        this.container.appendChild(this.element);
     }
     
     //Popup when encounter is "noEncounter"
@@ -46,12 +80,6 @@ class EncounterPopup{
                     "The sea before you is empty - the U-boat cruises onwards.",
                     "You have an uneventful transit.",
                     "You continue to sail towards your destination, finding nothing along the way."];
-                break;
-            case "Bay of Biscay":
-                noEncounterArray = ["", 
-                    "We manage to cross the treacherous Bay without issue.",
-                    "You have an uneventful transit across the Bay.",
-                    "You sail across the Bay of Biscay uninterrupted."];
                 break;
             case "Gibraltar":
                 noEncounterArray = ["", 
@@ -99,25 +127,6 @@ class EncounterPopup{
         })
 
         this.container.appendChild(this.element);
-    }
-
-    escortArrival() {
-                //new div to add
-                this.element.innerHTML = (`
-                    <h3 class="HeaderMessage_h3">An escort has arrived!<br>
-                    </h3>
-                    <button class="AttackPopup_button" id="continue">Continue</button>
-                `)
-        
-                this.element.addEventListener("click", ()=> {
-                    var action = null;
-                    if (event.target.id == "continue"){
-                        //close popup
-                        this.done(event.target.id);
-                    }
-                })
-        
-                this.container.appendChild(this.element);
     }
 
     //Popup for mission (abwehr agent or minelaying)

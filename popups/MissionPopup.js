@@ -49,10 +49,12 @@ class MissionPopup{
 
     torpedoDoorFailure() {
         //NEED MESSAGING FOR WHEN BOTH TORPEDO DOORS ARE INOP
+        console.log("NEED MESSAGING FOR WHEN BOTH TORPEDO DOORS ARE INOP");
     }
 
     agentDeadFailure() {
         //NEED MESSAGING FOR WHEN ABWEHR AGENT IS KIA OR SW
+        console.log("NEED MESSAGING FOR WHEN ABWEHR AGENT IS KIA OR SW");
     }
 
     //Popup for aircraft attack - NOT USED??
@@ -72,7 +74,10 @@ class MissionPopup{
         if (!this.tv.isPaused) {
             this.element.remove();
             this.gm.setEventResolved(true);
-            this.choice = id;
         }
+    }
+
+    remove() {
+        this.element.remove();
     }
 }
