@@ -601,24 +601,30 @@ class Uboat{
         this.gm.hitsTaken += numHits;
         var tookFloodingThisRound = false;
         var damage = "";
-        var messageToReturn = "";
+        var messageToReturn = numHits + " hits! ";
+        if (numHits == 0) {
+            messageToReturn = "They missed us! ";
+        }
+        else if (numHits == 1) {
+            messageToReturn = numHits + " hit! ";
+        }
 
         for (let x = 0; x < numHits; x++) {
             damage = this.damageChart[randomNum(0, 35)];
             switch (damage) {
                 case "crew injury":
-                    messageToReturn = messageToReturn + "Crew injured! ";
+                    messageToReturn = messageToReturn + "Injury! ";
                     if (this.gm.halsUndBeinbruch > 0){
                         //deal with hals TODO
                     }
-                    messageToReturn = this.crewInjury(attack);
+                    messageToReturn += this.crewInjury(attack);
                     break;
                 case "crew injuryx2":
-                    messageToReturn = messageToReturn + "Two crew injured! ";
+                    messageToReturn = messageToReturn + "Two injuries! ";
                     if (this.gm.halsUndBeinbruch > 0){
                         //deal with hals TODO
                     }
-                    messageToReturn = this.crewInjury(attack);
+                    messageToReturn += this.crewInjury(attack);
                     messageToReturn += " ";
                     messageToReturn += this.crewInjury(attack);
                     break;
@@ -681,7 +687,12 @@ class Uboat{
                     }
                     break;
                 case "minor":
-                    messageToReturn = messageToReturn + "Depth charges ineffective! No damage. ";
+                    if (attack != "Aircraft") {
+                        messageToReturn = messageToReturn + "Depth charges ineffective! No damage. ";
+                    }
+                    else {
+                        messageToReturn = messageToReturn + "Aircraft missed! No damage. ";
+                    }
                     break;
                 default:
                     if (damage.slice(-1) == "s") {
@@ -742,9 +753,9 @@ class Uboat{
 
     crewInjury(attack) {
         var sevText = "";
-        var wounds;
+        var wounds = 0;
         var toReturn = "";
-        var person;
+        var person = "";
 
         if (attack == "Torpedo Incident") {
             //deal with TI
@@ -778,9 +789,9 @@ class Uboat{
         //assign wounds and finish return text
         switch (crewInjuryRoll) {
             case 2:
-                toReturn = "Kmdt has been " + sevText;
+                toReturn = "You have been " + sevText;
                 this.crew_health["Kommandant"] += wounds;
-                if (self.crew_health["Kommandant"] == 3) {
+                if (this.crew_health["Kommandant"] == 3) {
                     //deal with end of game text TODO=======================
                 }
                 //GAME OVER TODO =====================

@@ -50,10 +50,10 @@ class PatrolLog{
             }
             else if (this.gm.patrol.patrolArray[this.gm.currentBox] == "Mission") {
                 if (this.gm.currentOrders.includes("Abwehr")) {
-                    lineEntry = lineEntry + "Successfully landed Abwehr Agent.";
+                    lineEntry = lineEntry + "Completed mission: Successfully landed Abwehr Agent.";
                 }
                 else {
-                    lineEntry = lineEntry + "Successfully deployed mines.";
+                    lineEntry = lineEntry + "Completed mission: Successfully deployed mines.";
                 }
                 
             }

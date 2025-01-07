@@ -233,7 +233,7 @@ class GameManager{
                 this.currentOrdersLong = "Minelay off British Isles"
                 break;
             case "British Isles (Abwehr Agent Delivery)":
-                this.currentOrdersLong = "Deliver Agent to Britian"
+                this.currentOrdersLong = "Deliver Agent to Britain"
                 break;
             case "Atlantic (Wolfpack)":
                 this.currentOrdersLong = "Wolfpack patrol the Mid-Atlantic";
@@ -269,13 +269,7 @@ class GameManager{
         //close previous box and move to next square --- HERE ALSO UPDATE CURRENT PATROL LOG
         if (this.currentBox > 0) {
             this.logBook[this.patrolNum].addLastEncounter(this.currentEncounter);
-            if (this.currentBoxName == "Mission") {
-                this.currentEncounter.missionPopup.done();
-            }
-            else {
-                this.currentEncounter.encPop.done();
-            }
-            
+            this.currentEncounter.closeWindows();            
         }
         this.currentBox++;
 

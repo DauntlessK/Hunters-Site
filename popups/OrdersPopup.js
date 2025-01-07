@@ -36,7 +36,7 @@ class OrdersPopup{
             case "Norway":
                 message = " has been assigned to a patrol off Norway. Proceed to the enclosed target area."
                 break;
-            case "British Isles (Abwehr Agent Delivery":
+            case "British Isles (Abwehr Agent Delivery)":
                 message = " has been entrusted to safely deliver the onboard Abwehr agent to the enclosed area, then proceed to patrol the British Isles."
                 break;
             case "Atlantic":
@@ -101,10 +101,14 @@ class OrdersPopup{
                 this.gm.currentOrders = event.target.id;
                 console.log(event.target.id + " " + this.gm.currentOrders);
                 this.gm.ordersPopup(this.uniqueOrders, false)
-                this.done();
+                this.remove();
             }
 
         });
+    }
+
+    remove() {
+        this.element.remove();
     }
 
     done(){

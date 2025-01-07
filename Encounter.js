@@ -65,6 +65,8 @@ class Encounter {
         this.follow = "";
 
         this.encPop = null;
+        this.airPopup = null;
+        this.missionPopup = null;
         this.start(this.encounterType);
     }
 
@@ -86,7 +88,7 @@ class Encounter {
 
                 //DEAL WITH ABWEHR or MINELAYING ROLL (already rolled - result is encounterType)
                 this.gm.setEventResolved(false);
-                var missionPopup = new MissionPopup(this.tv, this.gm, this.encounterType, this.gm.currentOrders);
+                this.missionPopup = new MissionPopup(this.tv, this.gm, this.encounterType, this.gm.currentOrders);
 
                 //Establish if mission was successful or not
                 //Abwehr Missions
@@ -94,14 +96,14 @@ class Encounter {
                     //Successful delivery
                     if (this.encounterType == "No Encounter" && this.sub.isCrewmanFunctional("Abwehr Agent")) {
                         //Success
-                        missionPopup.missionSuccess(this.gm.currentOrders);
+                        this.missionPopup.missionSuccess(this.gm.currentOrders);
                         this.gm.missionComplete = true;
                         this.endEncounter();
                         break;
                     }
                     else if (this.encounterType == "No Encounter") {
                         //Unsucessful - Agent dead
-                        missionPopup.agentDeadFailure();
+                        this.missionPopup.agentDeadFailure();
                         this.gm.missionComplete = false;
                         this.endEncounter();
                         break;
@@ -118,14 +120,14 @@ class Encounter {
                     if (this.encounterType == "No Encounter") {
                         //Success, at least SOME mines were deployed
                         if (this.sub.getSystemStatus("Forward Torpedo Doors") == "Operational" || this.sub.getSystemStatus("Forward Torpedo Doors")) {
-                            missionPopup.missionSuccess(this.gm.currentOrders);
+                            this.missionPopup.missionSuccess(this.gm.currentOrders);
                             this.gm.missionComplete = true;
                             this.endEncounter();
                             break;
                         }
                         else {
                             //no mines were deployed as doors were both broken. failure
-                            missionPopup.torpedoDoorFailure();
+                            this.missionPopup.torpedoDoorFailure();
                             this.gm.missionComplete = false;
                             this.endEncounter();
                             break;
@@ -147,13 +149,21 @@ class Encounter {
                 case "Aircraft":
                     this.aircraftFlow();
                     break;
+                case "Escort":
+                    this.encPop.escortArrival();
+                    this.escortDetection(false ,0 ,false);
+                    break;
                 default:
                     this.attackFlow(true);
             }
         }
     }
 
-    //Starts engagement of ship or ship(s)
+    /**
+     * Starts engagement of ship or ship(s)
+     * @param {boolean} newAttack 
+     * @returns 
+     */
     async attackFlow(newAttack) {
 
         //If mines are on the boat and ship is escorted, ignore encounter TODO FIX
@@ -471,21 +481,66 @@ class Encounter {
         }
 
         //Check results
-        let result = mods + a1Roll;
-        let result2 = "";
+        let result = mods + a1Roll;         //roll result
+        let result1 = "";                   //1st attack
+        let result2 = "";                   //Crew Injury
+        let result3 = "";                   //2nd attack if applicable
+        let secondAttack = false;
+        this.airPopup = new AircraftPopup(this.tv, this.gm, this.encounterType, this.currentBoxName);
+
+        console.log("Aircraft Roll: " + result);
         if (result >= 6) {
             //Crash Dive successful, avoids air attack
+            console.log("Successful Dive");
+            this.airPopup.successfulDive();
         }
         else if (result >= 2) {
             //1 Attack on E3 + 1 Crew Injury
-            result = this.sub.damage(1, "Aircraft");
+            this.gm.setEventResolved(false);
+            let hitCount = this.escortAndAirAttackRoll(false, false, true);
+            result1 = this.sub.damage(hitCount, "Aircraft");
             result2 = this.sub.crewInjury("Aircraft");
+            this.airPopup.hit(hitCount, result1, result2, false);
+            console.log(result1);
+            console.log(this.gm.eventResolved);
+            await until(_ => this.gm.eventResolved == true);
         }
         else {
             //1 Attack on E3*extra mod* + 1 Injury (and a second attack if flak did not down plane)
-
+            this.gm.setEventResolved(false);
+            let hitCount = this.escortAndAirAttackRoll(false, false, true);
+            result1 = this.sub.damage(hitCount, "Aircraft");
+            result2 = this.sub.crewInjury("Aircraft");
+            secondAttack = true;
+            this.airPopup.hit(hitCount, result1, result2, true);
+            console.log(result1);
+            console.log(this.gm.eventResolved);
+            await until(_ => this.gm.eventResolved == true);
         }
 
+        //Additional aircraft steps if not a successful dive
+        if (result < 6) {
+            let flakResult = this.flakAttack();
+
+            if (flakResult == "Shot Down") {
+                //Message for shot down
+                secondAttack = false;
+            }
+
+            if (secondAttack) {
+                let hitCount = this.escortAndAirAttackRoll(false, false, true);
+                result3 = this.sub.damage(hitCount, "Aircraft");
+            }
+
+            //New encounter roll on the additional round E1
+            if (flakResult != "Shot Down" || flakResult == "None") {
+                this.tv.uboat.sprite.dive();
+                this.encounterType = this.patrol.getEncounterType("Additional Round of Combat", this.gm.getYear(), this.gm.randomEvent);
+                this.start(this.encounterType);
+            }
+        }
+        this.endEncounter();
+        
         //Fire Flak if sub did not dive fast enough
         //if did not dive and aircraft is still alive and result is 1 or less, resolve second attack on E3
         //Ship dives
@@ -507,7 +562,7 @@ class Encounter {
     //Resets flags and attack parameters to start-of-encounter
     postFollowStatsClear(depth) {
         this.attackDepth = "";
-        this.depth = depth;               //Surfaced, Periscope Depth, or Deep
+        this.depth = depth;            //Surfaced, Periscope Depth, or Deep
         this.range = "";               //Close, Medium, or Long
         this.rangeNum = 0;             //8, 7, 6
         this.canFireForeAndAft = false;
@@ -1092,7 +1147,12 @@ class Encounter {
         }
     }
 
-    //Called when escort detection roll is required to see if Uboat was detected
+    /**
+     * Called when escort detection roll is required to see if Uboat was detected
+     * @param {boolean} previouslyDetected 
+     * @param {int} wpMod (Wolfpack Modifier), default 0
+     * @param {boolean} closeRangeCheck 
+     */
     async escortDetection(previouslyDetected, wpMod, closeRangeCheck) {
         var escortRoll = d6Rollx2();
         var escortMods = 0;
@@ -1259,7 +1319,7 @@ class Encounter {
             mods += 2;
         }
 
-        result = e3roll + mods;
+        let result = e3roll + mods;
 
         switch (result) {
             case 2:
@@ -1282,6 +1342,58 @@ class Encounter {
             default:
                 console.log("GAME OVER");
                 return 20; //TODO FIX
+        }
+    }
+
+    /**
+     * A2 Chart roll for flak attacks following an aircraft attack
+     * @returns String of roll result ("Shot Down", "Damaged", or "Miss")
+     */
+    flakAttack() {
+
+        if (this.sub.getType().includes("VII") && this.sub.getSystemStatus("Flak Gun") != "Operational") {
+            return "None";
+        }
+        else if (this.sub.getType().includes("IX") && this.sub.getSystemStatus("3.7 Flak") != "Functional" && this.sub.getSystemStatus("Flak Gun") != "Functional") {
+            return "None";
+        }
+
+        let a2roll = d6Rollx2();
+        let mods = 0;
+
+        if (this.sub.getType() == "VIIA") {
+            mods += 1;
+        }
+        if (this.sub.getType().includes("IX") && this.sub.getSystemStatus("3.7 Flak") == "Functional") {
+            mods -= 1;
+        }
+        if (this.sub.crew_levels["Crew"] >= 2) {
+            mods -= 1;
+        }
+        //TODO for Flak (if it is ever added) bonus (-2)
+
+        let result = a2roll + mods;
+        if (result <= 3) {
+            return "Shot Down";
+        }
+        else if (result <= 5) {
+            return "Damaged";
+        }
+        else {
+            return "Miss";
+        }
+    }
+
+    /**
+     * Used to ensure closure of popup messages.
+     */
+    closeWindows() {
+        this.encPop.done();
+        if (this.airPopup != null) {
+            this.airPopup.done();
+        }
+        if (this.missionPopup != null) {
+            this.missionPopup.done();
         }
     }
 }
