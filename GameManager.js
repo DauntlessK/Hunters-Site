@@ -104,6 +104,10 @@ class GameManager{
         return "U-" + this.id;
     }
 
+    /**
+     * 
+     * @returns String: Full date in Mon - Year Format (Jan - 1939)
+     */
     getFullDate(){
         return this.month[this.date_month] + " - " + this.date_year;
     }
@@ -274,6 +278,7 @@ class GameManager{
         this.currentBox++;
 
         console.log("Patrol Advance---------- step #" + this.currentBox);
+        //reset current encounter
 
         //todo - assignment to arctic
         if (this.currentOrders == "Arctic"){
@@ -326,10 +331,19 @@ class GameManager{
             console.log("TO DO - Deal with severe weather");
         }
 
+        let roll = -1;
+        //Check admin mode
+        if (this.adminMode) {
+            this.eventResolved = false;
+            let dicePicker = new AdminPopup(this.tv, this, "Get Encounter Type (E1)");
+            await until(_ => this.eventResolved == true);
+            roll = parseInt(dicePicker.getChoice());
+        }
+
         //get current encounter (IE noEncounter, encounterAttackConvoy)
-        var currentEncounterType = this.patrol.getEncounterType(currentBoxName, this.getYear(), this.randomEvent);
-        console.log("Current Encounter: " + currentEncounterType);
+        var currentEncounterType = this.patrol.getEncounterType(currentBoxName, this.getYear(), this.randomEvent, roll);
         
+        console.log("Current Encounter: " + currentEncounterType);
         this.currentEncounter = new Encounter(this.tv, this, this.patrol, this.sub, currentEncounterType, currentBoxName, null);
         await until(_ => this.tv.isInEncounter == false);
         console.log("End Encounter");

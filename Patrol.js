@@ -233,17 +233,20 @@ class Patrol{
         }
     }
 
-    getEncounterType(loc, year, randomEvent){
-        roll = d6Rollx2();
-
-        if (loc != "Additional Round of Combat"){
-            console.log("Roll for " + loc + ": " + roll);
+    getEncounterType(loc, year, randomEvent, roll){
+        //-1 is passed if admin mode is not in effect (the encounter roll wasn't set)
+        if (roll == -1) {
+            roll = d6Rollx2();
         }
+
+        console.log("Roll for " + loc + ": " + roll);
 
         //first check if random event (natural 12)
         if (roll == 12 && randomEvent == false && loc != "Additional Round of Combat" && loc != "Mission"){
             console.log("TODO - deal with getting a random event");
         }
+
+        var toReturn = "";
 
         switch (loc){
             case "Transit":
@@ -251,147 +254,193 @@ class Patrol{
                     case 2:
                     case 3:
                         //aircraft
-                        return "Aircraft";
+                        toReturn = "Aircraft";
+                        break;
                     case 12:
-                        return "Ship";
+                        toReturn = "Ship";
+                        break;
                     default:
-                        return "No Encounter";
+                        toReturn = "No Encounter";
+                        break;
                 }
+                break;
             case "Arctic":
                 switch (roll){
                     case 2:
-                        return "Capital Ship";
+                        toReturn = "Capital Ship";
+                        break;
                     case 3:
-                        return "Ship";
+                        toReturn = "Ship";
+                        break;
                     case 6:
                     case 7:
                     case 8:
-                        return "Convoy";
+                        toReturn = "Convoy";
+                        break;
                     case 12:
-                        return "Aircraft";
+                        toReturn = "Aircraft";
+                        break;
                     default:
-                        return "No Encounter";                 
+                        toReturn = "No Encounter";
+                        break;               
                 }
                 break;
             case "Atlantic":
             case "Atlantic (Wolfpack)":
                 switch (roll){
                     case 2:
-                        return "Capital Ship";
+                        toReturn = "Capital Ship";
+                        break;
                     case 3:
-                        return "Ship";
+                        toReturn = "Ship";
+                        break;
                     case 6:
                     case 7:
                     case 9:
                     case 12:
-                        return "Convoy";
+                        toReturn = "Convoy";
+                        break;
                     default:
-                        return "No Encounter";
+                        toReturn = "No Encounter";
+                        break;
                 }
                 break;
             case "British Isles":
                 switch (roll) {
                     case 2:
-                        return "Capital Ship";
+                        toReturn = "Capital Ship";
+                        break;
                     case 5:
                     case 8:
-                        return "Ship";
+                        toReturn = "Ship";
+                        break;
                     case 6:
-                        return "Ship + Escort";
+                        toReturn = "Ship + Escort";
+                        break;
                     case 10:
-                        return "Convoy";
+                        toReturn = "Convoy";
                     case 12:
-                        return "Aircraft";
+                        toReturn = "Aircraft";
+                        break;
                     default:
-                        return "No Encounter";
+                        toReturn = "No Encounter";
+                        break;
                 }
                 break;
             case "Caribbean":
                 switch (roll) {
                     case 2:
                     case 12:
-                        return "Aircraft";
+                        toReturn = "Aircraft";
+                        break;
                     case 4:
-                        return "Capital Ship";
+                        toReturn = "Capital Ship";
+                        break;
                     case 7:
-                        return "Ship";
+                        toReturn = "Ship";
+                        break;
                     case 8:
-                        return "Convoy";
+                        toReturn = "Convoy";
+                        break;
                     case 10:
-                        return "Two Ships + Escort";
+                        toReturn = "Two Ships + Escort";
+                        break;
                     default:
-                        return "No Encounter";
+                        toReturn = "No Encounter";
+                        break;
                 }
                 break;
             case "North America":
                 switch (roll){
                     case 2:
-                        return "Aircraft";
+                        toReturn = "Aircraft";
+                        break;
                     case 4:
                     case 6:
-                        return "Ship";
+                        toReturn = "Ship";
+                        break;
                     case 5:
-                        return "Two Ships + Escort";
+                        toReturn = "Two Ships + Escort";
+                        break;
                     case 8:
-                        return "Two Ships";
+                        toReturn = "Two Ships";
+                        break;
                     case 9:
                     case 12:
-                        return "Tanker";
+                        toReturn = "Tanker";
+                        break;
                     case 11:
-                        return "Convoy";
+                        toReturn = "Convoy";
+                        break;
                     default:
-                        return "No Encounter";
+                        toReturn = "No Encounter";
+                        break;
                 }
                 break;
             case "Norway":
                 switch (roll) {
                     case 2:
                     case 12:
-                        return "Aircraft";
+                        toReturn = "Aircraft";
+                        break;
                     case 3:
                     case 11:
-                        return "Capital Ship";
+                        toReturn = "Capital Ship";
+                        break;
                     case 4:
                     case 9:
                     case 10:
-                        return "Ship + Escort";
+                        toReturn = "Ship + Escort";
+                        break;
                     default:
-                        return "No Encounter"
+                        toReturn = "No Encounter";
+                        break;
                 }
                 break;
             case "Spanish Coast":
                 switch (roll) {
                     case 2:
                     case 12:
-                        return "Aircraft";
+                        toReturn = "Aircraft";
+                        break;
                     case 5:
-                        return "Ship + Escort";
+                        toReturn = "Ship + Escort";
+                        break;
                     case 6:
                     case 7:
-                        return "Ship";
+                        toReturn = "Ship";
+                        break;
                     case 10:
                     case 11:
-                        return "Convoy";
+                        toReturn = "Convoy";
+                        break;
                     default:
-                        return "No Encounter" 
+                        toReturn = "No Encounter";
+                        break;
                 }
                 break;
             case "West African Coast":
                 switch (roll) {
                     case 2:
-                        return "Aircraft";
+                        toReturn = "Aircraft";
+                        break;
                     case 3:
                     case 7:
-                        return "Ship";
+                        toReturn = "Ship";
+                        break;
                     case 6:
                     case 10:
-                        return "Convoy";
+                        toReturn = "Convoy";
+                        break;
                     case 9:
-                        return "Ship + Escort";
+                        toReturn = "Ship + Escort";
+                        break;
                     case 12:
-                        return "Aircraft";
+                        toReturn = "Aircraft";
+                        break;
                     default:
-                        return "No Encounter" 
+                        toReturn = "No Encounter";
+                        break;
                 }
                 break;
             case "Additional Round of Combat":
@@ -409,24 +458,26 @@ class Patrol{
                     case 3:
                         if (loc == "Additional Round of Combat") {
                             console.log("TO DO- Notify- An enemy escort has arrived!");
-                            return "Escort";
+                            toReturn = "Escort";
                             
                         }
                         else {
                             console.log("TO DO- Notify- An enemy escort has arrived!");
-                            return "Escort";
+                            toReturn = "Escort";
                         }
                         break;
                     case 4:
                     case 5:
                         if (loc == "Additional Round of Combat") {
-                            return "Aircraft";
+                            toReturn = "Aircraft";
                         }
                         else {
-                            return "Aircraft";
+                            toReturn = "Aircraft";
                         }
+                        break;
                     default:
-                        return "No Encounter";
+                        toReturn = "No Encounter";
+                        break;
                 }
                 break;
             case "Bay of Biscay":
@@ -442,13 +493,19 @@ class Patrol{
                     case 2:
                     case 3:
                     case 4:
-                        return "Aircraft";
+                        toReturn = "Aircraft";
+                        break;
                     default:
-                        return "No Encounter" 
+                        toReturn = "No Encounter" 
+                        break;
                 }
-                break;         
+                break;
+            default:
+                console.log("Error getting loc in patrol for E1 roll.")         
 
         }
+        this.gm.adminPause = false;
+        return toReturn;
     }
 
     //creates the string for the correct telegraph png source file based on the patrol / U-boat

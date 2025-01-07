@@ -597,7 +597,7 @@ class Uboat{
         }
     }
 
-    damage(numHits, attack) {
+    damage(numHits, attack, attacker) {
         this.gm.hitsTaken += numHits;
         var tookFloodingThisRound = false;
         var damage = "";
@@ -711,6 +711,7 @@ class Uboat{
                     }
                     break;
             }
+            
         }
 
         //check if flooding took place this round and roll for additional flooding chance
@@ -731,6 +732,19 @@ class Uboat{
                 messageToReturn = messageToReturn + "Leaks weren't contained quickly enough! Additional flooding! ";
                 this.flooding_Damage = this.flooding_Damage + 1;
             }
+        }
+
+        //check to see if sunk from hull damage
+        if (this.hull_Damage > this.hull_hp) {
+            let cause = "Sunk " + this.gm.getFullDate();
+            if (airAttack) {
+                cause += " - Hull destroyed from air attack by  " + attacker;
+            }
+            else {
+                cause += " - Hull destroyed by depth charges by the " + attacker;
+            }
+            console.log("GAME OVER: " + cause);
+            goPopup = new GameOverPopup(this.tv, this.gm, this, cause);
         }
 
         return messageToReturn;

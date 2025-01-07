@@ -9,6 +9,7 @@ class Encounter {
         this.currentBoxName = currentBoxName; //Current box- step of patrol (IE Mission, transit, British Isles, etc)
         this.encounterType = encounterType;   //Rolled encounter (no encounter, aircraft, convoy, etc)
         this.shipList = [];
+        this.airCraft = "";
         this.shipsSunk = [];
         this.sub = sub;
 
@@ -83,7 +84,7 @@ class Encounter {
                 console.log("Mission attempt!");
                 if (looping > 0) {
                     //get new encounterType (mission attempt)
-                    this.encounterType = this.patrol.getEncounterType("Mission", this.gm.getYear(), this.gm.randomEvent);
+                    this.encounterType = this.patrol.getEncounterType("Mission", this.gm.getYear(), this.gm.randomEvent, -1);
                 }
 
                 //DEAL WITH ABWEHR or MINELAYING ROLL (already rolled - result is encounterType)
@@ -450,6 +451,9 @@ class Encounter {
         let a1Roll = d6Rollx2();   //roll on A1 chart
         let year = this.gm.getYear();
 
+        //get aircraft type
+        this.getAircraft();
+
         //modifiers
         let mods = 0;
         if (this.sub.isCrewKnockedOut()) {
@@ -486,7 +490,7 @@ class Encounter {
         let result2 = "";                   //Crew Injury
         let result3 = "";                   //2nd attack if applicable
         let secondAttack = false;
-        this.airPopup = new AircraftPopup(this.tv, this.gm, this.encounterType, this.currentBoxName);
+        this.airPopup = new AircraftPopup(this.tv, this.gm, this.encounterType, this.currentBoxName, this.airCraft);
 
         console.log("Aircraft Roll: " + result);
         if (result >= 6) {
@@ -498,23 +502,21 @@ class Encounter {
             //1 Attack on E3 + 1 Crew Injury
             this.gm.setEventResolved(false);
             let hitCount = this.escortAndAirAttackRoll(false, false, true);
-            result1 = this.sub.damage(hitCount, "Aircraft");
+            result1 = this.sub.damage(hitCount, "Aircraft", this.aircraftType);
             result2 = this.sub.crewInjury("Aircraft");
             this.airPopup.hit(hitCount, result1, result2, false);
             console.log(result1);
-            console.log(this.gm.eventResolved);
             await until(_ => this.gm.eventResolved == true);
         }
         else {
             //1 Attack on E3*extra mod* + 1 Injury (and a second attack if flak did not down plane)
             this.gm.setEventResolved(false);
             let hitCount = this.escortAndAirAttackRoll(false, false, true);
-            result1 = this.sub.damage(hitCount, "Aircraft");
+            result1 = this.sub.damage(hitCount, "Aircraft", this.aircraftType);
             result2 = this.sub.crewInjury("Aircraft");
             secondAttack = true;
             this.airPopup.hit(hitCount, result1, result2, true);
             console.log(result1);
-            console.log(this.gm.eventResolved);
             await until(_ => this.gm.eventResolved == true);
         }
 
@@ -529,23 +531,31 @@ class Encounter {
 
             if (secondAttack) {
                 let hitCount = this.escortAndAirAttackRoll(false, false, true);
-                result3 = this.sub.damage(hitCount, "Aircraft");
+                result3 = this.sub.damage(hitCount, "Aircraft",  this.aircraftType);
             }
 
             //New encounter roll on the additional round E1
             if (flakResult != "Shot Down" || flakResult == "None") {
                 this.tv.uboat.sprite.dive();
-                this.encounterType = this.patrol.getEncounterType("Additional Round of Combat", this.gm.getYear(), this.gm.randomEvent);
+                this.encounterType = this.patrol.getEncounterType("Additional Round of Combat", this.gm.getYear(), this.gm.randomEvent, -1);
                 this.start(this.encounterType);
             }
         }
         this.endEncounter();
         
-        //Fire Flak if sub did not dive fast enough
-        //if did not dive and aircraft is still alive and result is 1 or less, resolve second attack on E3
-        //Ship dives
-        //if aircraft damaged, attack complete
-        //else, roll on additional round E1
+    }
+
+    /**
+     * Sets the name of attacking aircraft for encounter
+     */
+    getAircraft() {
+        //var names = await getDataFromTxt("data/aircraft.txt");
+        //this.aircraftType = names[randomNum(0, 17)];
+        let aTypes = ["Lockheed Hudson", "de Havilland Mosquito", "Vickers Wellington", "Armstrong Whitworth Whitley",
+            "Lockheed Ventura and Harpoon", "B-25 Mitchell", "Vickers Warwick", "B-18 Bolo", "Avro Anson", "TBF Avenger",
+            "F4F Wildcat", "Fairey Swordfish", "Martin PBM Mariner", "Short Sunderland", "PBY Catalina", "Handley Page Halifax",
+            "B-17 Flying Fortress", "B-24 Liberator"]
+        this.aircraftType = aTypes[randomNum(0, 17)];
     }
 
     //Clean up after firings
@@ -1262,11 +1272,11 @@ class Encounter {
             if (majorDetection) {
                 this.wasDetected = true;
                 let hitCount = this.escortAndAirAttackRoll(nightSurfaceAttackFirstRound, true, false);
-                results = this.sub.damage(hitCount, "Depth Charges");
+                results = this.sub.damage(hitCount, "Depth Charges", this.shipList[0].getName());
             }
             else {
                 let hitCount = this.escortAndAirAttackRoll(nightSurfaceAttackFirstRound, true, false);
-                results = this.sub.damage(hitCount, "Depth Charges");
+                results = this.sub.damage(hitCount, "Depth Charges", this.shipList[0].getName());
             }
             escortDetectionPopup.damageResults(results, majorDetection)
             await until(_ => this.subEventResolved == true);
@@ -1340,8 +1350,15 @@ class Encounter {
             case 12:
                 return 5;
             default:
-                console.log("GAME OVER");
-                return 20; //TODO FIX
+                let cause = "Sunk " + this.gm.getFullDate();
+                if (airAttack) {
+                    cause += " by catastrophic damage from a " + this.airCraft;
+                }
+                else {
+                    cause += " by catastrophic damage done by depth charges from the " + this.shipList[0].getName();
+                }
+                console.log("GAME OVER: " + cause);
+                goPopup = new GameOverPopup(this.tv, this.gm, this, cause);
         }
     }
 

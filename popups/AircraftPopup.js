@@ -1,12 +1,10 @@
 class AircraftPopup{
-    constructor(tv, gm, enc, currentBoxName) {
+    constructor(tv, gm, enc, currentBoxName, aircraftType) {
         this.tv = tv;
         this.gm = gm;
         this.enc = enc;
         this.currentBoxName = currentBoxName;
-        this.aircraftType = "";
-        
-        this.getAircraft();
+        this.aircraftType = aircraftType;
 
         this.container = document.querySelector(".game-container");
 
@@ -14,16 +12,6 @@ class AircraftPopup{
         this.element = document.createElement("div");
 
         this.element.classList.add("AircraftDamageMessage");
-    }
-
-    getAircraft() {
-        //var names = await getDataFromTxt("data/aircraft.txt");
-        //this.aircraftType = names[randomNum(0, 17)];
-        let aTypes = ["Lockheed Hudson", "de Havilland Mosquito", "Vickers Wellington", "Armstrong Whitworth Whitley",
-            "Lockheed Ventura and Harpoon", "B-25 Mitchell", "Vickers Warwick", "B-18 Bolo", "Avro Anson", "TBF Avenger",
-            "F4F Wildcat", "Fairey Swordfish", "Martin PBM Mariner", "Short Sunderland", "PBY Catalina", "Handley Page Halifax",
-            "B-17 Flying Fortress", "B-24 Liberator"]
-        this.aircraftType = aTypes[randomNum(0, 17)];
     }
 
     successfulDive() {
