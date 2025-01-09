@@ -5,7 +5,6 @@ class AircraftPopup{
         this.enc = enc;
         this.currentBoxName = currentBoxName;
         this.aircraftType = aircraftType;
-        console.log("AIRCRAFT: " + this.aircraftType);
 
         this.container = document.querySelector(".game-container");
 
@@ -43,7 +42,7 @@ class AircraftPopup{
                 <button class="ContinuePopup_button" id="continue2">Continue</button>
                 </p>`)
         }
-        else {
+        else if (result2 != "") {
             this.element.innerHTML = (`
                 <h3 class="HeaderMessage_h3">Damage Report! </h3>
                 <p class="DetectionTextMessage_p">${this.aircraftType} has made an attack run!<br><br>
@@ -51,9 +50,19 @@ class AircraftPopup{
                 <button class="ContinuePopup_button" id="continue2">Continue</button>
                 </p>`)
         }
+        else {
+            this.element.innerHTML = (`
+                <h3 class="HeaderMessage_h3">Damage Report! </h3>
+                <p class="DetectionTextMessage_p">${this.aircraftType} has made a second attack run!<br><br>
+                ${result} <br>
+                <button class="ContinuePopup_button" id="continue2">Continue</button>
+                </p>`)
+        }
 
         this.element.addEventListener("click", ()=> {
-            this.done();
+            if (event.target.id == "continue2") {
+                this.done();
+            }
         })
 
         this.container.appendChild(this.element);

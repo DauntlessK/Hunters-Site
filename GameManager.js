@@ -52,6 +52,7 @@ class GameManager{
         this.patrolArray = [];
         this.currentBox = 0;
         this.shipsSunk = [];
+        this.planesShotDown = 0;
         this.shipsSunkOnCurrentPatrol = [];
         this.logBook = [];
         this.damageDone = 0;
@@ -100,6 +101,10 @@ class GameManager{
         this.subEventResolved = state;
     }
 
+    /**
+     * 
+     * @returns string "U-###"
+     */
     getFullUboatID(){
         return "U-" + this.id;
     }

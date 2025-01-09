@@ -66,21 +66,26 @@ class Encounter {
         this.ignored = false;
         this.follow = "";
 
-        this.encPop = null;
+        this.encPop = new EncounterPopup(this.tv, this.gm, this.currentBoxName, this.shipList);
         this.airPopup = null;
         this.missionPopup = null;
-        this.start(this.encounterType);
+        this.start(this.encounterType, true);
     }
 
-    async start(encType) {
-        //create popup based on that encounter to begin encounter
-        console.log(encType);
-        this.encPop = new EncounterPopup(this.tv, this.gm, encType, this.currentBoxName, this.shipList);
-        await until(_ => this.gm.eventResolved == true);
+    /**
+     * First step in an encounter for getting popup and directing encounter to next step
+     * @param {string} encType type of encounter (rolled from encounter chart in patrol)
+     * @param {boolean} starting if very first encounter roll
+     */
+    async start(encType, starting) {
+        this.encPop.setEncounter(encType);
 
+        //Getting encounter popup and feeding into next step of encounter
         //deal with mission boxes first
         if (this.currentBoxName == "Mission") {
             //loop to continue attempting mission (if at first unsuccessful but CAN succeed)
+            this.encPop.mission();
+
             let looping = 0;
             while (looping >= 0) {
                 console.log("Mission attempt!");
@@ -148,22 +153,33 @@ class Encounter {
         else {
             switch (encType) {
                 case "No Encounter":
+                    this.gm.setEventResolved(false);
+                    this.encPop.noEncounter();
+                    await until(_ => this.gm.eventResolved == true);
                     break;
                 case "Aircraft":
+                    this.gm.setEventResolved(false);
+                    this.encPop.encounterAircraft();
+                    await until(_ => this.gm.eventResolved == true);
                     this.aircraftFlow();
                     break;
                 case "Escort":
+                    this.gm.setEventResolved(false);
                     this.encPop.escortArrival();
+                    await until(_ => this.gm.eventResolved == true);
                     this.escortDetection(false ,0 ,false);
                     break;
                 default:
+                    this.gm.setEventResolved(false);
+                    this.encPop.ships();
+                    await until(_ => this.gm.eventResolved == true);
                     this.attackFlow(true);
             }
         }
     }
 
     /**
-     * Starts engagement of ship or ship(s)
+     * Engagement flow of an attack vs ship(s)
      * @param {boolean} newAttack 
      * @returns 
      */
@@ -410,7 +426,7 @@ class Encounter {
                         this.tv.uboat.sprite.surface();
                     }
                     postFollowStatsClear("Periscope Depth");
-                    this.start("Convoy");
+                    this.start("Convoy", false);
                     return;
                 case "Ship":
                     this.tv.changeScene("Ship", this.timeOfDay, this, false);
@@ -524,24 +540,43 @@ class Encounter {
 
         //Additional aircraft steps if not a successful dive
         if (result < 6) {
+            //Get flak attack result, and then display flak popup
             let flakResult = this.flakAttack();
+            if (flakResult != "None") {
+                this.encPop.flak(flakResult);
+            }
 
             if (flakResult == "Shot Down") {
-                //Message for shot down
                 secondAttack = false;
             }
 
             if (secondAttack) {
                 let hitCount = this.escortAndAirAttackRoll(false, false, true);
                 result3 = this.sub.damage(hitCount, "Aircraft",  this.aircraftType);
+
+                this.gm.setEventResolved(false);
+                this.airPopup.hit(hitCount, result3, "", false);
+                await until(_ => this.gm.eventResolved == true);
             }
 
             //New encounter roll on the additional round E1
             if (flakResult != "Shot Down" || flakResult == "None") {
                 this.tv.uboat.sprite.dive();
+                //get new encounterType from patrol sheet
                 this.encounterType = this.patrol.getEncounterType("Additional Round of Combat", this.gm.getYear(), this.gm.randomEvent, -1);
                 console.log("Additional Round: " + this.encounterType);
-                this.start(this.encounterType);
+                if (this.encounterType == "No Encounter") {
+                    this.gm.setEventResolved(false);
+                    this.encPop.noAdditionalRound();
+                    await until(_ => this.gm.eventResolved == true);
+                }
+                else {
+                    this.gm.setEventResolved(false);
+                    this.encPop.additionalRound("aircraft", this.encounterType);
+                    await until(_ => this.gm.eventResolved == true);
+                    this.start(this.encounterType, false);
+                }
+                
             }
         }
         this.endEncounter();
@@ -1362,7 +1397,7 @@ class Encounter {
                     cause += " by catastrophic damage done by depth charges from the " + this.shipList[0].getName();
                 }
                 console.log("GAME OVER: " + cause);
-                goPopup = new GameOverPopup(this.tv, this.gm, this, cause);
+                let goPopup = new GameOverPopup(this.tv, this.gm, this, cause);
         }
     }
 
@@ -1395,6 +1430,7 @@ class Encounter {
 
         let result = a2roll + mods;
         if (result <= 3) {
+            this.gm.planesShotDown++;
             return "Shot Down";
         }
         else if (result <= 5) {

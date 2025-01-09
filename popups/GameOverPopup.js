@@ -18,7 +18,9 @@ class GameOverPopup{
     gameOver() {
         //new div to add
         this.element.innerHTML = (`
-            <h3 class="HeaderMessage_h3">GAME OVER!</h3>
+            <h1 class="HeaderMessage_h1">GAME OVER!</h1>
+            <h3 class="HeaderMessage_h3">${this.gm.getFullUboatID()}</h3>
+            <h3 class="HeaderMessage_h3">${this.gm.getLRankAndName()}</h3>
             <p class="TextMessage_p">${this.cause}<br>
             </p>
         `)

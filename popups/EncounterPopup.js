@@ -1,8 +1,8 @@
 class EncounterPopup{
-    constructor(tv, gm, enc, currentBoxName, shipList) {
+    constructor(tv, gm, currentBoxName, shipList) {
         this.tv = tv;
         this.gm = gm;
-        this.enc = enc;
+        this.enc = "";
         this.currentBoxName = currentBoxName;
         this.shipList = shipList;
         
@@ -14,29 +14,15 @@ class EncounterPopup{
         this.element = document.createElement("div");
 
         this.element.classList.add("PatrolMessage");
+    }
 
-        if (this.currentBoxName == "Mission") {
-            this.mission();
-        }
-        else {
-            switch (enc) {
-                case "No Encounter":
-                    this.noEncounter();
-                    break;
-                case "Aircraft":
-                    this.encounterAircraft();
-                    break;
-                case "Mission":
-                    this.mission();
-                    break;
-                default:
-                    this.ships();
-                    break;
-            }
-        }
+    setEncounter(encounter) {
+        this.enc = encounter;
     }
     
-    //Popup when encounter is "noEncounter"
+    /**
+     * Popup when encounter is "noEncounter"
+     */
     noEncounter(){
         var noEncounterArray = [];
 
@@ -80,18 +66,95 @@ class EncounterPopup{
         this.tv.finishEncounter();
     }
 
-    //Popup for aircraft attack
-    encounterAircraft(){
+    /**
+     * Popup when encounter is "noEncounter"
+     */
+    noAdditionalRound(){
+        var noARArray = ["", 
+            "You sail on, trying to put distance between you and the encounter with the aircraft.",
+            "You surface and sail away without further trouble.",
+            "You receive no further trouble after the aircraft attack."];
+
+        const roll = d3Roll();
 
         //new div to add
         this.element.innerHTML = (`
-            <p class="PatrolMessage_p">Aircraft!<br>
+            <p class="PatrolMessage_p">${noARArray[roll]}<br>
+            </p>
+        `)
+
+        this.container.appendChild(this.element);
+        this.gm.setEventResolved(true);
+        this.tv.finishEncounter();
+    }
+
+    /**
+     * NOTE: prevEnc must be all lowercase
+     * @param {string} prevEnc previous encounterType (Aircraft or unescorted ship(s))
+     * @param {string} enc newly rolled encounterType
+     */
+    additionalRound(prevEnc, enc) {
+        //new div to add
+        this.element.innerHTML = (`
+            <p class="PatrolMessage_p">The ${prevEnc} has alerted nearby enemies!<br>
             </p>
             <button class="AttackPopup_button" id="continue">Continue</button>
         `)
 
         this.element.addEventListener("click", ()=> {
-            var action = null;
+            if (event.target.id == "continue"){
+                //close popup
+                this.done(event.target.id);
+            }
+        })
+
+        this.container.appendChild(this.element);
+    }
+
+    //Popup for aircraft attack
+    encounterAircraft(){
+
+        //new div to add
+        this.element.innerHTML = (`
+            <h3 class="HeaderMessage_h3">Alarm!! Aircraft!<br>
+            </h3>
+            <button class="AttackPopup_button" id="continue">Continue</button>
+        `)
+
+        this.element.addEventListener("click", ()=> {
+            if (event.target.id == "continue"){
+                //close popup
+                this.done(event.target.id);
+            }
+        })
+
+        this.container.appendChild(this.element);
+    }
+
+    /**
+     * 
+     * @param {string} result "Shot Down", "Damaged", "None", "Missed"
+     */
+    flak(result) {
+        let message = "";
+        if (result == "Shot Down") {
+            message = "Yes! We got it! She's going down!"
+        }
+        else if ( result == "Damaged") {
+            message = "Looks like we hit it! The plane has turned back home!"
+        }
+        else {
+            message = "Flak has missed!"
+        }
+        //new div to add
+        this.element.innerHTML = (`
+            <h3 class="HeaderMessage_h3">Flak Fire!</h3>
+            <p class="PatrolMessage_p">${message}<br>
+            </p>
+            <button class="AttackPopup_button" id="continue">Continue</button>
+        `)
+
+        this.element.addEventListener("click", ()=> {
             if (event.target.id == "continue"){
                 //close popup
                 this.done(event.target.id);
@@ -104,7 +167,7 @@ class EncounterPopup{
     escortArrival() {
                 //new div to add
                 this.element.innerHTML = (`
-                    <h3 class="HeaderMessage_h3">An escort has arrived!<br>
+                    <h3 class="HeaderMessage_h3">ALARM! An escort has arrived!<br>
                     </h3>
                     <button class="AttackPopup_button" id="continue">Continue</button>
                 `)
@@ -173,10 +236,42 @@ class EncounterPopup{
             oppositeTime = "Day";
         }
         //NEED OTHER ENCOUNTER ARRAYS
-        encounterAttackShipArray = ["", 
-            "Smoke on the horizon, bearing ",
-            "Lone ship bearing ",
-            "Single ship bearing "];
+        switch (this.enc) {
+            case "Ship":
+            case "Tanker":
+                encounterAttackShipArray = ["", 
+                    "Smoke on the horizon, bearing ",
+                    "Lone ship bearing ",
+                    "Single ship bearing "];
+                break;
+            case "Ship + Escort":
+            case "Two Ships":
+                encounterAttackShipArray = ["", 
+                    "Smoke on the horizon, bearing ",
+                    "Pair of ships bearing ",
+                    "Two ships bearing "];
+                break;
+            case "Two Ships + Escort":
+                encounterAttackShipArray = ["", 
+                    "Smoke on the horizon, bearing ",
+                    "Small group of ships bearing ",
+                    "Three ships bearing "];
+                break;
+            case "Convoy":
+                encounterAttackShipArray = ["", 
+                    "Large smoke clouds on the horizon, bearing ",
+                    "Convoy bearing ",
+                    "Several ships bearing "];
+                break;
+            case "Capital Ship":
+                encounterAttackShipArray = ["", 
+                    "Smoke on the horizon, bearing ",
+                    "Warships bearing ",
+                    "Large capital ship bearing "];
+                break;
+            default:
+                console.log("ERROR GETTING ENCOUNTER ATTACK SHIP ARRAY");
+        }
 
         const roll = d3Roll();
 
