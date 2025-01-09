@@ -5,6 +5,7 @@ class AircraftPopup{
         this.enc = enc;
         this.currentBoxName = currentBoxName;
         this.aircraftType = aircraftType;
+        console.log("AIRCRAFT: " + this.aircraftType);
 
         this.container = document.querySelector(".game-container");
 

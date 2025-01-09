@@ -42,6 +42,7 @@ class Encounter {
             }
         }
 
+        this.aircraftType = "";
         this.shipListLoaded = true;
 
         this.tv.enterEncounter();
@@ -73,6 +74,7 @@ class Encounter {
 
     async start(encType) {
         //create popup based on that encounter to begin encounter
+        console.log(encType);
         this.encPop = new EncounterPopup(this.tv, this.gm, encType, this.currentBoxName, this.shipList);
         await until(_ => this.gm.eventResolved == true);
 
@@ -490,7 +492,7 @@ class Encounter {
         let result2 = "";                   //Crew Injury
         let result3 = "";                   //2nd attack if applicable
         let secondAttack = false;
-        this.airPopup = new AircraftPopup(this.tv, this.gm, this.encounterType, this.currentBoxName, this.airCraft);
+        this.airPopup = new AircraftPopup(this.tv, this.gm, this.encounterType, this.currentBoxName, this.aircraftType);
 
         console.log("Aircraft Roll: " + result);
         if (result >= 6) {
@@ -538,6 +540,7 @@ class Encounter {
             if (flakResult != "Shot Down" || flakResult == "None") {
                 this.tv.uboat.sprite.dive();
                 this.encounterType = this.patrol.getEncounterType("Additional Round of Combat", this.gm.getYear(), this.gm.randomEvent, -1);
+                console.log("Additional Round: " + this.encounterType);
                 this.start(this.encounterType);
             }
         }
@@ -556,6 +559,7 @@ class Encounter {
             "F4F Wildcat", "Fairey Swordfish", "Martin PBM Mariner", "Short Sunderland", "PBY Catalina", "Handley Page Halifax",
             "B-17 Flying Fortress", "B-24 Liberator"]
         this.aircraftType = aTypes[randomNum(0, 17)];
+        console.log(this.aircraftType);
     }
 
     //Clean up after firings
