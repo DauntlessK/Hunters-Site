@@ -695,6 +695,20 @@ class Uboat{
                     }
                     break;
                 default:
+                    //First check if damage is not applicable (Only case I can think of is 3.7 Flak on VII)
+                    if (this.system[damage] == "3.7 Flak" && this.subClass.includes("VII")) {
+                        messageToReturn = messageToReturn + "Damage ineffectual! ";
+                    }
+
+                    //Check first if system is already damaged or inop
+                    if (this.systems[damage] > 0) {
+                        if (damage.slice(-1) == "s") {
+                            messageToReturn = messageToReturn + "The " + damage + " are already damaged! ";
+                        }
+                        else {
+                            messageToReturn = messageToReturn + "The " + damage + " is already damaged! ";
+                        }
+                    }
                     if (damage.slice(-1) == "s") {
                         messageToReturn = messageToReturn + "The " + damage + " have taken damage! ";
                     }

@@ -542,8 +542,11 @@ class Encounter {
         if (result < 6) {
             //Get flak attack result, and then display flak popup
             let flakResult = this.flakAttack();
+            console.log(flakResult);
             if (flakResult != "None") {
+                this.gm.setEventResolved(false);
                 this.encPop.flak(flakResult);
+                await until(_ => this.gm.eventResolved == true);
             }
 
             if (flakResult == "Shot Down") {
