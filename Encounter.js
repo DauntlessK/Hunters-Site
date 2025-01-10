@@ -6,8 +6,11 @@ class Encounter {
         this.tv = tv;
         this.gm = gm;
         this.patrol = patrol;
-        this.currentBoxName = currentBoxName; //Current box- step of patrol (IE Mission, transit, British Isles, etc)
-        this.encounterType = encounterType;   //Rolled encounter (no encounter, aircraft, convoy, etc)
+        this.currentBoxName = currentBoxName;       //Current box- step of patrol (IE Mission, transit, British Isles, etc)
+        this.encounterType = encounterType;         //Rolled encounter (no encounter, aircraft, convoy, etc)
+        this.originalEncounterType = this.encounterType; //Used to store what was originally rolled, in event of addl' round
+        this.aircraftFirstEncounter = true;         //Flag for the very first aircraft attack vs. additional round aircraft attacks
+        this.aircraftResult = "";                   //For combat log mainly, result of aircraft (Show down, etc)
         this.shipList = [];
         this.airCraft = "";
         this.shipsSunk = [];
@@ -97,14 +100,17 @@ class Encounter {
                 //DEAL WITH ABWEHR or MINELAYING ROLL (already rolled - result is encounterType)
                 this.gm.setEventResolved(false);
                 this.missionPopup = new MissionPopup(this.tv, this.gm, this.encounterType, this.gm.currentOrders);
+                await until(_ => this.gm.eventResolved == true);
 
                 //Establish if mission was successful or not
                 //Abwehr Missions
-                if (this.gm.currentOrders.includes("Abwehr")){
+                this.gm.setEventResolved(false);
+                if (this.gm.currentOrders.includes("Abwehr")) {
                     //Successful delivery
                     if (this.encounterType == "No Encounter" && this.sub.isCrewmanFunctional("Abwehr Agent")) {
                         //Success
                         this.missionPopup.missionSuccess(this.gm.currentOrders);
+                        await until(_ => this.gm.eventResolved == true);
                         this.gm.missionComplete = true;
                         this.endEncounter();
                         break;
@@ -112,12 +118,15 @@ class Encounter {
                     else if (this.encounterType == "No Encounter") {
                         //Unsucessful - Agent dead
                         this.missionPopup.agentDeadFailure();
+                        await until(_ => this.gm.eventResolved == true);
                         this.gm.missionComplete = false;
                         this.endEncounter();
                         break;
                     }
                     else {
                         //Aircraft
+                        this.missionPopup.encounterAircraft();
+                        await until(_ => this.gm.eventResolved == true);
                         this.aircraftFlow();
                         looping++;
                         continue;
@@ -129,6 +138,7 @@ class Encounter {
                         //Success, at least SOME mines were deployed
                         if (this.sub.getSystemStatus("Forward Torpedo Doors") == "Operational" || this.sub.getSystemStatus("Forward Torpedo Doors")) {
                             this.missionPopup.missionSuccess(this.gm.currentOrders);
+                            await until(_ => this.gm.eventResolved == true);
                             this.gm.missionComplete = true;
                             this.endEncounter();
                             break;
@@ -136,6 +146,7 @@ class Encounter {
                         else {
                             //no mines were deployed as doors were both broken. failure
                             this.missionPopup.torpedoDoorFailure();
+                            await until(_ => this.gm.eventResolved == true);
                             this.gm.missionComplete = false;
                             this.endEncounter();
                             break;
@@ -143,6 +154,8 @@ class Encounter {
                     }
                     else {
                         //Aircraft
+                        this.missionPopup.encounterAircraft();
+                        await until(_ => this.gm.eventResolved == true);
                         this.aircraftFlow();
                         looping++;
                         continue;
@@ -514,6 +527,9 @@ class Encounter {
         if (result >= 6) {
             //Crash Dive successful, avoids air attack
             console.log("Successful Dive");
+            if (this.aircraftFirstEncounter) {
+                this.aircraftResult = "Submerged to avoid. "
+            }
             this.airPopup.successfulDive();
         }
         else if (result >= 2) {
@@ -523,7 +539,9 @@ class Encounter {
             result1 = this.sub.damage(hitCount, "Aircraft", this.aircraftType);
             result2 = this.sub.crewInjury("Aircraft");
             this.airPopup.hit(hitCount, result1, result2, false);
-            console.log(result1);
+            if (this.aircraftFirstEncounter) {
+                this.aircraftResult = "Took damage. "
+            }
             await until(_ => this.gm.eventResolved == true);
         }
         else {
@@ -534,7 +552,9 @@ class Encounter {
             result2 = this.sub.crewInjury("Aircraft");
             secondAttack = true;
             this.airPopup.hit(hitCount, result1, result2, true);
-            console.log(result1);
+            if (this.aircraftFirstEncounter) {
+                this.aircraftResult = "Took heavy damage. "
+            }
             await until(_ => this.gm.eventResolved == true);
         }
 
@@ -551,6 +571,14 @@ class Encounter {
 
             if (flakResult == "Shot Down") {
                 secondAttack = false;
+                if (this.aircraftFirstEncounter) {
+                    this.aircraftResult =  this.aircraftResult + "Shot down " + this.aircraftType + ". ";
+                }
+            }
+            if (flakResult == "Damaged") {
+                if (this.aircraftFirstEncounter) {
+                    this.aircraftResult =  this.aircraftResult + "Flak fire damaged " + this.aircraftType + ". ";
+                }
             }
 
             if (secondAttack) {
@@ -575,6 +603,15 @@ class Encounter {
                 }
                 else {
                     this.gm.setEventResolved(false);
+                    if (this.aircraftFirstEncounter) {
+                        if (this.encounterType == "Aircraft") {
+                            this.aircraftResult = this.aircraftResult + "It alerted a nearby allied aircraft."
+                        }
+                        else if (this.encounterType == "Escort") {
+                            this.aircraftResult = this.aircraftResult + "It alerted a nearby allied escort."
+                        }
+                    }
+                    this.aircraftFirstEncounter = false;
                     this.encPop.additionalRound("aircraft", this.encounterType);
                     await until(_ => this.gm.eventResolved == true);
                     this.start(this.encounterType, false);

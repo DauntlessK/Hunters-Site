@@ -44,9 +44,9 @@ class PatrolLog{
         this.currentDay = this.currentDay + d6Roll();
         var lineEntry = "<p>Day " + this.currentDay.toString() + "- ";
 
-        if (enc.encounterType == "No Encounter") {
+        if (enc.originalEncounterType == "No Encounter") {
             if (this.gm.patrol.patrolArray[this.gm.currentBox] == "Transit") {
-                lineEntry = lineEntry + "Uneventful transit";
+                lineEntry = lineEntry + "Uneventful transit.";
             }
             else if (this.gm.patrol.patrolArray[this.gm.currentBox] == "Mission") {
                 if (this.gm.currentOrders.includes("Abwehr")) {
@@ -57,16 +57,19 @@ class PatrolLog{
                 }
                 
             }
+            else if (this.gm.patrol.patrolArray[this.gm.currentBox] == "Bay of Biscay") {
+                lineEntry = lineEntry + "Crossed Bay of Biscay, no ships or aircraft in sight.";
+            }
             else {
-                lineEntry = lineEntry + "Patrolled area - no ships found";
+                lineEntry = lineEntry + "Patrolled area - no ships found.";
             }
         }
         //If encounter is a ship / attack encounter
-        else if (enc.encounterType.includes("Ship") || enc.encounterType == "Convoy" || enc.encounterType.includes("Tanker")) {
-            if (enc.encounterType == "Convoy") {
+        else if (enc.originalEncounterType.includes("Ship") || enc.originalEncounterType == "Convoy" || enc.originalEncounterType.includes("Tanker")) {
+            if (enc.originalEncounterType == "Convoy") {
                 lineEntry = lineEntry + "Encountered convoy; ";
             }
-            else if (enc.encounterType == "Ship") {
+            else if (enc.originalEncounterType == "Ship") {
                 lineEntry = lineEntry + "Encountered lone ship; ";
             }
             else {
@@ -105,9 +108,9 @@ class PatrolLog{
                 }
             }
         }
-        else if (enc.encounterType == "Aircraft") {
-            lineEntry = lineEntry + "Encountered Aircraft.";
-            //TODO add results of encounter
+        else if (enc.originalEncounterType == "Aircraft") {
+            lineEntry = lineEntry + "Encountered Aircraft; ";
+            lineEntry = lineEntry + enc.aircraftResult;
         }
         else {
             lineEntry = lineEntry + "unknown enc";

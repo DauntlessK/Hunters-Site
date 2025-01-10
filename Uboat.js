@@ -696,7 +696,7 @@ class Uboat{
                     break;
                 default:
                     //First check if damage is not applicable (Only case I can think of is 3.7 Flak on VII)
-                    if (this.system[damage] == "3.7 Flak" && this.subClass.includes("VII")) {
+                    if (damage == "3.7 Flak" && this.subClass.includes("VII")) {
                         messageToReturn = messageToReturn + "Damage ineffectual! ";
                     }
 

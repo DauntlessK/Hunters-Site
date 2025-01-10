@@ -49,7 +49,7 @@ class Patrol{
         var unique = this.ordersArray.filter(onlyUnique);
         var isPicking = false
         if (this.gm.adminMode) {pickOrderRoll = 1;}
-        if (pickOrderRoll <= this.gm.sub.crew_levels["Kommandant"] && !this.gm.permArcPost && !this.permMedPost){  //final should be <=
+        if ((pickOrderRoll <= this.gm.sub.crew_levels["Kommandant"] && !this.gm.permArcPost && !this.permMedPost) || this.gm.adminMode){  
             isPicking = true;
             this.gm.ordersPopup(unique, isPicking);
 
@@ -319,6 +319,7 @@ class Patrol{
                         break;
                     case 10:
                         toReturn = "Convoy";
+                        break;
                     case 12:
                         toReturn = "Aircraft";
                         break;

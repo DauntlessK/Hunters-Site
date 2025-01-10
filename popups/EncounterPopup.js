@@ -67,12 +67,12 @@ class EncounterPopup{
     }
 
     /**
-     * Popup when encounter is "noEncounter"
+     * Popup when there's no additional round rolled after
      */
     noAdditionalRound(){
         var noARArray = ["", 
-            "You sail on, trying to put distance between you and the encounter with the aircraft.",
-            "You surface and sail away without further trouble.",
+            "You finally manage to dive. After a while, you surface and sail on, trying to put distance between you and the encounter with the aircraft.",
+            "A little while after your crash dive, you surface and sail away without further trouble.",
             "You receive no further trouble after the aircraft attack."];
 
         const roll = d3Roll();
@@ -96,7 +96,7 @@ class EncounterPopup{
     additionalRound(prevEnc, enc) {
         //new div to add
         this.element.innerHTML = (`
-            <p class="PatrolMessage_p">The ${prevEnc} has alerted nearby enemies!<br>
+            <p class="PatrolMessage_p">The ${prevEnc} has alerted nearby allied forces!<br>
             </p>
             <button class="AttackPopup_button" id="continue">Continue</button>
         `)

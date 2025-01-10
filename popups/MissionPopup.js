@@ -47,14 +47,36 @@ class MissionPopup{
         this.tv.finishEncounter();
     }
 
+    /**
+     * Popup in the rare case both fore and aft torpedo doors are inop when trying to complete a minelaying mission
+     */
     torpedoDoorFailure() {
-        //NEED MESSAGING FOR WHEN BOTH TORPEDO DOORS ARE INOP
-        console.log("NEED MESSAGING FOR WHEN BOTH TORPEDO DOORS ARE INOP");
+
+        //new div to add
+        this.element.innerHTML = (`
+            <p class="PatrolMessage_p">Both fore and aft torpedo doors are jammed broken. We are unable to
+            deploy our mines to complete the mission.<br>
+            </p>
+        `)
+
+        this.container.appendChild(this.element);
+        this.gm.setEventResolved(true);
+        this.tv.finishEncounter();
     }
 
+    /**
+     * Popup in the rare case that the Abwehr agent aboard is SW or KIA when trying to complete the agent delivery mission
+     */
     agentDeadFailure() {
-        //NEED MESSAGING FOR WHEN ABWEHR AGENT IS KIA OR SW
-        console.log("NEED MESSAGING FOR WHEN ABWEHR AGENT IS KIA OR SW");
+        //new div to add
+        this.element.innerHTML = (`
+            <p class="PatrolMessage_p">We are unable to land the agent - he's ${this.gm.sub.getCrewHealth("Abwehr Agent")}.<br>
+            </p>
+        `)
+
+        this.container.appendChild(this.element);
+        this.gm.setEventResolved(true);
+        this.tv.finishEncounter();
     }
 
     //Popup for aircraft attack - NOT USED??
@@ -62,9 +84,17 @@ class MissionPopup{
 
         //new div to add
         this.element.innerHTML = (`
-            <p class="PatrolMessage_p">Aircraft! It has sighted us as we moved in to complete our mission!<br>
+            <h3 class="HeaderMessage_h3">Aircraft!</h3>
+            <p class="PatrolMessage_p">It has sighted us as we moved in to complete our mission!<br>
             </p>
+            <button class="ContinuePopup_button" id="continue2">Continue</button>
         `)
+
+        this.element.addEventListener("click", ()=> {
+            if (event.target.id == "continue2") {
+                this.done();
+            }
+        })
 
         this.container.appendChild(this.element);
     }
