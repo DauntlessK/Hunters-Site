@@ -438,7 +438,7 @@ class Encounter {
                     if (this.depth != "Surfaced") {
                         this.tv.uboat.sprite.surface();
                     }
-                    postFollowStatsClear("Periscope Depth");
+                    this.postFollowStatsClear("Periscope Depth");
                     this.start("Convoy", false);
                     return;
                 case "Ship":
@@ -451,7 +451,7 @@ class Encounter {
                         this.tv.uboat.sprite.surface();
                     }
                     this.tv.changeScene("Ship", this.timeOfDay, this, true);
-                    postFollowStatsClear("Surfaced");
+                    this.postFollowStatsClear("Surfaced");
                     this.attackFlow(false);
                     return;
                 case "Ship + Escort":
@@ -464,7 +464,7 @@ class Encounter {
                         this.tv.uboat.sprite.surface();
                     }
                     this.tv.changeScene("Ship + Escort", this.timeOfDay, this, true);
-                    postFollowStatsClear("Periscope Depth");
+                    this.postFollowStatsClear("Periscope Depth");
                     this.attackFlow(false);
                     return;
                 default:
@@ -1249,7 +1249,7 @@ class Encounter {
 
         this.gm.setSubEventResolved(false);
         var escortDetectionPopup = new EscortDetectionPopup(this.tv, this.gm, this, closeRangeCheck);
-        await until(_ => this.subEventResolved == true);
+        await until(_ => this.gm.subEventResolved == true);
 
         //Check if in Wolfpack - only checked once if wolfpack. Otherwise stays 0
         if (this.gm.currentOrders.includes("Wolfpack") && wpMod == 0 && this.encounterType == "Convoy") {
@@ -1336,7 +1336,7 @@ class Encounter {
         //Show if detected or not popup
         this.gm.setSubEventResolved(false);
         escortDetectionPopup.escortResults(results, majorDetection)
-        await until(_ => this.subEventResolved == true);
+        await until(_ => this.gm.subEventResolved == true);
 
         //Show damage results popup
         if (results == "Detected") {
@@ -1358,7 +1358,7 @@ class Encounter {
                 results = this.sub.damage(hitCount, "Depth Charges", this.shipList[0].getName());
             }
             escortDetectionPopup.damageResults(results, majorDetection)
-            await until(_ => this.subEventResolved == true);
+            await until(_ => this.gm.subEventResolved == true);
 
             //If detected, check detection again
             this.depth = "Periscope Depth";  //reset depth (in case "Deep" was selected)
