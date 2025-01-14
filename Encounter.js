@@ -15,6 +15,7 @@ class Encounter {
         this.airCraft = "";
         this.shipsSunkInEnc = [];    //Changed from shipsSunk... need to record ships sunk throughout this enc space
         this.sub = sub;
+        this.encounterMid = false;                  //Flag for when in between following stages / switching scenes
 
         //Encounter "Scoreboard" for results
         this.numHits = 0;
@@ -378,7 +379,7 @@ class Encounter {
                         if (roll <= 3) {
                             //escort shows up
                             var newShipList = [];
-                            var esc = new Ship(this.gm, "Escort", this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders);
+                            var esc = new Ship(this.gm, this, "Escort", this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders);
                             newShipList.push(esc);
                             newShipList.push(shipToFollow);
                             this.shipList = newShipList;
@@ -416,6 +417,14 @@ class Encounter {
                 }
             }
 
+            //reset to empty sea for transition (current encounter over - will transition to new scene if following after)
+            this.encounterMid = true;
+            this.tv.changeScene("Sea", this.timeOfDay, this, false);
+            if (this.depth != "Surfaced") {
+                this.tv.uboat.sprite.surface();
+            }
+            await until(_ => this.tv.uboat.sprite.depth > 10);
+
             //End encounter after unsuccessful follow or choice, or begin "new" enc
             switch (action) {
                 case "Ignore":
@@ -441,6 +450,7 @@ class Encounter {
                         this.tv.uboat.sprite.surface();
                     }
                     this.postFollowStatsClear("Periscope Depth");
+                    this.encounterMid = false;
                     this.start("Convoy", false);
                     return;
                 case "Ship":
@@ -455,6 +465,7 @@ class Encounter {
                     }
                     this.tv.changeScene("Ship", this.timeOfDay, this, true);
                     this.postFollowStatsClear("Surfaced");
+                    this.encounterMid = false;
                     this.attackFlow(false);
                     return;
                 case "Ship + Escort":
@@ -469,6 +480,7 @@ class Encounter {
                     }
                     this.tv.changeScene("Ship + Escort", this.timeOfDay, this, true);
                     this.postFollowStatsClear("Periscope Depth");
+                    this.encounterMid = false;
                     this.attackFlow(false);
                     return;
                 default:
@@ -706,34 +718,34 @@ class Encounter {
 
         //First add escort if applicable
         if (enc == "Convoy" || enc == "Capital Ship" || enc.includes("Escort")) {
-            var esc = new Ship(this.gm, "Escort", this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders);
+            var esc = new Ship(this.gm, this, "Escort", this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders, "", "", "");
             tgt.push(esc);
         }
 
         if (enc == "Tanker") {
-            var ship1 = new Ship(this.gm, "Tanker", this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders);
+            var ship1 = new Ship(this.gm, this, "Tanker", this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders, "", "", "");
             tgt.push(ship1);
         }
 
         if (enc == "Capital Ship") {
-            var ship1 = new Ship(this.gm, "Tanker", this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders);
+            var ship1 = new Ship(this.gm, this, "Tanker", this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders, "", "", "");
             tgt.push(ship1);
         }
 
         if (enc == "Ship" || enc == "Two Ships" || enc == "Convoy" || enc == "Ship + Escort" || enc == "Two Ships + Escort") {
-            var ship1 = new Ship(this.gm, this.getTargetShipType(), this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders);
+            var ship1 = new Ship(this.gm, this, this.getTargetShipType(), this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders, "", "", "");
             tgt.push(ship1);
         }
 
         if (enc == "Two Ships" || enc == "Two Ships + Escort" || enc == "Convoy") {
-            var ship2 = new Ship(this.gm, this.getTargetShipType(), this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders);
+            var ship2 = new Ship(this.gm, this, this.getTargetShipType(), this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders, ship1.getName(), "", "");
             tgt.push(ship2);
         }
 
         if (enc == "Convoy") {
-            var ship3 = new Ship(this.gm, this.getTargetShipType(), this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders);
-            var ship4 = new Ship(this.gm, this.getTargetShipType(), this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders);
+            var ship3 = new Ship(this.gm, this, this.getTargetShipType(), this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders, ship1.getName(), ship2.getName(), "");
             tgt.push(ship3);
+            var ship4 = new Ship(this.gm, this, this.getTargetShipType(), this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders, ship1.getName(), ship2.getName(), ship3.getName());
             tgt.push(ship4);
         }
 
@@ -985,7 +997,7 @@ class Encounter {
                     this.numFired++;
                     this.roundFired++;
                     this.firedG7a = true;
-                    console.log("Resolving G7a on " + currentShip.name);
+                    console.log("Rolled " + torpRoll + " and mods " + rollMod + "... Resolving G7a on " + currentShip.name);
 
                     //Determine if hit or miss
                     if (torpRoll + rollMod <= this.rangeNum) {
@@ -1032,7 +1044,7 @@ class Encounter {
                         rollMod += 2;
                     }
 
-                    console.log("Resolving G7e on " + currentShip.name);
+                    console.log("Rolled " + torpRoll + " and mods " + rollMod + "... Resolving G7e on " + currentShip.name);
 
                     //Determine if hit or miss
                     if (torpRoll + rollMod <= this.rangeNum) {
@@ -1217,18 +1229,18 @@ class Encounter {
 
         if (this.gm.getYear() >= 1941) {
             if (dudRoll == 1) {
-                return true;
+                return false;
             }
             else {
-                return false;
+                return true;
             }
         }
         else if (this.gm.getYear() == 1940 && this.gm.getMonth() >= 6) {
             if (dudRoll >= 2) {
-                return true;
+                return false;
             }
             else {
-                return false;
+                return true;
             }
         }
         else {

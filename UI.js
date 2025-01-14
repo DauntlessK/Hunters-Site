@@ -235,7 +235,7 @@ class UI{
                     shipsInEnc = true;
                 }
             }
-            if (this.tv.isInEncounter && shipsInEnc) {
+            if (this.tv.isInEncounter && shipsInEnc && !this.gm.currentEncounter.encounterMid) {
                 Object.values(this.tv.gameObjects).forEach(object => {
                     if (!object.sprite.isPlayer && object.sprite.shipType == "Escort") {
                         object.sprite.drawEscortShipInfo(ctx);

@@ -1,6 +1,7 @@
 class Ship {
-    constructor(gm, type, month, year, shipsSunk, currentOrders) {
+    constructor(gm, enc, type, month, year, shipsSunk, currentOrders, otherShip1, otherShip2, otherShip3) {
         this.gm = gm;
+        this.enc = enc;
 
         this.type = type;
         this.name = name;
@@ -8,6 +9,10 @@ class Ship {
         this.damage = 0;
         this.sunk = false;
         this.GRT = 0;
+
+        this.otherShip1 = otherShip1;
+        this.otherShip2 = otherShip2;
+        this.otherShip3 = otherShip3;
 
         this.isLoaded = false;
         
@@ -117,7 +122,7 @@ class Ship {
         //ensure name is unique, if not, call getShip again
         if (this.shipsSunk.length != 0) {
             for (let i = 0; i < this.shipsSunk.length; i++) {
-                if (this.shipsSunk[i].name == this.name) {
+                if (this.shipsSunk[i].name == this.name || this.name == this.otherShip1 || this.name == this.otherShip2 || this.name == this.otherShip3 ) {
                     this.getShip();
                 }
             }
@@ -180,7 +185,7 @@ class Ship {
             this.roundSunk = true;
             this.gm.shipsSunk.push(this);
             this.gm.shipsSunkOnCurrentPatrol.push(this);
-            this.gm.currentEncounter.shipsSunk.push(this);
+            this.enc.shipsSunkInEnc.push(this);
         }
     }
     

@@ -10,8 +10,8 @@ class Sprite {
     this.image.onload = () => {
       this.isLoaded = true;
     }
-    this.width = config.width;
-    this.height = config.height;
+    this.width = config.width;          //Width of sprite image
+    this.height = config.height;        //Height of sprite image
     this.frames = config.frames;
     this.isPlayer = config.isPlayer;
 
@@ -187,6 +187,7 @@ class Sprite {
           if (this.depth <= 0) {
             this.surfacing = false;
             this.depth = 0;
+            this.height = 95;
           }
         }
 
@@ -261,10 +262,14 @@ class Sprite {
       return;
     }
     this.surfacing = true;
-    this.depth = 0;
-    this.height = 95;
+    this.depth = 109;
   }
 
+  /**
+   * Sets the frame for enemy ships for short medium or long range
+   * @param {string} range 
+   * @returns 
+   */
   setRange(range) {
     if (this.isPlayer) {
       return;
