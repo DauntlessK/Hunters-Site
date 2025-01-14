@@ -185,7 +185,7 @@ class Sprite {
         if (this.surfacing && this.isPlayer) {
           this.depth -= 2;
           if (this.depth <= 0) {
-            this.diving = false;
+            this.surfacing = false;
             this.depth = 0;
           }
         }

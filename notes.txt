@@ -1,0 +1,2 @@
+note:
+combat log needs a way to be able to get all ships sunk during an encounter, even after a follow attempt, etc

@@ -13,7 +13,7 @@ class Encounter {
         this.aircraftResult = "";                   //For combat log mainly, result of aircraft (Show down, etc)
         this.shipList = [];
         this.airCraft = "";
-        this.shipsSunk = [];
+        this.shipsSunkInEnc = [];    //Changed from shipsSunk... need to record ships sunk throughout this enc space
         this.sub = sub;
 
         //Encounter "Scoreboard" for results
@@ -415,7 +415,8 @@ class Encounter {
                     }
                 }
             }
-            
+
+            //End encounter after unsuccessful follow or choice, or begin "new" enc
             switch (action) {
                 case "Ignore":
                     this.endEncounter();
@@ -433,7 +434,8 @@ class Encounter {
                     this.endEncounter();
                     break;
                 case "Convoy":    //attack 4 new ships convoy
-                    this.tv.enterReloadMode();
+                    this.reloadTubes();
+                    await until(_ => this.tv.reloadMode == false);
                     this.shipList = this.getShips("Convoy");
                     if (this.depth != "Surfaced") {
                         this.tv.uboat.sprite.surface();
@@ -442,8 +444,9 @@ class Encounter {
                     this.start("Convoy", false);
                     return;
                 case "Ship":
+                    this.reloadTubes();
+                    await until(_ => this.tv.reloadMode == false);
                     this.tv.changeScene("Ship", this.timeOfDay, this, false);
-                    this.tv.enterReloadMode();
                     this.gm.setEventResolved(false);
                     this.timeOfDay = this.getTimeOfDay(true);
                     await until(_ => this.gm.eventResolved == true);
@@ -455,8 +458,9 @@ class Encounter {
                     this.attackFlow(false);
                     return;
                 case "Ship + Escort":
+                    this.reloadTubes();
+                    await until(_ => this.tv.reloadMode == false);
                     this.tv.changeScene("Ship + Escort", this.timeOfDay, this, false);
-                    this.tv.enterReloadMode();
                     this.gm.setEventResolved(false);
                     this.timeOfDay = this.getTimeOfDay(true);
                     await until(_ => this.gm.eventResolved == true);
@@ -671,6 +675,10 @@ class Encounter {
         }
         this.attackFlow();
     }*/ 
+
+    async reloadTubes() {
+        this.tv.enterReloadMode();
+    }
 
     endEncounter() {
         this.tv.changeScene("", this.timeOfDay, null, false);
@@ -1090,7 +1098,7 @@ class Encounter {
         if (!this.sub.canFire("Aft") || this.firedAft || this.firedForeAndAft) {
             canFireAft = false;
         }
-        if (this.isEscorted() || !this.sub.canFire("Deck Gun") || this.firedDeckGun) {
+        if (this.isEscorted() || !this.sub.canFire("Deck Gun") || this.firedDeckGun || this.depth == "Periscope Depth") {
             canFireDeckGun = false;
         }
 
@@ -1335,7 +1343,7 @@ class Encounter {
 
         //Show if detected or not popup
         this.gm.setSubEventResolved(false);
-        escortDetectionPopup.escortResults(results, majorDetection)
+        escortDetectionPopup.escortResults(results, majorDetection);
         await until(_ => this.gm.subEventResolved == true);
 
         //Show damage results popup
