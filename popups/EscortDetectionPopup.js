@@ -5,6 +5,8 @@ class EscortDetectionPopup{
         this.enc = enc
         this.closeRangeCheck = closeRangeCheck;
 
+        this.choice = "";
+
         this.depth = null;
         this.range = null;
 
@@ -53,7 +55,7 @@ class EscortDetectionPopup{
                 this.done();
             }
             else if (event.target.id == "dive") {
-                this.enc.diveDeep();
+                this.choice = "Dive";
                 this.done();
             }
         })
@@ -118,10 +120,16 @@ class EscortDetectionPopup{
             </p>`)
 
         this.element.addEventListener("click", ()=> {
-            this.done();
+            if (event.target.id == "continue") {
+                this.done();
+            }
         })
 
         this.container.appendChild(this.element);
+    }
+
+    getChoice() {
+        return this.choice;
     }
     
     done(){

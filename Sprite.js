@@ -22,13 +22,18 @@ class Sprite {
 
     //for non-player ships
     this.shipNum = config.shipNum;
+    this.isAircraft = false;
     this.encounter = config.encounter;
     this.shipType = null;
     this.isSelected = false;
     var imageVariation = d6Roll();
 
+    if (this.image.src.includes("Aircraft")) {
+      this.isAircraft = true;
+    }
+
     //get image variation for enemy ships
-    if (this.shipNum >= 0) {
+    if (this.shipNum >= 0 && !this.isAircraft) {
       this.shipType = this.encounter.shipList[this.shipNum].getType();
       this.shipType = this.shipType.replace(" ", "");
 
@@ -43,7 +48,7 @@ class Sprite {
       }
 
       //Get Health Bar Image
-      if (this.shipType != "Escort") {
+      if (this.shipType != "Escort" && !this.isAircraft) {
         this.healthBarImage = new Image();
         this.hisLoaded = false;
         this.healthBarImage.onload = () => {
@@ -139,6 +144,14 @@ class Sprite {
       this.currentFrame++;
       this.isSelected = true;
     }
+  }
+
+  /**
+   * Updates sprite with new sprite based on string given
+   * @param {string} newAircraft 
+   */
+  updateSprite(newAircraft) {
+    this.image.src = "images/aircraft/" + newAircraft + ".png";
   }
 
   //Checks current progress towards the next frame in animation

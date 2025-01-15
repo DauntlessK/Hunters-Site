@@ -66,6 +66,7 @@ class EncounterPopup{
         this.tv.finishEncounter();
     }
 
+
     /**
      * Popup when there's no additional round rolled after
      */
@@ -86,6 +87,28 @@ class EncounterPopup{
         this.container.appendChild(this.element);
         this.gm.setEventResolved(true);
         this.tv.finishEncounter();
+    }
+
+    /**
+     * Popup when diving deep before escort detection
+     * @param {string} pressureText 
+     */
+    diveDeep(pressureText) {
+        //new div to add
+        this.element.innerHTML = (`
+            <p class="PatrolMessage_p">${pressureText}<br>
+            </p>
+            <button class="AttackPopup_button" id="continue">Continue</button>
+        `)
+
+        this.element.addEventListener("click", ()=> {
+            if (event.target.id == "continue"){
+                //close popup
+                this.doneDiveDeep();
+            }
+        })
+
+        this.container.appendChild(this.element);
     }
 
     /**
@@ -302,6 +325,13 @@ class EncounterPopup{
             this.element.remove();
             this.gm.setEventResolved(true);
             this.choice = id;
+        }
+    }
+
+    doneDiveDeep() {
+        if (!this.tv.isPaused) {
+            this.element.remove();
+            this.gm.setSubEventResolved(true);
         }
     }
 

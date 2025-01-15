@@ -242,6 +242,7 @@ class TacticalView{
             }
         }
     }
+
     //called to change the scene, responsible for background and sprites on background
     async changeScene(newScene, newTime, enc, timeChangeOnly){
 
@@ -398,6 +399,25 @@ class TacticalView{
                         width: 201,
                         height: 158,
                         frames: 6,
+                        isPlayer: false,
+                        encounter: enc
+                    })
+                }
+                break;
+            case "Aircraft":
+                this.upperImage.src = "images/deepwater.png";
+                this.bgdFrames = 49;
+                this.gameObjects = {
+                    aircraft: new GameObject({
+                        tv: this,
+                        gm: this.gm,
+                        x: 300,
+                        y: 10,
+                        src: "images/aircraft/Aircraft.png",  //"images/ships/CargoShip1.png"
+                        shipNum: 0,
+                        width: 50,
+                        height: 50,
+                        frames: 1,
                         isPlayer: false,
                         encounter: enc
                     })

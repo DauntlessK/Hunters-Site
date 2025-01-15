@@ -597,16 +597,58 @@ class Uboat{
         }
     }
 
+    /**
+     * When Uboat takes damage
+     * @param {int} numHits 
+     * @param {string} attack - Type of attack ("Aircraft", "Depth Charges", or "Pressure")
+     * @param {string} attacker 
+     * @returns String of results of all hits.
+     */
     damage(numHits, attack, attacker) {
         this.gm.hitsTaken += numHits;
         var tookFloodingThisRound = false;
         var damage = "";
-        var messageToReturn = numHits + " hits! ";
-        if (numHits == 0) {
-            messageToReturn = "They missed us! ";
+        var messageToReturn = "";
+        if (attack != "Pressure") {
+            messageToReturn = numHits + " hits! ";
+
+            if (numHits == 0) {
+                messageToReturn = "They missed us! ";
+            }
+            else if (numHits == 1) {
+                messageToReturn = numHits + " hit! ";
+            }
         }
-        else if (numHits == 1) {
-            messageToReturn = numHits + " hit! ";
+
+        //Deal with diving deep- if diving deep, bypass damage rolls for attacks below
+        if (attack == "Pressure") {
+            //Automatically take 1 damage
+            this.hull_Damage += 1;
+            messageToReturn = "The hull groans as the boat dives further. ";
+
+            //Check for further damage
+            let rollingForPressure = true;
+            while (rollingForPressure) {
+                let pressureRoll = d6Rollx2();
+                if (pressureRoll < this.hull_Damage) {
+                    //game over
+                    let cause = "Sunk " + this.gm.getFullDate();
+                    cause += " - Hull catastrophically imploded escaping " + attacker;
+                
+                    console.log("GAME OVER: " + cause);
+                    goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
+                }
+                else if (pressureRoll == this.hull_Damage) {
+                    this.hull_Damage += 1;
+                    messageToReturn = messageToReturn + "The hull has taken further pressure from the depths! "
+                    continue;
+                }
+                else {
+                    rollingForPressure = false;
+                }
+            }
+
+            numHits = 0;        //set to 0 hits so for loop following this is skipped
         }
 
         for (let x = 0; x < numHits; x++) {
@@ -751,14 +793,17 @@ class Uboat{
         //check to see if sunk from hull damage
         if (this.hull_Damage > this.hull_hp) {
             let cause = "Sunk " + this.gm.getFullDate();
-            if (airAttack) {
-                cause += " - Hull destroyed from air attack by  " + attacker;
+            if (attack == "Aircraft") {
+                cause += " - Hull destroyed from air attack by " + attacker;
+            }
+            else if (attack == "Pressure") {
+                cause += " - Hull crushed by pressure escaping " + attacker;
             }
             else {
                 cause += " - Hull destroyed by depth charges by the " + attacker;
             }
             console.log("GAME OVER: " + cause);
-            goPopup = new GameOverPopup(this.tv, this.gm, this, cause);
+            goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
         }
 
         return messageToReturn;
@@ -820,9 +865,13 @@ class Uboat{
                 toReturn = "You have been " + sevText;
                 this.crew_health["Kommandant"] += wounds;
                 if (this.crew_health["Kommandant"] == 3) {
-                    //deal with end of game text TODO=======================
+                    //game over
+                    let cause = "Kommandant killed " + this.gm.getFullDate();
+                    cause += " - KIA by " + attacker;
+
+                    console.log("GAME OVER: " + cause);
+                    goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
                 }
-                //GAME OVER TODO =====================
                 break;
             case 3:
                 toReturn = "The First Officer has been " + sevText;

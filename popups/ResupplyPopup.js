@@ -35,8 +35,19 @@ class ResupplyPopup{
             <button class="G7aLoadout" id="G7aLoadout">G7a Steam max loadout</button>
             <button class="G7eLoadout" id="G7eLoadout">G7e Electric max Loadout</button>
             <button class="BalLoadout" id="BalLoadout">Balanced Loadout</button>
-            <button class="Custom" id="Custom">Custom Loadout</button>
+            <button class="Custom" id="Custom">Custom Loadout</button> <br><br>
+            <p class="HintMessage_p">
+            G7a (steam) torpedoes: More reliable. Detectable during day.<br>
+            G7e (electric) torpedoes: Less reliable (until mid-1940). Not detectable.</p>
         `)
+
+        /**
+         * <p class="HintMessage_p">
+            G7a (steam) torpedoes are historically more reliable (less duds), especially early war. They have the drawback of being easily detectable during
+            day attacks, however, because they leave a trail of bubbles on their way to their intended target.<br>
+            G7e (electric) torpedoes suffered many reliability issues early war. By the mid-1940, they were on par with steam's reliability,
+            without the drawback of bubble trails. </p>
+         */
 
         this.element.addEventListener("click", ()=> {
             //determine which button was clicked

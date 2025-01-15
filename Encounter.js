@@ -383,12 +383,11 @@ class Encounter {
                             newShipList.push(esc);
                             newShipList.push(shipToFollow);
                             this.shipList = newShipList;
-                            action = "Ship";
+                            action = "Ship + Escort";
                         }
                         else if (roll <= 5) {
                             //aircraft encounter
-                            console.log("TODO AIRCRAFT");
-                            action = "Ship"; //!!!!!!!!!!!!!!!
+                            action = "Aircraft";
                         }
                         //No escort / aircraft show up, start attack flow again
                         else {
@@ -420,10 +419,7 @@ class Encounter {
             //reset to empty sea for transition (current encounter over - will transition to new scene if following after)
             this.encounterMid = true;
             this.tv.changeScene("Sea", this.timeOfDay, this, false);
-            if (this.depth != "Surfaced") {
-                this.tv.uboat.sprite.surface();
-            }
-            await until(_ => this.tv.uboat.sprite.depth > 10);
+            //await until(_ => this.tv.uboat.sprite.depth > 10);
 
             //End encounter after unsuccessful follow or choice, or begin "new" enc
             switch (action) {
@@ -446,12 +442,15 @@ class Encounter {
                     this.reloadTubes();
                     await until(_ => this.tv.reloadMode == false);
                     this.shipList = this.getShips("Convoy");
-                    if (this.depth != "Surfaced") {
-                        this.tv.uboat.sprite.surface();
-                    }
                     this.postFollowStatsClear("Periscope Depth");
                     this.encounterMid = false;
+                    this.gm.setEventResolved(false);
+                    console.log(this.gm.eventResolved);
+                    this.getTimeOfDay(true);
+                    console.log(this.gm.eventResolved);
+                    await until(_ => this.gm.eventResolved == false);
                     this.start("Convoy", false);
+                    this.tv.changeScene("Convoy", this.timeOfDay, this, false);
                     return;
                 case "Ship":
                     this.reloadTubes();
@@ -460,12 +459,10 @@ class Encounter {
                     this.gm.setEventResolved(false);
                     this.timeOfDay = this.getTimeOfDay(true);
                     await until(_ => this.gm.eventResolved == true);
-                    if (this.depth != "Surfaced") {
-                        this.tv.uboat.sprite.surface();
-                    }
-                    this.tv.changeScene("Ship", this.timeOfDay, this, true);
+                    this.tv.changeScene("Ship", this.timeOfDay, this, false);
                     this.postFollowStatsClear("Surfaced");
                     this.encounterMid = false;
+                    this.encounterType = "Ship";
                     this.attackFlow(false);
                     return;
                 case "Ship + Escort":
@@ -475,14 +472,13 @@ class Encounter {
                     this.gm.setEventResolved(false);
                     this.timeOfDay = this.getTimeOfDay(true);
                     await until(_ => this.gm.eventResolved == true);
-                    if (this.depth != "Surfaced") {
-                        this.tv.uboat.sprite.surface();
-                    }
-                    this.tv.changeScene("Ship + Escort", this.timeOfDay, this, true);
+                    this.tv.changeScene("Ship + Escort", this.timeOfDay, this, false);
                     this.postFollowStatsClear("Periscope Depth");
                     this.encounterMid = false;
                     this.attackFlow(false);
                     return;
+                case "Aircraft":
+                    this.start("Aircraft", false);
                 default:
                     console.log("DEFAULT - ERROR");
             }
@@ -500,6 +496,7 @@ class Encounter {
 
         //get aircraft type
         this.getAircraft();
+        this.tv.aircraft.sprite.updateSprite(this.aircraftType);
 
         //modifiers
         let mods = 0;
@@ -645,11 +642,11 @@ class Encounter {
     getAircraft() {
         //var names = await getDataFromTxt("data/aircraft.txt");
         //this.aircraftType = names[randomNum(0, 17)];
-        let aTypes = ["Lockheed Hudson", "de Havilland Mosquito", "Vickers Wellington", "Armstrong Whitworth Whitley",
-            "Lockheed Ventura and Harpoon", "B-25 Mitchell", "Vickers Warwick", "B-18 Bolo", "Avro Anson", "TBF Avenger",
+        let aTypes = ["Lockheed Hudson", "de Havilland Mosquito", "Vickers Wellington", 
+            "Lockheed Ventura", "B-25 Mitchell", "Vickers Warwick", "B-18 Bolo", "Avro Anson", "TBF Avenger",
             "F4F Wildcat", "Fairey Swordfish", "Martin PBM Mariner", "Short Sunderland", "PBY Catalina", "Handley Page Halifax",
             "B-17 Flying Fortress", "B-24 Liberator"]
-        this.aircraftType = aTypes[randomNum(0, 17)];
+        this.aircraftType = aTypes[randomNum(0, 16)];
         console.log(this.aircraftType);
     }
 
@@ -664,7 +661,10 @@ class Encounter {
         }
     }
 
-    //Resets flags and attack parameters to start-of-encounter
+    /**
+     * Resets flags and attack parameters to start-of-encounter
+     * @param {string} depth "Surfaced", "Periscope Depth" or "Deep"
+     */
     postFollowStatsClear(depth) {
         this.attackDepth = "";
         this.depth = depth;            //Surfaced, Periscope Depth, or Deep
@@ -768,7 +768,11 @@ class Encounter {
         }
     }
 
-    //Returns string of time of day (Day or Night) based on current orders and die roll
+    /**
+     * Returns string of time of day (Day or Night) based on current orders and die roll
+     * @param {boolean} isFollowing 
+     * @returns string "Day" or "Night"
+     */
     getTimeOfDay(isFollowing) {
         //first deal with actic always day or always night months if applicable
         if (this.currentOrders == "Arctic" && (this.date_month == 5 || this.date_month == 11)) {
@@ -859,8 +863,13 @@ class Encounter {
         }
     }
 
+    /**
+     * Dives deep during escort detection
+     */
     diveDeep() {
         this.depth = "Deep";
+        let pressureDamage = this.gm.sub.damage(1, "Pressure", this.shipList[0].getName());
+        this.encPop.diveDeep(pressureDamage);
     }
 
     //Enter firing mode to allow for target selection and weapon selection
@@ -1232,6 +1241,7 @@ class Encounter {
                 return false;
             }
             else {
+                console.log("DUD");
                 return true;
             }
         }
@@ -1240,6 +1250,7 @@ class Encounter {
                 return false;
             }
             else {
+                console.log("DUD");
                 return true;
             }
         }
@@ -1247,10 +1258,11 @@ class Encounter {
             if (torpType == "G7a" && dudRoll >= 2) {
                 return false;
             }
-            else if (torpType == "G7e" && dudRoll >= 3) {
+            else if (torpType == "G7e" && dudRoll >= 3) { 
                 return false;
             }
             else {
+                console.log("DUD");
                 return true;
             }
         }
@@ -1270,6 +1282,11 @@ class Encounter {
         this.gm.setSubEventResolved(false);
         var escortDetectionPopup = new EscortDetectionPopup(this.tv, this.gm, this, closeRangeCheck);
         await until(_ => this.gm.subEventResolved == true);
+        if (escortDetectionPopup.getChoice() == "Dive") {
+            this.gm.setSubEventResolved(false);
+            this.diveDeep();
+            await until(_ => this.gm.subEventResolved == true);
+        }
 
         //Check if in Wolfpack - only checked once if wolfpack. Otherwise stays 0
         if (this.gm.currentOrders.includes("Wolfpack") && wpMod == 0 && this.encounterType == "Convoy") {
