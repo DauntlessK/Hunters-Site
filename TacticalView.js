@@ -243,7 +243,14 @@ class TacticalView{
         }
     }
 
-    //called to change the scene, responsible for background and sprites on background
+    /**
+     * Called to change the scene, responsible for background and sprites on background
+     * @param {string} newScene - scene type ("Port", "Ship", "Convoy", etc)
+     * @param {boolean} newTime - Time of day of scene
+     * @param {encounter} enc - Encounter object
+     * @param {boolean} timeChangeOnly - true only if simply updating time of day
+     * @returns 
+     */
     async changeScene(newScene, newTime, enc, timeChangeOnly){
 
         //If last (current) scene was Port and changing scenes, set background to scrolling water and set new uboat
@@ -418,6 +425,25 @@ class TacticalView{
                         width: 50,
                         height: 50,
                         frames: 1,
+                        isPlayer: false,
+                        encounter: enc
+                    })
+                }
+                break;
+            case "Escort":
+                this.upperImage.src = "images/deepwater.png";
+                this.bgdFrames = 49;
+                this.gameObjects = {
+                    ship0: new GameObject({
+                        tv: this,
+                        gm: this.gm,
+                        x: 300,
+                        y: 10,
+                        src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
+                        shipNum: 0,
+                        width: 201,
+                        height: 158,
+                        frames: 6,
                         isPlayer: false,
                         encounter: enc
                     })

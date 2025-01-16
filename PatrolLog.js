@@ -77,7 +77,7 @@ class PatrolLog{
             }
 
             //Results of attack
-            if (enc.shipsSunk.length == 0 && enc.ignored) {
+            if (enc.shipsSunkInEnc.length == 0 && enc.ignored) {
                 lineEntry = lineEntry + "Did not engage. ";
             }
             else if (enc.shipsSunk.length == 0) {

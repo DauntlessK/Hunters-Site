@@ -458,12 +458,10 @@ class Patrol{
                     case 2:
                     case 3:
                         if (loc == "Additional Round of Combat") {
-                            console.log("TO DO- Notify- An enemy escort has arrived!");
                             toReturn = "Escort";
                             
                         }
                         else {
-                            console.log("TO DO- Notify- An enemy escort has arrived!");
                             toReturn = "Escort";
                         }
                         break;

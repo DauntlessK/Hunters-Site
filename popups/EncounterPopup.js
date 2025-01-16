@@ -134,13 +134,38 @@ class EncounterPopup{
         this.container.appendChild(this.element);
     }
 
-    //Popup for aircraft attack
+    /**
+     * Popup for aircraft attack
+     */
     encounterAircraft(){
 
         //new div to add
         this.element.innerHTML = (`
             <h3 class="HeaderMessage_h3">Alarm!! Aircraft!<br>
             </h3>
+            <button class="AttackPopup_button" id="continue">Continue</button>
+        `)
+
+        this.element.addEventListener("click", ()=> {
+            if (event.target.id == "continue"){
+                //close popup
+                this.done(event.target.id);
+            }
+        })
+
+        this.container.appendChild(this.element);
+    }
+
+    /**
+     * Popup to notify of successful and unsuccessful repair results
+     * @param {string} repairString 
+     */
+    repairs(repairString){
+
+        //new div to add
+        this.element.innerHTML = (`
+            <p class="PatrolMessage_p">${repairString}<br>
+            </p>
             <button class="AttackPopup_button" id="continue">Continue</button>
         `)
 

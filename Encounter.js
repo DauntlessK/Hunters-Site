@@ -179,6 +179,8 @@ class Encounter {
                     break;
                 case "Escort":
                     this.gm.setEventResolved(false);
+                    this.shipList = this.getShips("Escort");
+                    this.tv.changeScene("Escort", this.timeOfDay, this, false);
                     this.encPop.escortArrival();
                     await until(_ => this.gm.eventResolved == true);
                     this.escortDetection(false ,0 ,false);
@@ -252,8 +254,12 @@ class Encounter {
         this.depth = attackPopup.getDepth();
         this.range = attackPopup.getRange();
 
-        if (this.depth == "Periscope Depth") {
+        //check for encounter depth vs sprite depth mismatches and correct
+        if (this.depth == "Periscope Depth" && this.tv.uboat.sprite.depth == 0) {
             this.tv.uboat.sprite.dive();
+        }
+        else if (this.depth == "Surfaced" && this.tv.uboat.sprite.depth == 110) {
+            this.tv.uboat.sprite.surface();
         }
         Object.values(this.tv.gameObjects).forEach(object => {
             object.sprite.setRange(this.range);
@@ -445,9 +451,8 @@ class Encounter {
                     this.postFollowStatsClear("Periscope Depth");
                     this.encounterMid = false;
                     this.gm.setEventResolved(false);
-                    console.log(this.gm.eventResolved);
                     this.getTimeOfDay(true);
-                    console.log(this.gm.eventResolved);
+                    this.repairCheck();
                     await until(_ => this.gm.eventResolved == false);
                     this.start("Convoy", false);
                     this.tv.changeScene("Convoy", this.timeOfDay, this, false);
@@ -460,6 +465,7 @@ class Encounter {
                     this.timeOfDay = this.getTimeOfDay(true);
                     await until(_ => this.gm.eventResolved == true);
                     this.tv.changeScene("Ship", this.timeOfDay, this, false);
+                    this.repairCheck();
                     this.postFollowStatsClear("Surfaced");
                     this.encounterMid = false;
                     this.encounterType = "Ship";
@@ -473,8 +479,10 @@ class Encounter {
                     this.timeOfDay = this.getTimeOfDay(true);
                     await until(_ => this.gm.eventResolved == true);
                     this.tv.changeScene("Ship + Escort", this.timeOfDay, this, false);
+                    this.repairCheck();
                     this.postFollowStatsClear("Periscope Depth");
                     this.encounterMid = false;
+                    this.encounterType = "Ship + Escort";
                     this.attackFlow(false);
                     return;
                 case "Aircraft":
@@ -498,6 +506,8 @@ class Encounter {
         //get aircraft type
         this.getAircraft();
         this.tv.gameObjects.aircraft.sprite.updateSprite(this.aircraftType);
+
+        this.depth = "Surfaced";
 
         //modifiers
         let mods = 0;
@@ -606,7 +616,8 @@ class Encounter {
 
             //New encounter roll on the additional round E1
             if (flakResult != "Shot Down" || flakResult == "None") {
-                this.tv.uboat.sprite.dive();
+                //this.tv.uboat.sprite.dive();
+                //sleep(1000);
                 //get new encounterType from patrol sheet
                 this.encounterType = this.patrol.getEncounterType("Additional Round of Combat", this.gm.getYear(), this.gm.randomEvent, -1);
                 console.log("Additional Round: " + this.encounterType);
@@ -629,6 +640,7 @@ class Encounter {
                     this.encPop.additionalRound("aircraft", this.encounterType);
                     await until(_ => this.gm.eventResolved == true);
                     this.start(this.encounterType, false);
+                    return;
                 }
                 
             }
@@ -693,11 +705,22 @@ class Encounter {
         this.tv.enterReloadMode();
     }
 
+    async repairCheck() {
+        let damageString = this.gm.sub.repair();
+
+        if (damageString != "") {
+            this.gm.setEventResolved(false);
+            this.encPop.repairs(damageString);
+            await until(_ => this.gm.eventResolved == true);
+        }
+    }
+
     endEncounter() {
         this.tv.changeScene("", this.timeOfDay, null, false);
         if (this.depth != "Surfaced") {
             this.tv.uboat.sprite.surface();
         }
+        this.repairCheck();
         this.tv.finishEncounter();
         //Prompt for reloads if torpedoes were fired
         if (this.numFired > 0 || this.currentBoxName == "Mission") {
@@ -1404,6 +1427,10 @@ class Encounter {
         }
         else {
             this.gm.setEventResolved(true);
+        }
+
+        if (this.encounterType == "Escort") {
+            this.endEncounter();
         }
     }
 

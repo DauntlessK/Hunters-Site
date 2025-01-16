@@ -160,6 +160,7 @@ class Uboat{
         this.lastLoadoutReloads_forward_G7e = 0;
         this.lastLoadoutReloads_aft_G7a = 0;
         this.lastLoadoutReloads_aft_G7e = 0;
+        this.numTorpedoesLoaded = 0;
 
         //Damage chart (for rolling damage against U-boat)
         this.damageChart = ["Batteries", "flooding", "crew injury", "Periscope", "Dive Planes", "Electric Engine #1",
@@ -300,6 +301,25 @@ class Uboat{
         this.lastLoadoutReloads_aft_G7e = this.reloads_aft_G7e;
     }
 
+    /**
+     * Only for leaving port, to ensure all tubes are loaded
+     * @returns true if all tubes are loaded
+     */
+    tubesLoadedCheck() {
+        var tubesNeedingReload = 0;
+        for (let i = 1; i < 7; i++){
+            if (this.tube[i] === 0){
+                tubesNeedingReload++;
+            }
+        }
+        if (tubesNeedingReload > 0) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
     loadTube(tubeNum, type){
         //loads a tube with a given torpedo type, checking to make sure the stores are available
 
@@ -319,7 +339,7 @@ class Uboat{
                 this.tube[tubeNum] = type;
             }
             else {
-                console.log("No Torpedoes available of that type to load forward.")
+                //console.log("No Torpedoes available of that type to load forward.")
             }
         }
         else {  //trying to load aft torpedoes
@@ -338,7 +358,7 @@ class Uboat{
                 this.tube[tubeNum] = type;
             }
             else {
-                console.log("No Torpedoes available of that type to load aft.")
+                //console.log("No Torpedoes available of that type to load aft.")
             }
         }
     }
@@ -968,5 +988,81 @@ class Uboat{
                 break;
         }
         return toReturn;
+    }
+
+    /**
+     * Called after an encounter, or between encounters / rounds to attempt to repair all damaged systems
+     * Updates all damaged (1) systems to either operable (0) or inoperative (2)
+     * @returns string of successful or unsuccessful repair attempts
+     */
+    repair() {
+        
+        this.flooding_Damage = 0;
+
+        var messageToReturn = "";
+        
+        let mods = 0;
+        let roll = 0;
+        let result = 0;
+        if (this.crew_health["Engineer"] >= 2) {
+            mods += 1
+        }
+        else if (this.crew_levels["Engineer"] == 1) {
+            mods -= 1
+        }
+
+        for (const [key, value] of Object.entries(this.systems)) {
+            roll = d6Roll();
+            result = roll + result;
+            if (value == 1) {
+                switch (key) {
+                    case "Electric Engine 1":
+                    case "Electric Engine 2":
+                    case "Periscope":
+                    case "Batteries":
+                        if (result <= 4) {
+                            this.systems[key] = 0;
+                            if (key.slice(-1) == "s") {
+                                messageToReturn = messageToReturn + "The " + key + " has been repaired. ";
+                            }
+                            else {
+                                messageToReturn = messageToReturn + "The " + key + " have been repaired! ";
+                            }
+                        }
+                        else {
+                            this.systems[key] = 2;
+                            messageToReturn = messageToReturn + "We're unable to repair the " + key + ". ";
+                        }
+                        break;
+                    case "Hydrophones":
+                    case "Dive Planes":
+                    case "Flak Gun":
+                    case "3.7 Flak":
+                    case "Deck Gun":
+                    case "Forward Torpedo Doors":
+                    case "Aft Torpedo Doors":
+                    case "Fuel Tanks":
+                    case "Radio":
+                        if (result <= 2) {
+                            this.systems[key] = 0;
+                            if (key.slice(-1) == "s") {
+                                messageToReturn = messageToReturn + "The " + key + " has been repaired. ";
+                            }
+                            else {
+                                messageToReturn = messageToReturn + "The " + key + " have been repaired! ";
+                            }
+                        }
+                        else {
+                            this.systems[key] = 2;
+                            messageToReturn = messageToReturn + "We're unable to repair the " + key + ". ";
+                        }
+                        break;
+                    default:
+                        console.log("Error attempting to repair " + key);
+                }
+            }
+        }
+
+        return messageToReturn;
     }
 }

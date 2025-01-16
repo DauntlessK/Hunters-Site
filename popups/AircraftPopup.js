@@ -37,7 +37,7 @@ class AircraftPopup{
         if (twoHit) {
             this.element.innerHTML = (`
                 <h3 class="HeaderMessage_h3">We've been caught with our pants down! Damage Report! </h3>
-                <p class="DetectionTextMessage_p">${this.aircraftType} has made an attack run! ${hitNum} hits!<br><br>
+                <p class="DetectionTextMessage_p">${this.aircraftType} has made an attack run and is turning around for another! ${hitNum} hits!<br><br>
                 ${result} <br> ${result2}
                 <button class="ContinuePopup_button" id="continue2">Continue</button>
                 </p>`)
