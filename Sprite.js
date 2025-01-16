@@ -151,6 +151,7 @@ class Sprite {
    * @param {string} newAircraft 
    */
   updateSprite(newAircraft) {
+    newAircraft = newAircraft.replaceAll(" ", "");
     this.image.src = "images/aircraft/" + newAircraft + ".png";
   }
 
@@ -344,7 +345,7 @@ class Sprite {
     }
 
     //Draw Health bar if not player or escort
-    if (!this.isPlayer && this.encounter != null) {
+    if (!this.isPlayer && this.encounter != null && !this.isAircraft) {
       if (this.encounter.shipList[this.shipNum].getType() != "Escort") {
         this.drawHealthBar(ctx);
       }

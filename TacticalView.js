@@ -412,7 +412,7 @@ class TacticalView{
                         tv: this,
                         gm: this.gm,
                         x: 300,
-                        y: 10,
+                        y: 40,
                         src: "images/aircraft/Aircraft.png",  //"images/ships/CargoShip1.png"
                         shipNum: 0,
                         width: 50,

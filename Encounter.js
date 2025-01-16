@@ -479,6 +479,7 @@ class Encounter {
                     return;
                 case "Aircraft":
                     this.start("Aircraft", false);
+                    return;
                 default:
                     console.log("DEFAULT - ERROR");
             }
@@ -496,7 +497,7 @@ class Encounter {
 
         //get aircraft type
         this.getAircraft();
-        this.tv.aircraft.sprite.updateSprite(this.aircraftType);
+        this.tv.gameObjects.aircraft.sprite.updateSprite(this.aircraftType);
 
         //modifiers
         let mods = 0;

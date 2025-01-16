@@ -653,6 +653,10 @@ class Uboat{
 
         for (let x = 0; x < numHits; x++) {
             damage = this.damageChart[randomNum(0, 35)];
+            //reroll 3.7 Flak for VII type boats
+            while (damage == "3.7 Flak" && this.getType().includes("VII")) {
+                damage = this.damageChart[randomNum(0, 35)];
+            }
             switch (damage) {
                 case "crew injury":
                     messageToReturn = messageToReturn + "Injury! ";

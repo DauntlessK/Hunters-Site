@@ -23,7 +23,7 @@ class Main{
       this.tv.drawLowerImage(this.ctx);
 
       //Draw Game Objects (other ships) - only if in an encounter
-      if (this.tv.scene.includes("Ship") || this.tv.scene.includes("Convoy")) {
+      if (this.tv.scene.includes("Ship") || this.tv.scene.includes("Convoy") || this.tv.scene.includes("Aircraft")) {
         Object.values(this.tv.gameObjects).forEach(object => {
         object.sprite.draw(this.ctx);
       })
