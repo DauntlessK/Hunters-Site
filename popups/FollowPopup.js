@@ -52,7 +52,9 @@ class FollowPopup{
         }
         //Add convoy option if possible
         if (this.enc.encounterType == "Convoy") {
-            bodyText = bodyText + "<br>";
+            if (!this.enc.shipList[4].sunk) {
+                bodyText = bodyText + "<br>";
+            }
             bodyText = bodyText + '<input type="radio" id="Convoy" name="options" value="Convoy"><label for="Convoy">-Convoy-</label>';
         }
         //Add Ignore option

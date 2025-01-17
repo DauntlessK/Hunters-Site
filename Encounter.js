@@ -797,7 +797,7 @@ class Encounter {
      * @param {boolean} isFollowing 
      * @returns string "Day" or "Night"
      */
-    getTimeOfDay(isFollowing) {
+    async getTimeOfDay(isFollowing) {
         //first deal with actic always day or always night months if applicable
         if (this.currentOrders == "Arctic" && (this.date_month == 5 || this.date_month == 11)) {
             if (this.date_month == 5){
@@ -812,7 +812,10 @@ class Encounter {
         }
         //otherwise, if following, choose day or night to attack
         else if (isFollowing) {
+            this.gm.setEventResolved(false);
             var FTpopup = new FollowTimePopup(this.tv, this.gm, this);
+            await until(_ => this.gm.eventResolved == true);
+            return FTpopup.getChoice();
         }
         //otherwise randomly determine day or night
         else {

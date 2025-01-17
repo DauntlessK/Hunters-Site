@@ -35,6 +35,15 @@ class FollowTimePopup{
         this.container.appendChild(this.element);
     }
 
+    getChoice() {
+        if (this.choice == "day") {
+            return "Day";
+        }
+        else {
+            return "Night";
+        }
+    }
+
     done(id){
         if (!this.tv.isPaused) {
             this.element.remove();

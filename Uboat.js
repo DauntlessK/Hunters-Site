@@ -1016,8 +1016,8 @@ class Uboat{
             result = roll + result;
             if (value == 1) {
                 switch (key) {
-                    case "Electric Engine 1":
-                    case "Electric Engine 2":
+                    case "Electric Engine #1":
+                    case "Electric Engine #2":
                     case "Periscope":
                     case "Batteries":
                         if (result <= 4) {
@@ -1057,6 +1057,9 @@ class Uboat{
                             messageToReturn = messageToReturn + "We're unable to repair the " + key + ". ";
                         }
                         break;
+                    case "Electric Engine #1":
+                    case "Electric Engine #2":
+                        continue;
                     default:
                         console.log("Error attempting to repair " + key);
                 }
