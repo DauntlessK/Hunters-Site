@@ -42,23 +42,19 @@ class FollowPopup{
             if (this.shipList[i].getType() == "Escort") {
                 continue;
             }
-            if (i != this.shipList.length-1 && !this.shipList[i].sunk) {
-                bodyText = bodyText + "<br>";
-            }
             if (!this.shipList[i].sunk) {
                 bodyText = bodyText + '<input type="radio" id="Ship' + i.toString() + '"  name="options" value="Ship' + i.toString() + '">';
                 bodyText = bodyText + '<label for="Ship' + i.toString() + '">' + this.shipList[i].getName() + '</label>';
+                bodyText = bodyText + "<br>";
             }
         }
         //Add convoy option if possible
         if (this.enc.encounterType == "Convoy") {
-            if (!this.enc.shipList[4].sunk) {
-                bodyText = bodyText + "<br>";
-            }
             bodyText = bodyText + '<input type="radio" id="Convoy" name="options" value="Convoy"><label for="Convoy">-Convoy-</label>';
+            bodyText = bodyText + "<br>";
         }
         //Add Ignore option
-        bodyText = bodyText + '<br><input type="radio" id="Ignore" name="options" value="Ignore"><label for="Ignore"><strong>Continue Patrol</strong></label>';
+        bodyText = bodyText + '<input type="radio" id="Ignore" name="options" value="Ignore"><label for="Ignore"><strong>Continue Patrol</strong></label>';
         //Add continue button
         bodyText = bodyText + '<button class="AttackPopup_button" id="continue">Continue</button></p>';
 

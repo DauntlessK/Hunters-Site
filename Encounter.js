@@ -16,6 +16,7 @@ class Encounter {
         this.shipsSunkInEnc = [];    //Changed from shipsSunk... need to record ships sunk throughout this enc space
         this.sub = sub;
         this.encounterMid = false;                  //Flag for when in between following stages / switching scenes
+        this.tookDamage = false;
 
         //Encounter "Scoreboard" for results
         this.numHits = 0;
@@ -51,6 +52,7 @@ class Encounter {
 
         this.tv.enterEncounter();
         this.timeOfDay = this.getTimeOfDay(false);
+        console.log(this.timeOfDay);
         this.tv.changeScene(this.encounterType, this.timeOfDay, this, false);
 
         this.gm.setEventResolved(false);
@@ -329,9 +331,8 @@ class Encounter {
             this.endRound();
         }
 
+        //FOLLOW FLOW-----
         if (this.hasSinkableShip() || this.encounterType == "Convoy") {
-            //Need to get input from player to see if attack will continue, follow, or leave
-            //FOLLOW FLOW
             //First determine if player WANTS to follow
             this.gm.setEventResolved(false);
             var followPrompt = new FollowPopup(this.tv, this.gm, this);
@@ -377,8 +378,18 @@ class Encounter {
                 }
                 //If following a ship
                 else {
+                    //first check to see if damaged- if not damaged, roll for contact loss
+                    if (shipToFollow.damage == 0) {
+                        var followRoll = d6Roll();
+                        if (followRoll <= 4) {
+                            action = "Ship";
+                        }
+                        else {
+                            action = "Lost";
+                        }
+                    }
                     //Check to see if aircraft or escort shows up (additional round roll)
-                    if (!this.isEscorted()) {
+                    if (!this.isEscorted() && action != "Lost") {
                         var roll = d6Rollx2();
                         if (year == 1942) {roll = roll - 1;}
                         if (year == 1943) {roll = roll - 2;}
@@ -401,7 +412,7 @@ class Encounter {
                         }
                     }
                     //Escorted
-                    else {
+                    else if (this.isEscorted() && action != "Lost") {
                         var roll = d6Roll();
                         //Stays Escorted
                         if (roll <= 4 || shipToFollow.damage == 0) {
@@ -434,14 +445,17 @@ class Encounter {
                     break;
                 case "Lost Convoy":
                     this.follow = " Attempted to follow convoy, but lost contact.";
+                    this.encPop.lostThem(this.follow);
                     this.endEncounter();
                     break;
                 case "Lost":
                     this.follow = " Attempted to follow ship, but lost contact.";
+                    this.encPop.lostThem(this.follow);
                     this.endEncounter();
                     break;
                 case "Lost - Can't Follow":    //for Capital Ships
                     this.follow = " Attempted to follow " + this.shipList[1].getName() + ", but lost her.";
+                    this.encPop.lostThem(this.follow);
                     this.endEncounter();
                     break;
                 case "Convoy":    //attack 4 new ships convoy
@@ -451,7 +465,9 @@ class Encounter {
                     this.postFollowStatsClear("Periscope Depth");
                     this.encounterMid = false;
                     this.gm.setEventResolved(false);
-                    this.getTimeOfDay(true);
+                    this.timeOfDay = this.getTimeOfDay(true);
+                    await until(_ => this.gm.eventResolved == true);
+                    console.log(this.timeOfDay);
                     this.repairCheck();
                     await until(_ => this.gm.eventResolved == false);
                     this.start("Convoy", false);
@@ -461,13 +477,14 @@ class Encounter {
                     this.reloadTubes();
                     await until(_ => this.tv.reloadMode == false);
                     this.tv.changeScene("Ship", this.timeOfDay, this, false);
+                    this.encounterMid = false;
                     this.gm.setEventResolved(false);
                     this.timeOfDay = this.getTimeOfDay(true);
                     await until(_ => this.gm.eventResolved == true);
+                    console.log(this.timeOfDay);
                     this.tv.changeScene("Ship", this.timeOfDay, this, false);
                     this.repairCheck();
                     this.postFollowStatsClear("Surfaced");
-                    this.encounterMid = false;
                     this.encounterType = "Ship";
                     this.attackFlow(false);
                     return;
@@ -475,13 +492,14 @@ class Encounter {
                     this.reloadTubes();
                     await until(_ => this.tv.reloadMode == false);
                     this.tv.changeScene("Ship + Escort", this.timeOfDay, this, false);
+                    this.encounterMid = false;
                     this.gm.setEventResolved(false);
                     this.timeOfDay = this.getTimeOfDay(true);
                     await until(_ => this.gm.eventResolved == true);
+                    console.log(this.timeOfDay);
                     this.tv.changeScene("Ship + Escort", this.timeOfDay, this, false);
                     this.repairCheck();
                     this.postFollowStatsClear("Periscope Depth");
-                    this.encounterMid = false;
                     this.encounterType = "Ship + Escort";
                     this.attackFlow(false);
                     return;
@@ -720,7 +738,10 @@ class Encounter {
         if (this.depth != "Surfaced") {
             this.tv.uboat.sprite.surface();
         }
-        this.repairCheck();
+        if (this.tookDamage) {
+            this.repairCheck();
+            this.tookDamage = false;
+        }
         this.tv.finishEncounter();
         //Prompt for reloads if torpedoes were fired
         if (this.numFired > 0 || this.currentBoxName == "Mission") {
@@ -797,7 +818,7 @@ class Encounter {
      * @param {boolean} isFollowing 
      * @returns string "Day" or "Night"
      */
-    async getTimeOfDay(isFollowing) {
+    getTimeOfDay(isFollowing) {
         //first deal with actic always day or always night months if applicable
         if (this.currentOrders == "Arctic" && (this.date_month == 5 || this.date_month == 11)) {
             if (this.date_month == 5){
@@ -812,9 +833,9 @@ class Encounter {
         }
         //otherwise, if following, choose day or night to attack
         else if (isFollowing) {
-            this.gm.setEventResolved(false);
+            //this.gm.setEventResolved(false);
             var FTpopup = new FollowTimePopup(this.tv, this.gm, this);
-            await until(_ => this.gm.eventResolved == true);
+            //await until(_ => this.gm.eventResolved == true);
             return FTpopup.getChoice();
         }
         //otherwise randomly determine day or night
@@ -1255,7 +1276,11 @@ class Encounter {
         }
     }
 
-    //Determines if the torpedo that hit was a dud based on year and D6 roll
+    /**
+     * Determines if the torpedo that hit was a dud based on year and D6 roll
+     * @param {string} torpType "G7a" or "G7e"
+     * @returns boolean: true if dud
+     */
     wasDud(torpType) {
         var dudRoll = d6Roll();
 
@@ -1268,7 +1293,6 @@ class Encounter {
                 return false;
             }
             else {
-                console.log("DUD");
                 return true;
             }
         }
@@ -1277,7 +1301,6 @@ class Encounter {
                 return false;
             }
             else {
-                console.log("DUD");
                 return true;
             }
         }

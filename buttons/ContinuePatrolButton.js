@@ -9,6 +9,8 @@ class ContinuePatrolButton extends Button {
 
     //Move to next step of patrol
     continuePatrol(){
-        this.gm.advancePatrol();
+        if (this.gm.currentBox < this.gm.patrol.getPatrolLength()) {
+            this.gm.advancePatrol();
+        }
     }
 }

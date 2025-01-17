@@ -212,6 +212,16 @@ class EncounterPopup{
         this.container.appendChild(this.element);
     }
 
+    lostThem(message) {
+        //new div to add
+        this.element.innerHTML = (`
+            <p class="PatrolMessage_p">${message}<br>
+            </p>
+        `)
+
+        this.container.appendChild(this.element);
+    }
+
     escortArrival() {
                 //new div to add
                 this.element.innerHTML = (`

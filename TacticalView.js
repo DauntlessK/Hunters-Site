@@ -263,6 +263,8 @@ class TacticalView{
             this.uboatwake.y = -204;
         }
 
+        console.log("Time: " + newTime);
+
         //If scene is not port, configure time of day
         if (newScene != "IntroPort" || newScene != "Port") {
             this.setTimeOfDay(newTime);

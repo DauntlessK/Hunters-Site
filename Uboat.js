@@ -603,7 +603,11 @@ class Uboat{
         }
     }
 
-    //returns true if given crewman is not wounded, or LW
+    /**
+     * Check if crewman is not wounded or only lightly-wounded
+     * @param {string} crewman 
+     * @returns returns true if given crewman is not wounded, or LW, false if SW or KIA
+     */
     isCrewmanFunctional(crewman) {
         if (this.gm.sub.crew_health[crewman] < 2) {
             return true;
@@ -638,6 +642,7 @@ class Uboat{
             else if (numHits == 1) {
                 messageToReturn = numHits + " hit! ";
             }
+            this.gm.currentEncounter.tookDamage = true;
         }
 
         //Deal with diving deep- if diving deep, bypass damage rolls for attacks below
@@ -656,7 +661,7 @@ class Uboat{
                     cause += " - Hull catastrophically imploded escaping " + attacker;
                 
                     console.log("GAME OVER: " + cause);
-                    goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
+                    const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
                 }
                 else if (pressureRoll == this.hull_Damage) {
                     this.hull_Damage += 1;
@@ -827,7 +832,20 @@ class Uboat{
                 cause += " - Hull destroyed by depth charges by the " + attacker;
             }
             console.log("GAME OVER: " + cause);
-            goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
+            const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
+        }
+
+        //check for too much flooding (emergency surface / scuttle)
+        if  (this.flooding_Damage > this.flooding_hp) {
+            let cause = "Scuttled " + this.gm.getFullDate();
+            if (attack == "Aircraft") {
+                cause += " - Forced to scuttle from air attack flooding by " + attacker; 
+            }
+            else {
+                cause += " - Forced to surface and scuttle from depth charge damage flooding by the " + attacker;
+            }
+            console.log("GAME OVER: " + cause);
+            const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
         }
 
         return messageToReturn;
@@ -894,7 +912,7 @@ class Uboat{
                     cause += " - KIA by " + attacker;
 
                     console.log("GAME OVER: " + cause);
-                    goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
+                    const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
                 }
                 break;
             case 3:
@@ -996,7 +1014,6 @@ class Uboat{
      * @returns string of successful or unsuccessful repair attempts
      */
     repair() {
-        
         this.flooding_Damage = 0;
 
         var messageToReturn = "";
@@ -1012,9 +1029,10 @@ class Uboat{
         }
 
         for (const [key, value] of Object.entries(this.systems)) {
-            roll = d6Roll();
-            result = roll + result;
             if (value == 1) {
+                roll = d6Roll();
+                result = roll + result;
+                console.log("Repair roll for " + key + ". Result: " + result);
                 switch (key) {
                     case "Electric Engine #1":
                     case "Electric Engine #2":
@@ -1054,14 +1072,42 @@ class Uboat{
                         }
                         else {
                             this.systems[key] = 2;
-                            messageToReturn = messageToReturn + "We're unable to repair the " + key + ". ";
+                            if (key == "Fuel Tanks") {
+                                messageToReturn = messageToReturn + "We cannot repair the " + key + " at sea. We must head back to port. ";
+                            }
+                            else {
+                                messageToReturn = messageToReturn + "We're unable to repair the " + key + ". ";
+                            }
                         }
                         break;
-                    case "Electric Engine #1":
-                    case "Electric Engine #2":
+                    case "Diesel Engine #1":
+                    case "Diesel Engine #2":
+                        this.systems[key] = 2;
+                        messageToReturn = messageToReturn + key + " cannot be repaired at sea. We must head back to port.";
                         continue;
                     default:
                         console.log("Error attempting to repair " + key);
+                }
+            }
+        }
+        return messageToReturn;
+    }
+
+    /**
+     * When doctor is SW or KIA, need to check every patrol box to see if SW crew members die
+     * @returns string of any crew members that may have changed to KIA, if applicable
+     */
+    checkVitals() {
+        var messageToReturn = "";
+        
+        let roll = 0;
+
+        for (const [key, value] of Object.entries(this.crew_health)) {
+            if (value == 2) {
+                roll = d6Roll();
+                if (roll >= 4) {
+                    messageToReturn += key + " has passed away due to his injuries. "
+                    this.crew_health[key] = 3;
                 }
             }
         }

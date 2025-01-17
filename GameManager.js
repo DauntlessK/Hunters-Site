@@ -61,7 +61,7 @@ class GameManager{
         this.pastSubs = [];
         this.adminMode = true;     //To choose orders
         
-
+        this.popup2 = new GMPopup(this.tv, this);
         this.currentEncounter = null;
     }
 
@@ -88,7 +88,7 @@ class GameManager{
         this.setEventResolved(false);
         this.setDate();
         this.getStartingRank();
-        const popup2 = new Popup("startGameText", this.tv, this);
+        this.popup2.startGameText(this.date_month, this.date_year);
         await until(_ => this.eventResolved == true);
         this.sub.torpedoResupply();        
     }
@@ -260,13 +260,26 @@ class GameManager{
         this.setEventResolved(false);
         const ordersPopUp = new OrdersPopup(this.tv, this, onlyUnique, isPicking);
         await until(_ => this.eventResolved == true);
+
+        //Check for arctic permanent assignments
+        if (this.currentOrders == "Arctic"){
+            let articAssignRoll = d6Roll();
+
+            if (articAssignRoll <= 3) {
+                this.permArcPost = true;
+                this.setEventResolved(false);
+                this.popup2.arcticAssignmentPopup();
+                await until(_ => this.eventResolved == true);
+            }
+        }
+
         this.tv.changeScene("NoEnc", "Day", null, false);
     }
 
     beginPatrol() {
         this.patrolling = true;
         this.patrolNum++;
-        var patrol = new PatrolLog(this.tv, this);
+        var patrol = new PatrolLog(this.tv, this);      
         this.logBook.push(patrol);
         this.currentBox = 0;
         this.advancePatrol();
@@ -285,14 +298,6 @@ class GameManager{
         console.log("Patrol Advance---------- step #" + this.currentBox);
         //reset current encounter
 
-        //todo - assignment to arctic
-        if (this.currentOrders == "Arctic"){
-            //TODO: Roll for artic assignment
-            console.log("TODO roll for <=3");
-        }
-
-        //loop to run through patrol array (each patrol box)
-
         //handle aborting near end of patrol
         if (this.abortingPatrol && x < this.patrol.getPatrolLength() - 2) {
             this.currentBox++;
@@ -300,10 +305,14 @@ class GameManager{
         }
 
         //if doctor is SW or KIA, see if any other injured crew members die (each patrol box, before encounter)
-        if (this.sub.crew_health["Doctor"] >= 2){
+        if (!this.sub.isCrewmanFunctional("Doctor")){
             //check if any hurt crewmen
-            //TODO: Crewman Death Check
-            console.log("TO DO - CREWMEN DEATH CHECK")
+            let vitals = this.sub.checkVitals();
+            if (vitals != "") {
+                this.setEventResolved(false);
+                this.popup2.deathKIAPopup(vitals);
+                await until(_ => this.eventResolved == true);
+            }
         }
 
         //get the current box name of this patrol (i.e. "Transit", "Mission", "Atlantic", etc)
@@ -311,13 +320,20 @@ class GameManager{
 
         //check for automatic aborts
         if (this.sub.dieselsInop() == 2){
-            if (this.currentBox == this.patrol.getPatrolLength()){
+            if (this.currentBox == this.patrol.getPatrolLength() || this.currentBox == 1){
                 //TODO: Popups (small)
-                console.log("TO DO- POPUP TOWED INTO PORT");
+                this.setEventResolved(false);
+                this.popup2.abortTowedBackPopup();
+                await until(_ => this.eventResolved == true);
+                this.currentBox = this.patrol.getPatrolLength();
+                this.endPatrol();
+                return;
             }
             else {
-                //TODO: Scuttle
-                console.log("TODO - SCUTTLE due to 2 diesel engines inop");
+                let cause = "Scuttled " + this.gm.getFullDate();
+                cause += " - Forced to scuttle after damage to both diesel engines " + this.currentEncounter.shipList[0].getName(); //GET LAST ENCOUNTER'S ATTACKER???
+                console.log("GAME OVER: " + cause);
+                const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
             }
         }
         else if (this.sub.dieselsInop() == 1 || this.sub.systems["Fuel Tanks"] == 2){
@@ -352,5 +368,16 @@ class GameManager{
         this.currentEncounter = new Encounter(this.tv, this, this.patrol, this.sub, currentEncounterType, currentBoxName, null);
         await until(_ => this.tv.isInEncounter == false);
         console.log("End Encounter");
+
+        if (this.currentBox == this.patrol.getPatrolLength()) {
+            this.endPatrol();
+        }
+    }
+
+    async endPatrol() {
+        this.tv.changeScene("Port", "Day", null, false);
+        this.eventResolved = false;
+        this.popup2.endPatrolPopup();
+        await until(_ => this.eventResolved == true);
     }
 }

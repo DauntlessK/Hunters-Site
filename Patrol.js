@@ -49,6 +49,7 @@ class Patrol{
         var unique = this.ordersArray.filter(onlyUnique);
         var isPicking = false
         if (this.gm.adminMode) {pickOrderRoll = 1;}
+        //Picking orders
         if ((pickOrderRoll <= this.gm.sub.crew_levels["Kommandant"] && !this.gm.permArcPost && !this.permMedPost) || this.gm.adminMode){  
             isPicking = true;
             this.gm.ordersPopup(unique, isPicking);
@@ -59,7 +60,7 @@ class Patrol{
             this.buildPatrol();
             this.gm.setCurrentOrdersLong();
         }
-        else {
+        else { //orders passed down from Bdu
             const ordersRoll = d6Rollx2();
             this.gm.currentOrders = this.ordersArray[ordersRoll];
 
