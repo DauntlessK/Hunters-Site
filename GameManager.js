@@ -298,11 +298,11 @@ class GameManager{
         console.log("Patrol Advance---------- step #" + this.currentBox);
         //reset current encounter
 
-        //handle aborting near end of patrol
+        /**handle aborting near end of patrol
         if (this.abortingPatrol && x < this.patrol.getPatrolLength() - 2) {
             this.currentBox++;
             return;
-        }
+        }*/ //Unsure if needed
 
         //if doctor is SW or KIA, see if any other injured crew members die (each patrol box, before encounter)
         if (!this.sub.isCrewmanFunctional("Doctor")){
@@ -321,7 +321,6 @@ class GameManager{
         //check for automatic aborts
         if (this.sub.dieselsInop() == 2){
             if (this.currentBox == this.patrol.getPatrolLength() || this.currentBox == 1){
-                //TODO: Popups (small)
                 this.setEventResolved(false);
                 this.popup2.abortTowedBackPopup();
                 await until(_ => this.eventResolved == true);
@@ -336,10 +335,24 @@ class GameManager{
                 const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
             }
         }
-        else if (this.sub.dieselsInop() == 1 || this.sub.systems["Fuel Tanks"] == 2){
-            console.log("TO DO- Abort Patrol due to fuel tanks or 1 diesel engine inop");
+        else if ((this.sub.dieselsInop() == 1 || this.sub.systems["Fuel Tanks"] == 2) && !this.abortingPatrol){
+            //logic to place uboat at correct box to abort
             this.abortingPatrol = true;
-            return;
+            let patrolLength = this.patrol.getPatrolLength();
+            let stepsToEnd = patrolLength - this.currentBox;
+            let transitSteps = 2;
+            if (this.patrol.NAorders || this.patrol.WAfricanCoast) { 
+                transitSteps = 4;
+            }
+            if (stepsToEnd > patrolLength / 2) {
+                stepsToEnd = patrolLength - stepsToEnd;
+            }
+            if (stepsToEnd > transitSteps) {
+                this.currentBox = patrolLength - transitSteps;
+            }
+            else {
+                this.currentBox = patrolLength - stepsToEnd;
+            }
         }
 
         // check if on weather duty or severe weather random events (skips current box)

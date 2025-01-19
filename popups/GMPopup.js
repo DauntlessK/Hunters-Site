@@ -95,8 +95,9 @@ class GMPopup{
     deathKIAPopup(message) {
         //new div to add
         this.element.innerHTML = (`
-            <h3 class="HeaderMessage_h3">${message}<br>
+            <h3 class="HeaderMessage_h3">Sad news, Herr Kaleun.<br>
             </h3>
+            <p class="PatrolMessage_p">${message}</p>
             <button class="AttackPopup_button" id="continue">Continue</button>
         `)
 

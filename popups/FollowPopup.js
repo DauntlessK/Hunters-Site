@@ -48,6 +48,13 @@ class FollowPopup{
                 bodyText = bodyText + "<br>";
             }
         }
+
+        //Add additional line breaks to move -Convoy- and ignore options to the 3rd column
+        let breakCount = 4 - this.enc.numSinkableShips();
+        for (let i = 0; i < breakCount; i++) {
+            bodyText = bodyText + "<br>";
+        }
+
         //Add convoy option if possible
         if (this.enc.encounterType == "Convoy") {
             bodyText = bodyText + '<input type="radio" id="Convoy" name="options" value="Convoy"><label for="Convoy">-Convoy-</label>';

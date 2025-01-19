@@ -80,15 +80,15 @@ class PatrolLog{
             if (enc.shipsSunkInEnc.length == 0 && enc.ignored) {
                 lineEntry = lineEntry + "Did not engage. ";
             }
-            else if (enc.shipsSunk.length == 0) {
+            else if (enc.shipsSunkInEnc.length == 0) {
                 lineEntry = lineEntry + "Unable to sink any targets. ";
             }
             else {
                 //sunk any ships
                 var sunkText = "Sunk ";
-                for (let i = 0; i < enc.shipsSunk.length; i++) {
-                    sunkText = sunkText + enc.shipsSunk[i].getName() + ", " + enc.shipsSunk[i].getGRT() + "GRT";
-                    if (i != enc.shipsSunk.length - 1) {
+                for (let i = 0; i < enc.shipsSunkInEnc.length; i++) {
+                    sunkText = sunkText + enc.shipsSunkInEnc[i].getName() + ", " + enc.shipsSunkInEnc[i].getGRT() + "GRT";
+                    if (i != enc.shipsSunkInEnc.length - 1) {
                         sunkText = sunkText + ", ";
                     }
                     else {

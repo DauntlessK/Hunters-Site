@@ -467,7 +467,6 @@ class Encounter {
                     this.gm.setEventResolved(false);
                     this.timeOfDay = this.getTimeOfDay(true);
                     await until(_ => this.gm.eventResolved == true);
-                    console.log(this.timeOfDay);
                     this.repairCheck();
                     await until(_ => this.gm.eventResolved == false);
                     this.start("Convoy", false);
@@ -481,7 +480,6 @@ class Encounter {
                     this.gm.setEventResolved(false);
                     this.timeOfDay = this.getTimeOfDay(true);
                     await until(_ => this.gm.eventResolved == true);
-                    console.log(this.timeOfDay);
                     this.tv.changeScene("Ship", this.timeOfDay, this, false);
                     this.repairCheck();
                     this.postFollowStatsClear("Surfaced");
@@ -496,7 +494,6 @@ class Encounter {
                     this.gm.setEventResolved(false);
                     this.timeOfDay = this.getTimeOfDay(true);
                     await until(_ => this.gm.eventResolved == true);
-                    console.log(this.timeOfDay);
                     this.tv.changeScene("Ship + Escort", this.timeOfDay, this, false);
                     this.repairCheck();
                     this.postFollowStatsClear("Periscope Depth");
@@ -909,6 +906,21 @@ class Encounter {
         else {
             return true;
         }
+    }
+
+    /**
+     * Counts number of ships in encounter aside from escorts
+     * @returns int of number of ships left in the shipList
+     */
+    numSinkableShips() {
+        var numShips = 0;
+
+        for (let i = 1; i < this.shipList.length; i++) {
+            if (!this.shipList[i].sunk) {
+                numShips++;
+            }
+        }
+        return numShips;
     }
 
     /**

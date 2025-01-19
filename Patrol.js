@@ -28,6 +28,9 @@ class Patrol{
             "Atlantic", "North America", "Arctic", "Atlantic (Wolfpack)", "West African Coast"];
 
         this.telegraphSrc = "";
+
+        this.WAfricanCoast = false;
+        this.NAorders = false;
     }
 
     async getPatrol(){
@@ -142,13 +145,13 @@ class Patrol{
         
         this.tv.mainUI.telegraph.setSrc(this.getTelegraphSrc()); //set telegraph to correct png
 
-        var NAorders = false;
+        this.NAorders = false;
         if (this.gm.currentOrders == "North America" || this.gm.currentOrders == "Caribbean"){
-            NAorders = true
+            this.NAorders = true
         }
-        var WAfricanCoast = false;
+        this.WAfricanCoast = false;
         if (this.gm.currentOrders == "West African Coast") {
-            WAfricanCoast = true;
+            this.this.WAfricanCoast = true;
         }
     
         for (let x=0; x < this.getPatrolLength() + 1; x++){
@@ -169,28 +172,28 @@ class Patrol{
             else if (x == 2 || x == this.getPatrolLength() - 1){
                 this.patrolArray.push("Transit");
             }
-            else if (x == 3 && this.gm.currentOrders.includes("Abwehr") && !NAorders){
+            else if (x == 3 && this.gm.currentOrders.includes("Abwehr") && !this.NAorders){
                 this.patrolArray.push("Mission");
             }
-            else if (x == 3 && this.gm.currentOrders.includes("Minelaying") && !NAorders && !WAfricanCoast){
+            else if (x == 3 && this.gm.currentOrders.includes("Minelaying") && !this.NAorders && !this.WAfricanCoast){
                 this.patrolArray.push("Mission");
             }
-            else if ((x == 3 || x == this.getPatrolLength() - 2) && NAorders){
+            else if ((x == 3 || x == this.getPatrolLength() - 2) && this.NAorders){
                 this.patrolArray.push("Transit");
             }
-            else if ((x == 3 || x == this.getPatrolLength() - 2) && WAfricanCoast){
+            else if ((x == 3 || x == this.getPatrolLength() - 2) && this.WAfricanCoast){
                 this.patrolArray.push("Transit");
             }
-            else if ((x == 4 || x == this.getPatrolLength() - 3) && NAorders){
+            else if ((x == 4 || x == this.getPatrolLength() - 3) && this.NAorders){
                 this.patrolArray.push("Transit");
             }
-            else if ((x == 4 || x == this.getPatrolLength() - 3) && WAfricanCoast){
+            else if ((x == 4 || x == this.getPatrolLength() - 3) && this.WAfricanCoast){
                 this.patrolArray.push("Transit");
             }
-            else if (x == 5 && this.gm.currentOrders.includes("Abwehr") && NAorders){
+            else if (x == 5 && this.gm.currentOrders.includes("Abwehr") && this.NAorders){
                 this.patrolArray.push("Mission");
             }
-            else if (x == 5 && this.gm.currentOrders.includes("Minelaying" && NAorders)){
+            else if (x == 5 && this.gm.currentOrders.includes("Minelaying" && this.NAorders)){
                 this.patrolArray.push("Mission");
             }
             else{   //used to replace patrol array spots that have parentheses and should not (so location is only displayed)
