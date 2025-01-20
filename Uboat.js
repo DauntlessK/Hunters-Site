@@ -779,6 +779,7 @@ class Uboat{
                         else {
                             messageToReturn = messageToReturn + "The " + damage + " is already damaged! ";
                         }
+                        continue;
                     }
                     if (damage.slice(-1) == "s") {
                         messageToReturn = messageToReturn + "The " + damage + " have taken damage! ";

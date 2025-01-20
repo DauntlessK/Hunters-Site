@@ -288,6 +288,7 @@ class TacticalView{
                 this.lowerImage.src = "images/portscene_spritesheet.png";
                 this.upperImage.src = "images/blank.png";
                 this.timeOverlayImage.src = "images/blank.png";
+                this.isDeparted = false;
                 break;
             case "Ship":
                 this.upperImage.src = "images/deepwater.png";

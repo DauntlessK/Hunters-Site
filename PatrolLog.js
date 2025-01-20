@@ -127,6 +127,7 @@ class PatrolLog{
         for (let i = 0; i < this.gm.shipsSunkOnCurrentPatrol.length; i++) {
             this.totalGRT = this.totalGRT + this.gm.shipsSunkOnCurrentPatrol[i].getGRT();
         }
+        console.log(this.totalGRT);
         var stringReturn = this.totalGRT.toString();
         stringReturn.replace(/^0+/, "");
         return stringReturn;

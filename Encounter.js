@@ -467,6 +467,7 @@ class Encounter {
                     this.gm.setEventResolved(false);
                     this.timeOfDay = this.getTimeOfDay(true);
                     await until(_ => this.gm.eventResolved == true);
+                    console.log("Selected: " + this.timeOfDay);
                     this.repairCheck();
                     await until(_ => this.gm.eventResolved == false);
                     this.start("Convoy", false);
@@ -480,6 +481,7 @@ class Encounter {
                     this.gm.setEventResolved(false);
                     this.timeOfDay = this.getTimeOfDay(true);
                     await until(_ => this.gm.eventResolved == true);
+                    console.log("Selected: " + this.timeOfDay);
                     this.tv.changeScene("Ship", this.timeOfDay, this, false);
                     this.repairCheck();
                     this.postFollowStatsClear("Surfaced");
@@ -494,6 +496,7 @@ class Encounter {
                     this.gm.setEventResolved(false);
                     this.timeOfDay = this.getTimeOfDay(true);
                     await until(_ => this.gm.eventResolved == true);
+                    console.log("Selected: " + this.timeOfDay);
                     this.tv.changeScene("Ship + Escort", this.timeOfDay, this, false);
                     this.repairCheck();
                     this.postFollowStatsClear("Periscope Depth");
@@ -730,13 +733,15 @@ class Encounter {
         }
     }
 
-    endEncounter() {
+    async endEncounter() {
         this.tv.changeScene("", this.timeOfDay, null, false);
         if (this.depth != "Surfaced") {
             this.tv.uboat.sprite.surface();
         }
         if (this.tookDamage) {
+            this.gm.setEventResolved = false;
             this.repairCheck();
+            await until(_ => this.gm.eventResolved == true);
             this.tookDamage = false;
         }
         this.tv.finishEncounter();
