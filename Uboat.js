@@ -302,22 +302,26 @@ class Uboat{
     }
 
     /**
-     * Only for leaving port, to ensure all tubes are loaded
-     * @returns true if all tubes are loaded
+     * Checks if any tubes are empty that can be loaded.
+     * @returns true if at least one tube at fore is empty and can be loaded, or at least one tube at aft is empty and can be loaded
      */
     tubesLoadedCheck() {
-        var tubesNeedingReload = 0;
-        for (let i = 1; i < 7; i++){
+        let startTubeToCheck = 1;           //First tube to check. Default is 1 (start at first tube)
+        let endTubeToCheck = 7;             //Last tube to check. Default is 7 (check all tubes 1-6)
+        
+        //loop through relevant tubes
+        for (let i = startTubeToCheck; i < endTubeToCheck; i++){
             if (this.tube[i] === 0){
-                tubesNeedingReload++;
+                if (i < 5 && (this.reloads_forward_G7a > 0 || this.reloads_forward_G7e > 0)) {
+                    return true;
+                }
+                else if (i > 4 && (this.reloads_aft_G7a > 0 || this.reloads_aft_G7e > 0)){
+                    return true;
+                }
+
             }
         }
-        if (tubesNeedingReload > 0) {
-            return false;
-        }
-        else {
-            return true;
-        }
+        return false;
     }
 
     loadTube(tubeNum, type){
@@ -1065,10 +1069,10 @@ class Uboat{
                         if (result <= 2) {
                             this.systems[key] = 0;
                             if (key.slice(-1) == "s") {
-                                messageToReturn = messageToReturn + "The " + key + " has been repaired. ";
+                                messageToReturn = messageToReturn + "The " + key + " have been repaired! ";
                             }
                             else {
-                                messageToReturn = messageToReturn + "The " + key + " have been repaired! ";
+                                messageToReturn = messageToReturn + "The " + key + " has been repaired. ";
                             }
                         }
                         else {
@@ -1084,7 +1088,7 @@ class Uboat{
                     case "Diesel Engine #1":
                     case "Diesel Engine #2":
                         this.systems[key] = 2;
-                        messageToReturn = messageToReturn + key + " cannot be repaired at sea. We must head back to port.";
+                        messageToReturn = messageToReturn + key + " cannot be repaired at sea. We must head back to port. ";
                         continue;
                     default:
                         console.log("Error attempting to repair " + key);

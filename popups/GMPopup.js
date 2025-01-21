@@ -131,6 +131,36 @@ class GMPopup{
         this.container.appendChild(this.element);
     }
 
+    endPatrol() {
+        //new div to add
+        let patrolResult = "";
+        if (this.gm.missionComplete) {
+            patrolResult = "Success"
+        }
+        else {
+            patrolResult = "Failure"
+        }
+
+        this.element.innerHTML = (`
+            <h3 class="HeaderMessage_h3">Welcome Back!<br>
+            </h3>
+            <p class="PatrolMessage_p">${this.gm.getFullUboatID} has arrived back at port.<br>
+            Orders: ${this.gm.currentOrdersLong} <br>
+            Mission Result: ${patrolResult}
+            </p>
+            
+        `)
+            //<button class="AttackPopup_button" id="continue">Continue</button>
+        this.element.addEventListener("click", ()=> {
+            if (event.target.id == "continue"){
+                //close popup
+                this.done();
+            }
+        })
+
+        this.container.appendChild(this.element);
+    }
+
     done(){
         this.element.remove();
         this.tv.pauseGame(false);

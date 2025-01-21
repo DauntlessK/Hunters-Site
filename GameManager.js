@@ -44,7 +44,6 @@ class GameManager{
         this.weatherDuty = false;
         this.severeWeather = false;
         this.eligibleForNewBoat = false;
-        this.lastPatrolWasUnsuccessful = false;
         this.abortingPatrol = false;
         this.permMedPost = false;
         this.permArcPost = false;
@@ -93,10 +92,18 @@ class GameManager{
         this.sub.torpedoResupply();        
     }
 
+    /**
+     * Sets EventResolved in gamemanager. False usually indicates a soft "pause"
+     * @param {boolean} state 
+     */
     setEventResolved(state) {
         this.eventResolved = state;
     }
 
+    /**
+     * Secondary event that soft "pauses" the game - only used by escort detection?
+     * @param {boolean} state 
+     */
     setSubEventResolved(state) {
         this.subEventResolved = state;
     }
@@ -330,12 +337,12 @@ class GameManager{
             }
             else {
                 let cause = "Scuttled " + this.gm.getFullDate();
-                cause += " - Forced to scuttle after damage to both diesel engines " + this.currentEncounter.shipList[0].getName(); //GET LAST ENCOUNTER'S ATTACKER???
+                cause += " - Forced to scuttle after damage to both diesel engines " + this.currentEncounter.shipList[0].getName();
                 console.log("GAME OVER: " + cause);
                 const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
             }
         }
-        else if ((this.sub.dieselsInop() == 1 || this.sub.systems["Fuel Tanks"] == 2) && !this.abortingPatrol){
+        else if (this.sub.dieselsInop() == 1 || this.sub.systems["Fuel Tanks"] == 2){
             //logic to place uboat at correct box to abort
             this.abortingPatrol = true;
             let patrolLength = this.patrol.getPatrolLength();

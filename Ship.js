@@ -139,6 +139,10 @@ class Ship {
         return this.GRT;
     }
 
+    getGRTInt() {
+        return parseInt(this.GRT);
+    }
+
     getNameAndGRT() {
         return this.name + " - " + this.GRT;  
     }

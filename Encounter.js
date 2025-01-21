@@ -332,7 +332,7 @@ class Encounter {
         }
 
         //FOLLOW FLOW-----
-        if (this.hasSinkableShip() || this.encounterType == "Convoy") {
+        if ((this.hasSinkableShip() || this.encounterType == "Convoy") && !this.gm.abortingPatrol) {
             //First determine if player WANTS to follow
             this.gm.setEventResolved(false);
             var followPrompt = new FollowPopup(this.tv, this.gm, this);
@@ -436,7 +436,6 @@ class Encounter {
             //reset to empty sea for transition (current encounter over - will transition to new scene if following after)
             this.encounterMid = true;
             this.tv.changeScene("Sea", this.timeOfDay, this, false);
-            //await until(_ => this.tv.uboat.sprite.depth > 10);
 
             //End encounter after unsuccessful follow or choice, or begin "new" enc
             switch (action) {
@@ -459,51 +458,59 @@ class Encounter {
                     this.endEncounter();
                     break;
                 case "Convoy":    //attack 4 new ships convoy
-                    this.reloadTubes();
-                    await until(_ => this.tv.reloadMode == false);
-                    this.shipList = this.getShips("Convoy");
-                    this.postFollowStatsClear("Periscope Depth");
-                    this.encounterMid = false;
-                    this.gm.setEventResolved(false);
-                    this.timeOfDay = this.getTimeOfDay(true);
-                    await until(_ => this.gm.eventResolved == true);
-                    console.log("Selected: " + this.timeOfDay);
-                    this.repairCheck();
-                    await until(_ => this.gm.eventResolved == false);
-                    this.start("Convoy", false);
-                    this.tv.changeScene("Convoy", this.timeOfDay, this, false);
-                    return;
                 case "Ship":
-                    this.reloadTubes();
-                    await until(_ => this.tv.reloadMode == false);
-                    this.tv.changeScene("Ship", this.timeOfDay, this, false);
-                    this.encounterMid = false;
-                    this.gm.setEventResolved(false);
-                    this.timeOfDay = this.getTimeOfDay(true);
-                    await until(_ => this.gm.eventResolved == true);
-                    console.log("Selected: " + this.timeOfDay);
-                    this.tv.changeScene("Ship", this.timeOfDay, this, false);
-                    this.repairCheck();
-                    this.postFollowStatsClear("Surfaced");
-                    this.encounterType = "Ship";
-                    this.attackFlow(false);
-                    return;
                 case "Ship + Escort":
+                    //First pause to reload tubes
                     this.reloadTubes();
                     await until(_ => this.tv.reloadMode == false);
-                    this.tv.changeScene("Ship + Escort", this.timeOfDay, this, false);
-                    this.encounterMid = false;
+
+                    //Generate new ship list (convoy only) then reset encounter stats
+                    if (action == "Convoy") {
+                        this.shipList = this.getShips("Convoy");
+                    }
+                    if (action == "Convoy" || action == "Ship + Escort") {
+                        this.postFollowStatsClear("Periscope Depth");
+                    }
+                    else {
+                        this.postFollowStatsClear("Surfaced");
+                    }
+
+                    //Get new time of day
                     this.gm.setEventResolved(false);
                     this.timeOfDay = this.getTimeOfDay(true);
                     await until(_ => this.gm.eventResolved == true);
                     console.log("Selected: " + this.timeOfDay);
-                    this.tv.changeScene("Ship + Escort", this.timeOfDay, this, false);
+
+                    //check for repairs
+                    this.gm.setEventResolved(false);
                     this.repairCheck();
-                    this.postFollowStatsClear("Periscope Depth");
-                    this.encounterType = "Ship + Escort";
+                    await until(_ => this.gm.eventResolved == true);
+                    console.log("No more repairs");
+
+                    //change encounter type if not convoy
+                    if (action == "Ship" || action == "Ship + Escort") {
+                        this.encounterType = action;
+                    }
+
+                    //Change scene then start next attack
+                    this.tv.changeScene(action, this.timeOfDay, this, false);
+                    this.encounterMid = false;
                     this.attackFlow(false);
                     return;
                 case "Aircraft":
+                    //First pause to reload tubes
+                    this.reloadTubes();
+                    await until(_ => this.tv.reloadMode == false);
+
+                    //check for repairs
+                    this.gm.setEventResolved(false);
+                    this.repairCheck();
+                    await until(_ => this.gm.eventResolved == true);
+
+                    this.tv.changeScene(action, this.timeOfDay, this, false);
+                    this.postFollowStatsClear("Surfaced");
+                    this.encounterType = "Aircraft";
+                    this.encounterMid = false;
                     this.start("Aircraft", false);
                     return;
                 default:
@@ -724,9 +731,16 @@ class Encounter {
     }
 
     async repairCheck() {
+        console.log("Checking damage");
+        if (!this.tookDamage) {
+            this.gm.setEventResolved(true);
+            return;
+        }
+
         let damageString = this.gm.sub.repair();
 
         if (damageString != "") {
+            console.log(this.gm);
             this.gm.setEventResolved(false);
             this.encPop.repairs(damageString);
             await until(_ => this.gm.eventResolved == true);
@@ -739,18 +753,18 @@ class Encounter {
             this.tv.uboat.sprite.surface();
         }
         if (this.tookDamage) {
-            this.gm.setEventResolved = false;
+            this.gm.setEventResolved(false);
             this.repairCheck();
             await until(_ => this.gm.eventResolved == true);
             this.tookDamage = false;
         }
+        if (this.gm.currentOrders.includes("Minelaying")) {
+            this.sub.deployMines();
+            this.tv.mainUI.forceTorpedoButtonUpdate();
+        }
         this.tv.finishEncounter();
-        //Prompt for reloads if torpedoes were fired
-        if (this.numFired > 0 || this.currentBoxName == "Mission") {
-            if (this.gm.currentOrders.includes("Minelaying")) {
-                this.sub.deployMines();
-                this.tv.mainUI.forceTorpedoButtonUpdate();
-            }
+        //Prompt for reloads if any tubes are empty that can be loaded
+        if (this.gm.sub.tubesLoadedCheck()) {
             this.tv.enterReloadMode();
         }
     }

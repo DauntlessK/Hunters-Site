@@ -87,7 +87,7 @@ class PatrolLog{
                 //sunk any ships
                 var sunkText = "Sunk ";
                 for (let i = 0; i < enc.shipsSunkInEnc.length; i++) {
-                    sunkText = sunkText + enc.shipsSunkInEnc[i].getName() + ", " + enc.shipsSunkInEnc[i].getGRT() + "GRT";
+                    sunkText = sunkText + enc.shipsSunkInEnc[i].getName() + " (" + enc.shipsSunkInEnc[i].getGRT() + "GRT)";
                     if (i != enc.shipsSunkInEnc.length - 1) {
                         sunkText = sunkText + ", ";
                     }
@@ -124,12 +124,11 @@ class PatrolLog{
     //Gets current GRT sunk on this patrol
     getTotalGRT() {
         let newTotalGRT = 0;
-        console.log(this.gm.shipsSunkOnCurrentPatrol);
         for (let i = 0; i < this.gm.shipsSunkOnCurrentPatrol.length; i++) {
-            newTotalGRT += this.gm.shipsSunkOnCurrentPatrol[i].getGRT();
+            newTotalGRT += this.gm.shipsSunkOnCurrentPatrol[i].getGRTInt();
         }
         this.totalGRT = newTotalGRT;
-        var stringReturn = this.totalGRT.toString();
+        var stringReturn = this.totalGRT.toLocaleString();
         //stringReturn.replace(/^0+/, "");
         return stringReturn;
     }
