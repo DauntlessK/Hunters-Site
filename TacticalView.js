@@ -265,6 +265,7 @@ class TacticalView{
 
         //If scene is not port, configure time of day
         if (newScene != "IntroPort" || newScene != "Port") {
+            console.log("Scene Time: " + newTime);
             this.setTimeOfDay(newTime);
             if (timeChangeOnly) {
                 return;

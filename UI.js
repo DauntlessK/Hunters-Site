@@ -236,6 +236,7 @@ class UI{
                 }
             }
             if (this.tv.isInEncounter && shipsInEnc && !this.gm.currentEncounter.encounterMid) {
+                console.log(this.tv.scene + this.tv.gameObjects);
                 Object.values(this.tv.gameObjects).forEach(object => {
                     if (!object.sprite.isPlayer && object.sprite.shipType == "Escort") {
                         object.sprite.drawEscortShipInfo(ctx);

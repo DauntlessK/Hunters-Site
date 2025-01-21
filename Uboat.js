@@ -447,7 +447,10 @@ class Uboat{
         }        
     }
 
-    //Returns int of how many inoperative diesel engines U-boat has
+    /**
+     * Checks (for abort purposes) # of inoperative diesel engines
+     * @returns int of # of inop diesel engines (0-2)
+     */
     dieselsInop(){
         var numInOp = 0;
         if (this.systems["Diesel Engine #1"] == 2) {numInOp ++;} 
@@ -1094,6 +1097,11 @@ class Uboat{
                         console.log("Error attempting to repair " + key);
                 }
             }
+        }
+
+        //If not already aborting patrol and fuel tanks damaged or 1 diesel inop
+        if (!this.gm.abortingPatrol && (this.dieselsInop() == 1 || this.getSystemStatus("Fuel Tanks") == "Inoperative")) {
+            this.gm.abortPatrol();
         }
         return messageToReturn;
     }

@@ -37,7 +37,7 @@ class AttackDepthAndRangePopup{
             <label for="Periscope Depth">Periscope Depth</label><br>
             <input type="radio" id="RangeShort" name="range" value="Short Range">
             <label for="Short Range">${shortRange}</label>
-            <input type="radio" id="RangeMedium" name="range" value="Medium Range" checked="checked">
+            <input type="radio" id="RangeMedium" name="range" value="Medium Range">
             <label for="Medium Range">Medium Range</label>
             <input type="radio" id="RangeLong" name="range" value="Long Range">
             <label for="Long Range">Long Range</label>
@@ -49,13 +49,13 @@ class AttackDepthAndRangePopup{
             this.element.innerHTML = (`
             <h3 class="HeaderMessage_h3">How should we engage?</h3>
             <p class="PatrolMessage_p">
-            <input type="radio" id="PeriscopeDepth" name="depth" value="Periscope Depth" checked="checked">
+            <input type="radio" id="PeriscopeDepth" name="depth" value="Periscope Depth">
             <label for="Periscope Depth">Periscope Depth</label>
             <input type="radio" id="SurfaceDepth" name="depth" value="Surfaced">
             <label for="Surfaced">Surfaced</label><br>
             <input type="radio" id="RangeShort" name="range" value="Short Range">
             <label for="Short Range">${shortRange}</label>
-            <input type="radio" id="RangeMedium" name="range" value="Medium Range" checked="checked">
+            <input type="radio" id="RangeMedium" name="range" value="Medium Range">
             <label for="Medium Range">Medium Range</label>
             <input type="radio" id="RangeLong" name="range" value="Long Range">
             <label for="Long Range">Long Range</label>
@@ -64,7 +64,10 @@ class AttackDepthAndRangePopup{
         `)}
 
         this.element.addEventListener("click", ()=> {
-            if (event.target.id == "attack"){
+            //Only allow button click to proceed if button is clicked + depth is selected + range is selected
+            if (event.target.id == "attack" && 
+                (document.getElementById("PeriscopeDepth").checked || document.getElementById("SurfaceDepth").checked) && 
+                (document.getElementById("RangeShort").checked || document.getElementById("RangeMedium").checked || document.getElementById("RangeLong").checked)) {
                 //get selected value and close popup
                 this.done();
             }

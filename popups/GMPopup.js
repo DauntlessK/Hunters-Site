@@ -131,7 +131,7 @@ class GMPopup{
         this.container.appendChild(this.element);
     }
 
-    endPatrol() {
+    endPatrolPopup() {
         //new div to add
         let patrolResult = "";
         if (this.gm.missionComplete) {
@@ -144,7 +144,7 @@ class GMPopup{
         this.element.innerHTML = (`
             <h3 class="HeaderMessage_h3">Welcome Back!<br>
             </h3>
-            <p class="PatrolMessage_p">${this.gm.getFullUboatID} has arrived back at port.<br>
+            <p class="PatrolMessage_p">${this.gm.getFullUboatID()} has arrived back at port.<br>
             Orders: ${this.gm.currentOrdersLong} <br>
             Mission Result: ${patrolResult}
             </p>

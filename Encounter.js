@@ -91,6 +91,7 @@ class Encounter {
         if (this.currentBoxName == "Mission") {
             //loop to continue attempting mission (if at first unsuccessful but CAN succeed)
             this.encPop.mission();
+            this.depth = "Surfaced";
 
             let looping = 0;
             while (looping >= 0) {
@@ -188,10 +189,15 @@ class Encounter {
                     this.escortDetection(false ,0 ,false);
                     break;
                 default:
+                    if (!this.canAttack()) {
+                        this.encPop.cannotAttack();
+                        this.endEncounter();
+                        return;
+                    }
                     this.gm.setEventResolved(false);
                     this.encPop.ships();
                     await until(_ => this.gm.eventResolved == true);
-                    this.attackFlow(true);
+                    this.attackFlow(starting);
             }
         }
     }
@@ -391,8 +397,8 @@ class Encounter {
                     //Check to see if aircraft or escort shows up (additional round roll)
                     if (!this.isEscorted() && action != "Lost") {
                         var roll = d6Rollx2();
-                        if (year == 1942) {roll = roll - 1;}
-                        if (year == 1943) {roll = roll - 2;}
+                        if (this.gm.getYear() == 1942) {roll = roll - 1;}
+                        if (this.gm.getYear() == 1943) {roll = roll - 2;}
                         if (roll <= 3) {
                             //escort shows up
                             var newShipList = [];
@@ -495,7 +501,8 @@ class Encounter {
                     //Change scene then start next attack
                     this.tv.changeScene(action, this.timeOfDay, this, false);
                     this.encounterMid = false;
-                    this.attackFlow(false);
+                    console.log("Moving to attack flow");
+                    this.attackFlow(action, false);
                     return;
                 case "Aircraft":
                     //First pause to reload tubes
@@ -752,6 +759,11 @@ class Encounter {
         if (this.depth != "Surfaced") {
             this.tv.uboat.sprite.surface();
         }
+        //Check if ships were sunk during encounter to mark mission complete flag (not applicable to missions)
+        if (!this.gm.missionComplete && this.gm.shipsSunkOnCurrentPatrol.length > 0 && this.gm.currentOrdersLong.includes("Patrol")) {
+            this.gm.missionComplete = true;
+        }
+
         if (this.tookDamage) {
             this.gm.setEventResolved(false);
             this.repairCheck();
@@ -1381,18 +1393,18 @@ class Encounter {
             escortMods += wpMod;
         }
 
-        if (this.gm.getYear() >= 1941 && this.rangeNum == 8) {
+        if (this.gm.getYear() >= 1941 && closeRangeCheck) {
             escortMods = escortMods + (this.gm.getYear() - 1940)
         }
-        if (this.sub.knightsCross >= 3) {
+        if (this.sub.knightsCross >= 3 && closeRangeCheck) {
             escortMods -= 1;
         }
 
-        //Deal with close range detection (Before Firing)
-        if (this.rangeNum == 8 && this.roundFired == 0 && !previouslyDetected) {
-            escortMods -= 2;
-        }
-        else {
+        //Deal with close range detection (Before Firing)   --- DNU - not sure where this came from.
+        //if (this.rangeNum == 8 && this.roundFired == 0 && !previouslyDetected) {
+        //    escortMods -= 2;
+        //}
+        if (!closeRangeCheck) {
             //Check if player can dive to test depth
             if (this.depth != "Surfaced" || previouslyDetected) {
                 canTestDive = true;

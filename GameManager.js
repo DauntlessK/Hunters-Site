@@ -58,7 +58,7 @@ class GameManager{
         this.hitsTaken = 0;
         this.randomEvents = 0;
         this.pastSubs = [];
-        this.adminMode = true;     //To choose orders
+        this.adminMode = false;
         
         this.popup2 = new GMPopup(this.tv, this);
         this.currentEncounter = null;
@@ -140,7 +140,9 @@ class GameManager{
         return this.rank[this.sub.crew_levels["Kommandant"]] + " " + this.kmdt;
     }
 
-    //Determines the starting rank of the player
+    /**
+     * Determines the starting rank of the player
+     */
     getStartingRank(){
         if ((this.sub.getType().includes("IX"))) {
             this.sub.crew_levels["Kommandant"] = 1;
@@ -182,7 +184,9 @@ class GameManager{
         }
     }
 
-    //sets date and other settings based on sub selection
+    /**
+     * Sets date and other settings based on sub selection for game start
+     */
     setDate(){
         switch (this.sub.getType()){
             case "VIIA":
@@ -252,7 +256,7 @@ class GameManager{
                 this.currentOrdersLong = "Deliver Agent to Britain"
                 break;
             case "Atlantic (Wolfpack)":
-                this.currentOrdersLong = "Wolfpack patrol the Mid-Atlantic";
+                this.currentOrdersLong = "Wolfpack Patrol the Mid-Atlantic";
                 break;
             case "North America (Abwehr Agent Delivery)":
                 this.currentOrdersLong = "Deliver Agent to USA"
@@ -292,7 +296,9 @@ class GameManager{
         this.advancePatrol();
     }
 
-    //patrol sequence to go through patrol
+    /**
+     * Patrol sequence to go through one patrol box
+     */
     async advancePatrol() {
     
         //close previous box and move to next square --- HERE ALSO UPDATE CURRENT PATROL LOG
@@ -328,37 +334,34 @@ class GameManager{
         //check for automatic aborts
         if (this.sub.dieselsInop() == 2){
             if (this.currentBox == this.patrol.getPatrolLength() || this.currentBox == 1){
-                this.setEventResolved(false);
-                this.popup2.abortTowedBackPopup();
-                await until(_ => this.eventResolved == true);
-                this.currentBox = this.patrol.getPatrolLength();
-                this.endPatrol();
-                return;
+                //When 1 square from port, scuttling
+                //Roll 2d6. 2-10 is successful recovery of crew, new uboat. 11 or 12 crew is lost at sea, game over
+                //TODO
+                let recoveryRoll = d6Rollx2();
+                if (this.sub.getSystemStatus("Radio") == "Inoperative") {
+                    recoveryRoll += 4;
+                }
+                if (recoveryRoll <= 10) {
+                    //Crew recovered. New uboat
+                    this.setEventResolved(false);
+                    this.popup2.abortTowedBackPopup();
+                    await until(_ => this.eventResolved == true);
+                    this.currentBox = this.patrol.getPatrolLength();
+                    this.endPatrol();
+                    return;
+                }
+                else {
+                    let cause = "Crew lost at sea " + this.gm.getFullDate();
+                    cause += " - Forced to scuttle after damage to both diesel engines by " + this.currentEncounter.shipList[0].getName();
+                    console.log("GAME OVER: " + cause);
+                    const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
+                }
             }
             else {
                 let cause = "Scuttled " + this.gm.getFullDate();
-                cause += " - Forced to scuttle after damage to both diesel engines " + this.currentEncounter.shipList[0].getName();
+                cause += " - Forced to scuttle after damage to both diesel engines by " + this.currentEncounter.shipList[0].getName();
                 console.log("GAME OVER: " + cause);
                 const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
-            }
-        }
-        else if (this.sub.dieselsInop() == 1 || this.sub.systems["Fuel Tanks"] == 2){
-            //logic to place uboat at correct box to abort
-            this.abortingPatrol = true;
-            let patrolLength = this.patrol.getPatrolLength();
-            let stepsToEnd = patrolLength - this.currentBox;
-            let transitSteps = 2;
-            if (this.patrol.NAorders || this.patrol.WAfricanCoast) { 
-                transitSteps = 4;
-            }
-            if (stepsToEnd > patrolLength / 2) {
-                stepsToEnd = patrolLength - stepsToEnd;
-            }
-            if (stepsToEnd > transitSteps) {
-                this.currentBox = patrolLength - transitSteps;
-            }
-            else {
-                this.currentBox = patrolLength - stepsToEnd;
             }
         }
 
@@ -394,8 +397,40 @@ class GameManager{
         }
     }
 
+    /**
+     * Sets aborting patrol to true and immediately changes currentBox to nearest transit, if not in one already.
+     * If at start of patrol (first 1-4 transit boxes), places boat in the corresponding box at the end of the patrol.
+     */
+    abortPatrol() {
+        this.abortingPatrol = true;
+        console.log("Aborting Patrol!");
+
+        //logic to place uboat at correct box to abort
+        let patrolLength = this.patrol.getPatrolLength();
+        let stepsToEnd = patrolLength - this.currentBox;
+        let transitSteps = 2;
+        if (this.patrol.NAorders || this.patrol.WAfricanCoast) { 
+            transitSteps = 4;
+        }
+        if (stepsToEnd > patrolLength / 2) {
+            stepsToEnd = patrolLength - stepsToEnd;
+        }
+        if (stepsToEnd > transitSteps) {
+            this.currentBox = patrolLength - transitSteps + 1;
+        }
+        else {
+            this.currentBox = patrolLength - stepsToEnd + 1;
+        }
+    }
+
     async endPatrol() {
+        if (this.currentBox > 0) {
+            this.logBook[this.patrolNum].addLastEncounter(this.currentEncounter);
+            this.currentEncounter.closeWindows();            
+        }
+
         this.tv.changeScene("Port", "Day", null, false);
+        this.patrolling = false;
         this.eventResolved = false;
         this.popup2.endPatrolPopup();
         await until(_ => this.eventResolved == true);

@@ -222,6 +222,16 @@ class EncounterPopup{
         this.container.appendChild(this.element);
     }
 
+    cannotAttack() {
+        //new div to add
+        this.element.innerHTML = (`
+            <p class="PatrolMessage_p">We're unable to attack the ships on the horizon.<br>
+            </p>
+        `)
+
+        this.container.appendChild(this.element);
+    }
+
     escortArrival() {
                 //new div to add
                 this.element.innerHTML = (`

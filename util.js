@@ -1,11 +1,18 @@
+/**
+ * Rolls 1 6-sided die
+ * @returns 1-6
+ */
 function d6Roll() {
   //rolls a single die (1-6)
     roll = Math.floor(Math.random() * (6 - 1)) + 1;
     return roll;
 }
 
+/**
+ * rolls 2 6-sided dice
+ * @returns 2-12
+ */
 function d6Rollx2() {
-  //roles 2 dice and returns result (2-12)
     roll = d6Roll() + d6Roll();
     return roll;
 }
