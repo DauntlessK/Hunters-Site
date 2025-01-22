@@ -43,6 +43,9 @@ class Sprite {
       if (this.shipType == "Escort") {
         this.image.src = "images/ships/EscortShip1.png";
       }
+      else if (this.shipType == "CapitalShip") {
+        this.image.src = "images/ships/CapitalShip1.png";
+      }
       else {
         this.image.src = "images/ships/CargoShip1.png";
       }
@@ -148,11 +151,17 @@ class Sprite {
 
   /**
    * Updates sprite with new sprite based on string given
-   * @param {string} newAircraft 
+   * @param {string} new sprite name 
    */
-  updateSprite(newAircraft) {
-    newAircraft = newAircraft.replaceAll(" ", "");
-    this.image.src = "images/aircraft/" + newAircraft + ".png";
+  updateSprite(newName) {
+    if (this.isAircraft) {
+      newName = newName.replaceAll(" ", "");
+      this.image.src = "images/aircraft/" + newName + ".png";
+    }
+    else { //Update capital ship sprite
+      newName = newName.replaceAll(" ", "");
+      this.image.src = "images/ships/" + newName + ".png";
+    }
   }
 
   //Checks current progress towards the next frame in animation

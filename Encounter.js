@@ -801,7 +801,7 @@ class Encounter {
         }
 
         if (enc == "Capital Ship") {
-            var ship1 = new Ship(this.gm, this, "Tanker", this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders, "", "", "");
+            var ship1 = new Ship(this.gm, this, "Capital Ship", this.gm.date_month, this.gm.date_year, this.gm.shipsSunk, this.gm.currentOrders, "", "", "");
             tgt.push(ship1);
         }
 
@@ -959,7 +959,7 @@ class Encounter {
      */
     diveDeep() {
         this.depth = "Deep";
-        let pressureDamage = this.gm.sub.damage(1, "Pressure", this.shipList[0].getName());
+        let pressureDamage = this.gm.sub.damage(1, "Pressure", this.shipList[0].getClassAndName());
         this.encPop.diveDeep(pressureDamage);
     }
 
@@ -1481,11 +1481,11 @@ class Encounter {
             if (majorDetection) {
                 this.wasDetected = true;
                 let hitCount = this.escortAndAirAttackRoll(nightSurfaceAttackFirstRound, true, false);
-                results = this.sub.damage(hitCount, "Depth Charges", this.shipList[0].getName());
+                results = this.sub.damage(hitCount, "Depth Charges", this.shipList[0].getClassAndName());
             }
             else {
                 let hitCount = this.escortAndAirAttackRoll(nightSurfaceAttackFirstRound, true, false);
-                results = this.sub.damage(hitCount, "Depth Charges", this.shipList[0].getName());
+                results = this.sub.damage(hitCount, "Depth Charges", this.shipList[0].getClassAndName());
             }
             escortDetectionPopup.damageResults(results, majorDetection)
             await until(_ => this.gm.subEventResolved == true);
@@ -1626,5 +1626,13 @@ class Encounter {
         if (this.missionPopup != null) {
             this.missionPopup.done();
         }
+    }
+
+    /**
+     * One use only for capital ships to force update the sprite ping to use the correct shipname.png sprite (after ship has been loaded)
+     * @param {string} name 
+     */
+    forceUpdateSprite(name) {
+        this.tv.gameObjects.ship1.sprite.updateSprite(name);
     }
 }

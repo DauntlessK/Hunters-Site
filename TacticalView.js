@@ -451,6 +451,38 @@ class TacticalView{
                     })
                 }
                 break;
+            case "Capital Ship":
+                this.upperImage.src = "images/deepwater.png";
+                this.bgdFrames = 49;
+                this.gameObjects = {
+                    ship0: new GameObject({
+                        tv: this,
+                        gm: this.gm,
+                        x: 740,
+                        y: 50,
+                        src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
+                        shipNum: 0,
+                        width: 201,
+                        height: 158,
+                        frames: 6,
+                        isPlayer: false,
+                        encounter: enc
+                    }),
+                    ship1: new GameObject({
+                        tv: this,
+                        gm: this.gm,
+                        x: 500,
+                        y: 10,
+                        src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
+                        shipNum: 1,
+                        width: 201,
+                        height: 158,
+                        frames: 6,
+                        isPlayer: false,
+                        encounter: enc
+                    })
+                }
+                break;
             default:
                 this.upperImage.src = "images/deepwater.png";
                 this.bgdFrames = 49;

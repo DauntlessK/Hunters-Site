@@ -25,8 +25,11 @@ class GMPopup{
         else if (year == 1940){
             storyIntroText = "With France defeated, Germany's U-Boats have mostly relocated to French ports. Help tip the Battle of the Atlantic, now in full swing, in favor of Germany."
         }
+        else if (year == 1941){
+            storyIntroText = "The battle of Britain is over. Germany must be content to force England to capitulate through other means - which is where the U-Boats come in."
+        }
         else {
-            storyIntroText = "The Battle for the Atlantic has swung against Germany, as hundreds of U-Boats have been lost. Exercise caution as the allies have learned to hunt U-Boats."
+            storyIntroText = "The Battle for the Atlantic has begun to swing against Germany. Exercise caution as the allies have learned to hunt U-Boats."
         }
 
         //new div to add

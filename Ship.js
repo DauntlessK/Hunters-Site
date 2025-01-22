@@ -116,6 +116,7 @@ class Ship {
                 this.name = newEntry[0];
                 this.clss = newEntry[1]
                 this.GRT = newEntry[2];
+                this.enc.forceUpdateSprite(this.name);
                 break;
         }
 
@@ -133,6 +134,10 @@ class Ship {
 
     getName() {
         return this.name;
+    }
+
+    getClassAndName() {
+        return this.clss + " " + this.name;
     }
 
     getGRT() {

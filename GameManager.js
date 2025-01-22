@@ -352,14 +352,14 @@ class GameManager{
                 }
                 else {
                     let cause = "Crew lost at sea " + this.gm.getFullDate();
-                    cause += " - Forced to scuttle after damage to both diesel engines by " + this.currentEncounter.shipList[0].getName();
+                    cause += " - Forced to scuttle after damage to both diesel engines by " + this.currentEncounter.shipList[0].getClassAndName();
                     console.log("GAME OVER: " + cause);
                     const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
                 }
             }
             else {
                 let cause = "Scuttled " + this.gm.getFullDate();
-                cause += " - Forced to scuttle after damage to both diesel engines by " + this.currentEncounter.shipList[0].getName();
+                cause += " - Forced to scuttle after damage to both diesel engines by " + this.currentEncounter.shipList[0].getClassAndName();
                 console.log("GAME OVER: " + cause);
                 const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
             }
