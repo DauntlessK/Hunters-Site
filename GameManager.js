@@ -45,6 +45,7 @@ class GameManager{
         this.severeWeather = false;
         this.eligibleForNewBoat = false;
         this.abortingPatrol = false;
+        this.contFromAbort = false;     //flag used to skip over second encounter roll for the very first time after aborting only 
         this.permMedPost = false;
         this.permArcPost = false;
         this.francePost = false
@@ -311,12 +312,6 @@ class GameManager{
         console.log("Patrol Advance---------- step #" + this.currentBox);
         //reset current encounter
 
-        /**handle aborting near end of patrol
-        if (this.abortingPatrol && x < this.patrol.getPatrolLength() - 2) {
-            this.currentBox++;
-            return;
-        }*/ //Unsure if needed
-
         //if doctor is SW or KIA, see if any other injured crew members die (each patrol box, before encounter)
         if (!this.sub.isCrewmanFunctional("Doctor")){
             //check if any hurt crewmen
@@ -393,11 +388,16 @@ class GameManager{
         console.log("End Encounter");
 
         //check second encounter when 1 diesel is inop
-        if (this.sub.dieselsInop() == 1) {
+        if (this.sub.dieselsInop() == 1 && this.contFromAbort) {
+            currentEncounterType = this.patrol.getEncounterType(currentBoxName, this.getYear(), this.randomEvent, roll);
             console.log("Second Encounter: " + currentEncounterType);
             this.currentEncounter = new Encounter(this.tv, this, this.patrol, this.sub, currentEncounterType, currentBoxName, null);
             await until(_ => this.tv.isInEncounter == false);
             console.log("End Second Encounter");
+        }
+
+        if (this.abortingPatrol && !this.contFromAbort) {
+            this.contFromAbort = true;
         }
 
         if (this.currentBox == this.patrol.getPatrolLength()) {
@@ -423,10 +423,10 @@ class GameManager{
             stepsToEnd = patrolLength - stepsToEnd;
         }
         if (stepsToEnd > transitSteps) {
-            this.currentBox = patrolLength - transitSteps + 1;
+            this.currentBox = patrolLength - transitSteps; //removed +1 so that player actually is placed right before the correct box
         }
         else {
-            this.currentBox = patrolLength - stepsToEnd + 1;
+            this.currentBox = patrolLength - stepsToEnd;   //removed +1 so that player actually is placed right before the correct box
         }
 
         this.eventResolved = false;

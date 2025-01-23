@@ -49,6 +49,7 @@
 .PatrolMessage_p {
     font-size: 12;
     font-family: courier;
+    margin-right: 120px;
 }
 
 .PatrolAttackMessage_p {

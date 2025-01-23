@@ -108,7 +108,7 @@ class PatrolLog{
                 if (!enc.wasDetected) {
                     lineEntry = lineEntry + "Evaded detection.";
                 }
-                if (enc.wasDetected && enc.damageTaken == 0){
+                else if (enc.wasDetected && enc.damageTaken == 0){
                     lineEntry = lineEntry + "Escaped depth charges from the " + enc.shipList[0].getName() + ".";
                 }
                 else if (enc.damageTaken <= 3) {
@@ -132,7 +132,7 @@ class PatrolLog{
 
         //check first instance of when abortingPatrol flag is true but hasn't been flagged yet in patrol log
         if (this.gm.abortingPatrol && !this.aborting) {
-            lineEntry += " Damaged beyond repair and forced to return to port."
+            lineEntry += " Heavily damaged and forced to return to port."
         }
 
         this.lineEntry = this.lineEntry + "</p>";

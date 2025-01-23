@@ -167,6 +167,11 @@ class GMPopup{
             Orders: ${this.gm.currentOrdersLong} <br>
             Mission Result: ${patrolResult}
             </p>
+
+            <div class="Patrol_Log">
+                ${this.gm.logBook[0].patrolSummaryHeader}<br>
+                ${this.gm.logBook[0].patrolSummary}
+            </div>
             
         `)
             //<button class="AttackPopup_button" id="continue">Continue</button>

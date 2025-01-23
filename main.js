@@ -1,6 +1,6 @@
 class Main{
   constructor(config){
-      this.version = .644
+      this.version = .669
       this.element = config.element;
       this.canvas = this.element.querySelector(".game-canvas");
       this.ctx = this.canvas.getContext("2d");
@@ -23,7 +23,7 @@ class Main{
       this.tv.drawLowerImage(this.ctx);
 
       //Draw Game Objects (other ships) - only if in an encounter
-      if (this.tv.scene.includes("Ship") || this.tv.scene.includes("Convoy") || this.tv.scene.includes("Aircraft")) {
+      if (this.tv.scene.includes("Ship") || this.tv.scene.includes("Convoy") || this.tv.scene.includes("Aircraft") || this.tv.scene.includes("Escort") ) {
         Object.values(this.tv.gameObjects).forEach(object => {
         object.sprite.draw(this.ctx);
       })

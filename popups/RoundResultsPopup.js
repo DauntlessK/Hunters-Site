@@ -119,6 +119,7 @@ class RoundResultsPopup{
                 }
             }
             this.element.innerHTML = (`
+                <h3 class="HeaderMessage_h3">Treffe! </h3>
                 <p class="PatrolMessage_p">
                 ${hitMessage}
                 <button class="AttackPopup_button" id="continue">Continue</button>

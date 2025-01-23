@@ -714,6 +714,7 @@ class Uboat{
                     }
                     this.flooding_Damage += 1;
                     tookFloodingThisRound = true;
+                    this.gm.currentEncounter.unrepairedDamage = true;
                     break;
                 case "floodingx2":
                     var compartments = ["", "Forward Compartment", "Officer's Quarters", "Control Room", "Galley", "Diesel Engine Compartment", "Aft Compartment"]
@@ -724,6 +725,7 @@ class Uboat{
                     }
                     this.flooding_Damage += 2;
                     tookFloodingThisRound = true;
+                    this.gm.currentEncounter.unrepairedDamage = true;
                     break;
                 case "hull":
                     messageToReturn = messageToReturn + "The hull has taken damage! ";
@@ -747,10 +749,12 @@ class Uboat{
                         }
                         if (this.systems["3.7 Flak"] != 2) {
                             this.systems["3.7 Flak"] = 1;
+                            this.gm.currentEncounter.unrepairedDamage = true;
                             //this.systems.set("3.7 Flak", 1);
                         }
                         if (this.systems["Flak Gun"] != 2) {
                             this.systems["Flak Gun"] = 1;
+                            this.gm.currentEncounter.unrepairedDamage = true;
                         }
                     }
                     else {
@@ -760,6 +764,7 @@ class Uboat{
                         }
                         if (this.systems["Flak Gun"] != 2) {
                             this.systems["Flak Gun"] = 1;
+                            this.gm.currentEncounter.unrepairedDamage = true;
                             //this.systems.set("Flak Gun", 1);
                         }
                     }
@@ -790,9 +795,11 @@ class Uboat{
                     }
                     if (damage.slice(-1) == "s") {
                         messageToReturn = messageToReturn + "The " + damage + " have taken damage! ";
+                        this.gm.currentEncounter.unrepairedDamage = true;
                     }
                     else {
                         messageToReturn = messageToReturn + "The " + damage + " has taken damage! ";
+                        this.gm.currentEncounter.unrepairedDamage = true;
                     }
                     if (this.gm.halsUndBeinbruch > 0){
                         //deal with hals TODO
@@ -857,21 +864,6 @@ class Uboat{
         }
 
         return messageToReturn;
-
-        //check to see if sunk from hull damage
-        /** 
-        if self.hull_Damage >= self.hull_hp:
-            print("The hull continues to groan and buckle until...")
-            if not airAttack:
-                causeText =  "Sunk " + game.getFullDate() + " - Hull destroyed by depth charges by the " + attacker
-                gameover(game, causeText)
-            else:
-                causeText = "Sunk " + game.getFullDate() + " - Hull destroyed by attack by a " + attacker
-                gameover(game, causeText)
-        if self.flooding_Damage >= self.flooding_hp:
-            print("The ship is taking on too much water, we must blow the ballast tanks and surface.")
-            scuttleFromFlooding(game, attacker, airAttack)
-            */
     }
 
     crewInjury(attack) {
@@ -1049,10 +1041,10 @@ class Uboat{
                         if (result <= 4) {
                             this.systems[key] = 0;
                             if (key.slice(-1) == "s") {
-                                messageToReturn = messageToReturn + "The " + key + " has been repaired. ";
+                                messageToReturn = messageToReturn + "The " + key + " have been repaired. ";
                             }
                             else {
-                                messageToReturn = messageToReturn + "The " + key + " have been repaired! ";
+                                messageToReturn = messageToReturn + "The " + key + " has been repaired! ";
                             }
                         }
                         else {

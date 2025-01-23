@@ -17,6 +17,7 @@ class Encounter {
         this.sub = sub;
         this.encounterMid = false;                  //Flag for when in between following stages / switching scenes
         this.tookDamage = false;
+        this.unrepairedDamage = false;
         this.damageTaken = 0;                       //num of hits total on player sub
 
         //Encounter "Scoreboard" for results
@@ -338,6 +339,17 @@ class Encounter {
             this.endRound();
         }
 
+        //check for repairs  BEFORE starting follow flow. That way if forced to abort, player is kicked out of encounter before
+        //being asked to follow
+        this.gm.setEventResolved(false);
+        this.repairCheck(); 
+        await until(_ => this.gm.eventResolved == true);
+        //if repaircheck resulted in aborting patrol, abort patrol now before following
+        if (this.gm.abortingPatrol) {
+            this.endEncounter();
+            return;
+        }
+
         //FOLLOW FLOW-----
         if ((this.hasSinkableShip() || this.encounterType == "Convoy") && !this.gm.abortingPatrol) {
             //First determine if player WANTS to follow
@@ -486,16 +498,6 @@ class Encounter {
                         this.postFollowStatsClear("Surfaced");
                     }
 
-                    //check for repairs   --PROBLEM CHECKING FOR REPAIRS- WILL CHECK FOR REPAIRS EACH FOLLOW, AND THEN AT END OF ENCOUNTER()
-                    //THE PLAYER MAY BE DAMAGED IN THE FIRST SECTION BEFORE FOLLOW, REQUIRE REPAIR, THEN FOLLOW, THEN END ENCOUNTER() THEN
-                    //CHECK FOR REPAIR AGAIN WHICH MAY TRIGGER SOME ODD THINGS - MAYBE SET TOOK DAMAGE FLAG TO INT?
-                    this.gm.setEventResolved(false);
-                    this.repairCheck(); 
-                    await until(_ => this.gm.eventResolved == true);
-                    if (this.gm.abortingPatrol) {
-
-                    }
-
                     //change encounter type if not convoy
                     if (action == "Ship" || action == "Ship + Escort") {
                         this.encounterType = action;
@@ -538,7 +540,10 @@ class Encounter {
 
     }
 
-    //Starts attack from aircraft
+    /**
+     * Starts attack from aircraft
+     * @returns 
+     */
     async aircraftFlow() {
         let a1Roll = d6Rollx2();   //roll on A1 chart
         let year = this.gm.getYear();
@@ -615,7 +620,9 @@ class Encounter {
             result1 = this.sub.damage(hitCount, "Aircraft", this.aircraftType);
             result2 = this.sub.crewInjury("Aircraft");
             secondAttack = true;
-            this.airPopup.hit(hitCount, result1, result2, true);
+            if (hitcount <= 5) {
+                this.airPopup.hit(hitCount, result1, result2, true);
+            }
             if (this.aircraftFirstEncounter) {
                 this.aircraftResult = "Took heavy damage. "
             }
@@ -626,7 +633,6 @@ class Encounter {
         if (result < 6) {
             //Get flak attack result, and then display flak popup
             let flakResult = this.flakAttack();
-            console.log(flakResult);
             if (flakResult != "None") {
                 this.gm.setEventResolved(false);
                 this.encPop.flak(flakResult);
@@ -650,7 +656,9 @@ class Encounter {
                 result3 = this.sub.damage(hitCount, "Aircraft",  this.aircraftType);
 
                 this.gm.setEventResolved(false);
-                this.airPopup.hit(hitCount, result3, "", false);
+                if (hitcount <= 5) {
+                    this.airPopup.hit(hitCount, result3, "", false);
+                }
                 await until(_ => this.gm.eventResolved == true);
             }
 
@@ -670,10 +678,14 @@ class Encounter {
                     this.gm.setEventResolved(false);
                     if (this.aircraftFirstEncounter) {
                         if (this.encounterType == "Aircraft") {
-                            this.aircraftResult = this.aircraftResult + "It alerted a nearby allied aircraft."
+                            this.aircraftResult = this.aircraftResult + "It alerted a nearby allied aircraft.";
                         }
                         else if (this.encounterType == "Escort") {
-                            this.aircraftResult = this.aircraftResult + "It alerted a nearby allied escort."
+                            this.aircraftResult = this.aircraftResult + "It alerted a nearby allied escort.";
+                            if (this.depth == "Surfaced") {
+                                this.tv.uboat.sprite.dive();
+                                this.depth = "Periscope Depth";
+                            }
                         }
                     }
                     this.aircraftFirstEncounter = false;
@@ -747,7 +759,7 @@ class Encounter {
 
     async repairCheck() {
         console.log("Checking damage");
-        if (!this.tookDamage) {
+        if (!this.unrepairedDamage) {
             this.gm.setEventResolved(true);
             return;
         }
@@ -758,6 +770,7 @@ class Encounter {
             this.gm.setEventResolved(false);
             this.encPop.repairs(damageString);
             await until(_ => this.gm.eventResolved == true);
+            this.unrepairedDamage = false;
         }
     }
 
@@ -772,11 +785,11 @@ class Encounter {
             this.gm.missionComplete = true;
         }
 
-        if (this.tookDamage) {
+        if (this.unrepairedDamage) {
             this.gm.setEventResolved(false);
             this.repairCheck();
             await until(_ => this.gm.eventResolved == true);
-            this.tookDamage = false;
+            this.unrepairedDamage = false;
         }
         if (this.gm.currentOrders.includes("Minelaying")) {
             this.sub.deployMines();
@@ -1478,6 +1491,7 @@ class Encounter {
         //Show damage results popup
         if (results == "Detected") {
             let nightSurfaceAttackFirstRound = false;
+            let hitCount = 0;
             if (this.attackDepth == "Surfaced" && this.timeOfDay == "Night" && !previouslyDetected){
                 nightSurfaceAttackFirstRound = true;
             }
@@ -1487,17 +1501,20 @@ class Encounter {
             this.gm.setSubEventResolved(false);
             if (majorDetection) {
                 this.wasDetected = true;
-                let hitCount = this.escortAndAirAttackRoll(nightSurfaceAttackFirstRound, true, false);
+                hitCount = this.escortAndAirAttackRoll(nightSurfaceAttackFirstRound, true, false);
                 results = this.sub.damage(hitCount, "Depth Charges", this.shipList[0].getClassAndName());
                 this.damageTaken += hitCount;
             }
             else {
-                let hitCount = this.escortAndAirAttackRoll(nightSurfaceAttackFirstRound, true, false);
+                hitCount = this.escortAndAirAttackRoll(nightSurfaceAttackFirstRound, true, false);
                 results = this.sub.damage(hitCount, "Depth Charges", this.shipList[0].getClassAndName());
                 this.damageTaken += hitCount;
             }
-            escortDetectionPopup.damageResults(results, majorDetection)
-            await until(_ => this.gm.subEventResolved == true);
+            if (hitCount <= 5) {
+                escortDetectionPopup.damageResults(results, majorDetection)
+            }
+            await until(_ => this.gm.subEventResolved == true); //should be in above if statement - keep there for now to prevent program from progressing when game is over
+            
 
             //If detected, check detection again
             this.depth = "Periscope Depth";  //reset depth (in case "Deep" was selected)
@@ -1574,7 +1591,7 @@ class Encounter {
             default:
                 let cause = "Sunk " + this.gm.getFullDate();
                 if (airAttack) {
-                    cause += " by catastrophic damage from a " + this.airCraft;
+                    cause += " by catastrophic damage from a " + this.aircraftType;
                 }
                 else {
                     cause += " by catastrophic damage done by depth charges from the " + this.shipList[0].getName();
