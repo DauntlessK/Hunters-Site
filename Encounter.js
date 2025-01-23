@@ -17,6 +17,7 @@ class Encounter {
         this.sub = sub;
         this.encounterMid = false;                  //Flag for when in between following stages / switching scenes
         this.tookDamage = false;
+        this.damageTaken = 0;                       //num of hits total on player sub
 
         //Encounter "Scoreboard" for results
         this.numHits = 0;
@@ -395,7 +396,10 @@ class Encounter {
                         }
                     }
                     //Check to see if aircraft or escort shows up (additional round roll)
-                    if (!this.isEscorted() && action != "Lost") {
+                    if (this.encounterType == "Capital Ship") {
+                        action = "Capital Ship";
+                    }
+                    else if (!this.isEscorted() && action != "Lost") {
                         var roll = d6Rollx2();
                         if (this.gm.getYear() == 1942) {roll = roll - 1;}
                         if (this.gm.getYear() == 1943) {roll = roll - 2;}
@@ -466,6 +470,7 @@ class Encounter {
                 case "Convoy":    //attack 4 new ships convoy
                 case "Ship":
                 case "Ship + Escort":
+                case "Capital Ship":
                     //First pause to reload tubes
                     this.reloadTubes();
                     await until(_ => this.tv.reloadMode == false);
@@ -474,11 +479,26 @@ class Encounter {
                     if (action == "Convoy") {
                         this.shipList = this.getShips("Convoy");
                     }
-                    if (action == "Convoy" || action == "Ship + Escort") {
+                    if (action == "Convoy" || action == "Ship + Escort" || action == "Capital Ship") {
                         this.postFollowStatsClear("Periscope Depth");
                     }
                     else {
                         this.postFollowStatsClear("Surfaced");
+                    }
+
+                    //check for repairs   --PROBLEM CHECKING FOR REPAIRS- WILL CHECK FOR REPAIRS EACH FOLLOW, AND THEN AT END OF ENCOUNTER()
+                    //THE PLAYER MAY BE DAMAGED IN THE FIRST SECTION BEFORE FOLLOW, REQUIRE REPAIR, THEN FOLLOW, THEN END ENCOUNTER() THEN
+                    //CHECK FOR REPAIR AGAIN WHICH MAY TRIGGER SOME ODD THINGS - MAYBE SET TOOK DAMAGE FLAG TO INT?
+                    this.gm.setEventResolved(false);
+                    this.repairCheck(); 
+                    await until(_ => this.gm.eventResolved == true);
+                    if (this.gm.abortingPatrol) {
+
+                    }
+
+                    //change encounter type if not convoy
+                    if (action == "Ship" || action == "Ship + Escort") {
+                        this.encounterType = action;
                     }
 
                     //Get new time of day
@@ -487,21 +507,9 @@ class Encounter {
                     await until(_ => this.gm.eventResolved == true);
                     console.log("Selected: " + this.timeOfDay);
 
-                    //check for repairs
-                    this.gm.setEventResolved(false);
-                    this.repairCheck();
-                    await until(_ => this.gm.eventResolved == true);
-                    console.log("No more repairs");
-
-                    //change encounter type if not convoy
-                    if (action == "Ship" || action == "Ship + Escort") {
-                        this.encounterType = action;
-                    }
-
                     //Change scene then start next attack
                     this.tv.changeScene(action, this.timeOfDay, this, false);
                     this.encounterMid = false;
-                    console.log("Moving to attack flow");
                     this.attackFlow(action, false);
                     return;
                 case "Aircraft":
@@ -747,7 +755,6 @@ class Encounter {
         let damageString = this.gm.sub.repair();
 
         if (damageString != "") {
-            console.log(this.gm);
             this.gm.setEventResolved(false);
             this.encPop.repairs(damageString);
             await until(_ => this.gm.eventResolved == true);
@@ -755,6 +762,7 @@ class Encounter {
     }
 
     async endEncounter() {
+        this.tv.finishEncounter();
         this.tv.changeScene("", this.timeOfDay, null, false);
         if (this.depth != "Surfaced") {
             this.tv.uboat.sprite.surface();
@@ -774,7 +782,6 @@ class Encounter {
             this.sub.deployMines();
             this.tv.mainUI.forceTorpedoButtonUpdate();
         }
-        this.tv.finishEncounter();
         //Prompt for reloads if any tubes are empty that can be loaded
         if (this.gm.sub.tubesLoadedCheck()) {
             this.tv.enterReloadMode();
@@ -1482,10 +1489,12 @@ class Encounter {
                 this.wasDetected = true;
                 let hitCount = this.escortAndAirAttackRoll(nightSurfaceAttackFirstRound, true, false);
                 results = this.sub.damage(hitCount, "Depth Charges", this.shipList[0].getClassAndName());
+                this.damageTaken += hitCount;
             }
             else {
                 let hitCount = this.escortAndAirAttackRoll(nightSurfaceAttackFirstRound, true, false);
                 results = this.sub.damage(hitCount, "Depth Charges", this.shipList[0].getClassAndName());
+                this.damageTaken += hitCount;
             }
             escortDetectionPopup.damageResults(results, majorDetection)
             await until(_ => this.gm.subEventResolved == true);

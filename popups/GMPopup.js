@@ -70,7 +70,23 @@ class GMPopup{
     }
 
     abortPatrolPopup() {
+        //new div to add
+        this.element.innerHTML = (`
+            <h3 class="HeaderMessage_h3">We must abort our patrol!<br>
+            </h3>
+            <p class="PatrolMessage_p">${this.gm.getFullUboatID()} has been damaged too heavily and must return back to port. <br>
+            </p>
+            <button class="AttackPopup_button" id="continue">Continue</button>
+        `)
 
+        this.element.addEventListener("click", ()=> {
+            if (event.target.id == "continue"){
+                //close popup
+                this.done();
+            }
+        })
+
+        this.container.appendChild(this.element);
     }
 
     
@@ -79,7 +95,7 @@ class GMPopup{
         this.element.innerHTML = (`
             <h3 class="HeaderMessage_h3">Towed Back To Port!<br>
             </h3>
-            <p class="PatrolMessage_p">${this.gm.getFullUboatID} has been towed back to port. Thankfully we were close to home
+            <p class="PatrolMessage_p">${this.gm.getFullUboatID()} has been towed back to port. Thankfully we were close to home
             or scuttling would have been our only option.<br>
             </p>
             <button class="AttackPopup_button" id="continue">Continue</button>

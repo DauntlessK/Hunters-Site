@@ -6,6 +6,7 @@ class PatrolLog{
         this.patrolSummaryHeader = "";
         this.patrolSummary = "";
         this.totalGRT = 0;
+        this.aborting = false;
 
         this.currentDay = d6Roll();
 
@@ -72,6 +73,9 @@ class PatrolLog{
             else if (enc.originalEncounterType == "Ship") {
                 lineEntry = lineEntry + "Encountered lone ship; ";
             }
+            else if (enc.originalEncounterType == "Capital Ship") {
+                lineEntry = lineEntry + "Encountered large warship; ";
+            }
             else {
                 lineEntry = lineEntry + "Encountered ships; ";
             }
@@ -100,11 +104,21 @@ class PatrolLog{
             
             //If escorted, detail escape
             if (enc.isEscorted()) {
-                if (enc.wasDetected){
-                    lineEntry = lineEntry + "Escaped depth charges from " + enc.shipList[0].getName();
-                }
-                else {
+
+                if (!enc.wasDetected) {
                     lineEntry = lineEntry + "Evaded detection.";
+                }
+                if (enc.wasDetected && enc.damageTaken == 0){
+                    lineEntry = lineEntry + "Escaped depth charges from the " + enc.shipList[0].getName() + ".";
+                }
+                else if (enc.damageTaken <= 3) {
+                    lineEntry = lineEntry + "Took light depth charge damage from the " + enc.shipList[0].getName() + ".";
+                }
+                else if (enc.damageTaken <= 7) {
+                    lineEntry = lineEntry + "Took moderate depth charge damage from the " + enc.shipList[0].getName() + ".";
+                }
+                else{
+                    lineEntry = lineEntry + "Took major depth charge damage from the " + enc.shipList[0].getName() + ".";
                 }
             }
         }
@@ -114,6 +128,11 @@ class PatrolLog{
         }
         else {
             lineEntry = lineEntry + "unknown enc";
+        }
+
+        //check first instance of when abortingPatrol flag is true but hasn't been flagged yet in patrol log
+        if (this.gm.abortingPatrol && !this.aborting) {
+            lineEntry += " Damaged beyond repair and forced to return to port."
         }
 
         this.lineEntry = this.lineEntry + "</p>";

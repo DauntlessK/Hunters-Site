@@ -12,6 +12,8 @@ class GameOverPopup{
 
         this.element.classList.add("TextMessage");
 
+        this.gm.closeWindows();
+
         this.gameOver();
     }
 

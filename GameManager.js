@@ -352,14 +352,14 @@ class GameManager{
                 }
                 else {
                     let cause = "Crew lost at sea " + this.gm.getFullDate();
-                    cause += " - Forced to scuttle after damage to both diesel engines by " + this.currentEncounter.shipList[0].getClassAndName();
+                    cause += " - Forced to scuttle after damage to both diesel engines by the " + this.currentEncounter.shipList[0].getClassAndName();
                     console.log("GAME OVER: " + cause);
                     const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
                 }
             }
             else {
                 let cause = "Scuttled " + this.gm.getFullDate();
-                cause += " - Forced to scuttle after damage to both diesel engines by " + this.currentEncounter.shipList[0].getClassAndName();
+                cause += " - Forced to scuttle after damage to both diesel engines by the " + this.currentEncounter.shipList[0].getClassAndName();
                 console.log("GAME OVER: " + cause);
                 const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
             }
@@ -392,6 +392,14 @@ class GameManager{
         await until(_ => this.tv.isInEncounter == false);
         console.log("End Encounter");
 
+        //check second encounter when 1 diesel is inop
+        if (this.sub.dieselsInop() == 1) {
+            console.log("Second Encounter: " + currentEncounterType);
+            this.currentEncounter = new Encounter(this.tv, this, this.patrol, this.sub, currentEncounterType, currentBoxName, null);
+            await until(_ => this.tv.isInEncounter == false);
+            console.log("End Second Encounter");
+        }
+
         if (this.currentBox == this.patrol.getPatrolLength()) {
             this.endPatrol();
         }
@@ -401,9 +409,8 @@ class GameManager{
      * Sets aborting patrol to true and immediately changes currentBox to nearest transit, if not in one already.
      * If at start of patrol (first 1-4 transit boxes), places boat in the corresponding box at the end of the patrol.
      */
-    abortPatrol() {
+    async abortPatrol() {
         this.abortingPatrol = true;
-        console.log("Aborting Patrol!");
 
         //logic to place uboat at correct box to abort
         let patrolLength = this.patrol.getPatrolLength();
@@ -421,6 +428,10 @@ class GameManager{
         else {
             this.currentBox = patrolLength - stepsToEnd + 1;
         }
+
+        this.eventResolved = false;
+        this.popup2.abortPatrolPopup();
+        await until(_ => this.eventResolved == true);
     }
 
     async endPatrol() {

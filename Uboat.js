@@ -665,7 +665,7 @@ class Uboat{
                 if (pressureRoll < this.hull_Damage) {
                     //game over
                     let cause = "Sunk " + this.gm.getFullDate();
-                    cause += " - Hull catastrophically imploded escaping " + attacker;
+                    cause += " - Hull catastrophically imploded escaping the " + attacker;
                 
                     console.log("GAME OVER: " + cause);
                     const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
@@ -834,7 +834,7 @@ class Uboat{
                 cause += " - Hull destroyed from air attack by " + attacker;
             }
             else if (attack == "Pressure") {
-                cause += " - Hull crushed by pressure escaping " + attacker;
+                cause += " - Hull crushed by pressure escaping the " + attacker;
             }
             else {
                 cause += " - Hull destroyed by depth charges by the " + attacker;
