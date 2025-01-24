@@ -1017,6 +1017,8 @@ class Uboat{
         this.flooding_Damage = 0;
 
         var messageToReturn = "";
+        var repaired = "";
+        var notAbleToRepair = "";
         
         let mods = 0;
         let roll = 0;
@@ -1040,16 +1042,11 @@ class Uboat{
                     case "Batteries":
                         if (result <= 4) {
                             this.systems[key] = 0;
-                            if (key.slice(-1) == "s") {
-                                messageToReturn = messageToReturn + "The " + key + " have been repaired. ";
-                            }
-                            else {
-                                messageToReturn = messageToReturn + "The " + key + " has been repaired! ";
-                            }
+                            repaired = repaired + key + ", ";
                         }
                         else {
                             this.systems[key] = 2;
-                            messageToReturn = messageToReturn + "We're unable to repair the " + key + ". ";
+                            notAbleToRepair = notAbleToRepair + key + ", ";
                         }
                         break;
                     case "Hydrophones":
@@ -1063,31 +1060,74 @@ class Uboat{
                     case "Radio":
                         if (result <= 2) {
                             this.systems[key] = 0;
-                            if (key.slice(-1) == "s") {
-                                messageToReturn = messageToReturn + "The " + key + " have been repaired! ";
-                            }
-                            else {
-                                messageToReturn = messageToReturn + "The " + key + " has been repaired. ";
-                            }
+                            repaired = repaired + key + ", ";
                         }
                         else {
                             this.systems[key] = 2;
-                            if (key == "Fuel Tanks") {
-                                messageToReturn = messageToReturn + "We cannot repair the " + key + " at sea. We must head back to port. ";
-                            }
-                            else {
-                                messageToReturn = messageToReturn + "We're unable to repair the " + key + ". ";
-                            }
+                            notAbleToRepair = notAbleToRepair + key + ", ";
                         }
                         break;
                     case "Diesel Engine #1":
                     case "Diesel Engine #2":
                         this.systems[key] = 2;
-                        messageToReturn = messageToReturn + key + " cannot be repaired at sea. We must head back to port. ";
+                        notAbleToRepair = notAbleToRepair + key + ", ";
                         continue;
                     default:
                         console.log("Error attempting to repair " + key);
                 }
+            }
+        }
+
+        //Format damage / not damaged strings for one final damage string
+        //First if BOTH a repair occurs AND an unable to repair occurs
+        if (repaired != "" && notAbleToRepair != "") {
+            repaired = repaired.slice(0, -2);
+            notAbleToRepair = notAbleToRepair.slice(0, -2);
+
+            messageToReturn = "I have some good news and bad news, Kommandant. <br><br>"
+            messageToReturn += "<strong>Repaired:</strong> " + repaired + "<br>";
+            messageToReturn += "<strong>Unable To Repair:</strong> " + notAbleToRepair;
+        }
+        else if (repaired != "") {      //only able to repair (no occurances of not able to repair)
+            repaired = repaired.slice(0, -2);
+
+            messageToReturn = "Good news, Kommandant! <br><br>"
+            messageToReturn += "<strong>Repaired:</strong> " + repaired;
+        }
+        else if (notAbleToRepair != "") {      //only failure(s) to repair (no occurances of repairing)
+            notAbleToRepair = notAbleToRepair.slice(0, -2);
+
+            messageToReturn = "Bad news, Kommandant! <br><br>"
+            messageToReturn += "<strong>Unable To Repair:</strong> " + notAbleToRepair;
+        }
+
+
+        //Check if game over from both diesels being knocked out
+        if (this.dieselsInop() == 2){
+            if (this.gm.currentBox == this.gm.patrol.getPatrolLength() || this.gm.currentBox == 1){
+                //When 1 square from port, scuttling
+                //Roll 2d6. 2-10 is successful recovery of crew, new uboat. 11 or 12 crew is lost at sea, game over
+                //TODO
+                let recoveryRoll = d6Rollx2();
+                if (this.getSystemStatus("Radio") == "Inoperative") {
+                    recoveryRoll += 4;
+                }
+                if (recoveryRoll <= 10) {
+                    //Crew recovered. New uboat
+                    this.gm.recovery();
+                }
+                else {
+                    let cause = "Crew lost at sea " + this.gm.getFullDate();
+                    cause += " - Forced to scuttle after damage to both diesel engines by the " + this.gm.currentEncounter.shipList[0].getClassAndName();
+                    console.log("GAME OVER: " + cause);
+                    const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
+                }
+            }
+            else {
+                let cause = "Scuttled " + this.gm.getFullDate();
+                cause += " - Forced to scuttle after damage to both diesel engines by the " + this.currentEncounter.shipList[0].getClassAndName();
+                console.log("GAME OVER: " + cause);
+                const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
             }
         }
 

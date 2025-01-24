@@ -225,7 +225,7 @@ class Sprite {
   //Gets a value to add to the sprite's Y-value. If it's at it, it gets a new one to move towards
   randomUpAndDown() {
     //currently uses hard-coded 10 and neg 10 as the Y min and max
-    if (this.depth == 0) {
+    if (this.depth == 0 && !this.tv.scene.includes("Port")) {
       return 0;
     }
     if (!this.tv.isPaused && (this.tv.scene.includes("Port") || this.depth > 109)) {

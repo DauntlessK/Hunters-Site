@@ -70,7 +70,7 @@ class EncounterPopup{
     /**
      * Popup when there's no additional round rolled after
      */
-    noAdditionalRound(){
+    noAdditionalRound(unrepairedDamage){
         var noARArray = ["", 
             "You finally manage to dive. After a while, you surface and sail on, trying to put distance between you and the encounter with the aircraft.",
             "A little while after your crash dive, you surface and sail away without further trouble.",
@@ -78,15 +78,32 @@ class EncounterPopup{
 
         const roll = d3Roll();
 
-        //new div to add
-        this.element.innerHTML = (`
-            <p class="PatrolMessage_p">${noARArray[roll]}<br>
-            </p>
-        `)
+        if (unrepairedDamage) {
+            //new div to add
+            this.element.innerHTML = (`
+                <p class="PatrolMessage_p">${noARArray[roll]}<br>
+                </p>
+                <button class="AttackPopup_button" id="continue">Continue</button>
+            `)
+
+            this.element.addEventListener("click", ()=> {
+                if (event.target.id == "continue"){
+                    //close popup
+                    this.done();
+                }
+            })
+        }
+        else {
+            this.element.innerHTML = (`
+                <p class="PatrolMessage_p">${noARArray[roll]}<br>
+                </p>
+            `)
+            this.gm.setEventResolved(true);
+        }
 
         this.container.appendChild(this.element);
-        this.gm.setEventResolved(true);
-        this.tv.finishEncounter();
+        //this.gm.setEventResolved(true);
+        //this.tv.finishEncounter();
     }
 
     /**

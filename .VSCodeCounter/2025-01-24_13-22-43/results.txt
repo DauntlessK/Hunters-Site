@@ -1,0 +1,76 @@
+Date : 2025-01-24 13:22:43
+Directory : c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site
+Total : 45 files,  7441 codes, 896 comments, 948 blanks, all 9285 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| JavaScript |         38 |      6,864 |        892 |        875 |      8,631 |
+| CSS        |          5 |        480 |          1 |         63 |        544 |
+| HTML       |          1 |         88 |          3 |          7 |         98 |
+| Markdown   |          1 |          9 |          0 |          3 |         12 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                                  | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                     |         45 |      7,441 |        896 |        948 |      9,285 |
+| . (Files)                                                                                                             |         17 |      4,714 |        623 |        530 |      5,867 |
+| buttons                                                                                                               |          8 |        438 |         57 |         40 |        535 |
+| popups                                                                                                                |         16 |      1,827 |        215 |        320 |      2,362 |
+| styles                                                                                                                |          4 |        462 |          1 |         58 |        521 |
++-----------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                                                              | language   | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\Encounter.js                       | JavaScript |      1,349 |        197 |        131 |      1,677 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\GameManager.js                     | JavaScript |        336 |         49 |         43 |        428 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\GameObject.js                      | JavaScript |         24 |          0 |          4 |         28 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\MenuIcon.js                        | JavaScript |         40 |          4 |          7 |         51 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\Patrol.js                          | JavaScript |        472 |         35 |         38 |        545 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\PatrolLog.js                       | JavaScript |        130 |         11 |         18 |        159 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\README.md                          | Markdown   |          9 |          0 |          3 |         12 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\Ship.js                            | JavaScript |        169 |          8 |         30 |        207 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\Sprite.js                          | JavaScript |        329 |         74 |         61 |        464 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\TacticalView.js                    | JavaScript |        397 |         54 |         42 |        493 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\UI.js                              | JavaScript |        293 |         28 |         33 |        354 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\Uboat.js                           | JavaScript |        940 |        139 |         83 |      1,162 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\buttons\BeginPatrolButton.js       | JavaScript |         14 |          1 |          2 |         17 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\buttons\Button.js                  | JavaScript |         79 |         14 |         13 |        106 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\buttons\ContinuePatrolButton.js    | JavaScript |         13 |          1 |          2 |         16 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\buttons\DeckGunButton.js           | JavaScript |         91 |          8 |          8 |        107 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\buttons\FireAttackButton.js        | JavaScript |         11 |          1 |          2 |         14 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\buttons\OpenStatusButton.js        | JavaScript |         12 |          1 |          2 |         15 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\buttons\ReloadButton.js            | JavaScript |         22 |          1 |          3 |         26 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\buttons\TorpedoButton.js           | JavaScript |        196 |         30 |          8 |        234 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\index.html                         | HTML       |         88 |          3 |          7 |         98 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\init.js                            | JavaScript |          6 |          0 |          2 |          8 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\main.js                            | JavaScript |         63 |          8 |         15 |         86 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\AdminPopup.js               | JavaScript |         50 |          3 |         12 |         65 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\AircraftPopup.js            | JavaScript |        171 |         21 |         35 |        227 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\AttackDepthAndRangePopup.js | JavaScript |         75 |          8 |         13 |         96 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\EncounterPopup.js           | JavaScript |        297 |         53 |         57 |        407 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\EscortDetectionPopup.js     | JavaScript |        117 |          5 |         19 |        141 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\FollowPopup.js              | JavaScript |         56 |         11 |         16 |         83 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\FollowTimePopup.js          | JavaScript |         41 |          3 |         10 |         54 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\GMPopup.js                  | JavaScript |        151 |         18 |         31 |        200 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\GameOverPopup.js            | JavaScript |         33 |          2 |          9 |         44 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\MissionPopup.js             | JavaScript |         76 |         16 |         21 |        113 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\OrdersPopup.js              | JavaScript |         92 |          9 |         17 |        118 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\ResupplyCustomPopup.js      | JavaScript |        156 |          8 |         14 |        178 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\ResupplyPopup.js            | JavaScript |        136 |         16 |         15 |        167 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\RoundFollowUpPopup.js       | JavaScript |         87 |          7 |         11 |        105 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\RoundResultsPopup.js        | JavaScript |        119 |          9 |         18 |        146 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\StatusPopup.js              | JavaScript |        170 |         26 |         22 |        218 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\styles.css                         | CSS        |         18 |          0 |          5 |         23 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\styles\EncounterPopup.css          | CSS        |        148 |          0 |         13 |        161 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\styles\Popup.css                   | CSS        |         86 |          0 |         11 |         97 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\styles\StatusPopup.css             | CSS        |        188 |          0 |         25 |        213 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\styles\styles.css                  | CSS        |         40 |          1 |          9 |         50 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\util.js                            | JavaScript |         51 |         13 |          8 |         72 |
+| Total                                                                                                                 |            |      7,441 |        896 |        948 |      9,285 |
++-----------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+

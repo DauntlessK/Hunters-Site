@@ -54,7 +54,7 @@ class Encounter {
 
         this.tv.enterEncounter();
         this.timeOfDay = this.getTimeOfDay(false);
-        console.log(this.timeOfDay);
+        //console.log(this.timeOfDay);          //ToD Debug
         this.tv.changeScene(this.encounterType, this.timeOfDay, this, false);
 
         this.gm.setEventResolved(false);
@@ -342,8 +342,9 @@ class Encounter {
         //check for repairs  BEFORE starting follow flow. That way if forced to abort, player is kicked out of encounter before
         //being asked to follow
         this.gm.setEventResolved(false);
-        this.repairCheck(); 
+        this.repairCheck();
         await until(_ => this.gm.eventResolved == true);
+        console.log("Post repairCheck() eventResolved state: " + this.gm.eventResolved);
         //if repaircheck resulted in aborting patrol, abort patrol now before following
         if (this.gm.abortingPatrol) {
             this.endEncounter();
@@ -523,6 +524,7 @@ class Encounter {
                     this.gm.setEventResolved(false);
                     this.repairCheck();
                     await until(_ => this.gm.eventResolved == true);
+                    console.log("Post repairCheck() eventResolved state: " + this.gm.eventResolved);
 
                     this.tv.changeScene(action, this.timeOfDay, this, false);
                     this.postFollowStatsClear("Surfaced");
@@ -623,6 +625,9 @@ class Encounter {
             if (hitcount <= 5) {
                 this.airPopup.hit(hitCount, result1, result2, true);
             }
+            else { //catastrophic (game over) damage
+                return;
+            }
             if (this.aircraftFirstEncounter) {
                 this.aircraftResult = "Took heavy damage. "
             }
@@ -659,6 +664,9 @@ class Encounter {
                 if (hitcount <= 5) {
                     this.airPopup.hit(hitCount, result3, "", false);
                 }
+                else { //catastrophic (game over) damage
+                    return;
+                }
                 await until(_ => this.gm.eventResolved == true);
             }
 
@@ -671,7 +679,7 @@ class Encounter {
                 console.log("Additional Round: " + this.encounterType);
                 if (this.encounterType == "No Encounter") {
                     this.gm.setEventResolved(false);
-                    this.encPop.noAdditionalRound();
+                    this.encPop.noAdditionalRound(this.unrepairedDamage);
                     await until(_ => this.gm.eventResolved == true);
                 }
                 else {
@@ -757,7 +765,7 @@ class Encounter {
         this.tv.enterReloadMode();
     }
 
-    async repairCheck() {
+    repairCheck() {
         console.log("Checking damage");
         if (!this.unrepairedDamage) {
             this.gm.setEventResolved(true);
@@ -769,13 +777,15 @@ class Encounter {
         if (damageString != "") {
             this.gm.setEventResolved(false);
             this.encPop.repairs(damageString);
-            await until(_ => this.gm.eventResolved == true);
             this.unrepairedDamage = false;
+            console.log(this.gm.eventResolved);
+        }
+        else {
+            console.log("Error in damage repairing");
         }
     }
 
     async endEncounter() {
-        this.tv.finishEncounter();
         this.tv.changeScene("", this.timeOfDay, null, false);
         if (this.depth != "Surfaced") {
             this.tv.uboat.sprite.surface();
@@ -789,6 +799,7 @@ class Encounter {
             this.gm.setEventResolved(false);
             this.repairCheck();
             await until(_ => this.gm.eventResolved == true);
+            console.log("Post repairCheck() eventResolved state: " + this.gm.eventResolved);
             this.unrepairedDamage = false;
         }
         if (this.gm.currentOrders.includes("Minelaying")) {
@@ -799,6 +810,8 @@ class Encounter {
         if (this.gm.sub.tubesLoadedCheck()) {
             this.tv.enterReloadMode();
         }
+
+        this.tv.finishEncounter();
     }
 
     //Creates and returns a list of ship object(s) for a given encounter

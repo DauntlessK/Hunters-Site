@@ -5,6 +5,14 @@ class PatrolLog{
 
         this.patrolSummaryHeader = "";
         this.patrolSummary = "";
+
+        //Updated at the end of patrol for record keeping
+        this.patrolOrdersLong = "";
+        this.patrolResult = "";
+        this.patrolSunk = 0;
+        this.patrolGRTSunk = 0;
+
+
         this.totalGRT = 0;
         this.aborting = false;
 
@@ -16,6 +24,10 @@ class PatrolLog{
         return this.patrolSummary;
     }
 
+    /**
+     * 
+     * @returns string of Header for patrol log, which includes, U-boat, name and rank, patrol #, orders and tonnage sunk
+     */
     getPatrolHeader() {
         this.patrolSummaryHeader = "";
         //If not at the start of the game
@@ -36,6 +48,19 @@ class PatrolLog{
             this.patrolSummaryHeader = this.gm.getFullUboatID() + " - " + this.gm.getLRankAndName() + "<br>";
             this.patrolSummaryHeader = this.patrolSummaryHeader + this.gm.getFullDate() + ", in port";
             this.patrolSummaryHeader = this.patrolSummaryHeader + "<p>Reported to boat for immediate departure.</p>" 
+        }
+
+        //Update stats for final patrol record keeping
+        if (this.gm.currentBox = this.gm.patrol.getPatrolLength()) {
+            this.patrolOrdersLong = this.gm.currentOrdersLong;
+            if (this.gm.missionComplete) {
+                this.patrolResult = "Success"
+            }
+            else {
+                this.patrolResult = "Failure"
+            }
+            this.patrolSunk = this.gm.shipsSunkOnCurrentPatrol;
+            this.patrolGRTSunk = this.getTotalGRT() + "GRT";
         }
 
         return this.patrolSummaryHeader;
@@ -133,6 +158,7 @@ class PatrolLog{
         //check first instance of when abortingPatrol flag is true but hasn't been flagged yet in patrol log
         if (this.gm.abortingPatrol && !this.aborting) {
             lineEntry += " Heavily damaged and forced to return to port."
+            this.aborting = true;
         }
 
         this.lineEntry = this.lineEntry + "</p>";
@@ -140,7 +166,10 @@ class PatrolLog{
         this.patrolSummary = this.patrolSummary + lineEntry;
     }
 
-    //Gets current GRT sunk on this patrol
+    /**
+     * Gets current GRT sunk on this patrol
+     * @returns STRING of # of GRT sunk, WITH commas: "7,400"
+     */
     getTotalGRT() {
         let newTotalGRT = 0;
         for (let i = 0; i < this.gm.shipsSunkOnCurrentPatrol.length; i++) {

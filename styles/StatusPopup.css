@@ -57,6 +57,19 @@
     border-width: thin;
 }
 
+.Patrol_Log_After_Patrol {
+    position: absolute;
+    right: 30px;
+    top: 20px;
+    width: 500px;
+    height: 242px;
+    max-height: 180px;
+    padding: 5px;
+    overflow-y: scroll;
+    border-style: solid;
+    border-width: thin;
+}
+
 .UboatCrew {
     width: 200px;
     position: absolute;

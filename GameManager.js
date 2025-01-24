@@ -303,14 +303,20 @@ class GameManager{
     async advancePatrol() {
     
         //close previous box and move to next square --- HERE ALSO UPDATE CURRENT PATROL LOG
-        if (this.currentBox > 0) {
+        if (this.currentBox > 0 && this.currentBox != this.patrol.getPatrolLength()) {
             this.logBook[this.patrolNum].addLastEncounter(this.currentEncounter);
             this.currentEncounter.closeWindows();            
         }
-        this.currentBox++;
 
+        //End patrol if advance was clicked while boat is on the final box
+        if (this.currentBox == this.patrol.getPatrolLength()) {
+            this.endPatrol();
+            return;
+        }
+
+        //Advance box
+        this.currentBox++;
         console.log("Patrol Advance---------- step #" + this.currentBox);
-        //reset current encounter
 
         //if doctor is SW or KIA, see if any other injured crew members die (each patrol box, before encounter)
         if (!this.sub.isCrewmanFunctional("Doctor")){
@@ -325,40 +331,6 @@ class GameManager{
 
         //get the current box name of this patrol (i.e. "Transit", "Mission", "Atlantic", etc)
         var currentBoxName = this.patrol.patrolArray[this.currentBox];
-
-        //check for automatic aborts
-        if (this.sub.dieselsInop() == 2){
-            if (this.currentBox == this.patrol.getPatrolLength() || this.currentBox == 1){
-                //When 1 square from port, scuttling
-                //Roll 2d6. 2-10 is successful recovery of crew, new uboat. 11 or 12 crew is lost at sea, game over
-                //TODO
-                let recoveryRoll = d6Rollx2();
-                if (this.sub.getSystemStatus("Radio") == "Inoperative") {
-                    recoveryRoll += 4;
-                }
-                if (recoveryRoll <= 10) {
-                    //Crew recovered. New uboat
-                    this.setEventResolved(false);
-                    this.popup2.abortTowedBackPopup();
-                    await until(_ => this.eventResolved == true);
-                    this.currentBox = this.patrol.getPatrolLength();
-                    this.endPatrol();
-                    return;
-                }
-                else {
-                    let cause = "Crew lost at sea " + this.gm.getFullDate();
-                    cause += " - Forced to scuttle after damage to both diesel engines by the " + this.currentEncounter.shipList[0].getClassAndName();
-                    console.log("GAME OVER: " + cause);
-                    const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
-                }
-            }
-            else {
-                let cause = "Scuttled " + this.gm.getFullDate();
-                cause += " - Forced to scuttle after damage to both diesel engines by the " + this.currentEncounter.shipList[0].getClassAndName();
-                console.log("GAME OVER: " + cause);
-                const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
-            }
-        }
 
         // check if on weather duty or severe weather random events (skips current box)
         if (this.weatherDuty){
@@ -399,10 +371,6 @@ class GameManager{
         if (this.abortingPatrol && !this.contFromAbort) {
             this.contFromAbort = true;
         }
-
-        if (this.currentBox == this.patrol.getPatrolLength()) {
-            this.endPatrol();
-        }
     }
 
     /**
@@ -412,31 +380,45 @@ class GameManager{
     async abortPatrol() {
         this.abortingPatrol = true;
 
-        //logic to place uboat at correct box to abort
         let patrolLength = this.patrol.getPatrolLength();
-        let stepsToEnd = patrolLength - this.currentBox;
         let transitSteps = 2;
+        let stepsToEnd = patrolLength - this.currentBox;        // Num of steps to get to very last box
         if (this.patrol.NAorders || this.patrol.WAfricanCoast) { 
             transitSteps = 4;
         }
-        if (stepsToEnd > patrolLength / 2) {
-            stepsToEnd = patrolLength - stepsToEnd;
+
+        //First check if already in a transit area when attempting to abort
+        if (this.patrol.patrolArray[this.currentBox] == "Transit" || this.patrol.patrolArray[this.currentBox] == "Bay of Biscay") {
+            //Check if in the first half of the transit boxes
+            if (stepsToEnd > patrolLength / 2) {
+                let newStepsToEnd = patrolLength - stepsToEnd;
+                this.currentBox = patrolLength - newStepsToEnd + 1;         //Need to add extra step
+            }
+            //else (already in transit box at end of patrol), nothing happens, continue moving towards port / end
         }
-        if (stepsToEnd > transitSteps) {
-            this.currentBox = patrolLength - transitSteps; //removed +1 so that player actually is placed right before the correct box
-        }
-        else {
-            this.currentBox = patrolLength - stepsToEnd;   //removed +1 so that player actually is placed right before the correct box
+        else {  //Otherwise, (when in the middle of patrol)
+            this.currentBox = patrolLength - transitSteps;
         }
 
-        this.eventResolved = false;
+        //will need a flag somwhere in here for IX boats whether they burn a second month or not (abort before halfway)
+
+        this.subEventResolved = false;
         this.popup2.abortPatrolPopup();
+        await until(_ => this.subEventResolved == true);
+    }
+
+    async recovery() {
+        this.setEventResolved(false);
+        this.popup2.abortTowedBackPopup();
         await until(_ => this.eventResolved == true);
+        this.currentBox = this.patrol.getPatrolLength();
+        this.endPatrol();
     }
 
     async endPatrol() {
         if (this.currentBox > 0) {
             this.logBook[this.patrolNum].addLastEncounter(this.currentEncounter);
+            this.logBook[this.patrolNum].getPatrolHeader();
             this.currentEncounter.closeWindows();            
         }
 

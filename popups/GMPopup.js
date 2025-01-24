@@ -70,11 +70,12 @@ class GMPopup{
     }
 
     abortPatrolPopup() {
-        //new div to add
+        //new div to add  --TODO WILL NEED DISTINCTION BETWEEN FORCED AND VOLUNTARY (NON DAMAGED) ABORT POPUP
         this.element.innerHTML = (`
             <h3 class="HeaderMessage_h3">We must abort our patrol!<br>
             </h3>
-            <p class="PatrolMessage_p">${this.gm.getFullUboatID()} has been damaged too heavily and must return back to port. <br>
+            <p class="PatrolMessage_p">${this.gm.getFullUboatID()} has been damaged too heavily and must return back to port. <br><br>
+            We've plotted our course back to port.
             </p>
             <button class="AttackPopup_button" id="continue">Continue</button>
         `)
@@ -82,7 +83,7 @@ class GMPopup{
         this.element.addEventListener("click", ()=> {
             if (event.target.id == "continue"){
                 //close popup
-                this.done();
+                this.doneSE();
             }
         })
 
@@ -168,9 +169,9 @@ class GMPopup{
             Mission Result: ${patrolResult}
             </p>
 
-            <div class="Patrol_Log">
-                ${this.gm.logBook[0].patrolSummaryHeader}<br>
-                ${this.gm.logBook[0].patrolSummary}
+            <div class="Patrol_Log_After_Patrol">
+                ${this.gm.logBook[1].patrolSummaryHeader}<br>
+                ${this.gm.logBook[1].patrolSummary}
             </div>
             
         `)
@@ -182,6 +183,10 @@ class GMPopup{
             }
         })
 
+        console.log(this.gm.logBook);
+        console.log(this.gm.logBook[0]);
+        console.log(this.gm.logBook[1]);
+
         this.container.appendChild(this.element);
     }
 
@@ -189,5 +194,11 @@ class GMPopup{
         this.element.remove();
         this.tv.pauseGame(false);
         this.gm.eventResolved = true;
+    }
+
+    doneSE(){
+        this.element.remove();
+        this.tv.pauseGame(false);
+        this.gm.subEventResolved = true;
     }
 }

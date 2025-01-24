@@ -165,6 +165,7 @@ class TacticalView{
 
     //draw lowest layer of background
     drawLowerImage(ctx){
+        //console.log(this.currentFrame);             //Neat - shows 16 steps before advancing to next frame
         ctx.drawImage(this.lowerImage,
             this.currentFrame * 1280, 0,
             1280, 720,
@@ -192,30 +193,6 @@ class TacticalView{
             1280, 720
           ) 
     }
-
-    /**OLD CREATION OF UBOAT OBJECTS
-    drawUboat(ctx) {
-        if (this.scene == "Port" || this.scene == "IntroPort") {
-            this.uboat = new GameObject({
-                x: 137,
-                y: 392,
-                src: "images/ships/Uboat_VIIC_spritesheet2.png",
-                width: 803,
-                height: 95,
-                frames: 1,
-                isPlayer: true
-            })
-        }
-        this.uboat = new GameObject({
-            x: 0,
-            y: 200,
-            src: "images/ships/Uboat_VIIC_spritesheet2.png",
-            width: 803,
-            height: 95,
-            frames: 49,
-            isPlayer: true
-        })
-    } */
 
     //draws weather layers
     drawWeather(ctx) {
@@ -265,7 +242,7 @@ class TacticalView{
 
         //If scene is not port, configure time of day
         if (newScene != "IntroPort" || newScene != "Port") {
-            console.log("Scene Time: " + newTime);
+            //console.log("Scene Time: " + newTime);        //debug ToD
             this.setTimeOfDay(newTime);
             if (timeChangeOnly) {
                 return;
@@ -290,6 +267,34 @@ class TacticalView{
                 this.upperImage.src = "images/blank.png";
                 this.timeOverlayImage.src = "images/blank.png";
                 this.isDeparted = false;
+                this.bgdFrames = 30;
+                this.currentFrame = 0;
+
+                this.uboat = new GameObject({
+                    tv: this,
+                    gm: this.gm,
+                    x: 137,
+                    y: 392,
+                    src: "images/ships/Uboat_VIIC_spritesheet2.png",
+                    width: 803,
+                    height: 95,
+                    frames: 1,
+                    isPlayer: true
+                });
+        
+                //create wake water object
+                this.uboatwake = new GameObject({
+                    tv: this,
+                    gm: this.gm,
+                    x: -58,
+                    y: -5,
+                    src: "images/portscene_waterline_spritesheet.png",
+                    width: 1280,
+                    height: 720,
+                    frames: 24,
+                    isPlayer: false
+                })
+
                 break;
             case "Ship":
                 this.upperImage.src = "images/deepwater.png";
