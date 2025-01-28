@@ -51,7 +51,7 @@ class PatrolLog{
         }
 
         //Update stats for final patrol record keeping
-        if (this.gm.currentBox = this.gm.patrol.getPatrolLength()) {
+        if (this.gm.currentBox == this.gm.patrol.getPatrolLength()) {
             this.patrolOrdersLong = this.gm.currentOrdersLong;
             if (this.gm.missionComplete) {
                 this.patrolResult = "Success"
@@ -128,8 +128,7 @@ class PatrolLog{
             }
             
             //If escorted, detail escape
-            if (enc.isEscorted()) {
-
+            if (enc.isEscorted() && !enc.ignored) {
                 if (!enc.wasDetected) {
                     lineEntry = lineEntry + "Evaded detection.";
                 }
@@ -148,7 +147,12 @@ class PatrolLog{
             }
         }
         else if (enc.originalEncounterType == "Aircraft") {
-            lineEntry = lineEntry + "Encountered Aircraft; ";
+            if (this.gm.patrol.patrolArray[this.gm.currentBox] == "Bay of Biscay") {
+                lineEntry = lineEntry + "Encountered aircraft crossing Bay of Biscay; ";
+            }
+            else {
+                lineEntry = lineEntry + "Encountered aircraft; ";
+            }
             lineEntry = lineEntry + enc.aircraftResult;
         }
         else {

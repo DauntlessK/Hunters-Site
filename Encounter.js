@@ -60,7 +60,7 @@ class Encounter {
         this.gm.setEventResolved(false);
 
         this.attackDepth = "";
-        this.depth = "";               //Surfaced, Periscope Depth, or Deep
+        this.depth = "Surfaced";               //Surfaced, Periscope Depth, or Deep
         this.range = "";               //Close, Medium, or Long
         this.rangeNum = 0;             //8, 7, 6
         this.canFireForeAndAft = false;
@@ -118,6 +118,7 @@ class Encounter {
                         this.missionPopup.missionSuccess(this.gm.currentOrders);
                         await until(_ => this.gm.eventResolved == true);
                         this.gm.missionComplete = true;
+                        this.gm.sub.crew_health["Abwehr Agent"] = -1;
                         this.endEncounter();
                         break;
                     }
@@ -175,6 +176,7 @@ class Encounter {
                     this.gm.setEventResolved(false);
                     this.encPop.noEncounter();
                     await until(_ => this.gm.eventResolved == true);
+                    this.endEncounter();
                     break;
                 case "Aircraft":
                     this.gm.setEventResolved(false);
@@ -224,6 +226,7 @@ class Encounter {
             var waitRoll = d6Roll();
             if (this.encPop.getChoice() == "ignore") {
                 this.ignored = true;
+                this.depth = "Surfaced";
                 this.endEncounter();
                 return;
             }
@@ -778,7 +781,6 @@ class Encounter {
             this.gm.setEventResolved(false);
             this.encPop.repairs(damageString);
             this.unrepairedDamage = false;
-            console.log(this.gm.eventResolved);
         }
         else {
             console.log("Error in damage repairing");
@@ -799,10 +801,11 @@ class Encounter {
             this.gm.setEventResolved(false);
             this.repairCheck();
             await until(_ => this.gm.eventResolved == true);
-            console.log("Post repairCheck() eventResolved state: " + this.gm.eventResolved);
             this.unrepairedDamage = false;
         }
-        if (this.gm.currentOrders.includes("Minelaying")) {
+
+        //Deploy mines if mission space
+        if (this.gm.currentOrders.includes("Minelaying") && this.currentBoxName == "Mission") {
             this.sub.deployMines();
             this.tv.mainUI.forceTorpedoButtonUpdate();
         }
@@ -810,7 +813,7 @@ class Encounter {
         if (this.gm.sub.tubesLoadedCheck()) {
             this.tv.enterReloadMode();
         }
-
+        this.gm.logBook[this.gm.patrolNum].addLastEncounter(this);
         this.tv.finishEncounter();
     }
 

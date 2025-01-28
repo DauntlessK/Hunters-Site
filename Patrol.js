@@ -151,7 +151,7 @@ class Patrol{
         }
         this.WAfricanCoast = false;
         if (this.gm.currentOrders == "West African Coast") {
-            this.this.WAfricanCoast = true;
+            this.WAfricanCoast = true;
         }
     
         for (let x=0; x < this.getPatrolLength() + 1; x++){

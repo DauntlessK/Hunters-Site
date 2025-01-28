@@ -22,7 +22,7 @@ class UI{
         var yArray = [];
 
         //create x and y arrays for torpedo button locations
-        if (this.gm.sub.getType() == "IXA" || this.gm.sub.getType() == "IXB") { 
+        if (this.gm.sub.getType().includes("IX")) { 
             xArray = [0, 1007, 1110, 1007, 1110, 1007, 1110];
             yArray = [0, 245, 245, 341, 341, 449, 449];
         }
@@ -236,7 +236,6 @@ class UI{
                 }
             }
             if (this.tv.isInEncounter && shipsInEnc && !this.gm.currentEncounter.encounterMid) {
-                console.log(this.tv.scene + this.tv.gameObjects);
                 Object.values(this.tv.gameObjects).forEach(object => {
                     if (!object.sprite.isPlayer && object.sprite.shipType == "Escort") {
                         object.sprite.drawEscortShipInfo(ctx);
@@ -316,7 +315,7 @@ class UI{
         var rowArray = [];
 
         //determine x and y values for torpedo tube text, depending on 5 or 6 tubes
-        if (this.gm.sub.getType() == "IXA" || this.gm.sub.getType() == "IXB"){
+        if (this.gm.sub.getType().includes("IX")){
             sideArray = [0, 983, 1234, 983, 1234, 983, 1234];          //x values for torpedo tube text
             rowArray = [0, 292, 292, 395, 395, 499, 499];              //y values for torpedo tube text
         }
