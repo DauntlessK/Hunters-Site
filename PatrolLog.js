@@ -16,7 +16,7 @@ class PatrolLog{
         this.totalGRT = 0;
         this.aborting = false;
 
-        this.currentDay = d6Roll();
+        this.currentDay = 0;
 
     }
 
@@ -67,7 +67,19 @@ class PatrolLog{
     }
 
     addLastEncounter(enc) {
-        this.currentDay = this.currentDay + d6Roll();
+        if (this.gm.currentBox == 1) {
+            this.currentDay += randomNum(1, 2);
+        }
+        else {
+            if (this.gm.sub.getType().includes("IX") || this.gm.sub.getType() == "VIID") {
+                let randomBump = d3Roll() + 4;
+                console.log(randomBump)
+                this.currentDay += randomBump;
+            }
+            else {
+                this.currentDay += d6Roll();
+            }
+        }
         var lineEntry = "<p>Day " + this.currentDay.toString() + "- ";
 
         if (enc.originalEncounterType == "No Encounter") {

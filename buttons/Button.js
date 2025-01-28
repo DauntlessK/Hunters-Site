@@ -33,6 +33,10 @@ class Button {
         this.currentState = this.currentStateOptions[this.currentFrame];
     }
 
+    getState() {
+        return this.currentState;
+    }
+
     handleEvent(event){
         const xPos = event.offsetX;
         const yPos = event.offsetY;

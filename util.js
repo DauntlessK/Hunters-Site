@@ -23,6 +23,12 @@ function d3Roll() {
     return roll;
 }
 
+/**
+ * Generates number between two ints
+ * @param {int} min 
+ * @param {int} max 
+ * @returns Number between min and max, inclusive
+ */
 function randomNum(min, max) {
   num = Math.floor(Math.random() * (max - min)) + 1;
   return num;

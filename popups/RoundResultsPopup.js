@@ -67,14 +67,39 @@ class RoundResultsPopup{
         if (this.enc.roundHits == 0) {
             //Show message on all shots missed - vary between 1, 2 and 3+ torpedoes missing (Torpedo missed / both torpedoes missed / all missed)
             var missedMessage = "";
-            if (this.enc.roundFired == 1) {
+            var numFired = this.enc.roundFired;
+            var numMissed = this.enc.roundFired - (this.enc.roundHits + this.enc.roundDuds);
+            var numDuds = this.enc.roundDuds;
+
+            if (numFired == 1 && numDuds == 0) {
                 missedMessage = "Torpedo Missed!"
             }
-            else if (this.enc.roundFired == 2) {
+            else if (numFired == 1 && numDuds == 1) {
+                missedMessage = "Torpedo was a dud!"
+            }
+            else if (numFired == 2 && numDuds == 0) {
                 missedMessage = "Both torpedoes missed!"
             }
-            else {
-                missedMessage = "All torpedoes missed!"
+            else if (numFired == 2 && numDuds == 1) {
+                missedMessage = "One torpedo missed! The other was a dud."
+            }
+            else if (numFired == 2 && numDuds == 2) {
+                missedMessage = "Both torpedoes were duds!"
+            }
+            else {  //Messages for when at LEAST 3 torpedoes have been fired.
+                if (numMissed > 0 && numDuds > 0) {
+                    missedMessage = numMissed.toString() + " torpedoes missed. " + numDuds.toString() + " duds!";
+                }
+                else if (numMissed > 0 && numDuds == 0) {
+                    missedMessage = "All " + numMissed.toString() + " torpedoes missed. Verdammt!"; 
+                }
+                else if (numMissed == 0 && numDuds > 0) {
+                    missedMessage = "All " + numDuds.toString() + " torpedoes were duds. 25,000 Marks for torpedoes that don't work!"; 
+                }
+                else {
+                    console.log("Error getting missedMessage");
+                }
+
             }
             this.element.innerHTML = (`
                 <p class="PatrolMessage_p">

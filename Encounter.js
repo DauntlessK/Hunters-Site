@@ -305,16 +305,17 @@ class Encounter {
             this.gm.setEventResolved(false);
             this.resolveUboatAttack();
             await until(_ => this.gm.eventResolved == true);
-        }
 
-        if (this.isEscorted()) {
-            if (this.depth == "Surfaced") {
-                this.tv.uboat.sprite.dive();
-                this.depth = "Periscope Depth";
+            //Only goes through this escort detection if it was not detected at close range (so already made its attack)
+            if (this.isEscorted()) {
+                if (this.depth == "Surfaced") {
+                    this.tv.uboat.sprite.dive();
+                    this.depth = "Periscope Depth";
+                }
+                this.gm.setEventResolved(false);
+                this.escortDetection(false, 0, false);
+                await until(_ => this.gm.eventResolved == true);
             }
-            this.gm.setEventResolved(false);
-            this.escortDetection(false, 0, false);
-            await until(_ => this.gm.eventResolved == true);
         }
 
         this.endRound();
@@ -347,7 +348,6 @@ class Encounter {
         this.gm.setEventResolved(false);
         this.repairCheck();
         await until(_ => this.gm.eventResolved == true);
-        console.log("Post repairCheck() eventResolved state: " + this.gm.eventResolved);
         //if repaircheck resulted in aborting patrol, abort patrol now before following
         if (this.gm.abortingPatrol) {
             this.endEncounter();
@@ -625,7 +625,7 @@ class Encounter {
             result1 = this.sub.damage(hitCount, "Aircraft", this.aircraftType);
             result2 = this.sub.crewInjury("Aircraft");
             secondAttack = true;
-            if (hitcount <= 5) {
+            if (hitCount <= 5) {
                 this.airPopup.hit(hitCount, result1, result2, true);
             }
             else { //catastrophic (game over) damage
@@ -664,7 +664,7 @@ class Encounter {
                 result3 = this.sub.damage(hitCount, "Aircraft",  this.aircraftType);
 
                 this.gm.setEventResolved(false);
-                if (hitcount <= 5) {
+                if (hitCount <= 5) {
                     this.airPopup.hit(hitCount, result3, "", false);
                 }
                 else { //catastrophic (game over) damage
@@ -783,7 +783,7 @@ class Encounter {
             this.unrepairedDamage = false;
         }
         else {
-            console.log("Error in damage repairing");
+            console.log("Error in damage repairing: " + damageString);
         }
     }
 
@@ -1138,6 +1138,7 @@ class Encounter {
                     //Determine if hit or miss
                     if (torpRoll + rollMod <= this.rangeNum) {
                         if (this.wasDud("G7a")) {
+                            console.log("DUD.");
                             this.numDuds++;
                             this.roundDuds++;
                             currentShip.roundDuds++;
@@ -1163,6 +1164,7 @@ class Encounter {
                         }
                     }
                     else {
+                        console.log("MISSED.");
                         this.numMissed++;
                     }
                     currentShip.G7aINCOMING--;
@@ -1185,6 +1187,7 @@ class Encounter {
                     //Determine if hit or miss
                     if (torpRoll + rollMod <= this.rangeNum) {
                         if (this.wasDud("G7e")) {
+                            console.log("DUD.");
                             this.numDuds++;
                             this.roundDuds++;
                             currentShip.roundDuds++;
@@ -1210,6 +1213,7 @@ class Encounter {
                         }
                     }
                     else {
+                        console.log("MISSED.");
                         this.numMissed++;
                     }
                     currentShip.G7eINCOMING--;
@@ -1362,6 +1366,7 @@ class Encounter {
      */
     wasDud(torpType) {
         var dudRoll = d6Roll();
+        console.log("Dud roll: " + dudRoll);
 
         if (this.gm.superiorTorpedoes) {
             dudRoll -= 1;
@@ -1499,6 +1504,14 @@ class Encounter {
             majorDetection = true;
         }
 
+        console.log("Detection roll: " + escortRoll + " | Mods: " + escortMods + " --- Result: " + results);
+
+        //dive immediately when detected on close range check
+        if (this.depth == "Surfaced" && closeRangeCheck && results == "Detected") {
+            this.tv.uboat.sprite.dive();
+            this.depth = "Periscope Depth";
+        }
+
         //Show if detected or not popup
         this.gm.setSubEventResolved(false);
         escortDetectionPopup.escortResults(results, majorDetection);
@@ -1559,7 +1572,7 @@ class Encounter {
         if (this.sub.getSystemStatus("Fuel Tanks") != "Operational") {
             mods += 1;
         }
-        if (this.sub.getSystemStatus("Hydrophone") != "Operational") {
+        if (this.sub.getSystemStatus("Hydrophones") != "Operational") {
             mods += 1;
         }
         if (this.sub.getSystemStatus("Batteries") != "Operational") {
@@ -1614,6 +1627,7 @@ class Encounter {
                 }
                 console.log("GAME OVER: " + cause);
                 let goPopup = new GameOverPopup(this.tv, this.gm, this, cause);
+                return 6;
         }
     }
 

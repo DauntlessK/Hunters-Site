@@ -54,7 +54,7 @@ class UI{
             y: 650,
             width: 100,
             height: 50,
-            frames: 2,
+            frames: 3,
             gm: this.gm,
             tv: this.tv,
         });
@@ -206,6 +206,12 @@ class UI{
                 this.tubeButtonArray[i].draw(ctx);
             }
             if (this.tv.reloadMode){
+                if (this.reloadButton.getState() != "Pressed" && this.gm.sub.tubesLoadedCheck()) {
+                    this.reloadButton.changeState("Pressed");     //Pressed is the disabled state for reloadButton Only
+                }
+                else if (this.reloadButton.getState() == "Pressed" && !this.gm.sub.tubesLoadedCheck()) {
+                    this.reloadButton.changeState("Active");   
+                }
                 this.reloadButton.draw(ctx);
             }
             this.drawHeaderTxt(ctx);
