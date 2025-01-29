@@ -26,6 +26,11 @@ class Sprite {
     this.encounter = config.encounter;
     this.shipType = null;
     this.isSelected = false;
+    this.currentWakeFrame = 0;
+    this.cargoWakeImage = new Image();
+    this.cargoWakeImage.src = "images/ships/CargoWakes.png";
+    this.escortWakeImage = new Image();
+    this.escortWakeImage.src = "images/ships/EscortWakes.png";
     var imageVariation = d6Roll();
 
     if (this.image.src.includes("Aircraft")) {
@@ -220,6 +225,19 @@ class Sprite {
     else if (this.isPlayer) {
       this.currentFrame = 0;
     }
+
+    //Deal with wake frames (for non-player ships)
+    if (this.tv.isPaused == false && !this.isPlayer && !this.isAircraft) {
+      this.animationFrameProgress -= 1;
+      if (this.animationFrameProgress === 0) {
+        this.currentWakeFrame += 1;
+        
+        if (this.currentWakeFrame > 1) {
+          this.currentWakeFrame = 0;
+        }
+        this.animationFrameProgress = this.animationFrameLimit * 4;
+      }
+    }
   }
 
   //Gets a value to add to the sprite's Y-value. If it's at it, it gets a new one to move towards
@@ -361,6 +379,7 @@ class Sprite {
       if (this.encounter.shipList[this.shipNum].getType() != "Escort") {
         this.drawHealthBar(ctx);
       }
+      this.drawWake(ctx);
     }
     
     this.updateAnimationProgress();
@@ -459,6 +478,37 @@ class Sprite {
       140, 35,
       x, y,
       140, 35
+    )
+  }
+
+  drawWake(ctx) {
+    var x = 0;
+    var y = 0;
+
+    //figure out x and y
+    x = this.gameObject.x - 100;
+    y = this.gameObject.y;
+
+    let frame = this.currentFrame;
+    if (frame % 2 == 1) {
+      frame -= 1;
+    }
+
+    frame = frame + this.currentWakeFrame;
+    let imageToUse;
+
+    if (this.shipType == "Escort") {
+      imageToUse = this.escortWakeImage;
+    }
+    else {
+      imageToUse = this.cargoWakeImage;
+    }
+
+    ctx.drawImage(imageToUse,
+      frame * 301, 0,
+      301, 165,
+      x, y,
+      301, 165
     )
   }
 }

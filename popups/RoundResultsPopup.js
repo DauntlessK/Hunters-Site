@@ -94,7 +94,7 @@ class RoundResultsPopup{
                     missedMessage = "All " + numMissed.toString() + " torpedoes missed. Verdammt!"; 
                 }
                 else if (numMissed == 0 && numDuds > 0) {
-                    missedMessage = "All " + numDuds.toString() + " torpedoes were duds. 25,000 Marks for torpedoes that don't work!"; 
+                    missedMessage = "All " + numDuds.toString() + " torpedoes were duds. 25,000 Marks each for torpedoes that don't work!"; 
                 }
                 else {
                     console.log("Error getting missedMessage");

@@ -1133,12 +1133,11 @@ class Encounter {
                     this.numFired++;
                     this.roundFired++;
                     this.firedG7a = true;
-                    console.log("Rolled " + torpRoll + " and mods " + rollMod + "... Resolving G7a on " + currentShip.name);
+                    //console.log("Rolled " + torpRoll + " and mods " + rollMod + "... Resolving G7a on " + currentShip.name);
 
                     //Determine if hit or miss
                     if (torpRoll + rollMod <= this.rangeNum) {
                         if (this.wasDud("G7a")) {
-                            console.log("DUD.");
                             this.numDuds++;
                             this.roundDuds++;
                             currentShip.roundDuds++;
@@ -1164,7 +1163,6 @@ class Encounter {
                         }
                     }
                     else {
-                        console.log("MISSED.");
                         this.numMissed++;
                     }
                     currentShip.G7aINCOMING--;
@@ -1182,12 +1180,11 @@ class Encounter {
                         rollMod += 2;
                     }
 
-                    console.log("Rolled " + torpRoll + " and mods " + rollMod + "... Resolving G7e on " + currentShip.name);
+                    //console.log("Rolled " + torpRoll + " and mods " + rollMod + "... Resolving G7e on " + currentShip.name);
 
                     //Determine if hit or miss
                     if (torpRoll + rollMod <= this.rangeNum) {
                         if (this.wasDud("G7e")) {
-                            console.log("DUD.");
                             this.numDuds++;
                             this.roundDuds++;
                             currentShip.roundDuds++;
@@ -1213,7 +1210,6 @@ class Encounter {
                         }
                     }
                     else {
-                        console.log("MISSED.");
                         this.numMissed++;
                     }
                     currentShip.G7eINCOMING--;
