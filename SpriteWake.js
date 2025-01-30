@@ -1,4 +1,4 @@
-class Sprite {
+class SpriteWake {
   constructor(config) {
 
     this.tv = config.tv;
@@ -13,72 +13,10 @@ class Sprite {
     this.width = config.width;          //Width of sprite image
     this.height = config.height;        //Height of sprite image
     this.frames = config.frames;
-    this.isPlayer = config.isPlayer;
 
     this.depth = 0;
     this.diving = false;
     this.surfacing = false;
-    //this.surface();
-
-    //for non-player ships
-    this.shipNum = config.shipNum;
-    this.isAircraft = false;
-    this.encounter = config.encounter;
-    this.shipType = null;
-    this.isSelected = false;
-    this.currentWakeFrame = 0;
-    this.cargoWakeImage = new Image();
-    this.cargoWakeImage.src = "images/ships/CargoWakes.png";
-    this.escortWakeImage = new Image();
-    this.escortWakeImage.src = "images/ships/EscortWakes.png";
-    var imageVariation = d6Roll();
-
-    if (this.image.src.includes("Aircraft")) {
-      this.isAircraft = true;
-    }
-
-    //get image variation for enemy ships
-    if (this.shipNum >= 0 && !this.isAircraft) {
-      this.shipType = this.encounter.shipList[this.shipNum].getType();
-      this.shipType = this.shipType.replace(" ", "");
-
-      //this.image.src = "images/ships/" + this.shipType + imageVariation + ".png";        //to set imagepath to shiptype
-
-      //USED TO TEST ---- PRESET PNGs
-      if (this.shipType == "Escort") {
-        this.image.src = "images/ships/EscortShip1.png";
-      }
-      else if (this.shipType == "CapitalShip") {
-        this.image.src = "images/ships/CapitalShip1.png";
-      }
-      else {
-        this.image.src = "images/ships/CargoShip1.png";
-      }
-
-      //Get Health Bar Image
-      if (this.shipType != "Escort" && !this.isAircraft) {
-        this.healthBarImage = new Image();
-        this.hisLoaded = false;
-        this.healthBarImage.onload = () => {
-          this.hisLoaded = true;
-        }
-        this.shipHP = this.encounter.shipList[this.shipNum].hp.toString();
-        this.healthBarImage.src = "images/ui/shiphealthbars/ShipHealthBar_" + this.shipHP + ".png";
-      }
-    }
-
-    //Configure Animation & Initial State
-    this.animations = config.animations || {
-      "idle": 0,
-      "cruise": 49
-    }
-    this.currentAnimation = "cruise";//config.currentAnimation || "idle";
-    if (this.isPlayer) {
-      this.currentFrame = 1;
-    }
-    else {
-      this.currentFrame = 0;
-    }
 
     this.animationFrameLimit = 8;
     this.animationFrameProgress = 8;
@@ -93,12 +31,12 @@ class Sprite {
     this.nextTranslationTimer = 0;
 
     //Reference the game object
-    this.gameObject = config.gameObject;
+    //this.gameObject = config.gameObject;
 
     //Boundaries
-    this.xBoundMin = this.gameObject.x;
+    this.xBoundMin = config.x;
     this.xBoundMax = this.xBoundMin + this.width;
-    this.yBoundMin = this.gameObject.y;
+    this.yBoundMin = config.y;
     this.yBoundMax = this.yBoundMin + this.height;
   }
 
@@ -173,23 +111,8 @@ class Sprite {
   updateAnimationProgress() {
     //Downtick frame progress if game is unpaused
 
-    //non-player sprite
-    /**if (this.tv.isUnpaused && !this.isPlayer){
-      this.animationFrameProgress -= 1;
-      if (this.animationFrameProgress === 0){
-        this.currentFrame++;
-        if (this.currentFrame == this.frames - 1){
-          this.currentFrame = 1;
-        }
-        this.animationFrameProgress = this.animationFrameLimit;
-      }
-    }
-    else if (!this.isPlayer) {
-      this.currentFrame = 0;
-    }*/
-
     //player sprite
-    if (!this.tv.isPaused && this.depth > 0 && (this.isPlayer || this.image.src.includes("waterline"))) {
+    if (!this.tv.isPaused) {
       if (this.image.src.includes("waterline")) {
         console.log(this.animationFrameProgress + " | " + this.currentFrame);
       }
@@ -203,42 +126,7 @@ class Sprite {
           this.currentFrame = 1;
         }
 
-        //player diving animation
-        if (this.diving && this.isPlayer) {
-          this.depth += 2;
-          if (this.depth >= 110) {
-            this.depth = 110;
-            this.diving = false;
-          }
-        }
-
-        //player surfacing animation
-        if (this.surfacing && this.isPlayer) {
-          this.depth -= 2;
-          if (this.depth <= 0) {
-            this.surfacing = false;
-            this.depth = 0;
-            this.height = 95;
-          }
-        }
-
         this.animationFrameProgress = this.animationFrameLimit;
-      }
-    }
-    else if (this.isPlayer) {
-      this.currentFrame = 0;
-    }
-
-    //Deal with wake frames (for non-player ships)
-    if (this.tv.isPaused == false && !this.isPlayer && !this.isAircraft) {
-      this.animationFrameProgress -= 1;
-      if (this.animationFrameProgress === 0) {
-        this.currentWakeFrame += 1;
-        
-        if (this.currentWakeFrame > 1) {
-          this.currentWakeFrame = 0;
-        }
-        this.animationFrameProgress = this.animationFrameLimit * 4;
       }
     }
   }
@@ -341,8 +229,8 @@ class Sprite {
     var y = 0;
 
     //figure out x and y
-    x = this.gameObject.x + this.depart(); 
-    y = this.gameObject.y + this.randomUpAndDown() + this.depth;    
+    x = this.x + this.depart(); 
+    y = this.y + this.randomUpAndDown() + this.depth;    
 
 
     //work out width and height
@@ -391,8 +279,8 @@ class Sprite {
   //Draws ship name, type GRT, health bar, & torpedo indicators for cargo [targetable] ships
   drawTargetShipInfo(ctx) {
     //figure out x and y
-    var x = this.gameObject.x + 101;
-    var y = this.gameObject.y + 20;
+    var x = this.x + 101;
+    var y = this.y + 20;
 
     //Draw name, ship type and GRT
     ctx.font = "bold 12px courier";
@@ -415,7 +303,7 @@ class Sprite {
     //G7a
     ctx.fillStyle = "blue";
     ctx.textAlign = "left";
-    ctx.fillText(stringG7a, this.gameObject.x + 10, y + 80);
+    ctx.fillText(stringG7a, this.x + 10, y + 80);
 
     var numOfG7e = this.encounter.shipList[this.shipNum].G7eINCOMING;
     var stringG7e = "";
@@ -426,7 +314,7 @@ class Sprite {
     //G7e
     ctx.fillStyle = "darkred";
     ctx.textAlign = "right";
-    ctx.fillText(stringG7e, this.gameObject.x + 190, y + 80);
+    ctx.fillText(stringG7e, this.x + 190, y + 80);
 
     //Draw Deck Gun Assignment Indicator
     ctx.fillStyle = "black";
@@ -434,15 +322,15 @@ class Sprite {
     ctx.font = "bold 10px courier";
     //Only draw if there is 1 or more shots incoming
     if (this.encounter.shipList[this.shipNum].deckGunINCOMING > 0) {
-      ctx.fillText(this.encounter.shipList[this.shipNum].deckGunINCOMING, this.gameObject.x + 100, y + 74);
+      ctx.fillText(this.encounter.shipList[this.shipNum].deckGunINCOMING, this.x + 100, y + 74);
     }
   }
 
   //Draws ship name, type GRT, for escort ships
   drawEscortShipInfo(ctx) {
     //figure out x and y
-    var x = this.gameObject.x - 50;
-    var y = this.gameObject.y + 150;
+    var x = this.x - 50;
+    var y = this.y + 150;
 
     //Draw name, ship type and GRT
     ctx.font = "bold 12px courier";
@@ -461,8 +349,8 @@ class Sprite {
     var y = 0;
 
     //figure out x and y
-    x = this.gameObject.x + 30;
-    y = this.gameObject.y + 50;
+    x = this.x + 30;
+    y = this.y + 50;
 
     //Get current damage of ship
     var dam = this.encounter.shipList[this.shipNum].damage;
@@ -489,8 +377,8 @@ class Sprite {
     var y = 0;
 
     //figure out x and y
-    x = this.gameObject.x - 100;
-    y = this.gameObject.y;
+    x = this.x - 100;
+    y = this.y;
 
     let frame = this.currentFrame;
     if (frame % 2 == 1) {

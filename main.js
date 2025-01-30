@@ -33,7 +33,7 @@ class Main{
       this.tv.uboat.sprite.draw(this.ctx);
 
       //Draw Wake / water around hull
-      this.tv.uboatwake.sprite.draw(this.ctx);
+      this.tv.uboatwake.draw(this.ctx);
 
       //Draw Upper Layer
       this.tv.drawUpperImage(this.ctx);

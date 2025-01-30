@@ -25,7 +25,7 @@ class TacticalView{
             gm: this.gm,
             x: 137,
             y: 392,
-            src: "images/ships/Uboat_VIIC_spritesheet2.png",
+            src: "images/ships/Uboat_VIIC_spritesheet.png",
             width: 803,
             height: 95,
             frames: 1,
@@ -33,7 +33,7 @@ class TacticalView{
         });
 
         //create wake water object
-        this.uboatwake = new GameObject({
+        this.uboatwake = new SpriteWake({
             tv: this,
             gm: this.gm,
             x: -58,
@@ -235,7 +235,7 @@ class TacticalView{
             this.lowerImage.src = "images/scrollingwater_spritesheet.png";
             this.uboat.x = 0;
             this.uboat.y = 200;
-            this.uboat.sprite.frames = 49;
+            this.uboat.sprite.frames = 33;
             this.uboatwake.x = -200;
             this.uboatwake.y = -204;
         }
@@ -275,7 +275,7 @@ class TacticalView{
                     gm: this.gm,
                     x: 137,
                     y: 392,
-                    src: "images/ships/Uboat_VIIC_spritesheet2.png",
+                    src: "images/ships/Uboat_VIIC_spritesheet.png",
                     width: 803,
                     height: 95,
                     frames: 1,
