@@ -555,7 +555,9 @@ class Encounter {
 
         //get aircraft type
         this.getAircraft();
-        this.tv.gameObjects.aircraft.sprite.updateSprite(this.aircraftType);
+        //newName = newName.replaceAll(" ", ""); UNSURE IF NEED TO DO THIS BEFOREHAND
+        let path = "images/aircraft/" + this.airCraftType.replaceAll(" ", "") + ".png";
+        this.tv.gameObjects.aircraft.sprite.updateSprite(path);
 
         this.depth = "Surfaced";
 
@@ -1685,6 +1687,7 @@ class Encounter {
      * @param {string} name 
      */
     forceUpdateSprite(name) {
+        let path = "images/ships/" + name.replaceAll(" ", "") + ".png";
         this.tv.gameObjects.ship1.sprite.updateSprite(name);
     }
 }

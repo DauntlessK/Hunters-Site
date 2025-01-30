@@ -48,3 +48,22 @@ table{
 td{
     padding: 5px;
 }
+
+.tooltip_uboat:hover .tooltip {
+    /* NEW */
+    display: block;
+  }
+
+.tooltip {
+    display: none;
+    /* NEW */
+    background: #C8C8C8;
+    margin-left: 28px;
+    padding: 10px;
+    position: absolute;
+    z-index: 1000;
+    width: 400px;
+    max-height: 100px;
+    font-size: 12px;
+    color: black;
+}

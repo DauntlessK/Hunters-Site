@@ -14,7 +14,7 @@ class ReloadButton extends Button {
             this.tv.reloadMode = false;
             this.gm.newPatrol();
             this.tv.uboat.sprite.setDeparted();
-            this.tv.uboatwake.sprite.setDeparted();
+            this.tv.uboatwake.setDeparted();
             this.tv.setDeparted(true);
             this.changeState("Disabled");
         }

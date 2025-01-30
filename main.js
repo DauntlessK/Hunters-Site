@@ -23,20 +23,21 @@ class Main{
       this.tv.drawLowerImage(this.ctx);
 
       //Draw Game Objects (other ships) - only if in an encounter
-      if (this.tv.scene.includes("Ship") || this.tv.scene.includes("Convoy") || this.tv.scene.includes("Aircraft") || this.tv.scene.includes("Escort") ) {
+      if (this.tv.gameObjects != null) {
         Object.values(this.tv.gameObjects).forEach(object => {
         object.sprite.draw(this.ctx);
-      })
+        //Draw other things TODO
+        })
       }
 
       //Draw Uboat
       this.tv.uboat.sprite.draw(this.ctx);
 
-      //Draw Wake / water around hull
-      this.tv.uboatwake.draw(this.ctx);
-
       //Draw Upper Layer
       this.tv.drawUpperImage(this.ctx);
+
+      //Draw Wake / water around hull
+      this.tv.uboatwake.draw(this.ctx);
 
       //Draw Night Overlay
       this.tv.drawNightOverlayImage(this.ctx);

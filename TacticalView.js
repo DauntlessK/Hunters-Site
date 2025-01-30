@@ -42,8 +42,9 @@ class TacticalView{
             width: 1280,
             height: 720,
             frames: 24,
-            isPlayer: false
         })
+
+        this.gameObjects = null;
 
         this.currentFrame = 0;
         this.animationFrameLimit = 16;
@@ -236,17 +237,20 @@ class TacticalView{
             this.uboat.x = 0;
             this.uboat.y = 200;
             this.uboat.sprite.frames = 33;
-            this.uboatwake.x = -200;
-            this.uboatwake.y = -204;
+            this.uboatwake.x = 0;
+            this.uboatwake.y = 250;
         }
 
-        //If scene is not port, configure time of day
+        //If scene is not port, configure time of day and change uboat wake
         if (newScene != "IntroPort" || newScene != "Port") {
             //console.log("Scene Time: " + newTime);        //debug ToD
             this.setTimeOfDay(newTime);
             if (timeChangeOnly) {
                 return;
             }
+            this.uboatwake.updateSprite("images/UboatWake_spritesheet.png");
+            this.uboatwake.width = 813;
+            this.uboatwake.height = 100;
         }
         else {
             this.timeOverlayImage.src = "images/blank.png";
@@ -257,12 +261,17 @@ class TacticalView{
         this.scene = newScene;
         switch (newScene){
             case "IntroPort":
+                this.gameObjects = null;
                 this.lowerImage.src = "images/portscene_spritesheet.png";
                 this.upperImage.src = "images/logo.png";
                 this.timeOverlayImage.src = "images/blank.png";
                 this.bgdFrames = 30;
+                this.uboatwake.updateSprite("images/portscene_waterline_spritesheet.png");
+                this.uboatwake.width = 1280;
+                this.uboatwake.height= 720;
                 break;
             case "Port":
+                this.gameObjects = null;
                 this.lowerImage.src = "images/portscene_spritesheet.png";
                 this.upperImage.src = "images/blank.png";
                 this.timeOverlayImage.src = "images/blank.png";
@@ -283,7 +292,7 @@ class TacticalView{
                 });
         
                 //create wake water object
-                this.uboatwake = new GameObject({
+                this.uboatwake = new SpriteWake({
                     tv: this,
                     gm: this.gm,
                     x: -58,
@@ -292,9 +301,7 @@ class TacticalView{
                     width: 1280,
                     height: 720,
                     frames: 24,
-                    isPlayer: false
                 })
-
                 break;
             case "Ship":
                 this.upperImage.src = "images/deepwater.png";
