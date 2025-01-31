@@ -1,0 +1,49 @@
+Date : 2025-01-31 16:34:21
+Directory : c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site
+Total : 19 files,  762 codes, 149 comments, 132 blanks, all 1043 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| JavaScript |         16 |        722 |        146 |        127 |        995 |
+| CSS        |          2 |         30 |          2 |          4 |         36 |
+| HTML       |          1 |         10 |          1 |          1 |         12 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                           | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                              |         19 |        762 |        149 |        132 |      1,043 |
+| . (Files)                                                                                                      |         13 |        705 |        147 |        124 |        976 |
+| buttons                                                                                                        |          2 |          1 |          0 |          1 |          2 |
+| popups                                                                                                         |          2 |         26 |          0 |          3 |         29 |
+| styles                                                                                                         |          2 |         30 |          2 |          4 |         36 |
++----------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                                                       | language   | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\Encounter.js                | JavaScript |          8 |          6 |          2 |         16 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\GameManager.js              | JavaScript |          0 |          2 |          0 |          2 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\PatrolLog.js                | JavaScript |         33 |          9 |          3 |         45 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\Sprite.js                   | JavaScript |       -259 |        -46 |        -45 |       -350 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\SpriteOLD.js                | JavaScript |        374 |         76 |         69 |        519 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\SpriteShip.js               | JavaScript |        213 |         61 |         42 |        316 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\SpriteUboat.js              | JavaScript |        145 |         33 |         24 |        202 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\SpriteWake.js               | JavaScript |        141 |         18 |         25 |        184 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\TacticalView.js             | JavaScript |         30 |        -20 |          2 |         12 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\UI.js                       | JavaScript |          5 |          0 |          0 |          5 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\buttons\Button.js           | JavaScript |          3 |          0 |          1 |          4 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\buttons\ReloadButton.js     | JavaScript |         -2 |          0 |          0 |         -2 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\index.html                  | HTML       |         10 |          1 |          1 |         12 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\main.js                     | JavaScript |          5 |          1 |          1 |          7 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\GMPopup.js           | JavaScript |          3 |          0 |          1 |          4 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\popups\RoundResultsPopup.js | JavaScript |         23 |          0 |          2 |         25 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\styles\StatusPopup.css      | CSS        |         12 |          0 |          1 |         13 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\styles\styles.css           | CSS        |         18 |          2 |          3 |         23 |
+| c:\Users\kbreenbondie\OneDrive - Arbor Oakland Group\Documents\GitHub\Hunters_Site\util.js                     | JavaScript |          0 |          6 |          0 |          6 |
+| Total                                                                                                          |            |        762 |        149 |        132 |      1,043 |
++----------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
