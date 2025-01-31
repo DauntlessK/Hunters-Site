@@ -1,30 +1,10 @@
-class SpriteWake {
+class SpriteWake extends Sprite{
   constructor(config) {
-
-    this.tv = config.tv;
-    this.gm = config.gm;
-
-    //Set up the image
-    this.image = new Image();
-    this.image.src = config.src;
-    this.image.onload = () => {
-      this.isLoaded = true;
-    }
-    this.width = config.width;          //Width of sprite image
-    this.height = config.height;        //Height of sprite image
-    this.frames = config.frames;
-    this.x = config.x;
-    this.y = config.y;
+    super(config);
 
     this.depth = 0;
     this.diving = false;
     this.surfacing = false;
-
-    this.animationFrameLimit = 8;
-    this.animationFrameProgress = 8;
-    this.startFrame = 0;
-    this.lastFrame = this.frames - 1;
-    this.currentFrame = this.startFrame;
 
     this.departed = false;
     this.departTranslation = 0;
@@ -34,12 +14,7 @@ class SpriteWake {
     this.totalTranslation = 0;
     this.translationProgress = 20;
     this.nextTranslationTimer = 0;
-
-    //Boundaries
-    this.xBoundMin = config.x;
-    this.xBoundMax = this.xBoundMin + this.width;
-    this.yBoundMin = config.y;
-    this.yBoundMax = this.yBoundMin + this.height;
+    
   }
 
   dive() {
@@ -168,10 +143,6 @@ class SpriteWake {
     else {
       return 0;
     }
-  }
-
-  updateTV(tv) {
-    this.tv = tv;
   }
 
   //Draw sprite

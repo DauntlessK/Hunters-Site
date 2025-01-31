@@ -1,6 +1,6 @@
 class Main{
   constructor(config){
-      this.version = .69
+      this.version = .695
       this.element = config.element;
       this.canvas = this.element.querySelector(".game-canvas");
       this.ctx = this.canvas.getContext("2d");
@@ -22,16 +22,22 @@ class Main{
       //Draw Lower Layer
       this.tv.drawLowerImage(this.ctx);
 
-      //Draw Game Objects (other ships) - only if in an encounter
+      //Draw Game Objects (misc sprites and airplanes)
       if (this.tv.gameObjects != null) {
         Object.values(this.tv.gameObjects).forEach(object => {
-        object.sprite.draw(this.ctx);
-        //Draw other things TODO
+        object.draw(this.ctx);
+        })
+      }
+
+      //Draw Ship Objects (other ships)
+      if (this.tv.shipObjects != null) {
+        Object.values(this.tv.shipObjects).forEach(object => {
+        object.draw(this.ctx);
         })
       }
 
       //Draw Uboat
-      this.tv.uboat.sprite.draw(this.ctx);
+      this.tv.uboat.draw(this.ctx);
 
       //Draw Upper Layer
       this.tv.drawUpperImage(this.ctx);

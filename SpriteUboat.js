@@ -26,6 +26,7 @@ class SpriteUboat extends Sprite {
         //Downtick frame progress if game is unpaused
         if (!this.tv.isPaused && this.depth > 0) {
             this.animationFrameProgress -= 1;
+            this.animationWakeFrameProgress -= 1;
             //Check to see if animiation frame progress is 0, roll to next frame
             if (this.animationFrameProgress === 0) {
                 this.currentFrame += 1;
@@ -53,7 +54,6 @@ class SpriteUboat extends Sprite {
                         this.height = 95;
                     }
                 }
-
                 this.animationFrameProgress = this.animationFrameLimit;
             }
         }
@@ -73,17 +73,94 @@ class SpriteUboat extends Sprite {
     }
 
     /**
-    * Overrides sprite draw, adds additional drawing calls
-    * @param {ctx} ctx 
-    */
+     * Gets a value to add to the sprite's Y-value. If it's at it, it gets a new one to move towards
+     * @returns int of pixels to move up or down
+     */
+    randomUpAndDown() {
+        //currently uses hard-coded 10 and neg 10 as the Y min and max
+        if (this.depth == 0 && !this.tv.scene.includes("Port")) {
+            return 0;
+        }
+        if (!this.tv.isPaused && (this.tv.scene.includes("Port") || this.depth > 109)) {
+            if (this.currentTranslation === this.tv.getTotalTranslation()) {
+                if (this.nextTranslationTimer != 0) {
+                    this.nextTranslationTimer -= 1;
+                    return this.currentTranslation;
+                }
+                else {
+                    this.tv.setNewTranslation();
+                }
+            }
+            else {
+                if (this.translationProgress != 0) {
+                    this.translationProgress -= 1;
+                }
+                else {
+                    //reset translation progress
+                    this.translationProgress = 40;   //hard-coded limit in between moves
+                    if (this.currentTranslation > this.tv.getTotalTranslation()) {
+                        this.currentTranslation -= 1;
+                    }
+                    else if (this.currentTranslation < this.tv.getTotalTranslation()) {
+                        this.currentTranslation += 1;
+                    }
+                }
+            }
+        }
+        return this.currentTranslation;
+    }
+
+    setDeparted() {
+        this.departed = true;
+    }
+    
+    depart() {
+        if (this.departed && this.tv.scene == "Port") {
+            this.departTranslation++;
+            return this.departTranslation;
+        }
+        else {
+            return 0;
+        }
+    }
+    
+    /**
+     * Sets the sprite to start dive and fully draw sprite
+     */
+    dive() {
+        this.tv.uboatwake.dive();
+        this.diving = true;
+        this.depth = 2;
+        this.height = 150;
+    }
+    
+    /**
+     * Sets the sprite to begin surfacing back on normal X, depth 0
+     */
+    surface() {
+        this.tv.uboatwake.surface();
+        this.surfacing = true;
+        this.depth = 108;
+    }
+
+    /**
+     * Overrides sprite draw, adds additional drawing calls
+     * @param {ctx} ctx 
+     */
     draw(ctx) {
         //figure out x and y
-        let x = this.x; 
-        let y = this.y;
+        let x = this.x + this.depart(); 
+        let y = this.y + this.randomUpAndDown() + this.depth;
 
         //work out width and height
-        swidth = this.width;
-        sheight = this.height;
+        let swidth = this.width;
+        let sheight = this.height;
+
+        //increased size of sprite if its the player and at port
+        if ((this.tv.scene == "Port" || this.tv.scene == "IntroPort")) {
+            swidth = this.width + 150;
+            sheight = this.height + 20;
+        }
 
         this.isLoaded && ctx.drawImage(this.image,
             this.currentFrame * this.width, 0,
@@ -91,129 +168,8 @@ class SpriteUboat extends Sprite {
             x, y,
             swidth, sheight
         )
-
-        //Update selections to get correct frame
-        if (this.tv.getSelectedTarget() == this.shipNum) {
-            this.select();
-        }
-        else {
-            if (this.isSelected) {
-                this.isSelected = false;
-                this.currentFrame--;
-            }
-        }
-
-        //Draw Health bar if not escort
-        if (this.encounter != null) {
-            if (this.encounter.shipList[this.shipNum].getType() != "Escort") {
-                this.drawHealthBar(ctx);
-            }
-            his.drawWake(ctx);
-        }
         
         this.updateAnimationProgress();
-    }
-
-    /**
-     * Draws ship name, type GRT, health bar, & torpedo indicators for cargo [targetable] ships
-     * @param {ctx} ctx 
-     */
-    drawTargetShipInfo(ctx) {
-        //figure out x and y
-        let x = this.x + 101;
-        let y = this.y + 20;
-
-        //Draw name, ship type and GRT
-        ctx.font = "bold 12px courier";
-        ctx.fillStyle = "white";
-        ctx.textAlign = "center";
-        ctx.fillText(this.encounter.shipList[this.shipNum].getName(), x, y);
-
-        var secondLine = this.encounter.shipList[this.shipNum].getType() + " - GRT: " + this.encounter.shipList[this.shipNum].getGRT();
-        ctx.font = "9px courier";
-        ctx.fillText(secondLine, x, y + 10);
-
-        //Draw Torpedo Assignment Indicators
-        ctx.font = "30px courier";
-        var numOfG7a = this.encounter.shipList[this.shipNum].G7aINCOMING;
-        var stringG7a = "";
-        for (let i = 0; i < numOfG7a; i++) {
-            stringG7a = stringG7a + "•"
-        }
-
-        //G7a
-        ctx.fillStyle = "blue";
-        ctx.textAlign = "left";
-        ctx.fillText(stringG7a, this.gameObject.x + 10, y + 80);
-
-        var numOfG7e = this.encounter.shipList[this.shipNum].G7eINCOMING;
-        var stringG7e = "";
-        for (let i = 0; i < numOfG7e; i++) {
-            stringG7e = stringG7e + "•"
-        }
-
-        //G7e
-        ctx.fillStyle = "darkred";
-        ctx.textAlign = "right";
-        ctx.fillText(stringG7e, this.gameObject.x + 190, y + 80);
-
-        //Draw Deck Gun Assignment Indicator
-        ctx.fillStyle = "black";
-        ctx.textAlign = "center";
-        ctx.font = "bold 10px courier";
-        //Only draw if there is 1 or more shots incoming
-        if (this.encounter.shipList[this.shipNum].deckGunINCOMING > 0) {
-            ctx.fillText(this.encounter.shipList[this.shipNum].deckGunINCOMING, this.gameObject.x + 100, y + 74);
-        }
-    }
-
-    /**
-     * Draws ship name, type GRT, for escort ships
-     * @param {ctx} ctx 
-     */
-    drawEscortShipInfo(ctx) {
-        //figure out x and y
-        let x = this.gameObject.x - 50;
-        let y = this.gameObject.y + 150;
-
-        //Draw name, ship type and GRT
-        ctx.font = "bold 12px courier";
-        ctx.fillStyle = "black";
-        ctx.textAlign = "center";
-        ctx.fillText(this.encounter.shipList[this.shipNum].getName(), x, y);
-
-        var secondLine = this.encounter.shipList[this.shipNum].clss + " - GRT: " + this.encounter.shipList[this.shipNum].getGRT();
-        ctx.font = "9px courier";
-        ctx.fillText(secondLine, x, y + 10);
-    }
-
-    /**
-     * Responsible for drawing the health bar and correct frame based on HP
-     * @param {ctx} ctx 
-     */
-    drawHealthBar(ctx) {
-        //figure out x and y
-        let x = this.x + 30;
-        let y = this.y + 50;
-
-        //Get current damage of ship
-        var dam = this.encounter.shipList[this.shipNum].damage;
-        if (dam > this.encounter.shipList[this.shipNum].hp) {
-            dam = this.encounter.shipList[this.shipNum].hp;
-        }
-
-        //Doublecheck if HP is different than current HP bar
-        if (this.encounter.shipList[this.shipNum].hp != this.shipHP) {
-            this.shipHP = this.encounter.shipList[this.shipNum].hp.toString();
-            this.healthBarImage.src = "images/ui/shiphealthbars/ShipHealthBar_" + this.shipHP + ".png";
-        }
-
-        this.healthisLoaded && ctx.drawImage(this.healthBarImage,
-            dam * 140, 0,
-            140, 35,
-            x, y,
-            140, 35
-        )
     }
 
     drawWake(ctx) {

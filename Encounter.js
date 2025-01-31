@@ -268,14 +268,14 @@ class Encounter {
         this.range = attackPopup.getRange();
 
         //check for encounter depth vs sprite depth mismatches and correct
-        if (this.depth == "Periscope Depth" && this.tv.uboat.sprite.depth == 0) {
-            this.tv.uboat.sprite.dive();
+        if (this.depth == "Periscope Depth" && this.tv.uboat.depth == 0) {
+            this.tv.uboat.dive();
         }
-        else if (this.depth == "Surfaced" && this.tv.uboat.sprite.depth == 110) {
-            this.tv.uboat.sprite.surface();
+        else if (this.depth == "Surfaced" && this.tv.uboat.depth == 110) {
+            this.tv.uboat.surface();
         }
-        Object.values(this.tv.gameObjects).forEach(object => {
-            object.sprite.setRange(this.range);
+        Object.values(this.tv.shipObjects).forEach(object => {
+            object.setRange(this.range);
         })
 
         switch (this.range) {
@@ -309,7 +309,7 @@ class Encounter {
             //Only goes through this escort detection if it was not detected at close range (so already made its attack)
             if (this.isEscorted()) {
                 if (this.depth == "Surfaced") {
-                    this.tv.uboat.sprite.dive();
+                    this.tv.uboat.dive();
                     this.depth = "Periscope Depth";
                 }
                 this.gm.setEventResolved(false);
@@ -555,9 +555,9 @@ class Encounter {
 
         //get aircraft type
         this.getAircraft();
-        //newName = newName.replaceAll(" ", ""); UNSURE IF NEED TO DO THIS BEFOREHAND
-        let path = "images/aircraft/" + this.airCraftType.replaceAll(" ", "") + ".png";
-        this.tv.gameObjects.aircraft.sprite.updateSprite(path);
+        let newName = this.aircraftType.replaceAll(" ", "");
+        let path = "images/aircraft/" + newName + ".png";
+        this.tv.gameObjects.aircraft.updateSprite(path);
 
         this.depth = "Surfaced";
 
@@ -696,7 +696,7 @@ class Encounter {
                         else if (this.encounterType == "Escort") {
                             this.aircraftResult = this.aircraftResult + "It alerted a nearby allied escort.";
                             if (this.depth == "Surfaced") {
-                                this.tv.uboat.sprite.dive();
+                                this.tv.uboat.dive();
                                 this.depth = "Periscope Depth";
                             }
                         }
@@ -792,7 +792,7 @@ class Encounter {
     async endEncounter() {
         this.tv.changeScene("", this.timeOfDay, null, false);
         if (this.depth != "Surfaced") {
-            this.tv.uboat.sprite.surface();
+            this.tv.uboat.surface();
         }
         //Check if ships were sunk during encounter to mark mission complete flag (not applicable to missions)
         if (!this.gm.missionComplete && this.gm.shipsSunkOnCurrentPatrol.length > 0 && this.gm.currentOrdersLong.includes("Patrol")) {
@@ -1506,7 +1506,7 @@ class Encounter {
 
         //dive immediately when detected on close range check
         if (this.depth == "Surfaced" && closeRangeCheck && results == "Detected") {
-            this.tv.uboat.sprite.dive();
+            this.tv.uboat.dive();
             this.depth = "Periscope Depth";
         }
 
@@ -1688,6 +1688,6 @@ class Encounter {
      */
     forceUpdateSprite(name) {
         let path = "images/ships/" + name.replaceAll(" ", "") + ".png";
-        this.tv.gameObjects.ship1.sprite.updateSprite(name);
+        this.tv.shipObjects.ship1.updateSprite(name);
     }
 }

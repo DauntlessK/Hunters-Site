@@ -292,10 +292,6 @@ class Sprite {
     }
   }
 
-  updateTV(tv) {
-    this.tv = tv;
-  }
-
   //sets the sprite to start dive and fully draw sprite
   dive() {
     this.tv.uboatwake.dive();
@@ -312,6 +308,10 @@ class Sprite {
     this.tv.uboatwake.surface();
     this.surfacing = true;
     this.depth = 108;
+  }
+
+  updateTV(tv) {
+    this.tv = tv;
   }
 
   /**

@@ -10,9 +10,9 @@ class Sprite {
       this.image.onload = () => {
         this.isLoaded = true;
       }
-      this.width = config.width;          //Width of sprite image
-      this.height = config.height;        //Height of sprite image
-      this.frames = config.frames;
+      this.width = config.width;            //Width of sprite image
+      this.height = config.height;          //Height of sprite image
+      this.frames = config.frames;          //Total # of frames
       this.x = config.x;
       this.y = config.y;
   
@@ -97,8 +97,8 @@ class Sprite {
         let y = this.y;    
 
         //work out width and height
-        swidth = this.width;
-        sheight = this.height;
+        let swidth = this.width;
+        let sheight = this.height;
 
         this.isLoaded && ctx.drawImage(this.image,
             this.currentFrame * this.width, 0,
@@ -107,6 +107,8 @@ class Sprite {
             swidth, sheight
         )
         
-        this.updateAnimationProgress();
+        if (this.frames != 1) {
+            this.updateAnimationProgress();
+        }
     }
 }

@@ -152,8 +152,8 @@ class SpriteShip extends Sprite {
         let y = this.y;
 
         //work out width and height
-        swidth = this.width;
-        sheight = this.height;
+        let swidth = this.width;
+        let sheight = this.height;
 
         this.isLoaded && ctx.drawImage(this.image,
             this.currentFrame * this.width, 0,
@@ -178,7 +178,7 @@ class SpriteShip extends Sprite {
             if (this.encounter.shipList[this.shipNum].getType() != "Escort") {
                 this.drawHealthBar(ctx);
             }
-            his.drawWake(ctx);
+            this.drawWake(ctx);
         }
         
         this.updateAnimationProgress();
@@ -214,7 +214,7 @@ class SpriteShip extends Sprite {
         //G7a
         ctx.fillStyle = "blue";
         ctx.textAlign = "left";
-        ctx.fillText(stringG7a, this.gameObject.x + 10, y + 80);
+        ctx.fillText(stringG7a, this.x + 10, y + 80);
 
         var numOfG7e = this.encounter.shipList[this.shipNum].G7eINCOMING;
         var stringG7e = "";
@@ -225,7 +225,7 @@ class SpriteShip extends Sprite {
         //G7e
         ctx.fillStyle = "darkred";
         ctx.textAlign = "right";
-        ctx.fillText(stringG7e, this.gameObject.x + 190, y + 80);
+        ctx.fillText(stringG7e, this.x + 190, y + 80);
 
         //Draw Deck Gun Assignment Indicator
         ctx.fillStyle = "black";
@@ -233,7 +233,7 @@ class SpriteShip extends Sprite {
         ctx.font = "bold 10px courier";
         //Only draw if there is 1 or more shots incoming
         if (this.encounter.shipList[this.shipNum].deckGunINCOMING > 0) {
-            ctx.fillText(this.encounter.shipList[this.shipNum].deckGunINCOMING, this.gameObject.x + 100, y + 74);
+            ctx.fillText(this.encounter.shipList[this.shipNum].deckGunINCOMING, this.x + 100, y + 74);
         }
     }
 
@@ -243,8 +243,8 @@ class SpriteShip extends Sprite {
      */
     drawEscortShipInfo(ctx) {
         //figure out x and y
-        let x = this.gameObject.x - 50;
-        let y = this.gameObject.y + 150;
+        let x = this.x - 50;
+        let y = this.y + 150;
 
         //Draw name, ship type and GRT
         ctx.font = "bold 12px courier";
