@@ -20,7 +20,7 @@ class TacticalView{
         this.timeOverlayImage = new Image();
 
         //create uboat player object- (Initial state is large for port)
-        this.uboat = new GameObject({
+        this.uboat = new SpriteUboat({
             tv: this,
             gm: this.gm,
             x: 137,
@@ -42,8 +42,10 @@ class TacticalView{
             width: 1280,
             height: 720,
             frames: 24,
-            isPlayer: false
         })
+
+        this.shipObjects = null;
+        this.gameObjects = null;
 
         this.currentFrame = 0;
         this.animationFrameLimit = 16;
@@ -82,6 +84,10 @@ class TacticalView{
 
     setDeparted(val) {
         this.isDeparted = val;
+        if (val == true ) {
+            this.uboat.setDeparted();
+            this.uboatwake.setDeparted();
+        }
     }
 
     enterEncounter(){
@@ -235,18 +241,21 @@ class TacticalView{
             this.lowerImage.src = "images/scrollingwater_spritesheet.png";
             this.uboat.x = 0;
             this.uboat.y = 200;
-            this.uboat.sprite.frames = 33;
-            this.uboatwake.x = -200;
-            this.uboatwake.y = -204;
+            this.uboat.frames = 33;
+            this.uboatwake.x = 0;
+            this.uboatwake.y = 250;
         }
 
-        //If scene is not port, configure time of day
+        //If scene is not port, configure time of day and change uboat wake
         if (newScene != "IntroPort" || newScene != "Port") {
             //console.log("Scene Time: " + newTime);        //debug ToD
             this.setTimeOfDay(newTime);
             if (timeChangeOnly) {
                 return;
             }
+            this.uboatwake.updateSprite("images/UboatWake_spritesheet.png");
+            this.uboatwake.width = 813;
+            this.uboatwake.height = 100;
         }
         else {
             this.timeOverlayImage.src = "images/blank.png";
@@ -257,12 +266,17 @@ class TacticalView{
         this.scene = newScene;
         switch (newScene){
             case "IntroPort":
+                this.shipObjects = null;
                 this.lowerImage.src = "images/portscene_spritesheet.png";
                 this.upperImage.src = "images/logo.png";
                 this.timeOverlayImage.src = "images/blank.png";
                 this.bgdFrames = 30;
+                this.uboatwake.updateSprite("images/portscene_waterline_spritesheet.png");
+                this.uboatwake.width = 1280;
+                this.uboatwake.height= 720;
                 break;
             case "Port":
+                this.shipObjects = null;
                 this.lowerImage.src = "images/portscene_spritesheet.png";
                 this.upperImage.src = "images/blank.png";
                 this.timeOverlayImage.src = "images/blank.png";
@@ -270,7 +284,7 @@ class TacticalView{
                 this.bgdFrames = 30;
                 this.currentFrame = 0;
 
-                this.uboat = new GameObject({
+                this.uboat = new SpriteUboat({
                     tv: this,
                     gm: this.gm,
                     x: 137,
@@ -283,7 +297,7 @@ class TacticalView{
                 });
         
                 //create wake water object
-                this.uboatwake = new GameObject({
+                this.uboatwake = new SpriteWake({
                     tv: this,
                     gm: this.gm,
                     x: -58,
@@ -292,15 +306,14 @@ class TacticalView{
                     width: 1280,
                     height: 720,
                     frames: 24,
-                    isPlayer: false
                 })
-
                 break;
             case "Ship":
                 this.upperImage.src = "images/deepwater.png";
                 this.bgdFrames = 49;
-                this.gameObjects = {
-                    ship0: new GameObject({
+                this.gameObjects = null;
+                this.shipObjects = {
+                    ship0: new SpriteShip({
                         tv: this,
                         gm: this.gm,
                         x: 300,
@@ -310,7 +323,6 @@ class TacticalView{
                         width: 201,
                         height: 158,
                         frames: 6,
-                        isPlayer: false,
                         encounter: enc
                     })
                 }
@@ -318,8 +330,9 @@ class TacticalView{
             case "Ship + Escort":
                 this.upperImage.src = "images/deepwater.png";
                 this.bgdFrames = 49;
-                this.gameObjects = {
-                    ship0: new GameObject({
+                this.gameObjects = null;
+                this.shipObjects = {
+                    ship0: new SpriteShip({
                         tv: this,
                         gm: this.gm,
                         x: 740,
@@ -329,10 +342,9 @@ class TacticalView{
                         width: 201,
                         height: 158,
                         frames: 6,
-                        isPlayer: false,
                         encounter: enc
                     }),
-                    ship1: new GameObject({
+                    ship1: new SpriteShip({
                         tv: this,
                         gm: this.gm,
                         x: 500,
@@ -342,7 +354,6 @@ class TacticalView{
                         width: 201,
                         height: 158,
                         frames: 6,
-                        isPlayer: false,
                         encounter: enc
                     })
                 }
@@ -350,8 +361,9 @@ class TacticalView{
             case "Convoy":
                 this.upperImage.src = "images/deepwater.png";
                 this.bgdFrames = 49;
-                this.gameObjects = {
-                    ship0: new GameObject({
+                this.gameObjects = null;
+                this.shipObjects = {
+                    ship0: new SpriteShip({
                         tv: this,
                         gm: this.gm,
                         x: 740,
@@ -361,10 +373,9 @@ class TacticalView{
                         width: 201,
                         height: 158,
                         frames: 6,
-                        isPlayer: false,
                         encounter: enc
                     }),
-                    ship1: new GameObject({
+                    ship1: new SpriteShip({
                         tv: this,
                         gm: this.gm,
                         x: 680,
@@ -374,10 +385,9 @@ class TacticalView{
                         width: 201,
                         height: 158,
                         frames: 6,
-                        isPlayer: false,
                         encounter: enc
                     }),
-                    ship2: new GameObject({
+                    ship2: new SpriteShip({
                         tv: this,
                         gm: this.gm,
                         x: 460,
@@ -387,10 +397,9 @@ class TacticalView{
                         width: 201,
                         height: 158,
                         frames: 6,
-                        isPlayer: false,
                         encounter: enc
                     }),
-                    ship3: new GameObject({
+                    ship3: new SpriteShip({
                         tv: this,
                         gm: this.gm,
                         x: 240,
@@ -400,10 +409,9 @@ class TacticalView{
                         width: 201,
                         height: 158,
                         frames: 6,
-                        isPlayer: false,
                         encounter: enc
                     }),
-                    ship4: new GameObject({
+                    ship4: new SpriteShip({
                         tv: this,
                         gm: this.gm,
                         x: 20,
@@ -413,7 +421,6 @@ class TacticalView{
                         width: 201,
                         height: 158,
                         frames: 6,
-                        isPlayer: false,
                         encounter: enc
                     })
                 }
@@ -422,7 +429,7 @@ class TacticalView{
                 this.upperImage.src = "images/deepwater.png";
                 this.bgdFrames = 49;
                 this.gameObjects = {
-                    aircraft: new GameObject({
+                    aircraft: new Sprite({
                         tv: this,
                         gm: this.gm,
                         x: 300,
@@ -432,16 +439,17 @@ class TacticalView{
                         width: 50,
                         height: 50,
                         frames: 1,
-                        isPlayer: false,
                         encounter: enc
                     })
                 }
+                this.shipObjects = null;
                 break;
             case "Escort":
                 this.upperImage.src = "images/deepwater.png";
                 this.bgdFrames = 49;
-                this.gameObjects = {
-                    ship0: new GameObject({
+                this.gameObjects = null;
+                this.shipObjects = {
+                    ship0: new SpriteShip({
                         tv: this,
                         gm: this.gm,
                         x: 300,
@@ -451,7 +459,6 @@ class TacticalView{
                         width: 201,
                         height: 158,
                         frames: 6,
-                        isPlayer: false,
                         encounter: enc
                     })
                 }
@@ -459,8 +466,9 @@ class TacticalView{
             case "Capital Ship":
                 this.upperImage.src = "images/deepwater.png";
                 this.bgdFrames = 49;
-                this.gameObjects = {
-                    ship0: new GameObject({
+                this.gameObjects = null;
+                this.shipObjects = {
+                    ship0: new SpriteShip({
                         tv: this,
                         gm: this.gm,
                         x: 740,
@@ -470,10 +478,9 @@ class TacticalView{
                         width: 201,
                         height: 158,
                         frames: 6,
-                        isPlayer: false,
                         encounter: enc
                     }),
-                    ship1: new GameObject({
+                    ship1: new SpriteShip({
                         tv: this,
                         gm: this.gm,
                         x: 500,
@@ -483,7 +490,6 @@ class TacticalView{
                         width: 201,
                         height: 158,
                         frames: 6,
-                        isPlayer: false,
                         encounter: enc
                     })
                 }
@@ -492,6 +498,7 @@ class TacticalView{
                 this.upperImage.src = "images/deepwater.png";
                 this.bgdFrames = 49;
                 this.gameObjects = null;
+                this.shipObjects = null;
                 break;
         }
     }

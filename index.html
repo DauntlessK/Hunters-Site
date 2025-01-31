@@ -40,6 +40,13 @@
                 <option value="VIID">Type VIID</option>
               </optgroup>
             </select>
+            <div class ="tooltip_uboat">
+              <img src = "images/ui/info.png" style = "height: 20px; width: 20px;">
+              <span class="tooltip"> The starting date is tied to which U-Boat you choose. <br>
+                The U-Boat types fall into two major types: Type VII and IX. <br>
+                • VII were the workhorses of the Kriegsmarine with over 700 built. <br>
+                • IX were larger boats built for longer and further-reaching patrols.</span>
+            </div>
           </td>
           <td>
             <input type="button" id="StartButton" value="Start Game">
@@ -53,8 +60,6 @@
     <!-- Scripts -->
     <script src="Main.js"></script>
     <script src="GameObject.js"></script>
-    <script src="SpriteWake.js"></script>
-    <script src="Sprite.js"></script>
     <script src="TacticalView.js"></script>
     <script src="MenuIcon.js"></script>
     <script src="UI.js"></script>
@@ -76,6 +81,12 @@
     <script src="popups/FollowTimePopup.js"></script>
     <script src="popups/AdminPopup.js"></script>
     <script src="popups/GameOverPopup.js"></script>
+
+    <!-- Scripts / Sprites -->
+    <script src="Sprite.js"></script>
+    <script src="SpriteWake.js"></script>
+    <script src="SpriteShip.js"></script>
+    <script src="SpriteUboat.js"></script>
 
     <!-- Scripts / Buttons -->
     <script src="buttons/Button.js"></script>

@@ -168,8 +168,8 @@ class UI{
             this.continueButton.handleEvent(event);
         }
         if (this.tv.firingMode) {
-            Object.values(this.tv.gameObjects).forEach(object => {
-                object.sprite.handleEvent(event);
+            Object.values(this.tv.shipObjects).forEach(object => {
+                object.handleEvent(event);
               })
             this.deckGunButton.handleEvent(event);
         }
@@ -242,12 +242,12 @@ class UI{
                 }
             }
             if (this.tv.isInEncounter && shipsInEnc && !this.gm.currentEncounter.encounterMid) {
-                Object.values(this.tv.gameObjects).forEach(object => {
-                    if (!object.sprite.isPlayer && object.sprite.shipType == "Escort") {
-                        object.sprite.drawEscortShipInfo(ctx);
+                Object.values(this.tv.shipObjects).forEach(object => {
+                    if (object.shipType == "Escort") {
+                        object.drawEscortShipInfo(ctx);
                     }
-                    else if (!object.sprite.isPlayer) {
-                        object.sprite.drawTargetShipInfo(ctx);
+                    else {
+                        object.drawTargetShipInfo(ctx);
                     }
                   })
             }
