@@ -243,7 +243,7 @@ class TacticalView{
             this.uboat.y = 200;
             this.uboat.frames = 33;
             this.uboatwake.x = 0;
-            this.uboatwake.y = 250;
+            this.uboatwake.y = 249;
         }
 
         //If scene is not port, configure time of day and change uboat wake
@@ -254,8 +254,10 @@ class TacticalView{
                 return;
             }
             this.uboatwake.updateSprite("images/UboatWake_spritesheet.png");
-            this.uboatwake.width = 813;
-            this.uboatwake.height = 100;
+            this.uboatwake.width = 944;
+            this.uboatwake.height = 120;
+            this.uboatwake.setNewFrameCount(30);
+            this.uboatwake.setNewFrameLimit(48);
         }
         else {
             this.timeOverlayImage.src = "images/blank.png";

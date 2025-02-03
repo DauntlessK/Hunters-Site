@@ -62,6 +62,25 @@ class Sprite {
     }
 
     /**
+     * Changes the number of frames the sprite animation has, while also updating the last frame int and resetting the currentFrame to zero.
+     * @param {int} numFrames 
+     */
+    setNewFrameCount(numFrames) {
+      this.frames = numFrames;
+      this.lastFrame = this.frames - 1;
+      this.currentFrame = 0;
+    }
+
+    /**
+     * Updates the animation frame limit, making it faster (with a lower number) or slower (with a higher number)
+     * @param {int} numLimit 
+     */
+    setNewFrameLimit(numLimit) {
+      this.animationFrameLimit = numLimit;
+      this.animationFrameProgress = this.animationFrameLimit;
+    }
+
+    /**
     * Keeps track of when the current animation frame should be moved to the next animation frame
     */
     updateAnimationProgress() {
