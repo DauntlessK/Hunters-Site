@@ -22,7 +22,7 @@ class SpriteWake extends Sprite{
     this.diving = true;
     this.image.src = "images/UboatWakeDiving_spritesheet.png";
     this.currentFrame = this.startFrame;
-    this.frames = 48; //TODO UPDATE TOTAL FRAMES OF DIVING ANIMATION PNG
+    this.frames = 30;
     this.lastFrame = this.frames - 1;
   }
 
@@ -40,7 +40,7 @@ class SpriteWake extends Sprite{
     console.log("Surfacing");
     this.surfacing = true;
     this.image.src = "images/UboatWakeDiving_spritesheet.png";
-    this.frames = 48; //TODO UPDATE TOTAL FRAMES OF DIVING ANIMATION PNG
+    this.frames = 30;
     this.startFrame = this.frames - 1;
     this.currentFrame = this.frames - 1;
     this.lastFrame = 0;

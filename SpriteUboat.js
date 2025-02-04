@@ -37,7 +37,7 @@ class SpriteUboat extends Sprite {
                 }
 
                 //player diving animation
-                if (this.diving && this.isPlayer) {
+                if (this.diving) {
                     this.depth += 2;
                     if (this.depth >= 110) {
                         this.depth = 110;
@@ -46,7 +46,7 @@ class SpriteUboat extends Sprite {
                 }
 
                 //player surfacing animation
-                if (this.surfacing && this.isPlayer) {
+                if (this.surfacing) {
                     this.depth -= 2;
                     if (this.depth <= 0) {
                         this.surfacing = false;
