@@ -233,7 +233,7 @@ class Encounter {
             //check if waiting - see if roll to wait is successful
             else if (this.encPop.getChoice() == "wait") {
                 if (waitRoll >= 5) {
-                    console.log("TODO deal with lost them!");
+                    console.log("Lost them! - need popup");
                     if (this.timeOfDay == "Night") {
                         this.timeOfDay = "Day";
                         this.tv.changeScene(this.encounterType, this.timeOfDay, null, true);
