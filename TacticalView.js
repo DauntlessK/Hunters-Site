@@ -257,7 +257,7 @@ class TacticalView{
             this.uboatwake.width = 944;
             this.uboatwake.height = 120;
             this.uboatwake.setNewFrameCount(30);
-            this.uboatwake.setNewFrameLimit(48);
+            this.uboatwake.setNewFrameLimit(16);
         }
         else {
             this.timeOverlayImage.src = "images/blank.png";

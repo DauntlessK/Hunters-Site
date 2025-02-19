@@ -69,7 +69,7 @@ class SpriteWake extends Sprite{
   updateAnimationProgress() {
     //Downtick frame progress if game is unpaused
     if (!this.tv.isPaused) {
-      //console.log(this.animationFrameProgress + " | " + this.currentFrame);  DEBUG FRAME AND FRAME PROGRESS
+      console.log(this.animationFrameProgress + " | " + this.currentFrame);  //DEBUG FRAME AND FRAME PROGRESS
       this.animationFrameProgress -= 1;
       //Check to see if animiation frame progress is 0, roll to next frame
       if (this.animationFrameProgress === 0) {
