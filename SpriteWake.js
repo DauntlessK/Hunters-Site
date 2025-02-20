@@ -14,7 +14,7 @@ class SpriteWake extends Sprite{
     this.totalTranslation = 0;
     this.translationProgress = 20;
     this.nextTranslationTimer = 0;
-    
+
   }
 
   dive() {
@@ -29,7 +29,7 @@ class SpriteWake extends Sprite{
   diveComplete() {
     console.log("Dive Complete");
     this.diving = false;
-    this.image.src = "images/UboatWakePeriscope_spritesheet.png";
+    //this.image.src = "images/WavesOnly_spritesheet.png";  //TODO need wave only animation
     this.frames = 24;
     this.startFrame = 0;
     this.currentFrame = this.startFrame;
@@ -69,7 +69,7 @@ class SpriteWake extends Sprite{
   updateAnimationProgress() {
     //Downtick frame progress if game is unpaused
     if (!this.tv.isPaused) {
-      console.log(this.animationFrameProgress + " | " + this.currentFrame);  //DEBUG FRAME AND FRAME PROGRESS
+      //console.log(this.animationFrameProgress + " | " + this.currentFrame);  //DEBUG FRAME AND FRAME PROGRESS
       this.animationFrameProgress -= 1;
       //Check to see if animiation frame progress is 0, roll to next frame
       if (this.animationFrameProgress === 0) {

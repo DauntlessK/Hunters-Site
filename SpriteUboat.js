@@ -8,6 +8,7 @@ class SpriteUboat extends Sprite {
         this.depth = 0;
         this.diving = false;
         this.surfacing = false;
+        this.diveDelay = 800;
 
         this.departed = false;
         this.departTranslation = 0;
@@ -30,15 +31,18 @@ class SpriteUboat extends Sprite {
             //Check to see if animiation frame progress is 0, roll to next frame
             if (this.animationFrameProgress === 0) {
                 this.currentFrame += 1;
+                console.log(this.currentFrame);
 
                 //If at last frame
                 if (this.currentFrame == this.lastFrame) {
+                    console.log("Restarting Anim");
                     this.currentFrame = this.startFrame;
                 }
 
                 //player diving animation
                 if (this.diving) {
-                    this.depth += 2;
+                    console.log("diving");
+                    this.depth += 1;
                     if (this.depth >= 110) {
                         this.depth = 110;
                         this.diving = false;
@@ -47,7 +51,7 @@ class SpriteUboat extends Sprite {
 
                 //player surfacing animation
                 if (this.surfacing) {
-                    this.depth -= 2;
+                    this.depth -= 1;
                     if (this.depth <= 0) {
                         this.surfacing = false;
                         this.depth = 0;
@@ -129,9 +133,13 @@ class SpriteUboat extends Sprite {
      */
     dive() {
         this.tv.uboatwake.dive();
+        for(let i = 0; i < this.diveDelay; i++) {
+            i = i + 1;
+        }
         this.diving = true;
-        this.depth = 2;
+        this.depth = 1;
         this.height = 150;
+        this.setNewFrameCount(49);
     }
     
     /**
@@ -140,7 +148,7 @@ class SpriteUboat extends Sprite {
     surface() {
         this.tv.uboatwake.surface();
         this.surfacing = true;
-        this.depth = 108;
+        this.depth = 109;
     }
 
     /**

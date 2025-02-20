@@ -248,7 +248,7 @@ class TacticalView{
 
         //If scene is not port, configure time of day and change uboat wake
         if (newScene != "IntroPort" || newScene != "Port") {
-            //console.log("Scene Time: " + newTime);        //debug ToD
+            console.log("Scene Time: " + newTime);        //debug ToD
             this.setTimeOfDay(newTime);
             if (timeChangeOnly) {
                 return;
@@ -276,6 +276,18 @@ class TacticalView{
                 this.uboatwake.updateSprite("images/portscene_waterline_spritesheet.png");
                 this.uboatwake.width = 1280;
                 this.uboatwake.height= 720;
+
+                //create wake water object
+                this.uboatwake = new SpriteWake({
+                    tv: this,
+                    gm: this.gm,
+                    x: -58,
+                    y: -5,
+                    src: "images/portscene_waterline_spritesheet.png",
+                    width: 1280,
+                    height: 720,
+                    frames: 24,
+                })
                 break;
             case "Port":
                 this.shipObjects = null;
