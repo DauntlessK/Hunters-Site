@@ -20,7 +20,7 @@ class SpriteWake extends Sprite{
   dive() {
     console.log("Diving");
     this.diving = true;
-    this.image.src = "images/UboatWakeDiving_spritesheet.png";
+    this.image.src = "images/water/UboatWakeDiving_spritesheet.png";
     this.currentFrame = this.startFrame;
     this.frames = 30;
     this.lastFrame = this.frames - 1;
@@ -29,17 +29,17 @@ class SpriteWake extends Sprite{
   diveComplete() {
     console.log("Dive Complete");
     this.diving = false;
-    //this.image.src = "images/WavesOnly_spritesheet.png";  //TODO need wave only animation
-    this.frames = 24;
-    this.startFrame = 0;
-    this.currentFrame = this.startFrame;
-    this.lastFrame = this.frames - 1;
+    this.image.src = "images/blank.png";  //TODO need wave only animation
+    //this.frames = 24;
+    //this.startFrame = 0;
+    //this.currentFrame = this.startFrame;
+    //this.lastFrame = this.frames - 1;
   }
 
   surface() {
     console.log("Surfacing");
     this.surfacing = true;
-    this.image.src = "images/UboatWakeDiving_spritesheet.png";
+    this.image.src = "images/water/UboatWakeDiving_spritesheet.png";
     this.frames = 30;
     this.startFrame = this.frames - 1;
     this.currentFrame = this.frames - 1;
@@ -49,7 +49,7 @@ class SpriteWake extends Sprite{
   surfaceComplete() {
     console.log("Surface Complete");
     this.surfacing = false;
-    this.image.src = "images/UboatWake_spritesheet.png";
+    this.image.src = "images/water/UboatWake_spritesheet.png";
     this.frames = 24;
     this.startFrame = 0;
     this.currentFrame = this.startFrame;
@@ -168,8 +168,10 @@ class SpriteWake extends Sprite{
       sheight = this.height + 20;
     }
     else {
-      swidth = this.width;
-      sheight = this.height;
+      swidth = this.width * 1.1;
+      sheight = this.height * 1.55;
+      y = y - 20;
+      x = x - 30;
     }
 
     this.isLoaded && ctx.drawImage(this.image,

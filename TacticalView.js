@@ -38,11 +38,13 @@ class TacticalView{
             gm: this.gm,
             x: -58,
             y: -5,
-            src: "images/portscene_waterline_spritesheet.png",
+            src: "images/water/portscene_waterline_spritesheet.png",
             width: 1280,
             height: 720,
             frames: 24,
         })
+
+        this.waves = null;
 
         this.shipObjects = null;
         this.gameObjects = null;
@@ -238,7 +240,7 @@ class TacticalView{
 
         //If last (current) scene was Port and changing scenes, set background to scrolling water and set new uboat
         if (this.scene == "Port") {
-            this.lowerImage.src = "images/scrollingwater_spritesheet.png";
+            this.lowerImage.src = "images/water/scrollingwater_spritesheet.png";
             this.uboat.x = 0;
             this.uboat.y = 200;
             this.uboat.frames = 33;
@@ -246,24 +248,34 @@ class TacticalView{
             this.uboatwake.y = 249;
         }
 
-        //If scene is not port, configure time of day and change uboat wake
-        if (newScene != "IntroPort" || newScene != "Port") {
-            console.log("Scene Time: " + newTime);        //debug ToD
+        //If scene is port, blank overlay, otherwise configure time of day and change uboat wake, add waves
+        if (newScene == "IntroPort" || newScene == "Port") {
+            this.timeOverlayImage.src = "images/blank.png";
+        }
+        else {
+            console.log("Scene: " + newScene + " | Scene Time: " + newTime);        //debug ToD
             this.setTimeOfDay(newTime);
             if (timeChangeOnly) {
                 return;
             }
-            this.uboatwake.updateSprite("images/UboatWake_spritesheet.png");
+            this.uboat.height = 150;
+            this.uboatwake.updateSprite("images/water/UboatWake_spritesheet.png");
             this.uboatwake.width = 944;
             this.uboatwake.height = 120;
             this.uboatwake.setNewFrameCount(30);
             this.uboatwake.setNewFrameLimit(16);
-        }
-        else {
-            this.timeOverlayImage.src = "images/blank.png";
-        }
 
-        //sleep(1000);
+            this.waves = new Sprite({
+                tv: this,
+                gm: this.gm,
+                x: 0,
+                y: 245,
+                src: "images/water/WavesOnly_spritesheet.png",
+                width: 944,
+                height: 60,
+                frames: 30
+            })
+        }
         
         this.scene = newScene;
         switch (newScene){
@@ -273,7 +285,7 @@ class TacticalView{
                 this.upperImage.src = "images/logo.png";
                 this.timeOverlayImage.src = "images/blank.png";
                 this.bgdFrames = 30;
-                this.uboatwake.updateSprite("images/portscene_waterline_spritesheet.png");
+                this.uboatwake.updateSprite("images/water/portscene_waterline_spritesheet.png");
                 this.uboatwake.width = 1280;
                 this.uboatwake.height= 720;
 
@@ -283,7 +295,7 @@ class TacticalView{
                     gm: this.gm,
                     x: -58,
                     y: -5,
-                    src: "images/portscene_waterline_spritesheet.png",
+                    src: "images/water/portscene_waterline_spritesheet.png",
                     width: 1280,
                     height: 720,
                     frames: 24,
@@ -316,14 +328,14 @@ class TacticalView{
                     gm: this.gm,
                     x: -58,
                     y: -5,
-                    src: "images/portscene_waterline_spritesheet.png",
+                    src: "images/water/portscene_waterline_spritesheet.png",
                     width: 1280,
                     height: 720,
                     frames: 24,
                 })
                 break;
             case "Ship":
-                this.upperImage.src = "images/deepwater.png";
+                this.upperImage.src = "images/water/deepwater.png";
                 this.bgdFrames = 49;
                 this.gameObjects = null;
                 this.shipObjects = {
@@ -342,7 +354,7 @@ class TacticalView{
                 }
                 break;
             case "Ship + Escort":
-                this.upperImage.src = "images/deepwater.png";
+                this.upperImage.src = "images/water/deepwater.png";
                 this.bgdFrames = 49;
                 this.gameObjects = null;
                 this.shipObjects = {
@@ -373,7 +385,7 @@ class TacticalView{
                 }
                 break;
             case "Convoy":
-                this.upperImage.src = "images/deepwater.png";
+                this.upperImage.src = "images/water/deepwater.png";
                 this.bgdFrames = 49;
                 this.gameObjects = null;
                 this.shipObjects = {
@@ -440,7 +452,7 @@ class TacticalView{
                 }
                 break;
             case "Aircraft":
-                this.upperImage.src = "images/deepwater.png";
+                this.upperImage.src = "images/water/deepwater.png";
                 this.bgdFrames = 49;
                 this.gameObjects = {
                     aircraft: new Sprite({
@@ -459,7 +471,7 @@ class TacticalView{
                 this.shipObjects = null;
                 break;
             case "Escort":
-                this.upperImage.src = "images/deepwater.png";
+                this.upperImage.src = "images/water/deepwater.png";
                 this.bgdFrames = 49;
                 this.gameObjects = null;
                 this.shipObjects = {
@@ -478,7 +490,7 @@ class TacticalView{
                 }
                 break;
             case "Capital Ship":
-                this.upperImage.src = "images/deepwater.png";
+                this.upperImage.src = "images/water/deepwater.png";
                 this.bgdFrames = 49;
                 this.gameObjects = null;
                 this.shipObjects = {
@@ -509,7 +521,7 @@ class TacticalView{
                 }
                 break;
             default:
-                this.upperImage.src = "images/deepwater.png";
+                this.upperImage.src = "images/water/deepwater.png";
                 this.bgdFrames = 49;
                 this.gameObjects = null;
                 this.shipObjects = null;

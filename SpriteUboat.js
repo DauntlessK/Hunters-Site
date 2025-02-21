@@ -28,21 +28,25 @@ class SpriteUboat extends Sprite {
         if (!this.tv.isPaused && this.depth > 0) {
             this.animationFrameProgress -= 1;
             this.animationWakeFrameProgress -= 1;
+            //console.log("Update Anim Progress.... progress = " + this.animationFrameProgress);
             //Check to see if animiation frame progress is 0, roll to next frame
             if (this.animationFrameProgress === 0) {
                 this.currentFrame += 1;
-                console.log(this.currentFrame);
+                //console.log(this.currentFrame);
 
                 //If at last frame
                 if (this.currentFrame == this.lastFrame) {
-                    console.log("Restarting Anim");
+                    //console.log("Restarting Anim");
                     this.currentFrame = this.startFrame;
                 }
 
                 //player diving animation
                 if (this.diving) {
-                    console.log("diving");
+                    //console.log("diving");
                     this.depth += 1;
+                    if (this.depth > 30) {
+                        this.depth += 1;
+                    }
                     if (this.depth >= 110) {
                         this.depth = 110;
                         this.diving = false;
@@ -59,19 +63,6 @@ class SpriteUboat extends Sprite {
                     }
                 }
                 this.animationFrameProgress = this.animationFrameLimit;
-            }
-        }
-
-        //Deal with wake frames UNSURE IF NEEDED / WILL REPURPOSE FOR UBOAT WAKE WAVES
-        if (this.tv.isPaused == false && !this.isPlayer && !this.isAircraft) {
-            this.animationFrameProgress -= 1;
-            if (this.animationFrameProgress === 0) {
-                this.currentWakeFrame += 1;
-                
-                if (this.currentWakeFrame > 1) {
-                    this.currentWakeFrame = 0;
-                }
-                    this.animationFrameProgress = this.animationFrameLimit * 4;
             }
         }
     }
@@ -139,7 +130,8 @@ class SpriteUboat extends Sprite {
         this.diving = true;
         this.depth = 1;
         this.height = 150;
-        this.setNewFrameCount(49);
+        this.startFrame = 1;
+        this.setNewFrameCount(32);
     }
     
     /**
@@ -159,6 +151,8 @@ class SpriteUboat extends Sprite {
         //figure out x and y
         let x = this.x + this.depart(); 
         let y = this.y + this.randomUpAndDown() + this.depth;
+
+        //console.log("Depth: " + this.depth + " | Anim Frame Prog: " + this.animationFrameProgress);
 
         //work out width and height
         let swidth = this.width;

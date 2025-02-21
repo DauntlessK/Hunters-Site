@@ -43,6 +43,9 @@ class Main{
       this.tv.drawUpperImage(this.ctx);
 
       //Draw Wake / water around hull
+      if (this.tv.waves != null){
+        this.tv.waves.draw(this.ctx);
+      }
       this.tv.uboatwake.draw(this.ctx);
 
       //Draw Night Overlay
