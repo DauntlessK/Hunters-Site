@@ -5,6 +5,7 @@ class FollowTimePopup{
         this.enc = enc;
 
         this.choice = null;
+        this.isResolved = false;
 
         this.container = document.querySelector(".game-container");
 
@@ -27,6 +28,14 @@ class FollowTimePopup{
         this.element.addEventListener("click", ()=> {
             var action = null;
             if (event.target.id == "night" || event.target.id == "day"){
+                this.isResolved = true;
+                //set choice
+                if (event.target.id == "night") {
+                    this.choice = "Night";
+                }
+                else {
+                    this.choice = "Day";
+                }
                 //close popup
                 this.done(event.target.id);
             }

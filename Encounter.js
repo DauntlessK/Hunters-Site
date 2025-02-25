@@ -54,7 +54,9 @@ class Encounter {
 
         this.tv.enterEncounter();
         this.timeOfDay = this.getTimeOfDay(false);
-        //console.log(this.timeOfDay);          //ToD Debug
+        console.log(this.timeOfDay);          //ToD Debug
+        console.log(this.timeOfDay.val);
+        console.log(this.timeOfDay.value);
         this.tv.changeScene(this.encounterType, this.timeOfDay, this, false);
 
         this.gm.setEventResolved(false);
@@ -267,6 +269,7 @@ class Encounter {
         this.depth = attackPopup.getDepth();
         this.range = attackPopup.getRange();
 
+        console.log(this.tv.uboat.depth);
         //check for encounter depth vs sprite depth mismatches and correct
         if (this.depth == "Periscope Depth" && this.tv.uboat.depth == 0) {
             this.tv.uboat.dive();
@@ -884,7 +887,7 @@ class Encounter {
      * @param {boolean} isFollowing 
      * @returns string "Day" or "Night"
      */
-    getTimeOfDay(isFollowing) {
+    async getTimeOfDay(isFollowing) {
         //first deal with actic always day or always night months if applicable
         if (this.currentOrders == "Arctic" && (this.date_month == 5 || this.date_month == 11)) {
             if (this.date_month == 5){
@@ -901,7 +904,7 @@ class Encounter {
         else if (isFollowing) {
             //this.gm.setEventResolved(false);
             var FTpopup = new FollowTimePopup(this.tv, this.gm, this);
-            //await until(_ => this.gm.eventResolved == true);
+            await until(_ => FTpopup.isResolved == true);
             return FTpopup.getChoice();
         }
         //otherwise randomly determine day or night

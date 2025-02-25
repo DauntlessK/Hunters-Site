@@ -55,7 +55,7 @@ class SpriteUboat extends Sprite {
 
                 //player surfacing animation
                 if (this.surfacing) {
-                    this.depth -= 1;
+                    this.depth -= 2;
                     if (this.depth <= 0) {
                         this.surfacing = false;
                         this.depth = 0;

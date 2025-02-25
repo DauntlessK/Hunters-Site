@@ -238,27 +238,20 @@ class TacticalView{
      */
     async changeScene(newScene, newTime, enc, timeChangeOnly){
 
-        //If last (current) scene was Port and changing scenes, set background to scrolling water and set new uboat
+        //If last (current) scene was Port and changing scenes
+        //For starting patrol - Changing to animated move scenes
         if (this.scene == "Port") {
             this.lowerImage.src = "images/water/scrollingwater_spritesheet.png";
+
+            //Set new Uboat loc, frames and size
             this.uboat.x = 0;
             this.uboat.y = 200;
             this.uboat.frames = 33;
             this.uboatwake.x = 0;
             this.uboatwake.y = 249;
-        }
-
-        //If scene is port, blank overlay, otherwise configure time of day and change uboat wake, add waves
-        if (newScene == "IntroPort" || newScene == "Port") {
-            this.timeOverlayImage.src = "images/blank.png";
-        }
-        else {
-            console.log("Scene: " + newScene + " | Scene Time: " + newTime);        //debug ToD
-            this.setTimeOfDay(newTime);
-            if (timeChangeOnly) {
-                return;
-            }
             this.uboat.height = 150;
+
+            //Set new Uboat wake for on patrol moving
             this.uboatwake.updateSprite("images/water/UboatWake_spritesheet.png");
             this.uboatwake.width = 944;
             this.uboatwake.height = 120;
@@ -275,6 +268,19 @@ class TacticalView{
                 height: 60,
                 frames: 30
             })
+        }
+
+        //If scene is port, blank overlay, otherwise configure time of day and change uboat wake, add waves
+        if (newScene == "IntroPort" || newScene == "Port") {
+            this.timeOverlayImage.src = "images/blank.png";
+            this.waves = null;
+        }
+        else {
+            console.log("Scene: " + newScene + " | Scene Time: " + newTime);        //debug ToD
+            this.setTimeOfDay(newTime);
+            if (timeChangeOnly) {
+                return;
+            }
         }
         
         this.scene = newScene;
