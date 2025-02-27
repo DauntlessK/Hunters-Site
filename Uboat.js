@@ -1124,8 +1124,10 @@ class Uboat{
                 }
             }
             else {
+                //TODO need to change scene to empty sea and force uboat to surface
+                this.tv.uboat.surface();
                 let cause = "Scuttled " + this.gm.getFullDate();
-                cause += " - Forced to scuttle after damage to both diesel engines by the " + this.currentEncounter.shipList[0].getClassAndName();
+                cause += " - Forced to scuttle after damage to both diesel engines by the " + this.gm.currentEncounter.shipList[0].getClassAndName();
                 console.log("GAME OVER: " + cause);
                 const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
             }

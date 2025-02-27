@@ -45,6 +45,7 @@ class GameManager{
         this.severeWeather = false;
         this.eligibleForNewBoat = false;
         this.abortingPatrol = false;
+        this.extraStep = 0;             //is -1 if aborting with diesel inop which forces an extra encounter every box
         this.contFromAbort = false;     //flag used to skip over second encounter roll for the very first time after aborting only 
         this.permMedPost = false;
         this.permArcPost = false;
@@ -305,7 +306,7 @@ class GameManager{
         //close previous box and move to next square --- HERE ALSO UPDATE CURRENT PATROL LOG
         if (this.currentBox > 0 && this.currentBox != this.patrol.getPatrolLength()) {
             //this.logBook[this.patrolNum].addLastEncounter(this.currentEncounter);  Moved inside encounter
-            this.currentEncounter.closeWindows();            
+            this.currentEncounter.closeWindows();
         }
 
         //End patrol if advance was clicked while boat is on the final box
@@ -316,6 +317,7 @@ class GameManager{
 
         //Advance box
         this.currentBox++;
+        this.currentBox = this.currentBox + this.extraStep;
         console.log("Patrol Advance---------- step #" + this.currentBox);
 
         //if doctor is SW or KIA, see if any other injured crew members die (each patrol box, before encounter)
@@ -330,7 +332,7 @@ class GameManager{
         }
 
         //get the current box name of this patrol (i.e. "Transit", "Mission", "Atlantic", etc)
-        var currentBoxName = this.patrol.patrolArray[this.currentBox];
+        var currentBoxName = this.patrol.patrolArray[this.currentBox + this.extraStep];
 
         // check if on weather duty or severe weather random events (skips current box)
         if (this.weatherDuty){
@@ -359,13 +361,14 @@ class GameManager{
         await until(_ => this.tv.isInEncounter == false);
         console.log("End Encounter");
 
-        //check second encounter when 1 diesel is inop
+        //change extra step to force another encounter in the same box
         if (this.sub.dieselsInop() == 1 && this.contFromAbort) {
-            currentEncounterType = this.patrol.getEncounterType(currentBoxName, this.getYear(), this.randomEvent, roll);
-            console.log("Second Encounter: " + currentEncounterType);
-            this.currentEncounter = new Encounter(this.tv, this, this.patrol, this.sub, currentEncounterType, currentBoxName, null);
-            await until(_ => this.tv.isInEncounter == false);
-            console.log("End Second Encounter");
+            if (this.extraStep == 0) {
+                this.extraStep = -1;
+            }
+            else {
+                this.extraStep = 0;
+            }
         }
 
         if (this.abortingPatrol && !this.contFromAbort) {

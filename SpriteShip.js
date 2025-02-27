@@ -23,7 +23,6 @@ class SpriteShip extends Sprite {
 
         //TODO Ship image variation
         var imageVariation = d6Roll();
-        //this.image.src = "images/ships/" + this.shipType + imageVariation + ".png";        //to set imagepath to shiptype
 
         //USED TO TEST ---- PRESET PNGs
         if (this.shipType == "Escort") {
@@ -33,7 +32,8 @@ class SpriteShip extends Sprite {
             this.image.src = "images/ships/CapitalShip1.png";
         }
         else {
-            this.image.src = "images/ships/CargoShip1.png";
+            this.image.src = "images/ships/CargoShip" + imageVariation.toString() + ".png";        //to set imagepath to shiptype
+            //this.image.src = "images/ships/CargoShip1.png";
         }
 
         //Get Health Bar Image

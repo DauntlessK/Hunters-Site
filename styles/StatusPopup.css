@@ -70,6 +70,12 @@
     border-width: thin;
 }
 
+.Career {
+    position: absolute;
+    left: 542px;
+    bottom: 48px;
+}
+
 .UboatCrew {
     width: 200px;
     position: absolute;

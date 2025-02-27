@@ -116,6 +116,8 @@ class Ship {
                 this.name = newEntry[0];
                 this.clss = newEntry[1]
                 this.GRT = newEntry[2];
+
+                //Note: calls encounter to force a sprite update with new path
                 this.enc.forceUpdateSprite(this.name);
                 break;
         }

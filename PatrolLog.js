@@ -72,8 +72,7 @@ class PatrolLog{
         }
         else {
             if (this.gm.sub.getType().includes("IX") || this.gm.sub.getType() == "VIID") {
-                let randomBump = d3Roll() + 4;
-                console.log(randomBump)
+                let randomBump = d3Roll() + 5;
                 this.currentDay += randomBump;
             }
             else {

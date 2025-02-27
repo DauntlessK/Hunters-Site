@@ -18,7 +18,7 @@ class SpriteWake extends Sprite{
   }
 
   dive() {
-    console.log("Diving");
+    //console.log("Diving");
     this.diving = true;
     this.image.src = "images/water/UboatWakeDiving_spritesheet.png";
     this.currentFrame = this.startFrame;
@@ -27,7 +27,7 @@ class SpriteWake extends Sprite{
   }
 
   diveComplete() {
-    console.log("Dive Complete");
+    //console.log("Dive Complete");
     this.diving = false;
     this.image.src = "images/blank.png";  //TODO need wave only animation
     //this.frames = 24;
@@ -37,7 +37,7 @@ class SpriteWake extends Sprite{
   }
 
   surface() {
-    console.log("Surfacing");
+    //console.log("Surfacing");
     this.surfacing = true;
     this.image.src = "images/water/UboatWakeDiving_spritesheet.png";
     this.frames = 30;
@@ -47,7 +47,7 @@ class SpriteWake extends Sprite{
   }
 
   surfaceComplete() {
-    console.log("Surface Complete");
+    //console.log("Surface Complete");
     this.surfacing = false;
     this.image.src = "images/water/UboatWake_spritesheet.png";
     this.frames = 24;

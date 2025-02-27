@@ -1,6 +1,6 @@
 class Main{
   constructor(config){
-      this.version = .695
+      this.version = .698
       this.element = config.element;
       this.canvas = this.element.querySelector(".game-canvas");
       this.ctx = this.canvas.getContext("2d");
@@ -13,56 +13,72 @@ class Main{
       this.button = document.getElementById('StartButton');
   }
 
-  startGameLoop() {
-    const step = () => {
+  gameLoopWork() {
+    
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
+    //Draw Lower Layer
+    this.tv.drawLowerImage(this.ctx);
 
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-      //Draw Lower Layer
-      this.tv.drawLowerImage(this.ctx);
-
-      //Draw Game Objects (misc sprites and airplanes)
-      if (this.tv.gameObjects != null) {
-        Object.values(this.tv.gameObjects).forEach(object => {
-        object.draw(this.ctx);
-        })
-      }
-
-      //Draw Ship Objects (other ships)
-      if (this.tv.shipObjects != null) {
-        Object.values(this.tv.shipObjects).forEach(object => {
-        object.draw(this.ctx);
-        })
-      }
-
-      //Draw Uboat
-      this.tv.uboat.draw(this.ctx);
-
-      //Draw Upper Layer
-      this.tv.drawUpperImage(this.ctx);
-
-      //Draw Wake / water around hull
-      if (this.tv.waves != null){
-        this.tv.waves.draw(this.ctx);
-      }
-      this.tv.uboatwake.draw(this.ctx);
-
-      //Draw Night Overlay
-      this.tv.drawNightOverlayImage(this.ctx);
-
-      //Draw UI
-      if (this.tv.mainUI != null){
-        this.tv.drawUI(this.ctx);
-      }
-
-      this.tv.updateAnimationProgress();
-
-      requestAnimationFrame(() => {
-        step();
+    //Draw Game Objects (misc sprites and airplanes)
+    if (this.tv.gameObjects != null) {
+      Object.values(this.tv.gameObjects).forEach(object => {
+      object.draw(this.ctx);
       })
     }
-    step();
+
+    //Draw Ship Objects (other ships)
+    if (this.tv.shipObjects != null) {
+      Object.values(this.tv.shipObjects).forEach(object => {
+      object.draw(this.ctx);
+      })
+    }
+
+    //Draw Uboat
+    this.tv.uboat.draw(this.ctx);
+
+    //Draw Upper Layer
+    this.tv.drawUpperImage(this.ctx);
+
+    //Draw Wake / water around hull
+    if (this.tv.waves != null){
+      this.tv.waves.draw(this.ctx);
+    }
+    this.tv.uboatwake.draw(this.ctx);
+
+    //Draw Night Overlay
+    this.tv.drawNightOverlayImage(this.ctx);
+
+    //Draw UI
+    if (this.tv.mainUI != null){
+      this.tv.drawUI(this.ctx);
+    }
+
+    this.tv.updateAnimationProgress();
+  }
+
+  startGameLoop() {
+    let previousMs;
+    const step = 1/60;
+
+    const stepFn = (timestampMs) => {
+
+      if (previousMs === undefined) {
+        previousMs = timestampMs;
+      }
+      let delta = (timestampMs - previousMs) / 1000;
+      while (delta >= step) {
+        this.gameLoopWork();
+        delta -= step;
+      }
+      previousMs = timestampMs - delta * 1000;
+
+      //Normal tick
+      requestAnimationFrame(stepFn)
+    }
+
+    // First kickoff step
+    requestAnimationFrame(stepFn)
   }
 
   handleEvent(){

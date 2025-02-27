@@ -44,6 +44,10 @@ class StatusPopup{
             reload = "";
         }
 
+        let rankNum = this.gm.sub.crew_levels["Kommandant"] + 1;
+        let rankImagePath = "images/UI/ranks/Rank" + rankNum.toString() + ".png";
+        console.log(rankImagePath);
+
         //new div to add
         this.element.innerHTML = (`
             <img src = "images/ui/Status.png">
@@ -120,6 +124,12 @@ class StatusPopup{
                 ${this.patrolSummaryHeader}<br>
                 ${this.patrolSummary}
             </div>
+
+            <div class="Career">
+                <img src = "images/UI/Commander.png" style="max-height: 140px;">
+                <img src = ${rankImagePath}>
+            </div>
+
             <button class="CloseStatus_button" id="close">Close</button>
             <button class="ReloadStatus_button" id="reload">${reload}</button>
         `)

@@ -54,9 +54,7 @@ class Encounter {
 
         this.tv.enterEncounter();
         this.timeOfDay = this.getTimeOfDay(false);
-        console.log(this.timeOfDay);          //ToD Debug
-        console.log(this.timeOfDay.val);
-        console.log(this.timeOfDay.value);
+        //console.log(this.timeOfDay);          //ToD Debug
         this.tv.changeScene(this.encounterType, this.timeOfDay, this, false);
 
         this.gm.setEventResolved(false);
@@ -79,6 +77,7 @@ class Encounter {
         this.encPop = new EncounterPopup(this.tv, this.gm, this.currentBoxName, this.shipList);
         this.airPopup = null;
         this.missionPopup = null;
+        this.FTpopup = null;
         this.start(this.encounterType, true);
     }
 
@@ -269,7 +268,6 @@ class Encounter {
         this.depth = attackPopup.getDepth();
         this.range = attackPopup.getRange();
 
-        console.log(this.tv.uboat.depth);
         //check for encounter depth vs sprite depth mismatches and correct
         if (this.depth == "Periscope Depth" && this.tv.uboat.depth == 0) {
             this.tv.uboat.dive();
@@ -463,8 +461,9 @@ class Encounter {
             }
 
             //reset to empty sea for transition (current encounter over - will transition to new scene if following after)
+            //CHANGE- do not change to empty sea, change to new scene
             this.encounterMid = true;
-            this.tv.changeScene("Sea", this.timeOfDay, this, false);
+            this.tv.changeScene(action, this.timeOfDay, this, false);
 
             //End encounter after unsuccessful follow or choice, or begin "new" enc
             switch (action) {
@@ -512,9 +511,20 @@ class Encounter {
 
                     //Get new time of day
                     this.gm.setEventResolved(false);
-                    this.timeOfDay = this.getTimeOfDay(true);
-                    await until(_ => this.gm.eventResolved == true);
-                    console.log("Selected: " + this.timeOfDay);
+                    let canPickTimeOfDay = false;
+                    if (followChoice == "Convoy") {
+                        canPickTimeOfDay = false;
+                    }
+                    else if (shipToFollow.damage > 0) {
+                        canPickTimeOfDay = true;
+                    }
+                    this.timeOfDay = this.getTimeOfDay(canPickTimeOfDay);
+                    if (canPickTimeOfDay) {
+                        await until(_ => this.FTpopup.isResolved == true);
+                        this.timeOfDay = this.FTpopup.getChoice();
+                    }   
+                    this.FTpopup = null;
+                    //console.log("Selected: " + this.timeOfDay);
 
                     //Change scene then start next attack
                     this.tv.changeScene(action, this.timeOfDay, this, false);
@@ -728,7 +738,6 @@ class Encounter {
             "F4F Wildcat", "Fairey Swordfish", "Martin PBM Mariner", "Short Sunderland", "PBY Catalina", "Handley Page Halifax",
             "B-17 Flying Fortress", "B-24 Liberator"]
         this.aircraftType = aTypes[randomNum(0, 16)];
-        console.log(this.aircraftType);
     }
 
     //Clean up after firings
@@ -887,7 +896,7 @@ class Encounter {
      * @param {boolean} isFollowing 
      * @returns string "Day" or "Night"
      */
-    async getTimeOfDay(isFollowing) {
+    getTimeOfDay(isFollowing) {
         //first deal with actic always day or always night months if applicable
         if (this.currentOrders == "Arctic" && (this.date_month == 5 || this.date_month == 11)) {
             if (this.date_month == 5){
@@ -903,9 +912,7 @@ class Encounter {
         //otherwise, if following, choose day or night to attack
         else if (isFollowing) {
             //this.gm.setEventResolved(false);
-            var FTpopup = new FollowTimePopup(this.tv, this.gm, this);
-            await until(_ => FTpopup.isResolved == true);
-            return FTpopup.getChoice();
+            this.FTpopup = new FollowTimePopup(this.tv, this.gm, this);
         }
         //otherwise randomly determine day or night
         else {
@@ -1691,6 +1698,6 @@ class Encounter {
      */
     forceUpdateSprite(name) {
         let path = "images/ships/" + name.replaceAll(" ", "") + ".png";
-        this.tv.shipObjects.ship1.updateSprite(name);
+        this.tv.shipObjects.ship1.updateSprite(path);
     }
 }
