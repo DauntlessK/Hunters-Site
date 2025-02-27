@@ -563,6 +563,7 @@ class Encounter {
      * @returns 
      */
     async aircraftFlow() {
+        this.gm.numPlaneEncounters++;
         let a1Roll = d6Rollx2();   //roll on A1 chart
         let year = this.gm.getYear();
 
@@ -623,6 +624,7 @@ class Encounter {
         }
         else if (result >= 2) {
             //1 Attack on E3 + 1 Crew Injury
+            this.gm.numPlaneAttacks++;
             this.gm.setEventResolved(false);
             let hitCount = this.escortAndAirAttackRoll(false, false, true);
             result1 = this.sub.damage(hitCount, "Aircraft", this.aircraftType);
@@ -635,6 +637,7 @@ class Encounter {
         }
         else {
             //1 Attack on E3*extra mod* + 1 Injury (and a second attack if flak did not down plane)
+            this.gm.numPlaneAttacks++;
             this.gm.setEventResolved(false);
             let hitCount = this.escortAndAirAttackRoll(false, false, true);
             result1 = this.sub.damage(hitCount, "Aircraft", this.aircraftType);
@@ -675,6 +678,7 @@ class Encounter {
             }
 
             if (secondAttack) {
+                this.gm.numPlaneAttacks++;
                 let hitCount = this.escortAndAirAttackRoll(false, false, true);
                 result3 = this.sub.damage(hitCount, "Aircraft",  this.aircraftType);
 
@@ -1172,6 +1176,7 @@ class Encounter {
                             }
                             currentShip.takeDamage(damage);
                             this.roundDam += damage;
+                            //this.gm.damageDone += damage;
                         }
                     }
                     else {
@@ -1219,6 +1224,7 @@ class Encounter {
                             }
                             currentShip.takeDamage(damage);
                             this.roundDam += damage;
+                            //this.gm.damageDone += damage;
                         }
                     }
                     else {
@@ -1514,6 +1520,10 @@ class Encounter {
 
         console.log("Detection roll: " + escortRoll + " | Mods: " + escortMods + " --- Result: " + results);
 
+        if (results == "Detected") {
+            this.gm.numTimesDetected++;
+        }
+
         //dive immediately when detected on close range check
         if (this.depth == "Surfaced" && closeRangeCheck && results == "Detected") {
             this.tv.uboat.dive();
@@ -1551,7 +1561,6 @@ class Encounter {
                 escortDetectionPopup.damageResults(results, majorDetection)
             }
             await until(_ => this.gm.subEventResolved == true); //should be in above if statement - keep there for now to prevent program from progressing when game is over
-            
 
             //If detected, check detection again
             this.depth = "Periscope Depth";  //reset depth (in case "Deep" was selected)

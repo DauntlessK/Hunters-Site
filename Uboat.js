@@ -893,12 +893,14 @@ class Uboat{
         else {
             sevText = "killed in action! ";
             wounds = 3;
+            this.gm.sailorsLost++;
         }
 
         //save for KMDT if killed, reroll to new crew injury
         while (crewInjuryRoll == 2 && severity == 6 && this.gm.halsUndBeinbruch > 0) {
             crewInjuryRoll = d6Rollx2();
             this.gm.halsUndBeinbruch--;
+            this.gm.sailorsLost--;
         }
 
         //assign wounds and finish return text
@@ -1155,6 +1157,7 @@ class Uboat{
                 if (roll >= 4) {
                     messageToReturn += key + " has passed away due to his injuries. "
                     this.crew_health[key] = 3;
+                    this.gm.sailorsLost++;
                 }
             }
         }

@@ -33,8 +33,6 @@ class GameManager{
                             "twenty-third", "twenty-fourth"];
         this.patrolNum = 0;
         this.missionComplete = false;
-        this.successfulPatrols = 0;
-        this.unsuccessfulPatrols = 0;
         this.unsuccessfulPatrolsInARow = 0;
         this.eligibleForNewUboat = false;
         this.lastPatrolWasUnsuccessful = false;
@@ -53,14 +51,25 @@ class GameManager{
         this.patrolArray = [];
         this.currentBox = 0;
         this.shipsSunk = [];
-        this.planesShotDown = 0;
         this.shipsSunkOnCurrentPatrol = [];
         this.logBook = [];
+        this.pastSubs = [];
+        this.adminMode = false;
+
+        //------------Stat keeping
+        this.successfulPatrols = 0;
+        this.unsuccessfulPatrols = 0;
         this.damageDone = 0;
         this.hitsTaken = 0;
         this.randomEvents = 0;
-        this.pastSubs = [];
-        this.adminMode = false;
+        this.planesShotDown = 0;
+        this.bestPatrolGRT = 0;
+        this.numTimesDetected = 0;
+        this.numPlaneEncounters = 0;    //Num of times plane encounters have been rolled
+        this.numPlaneAttacks = 0;
+        this.sailorsLost = 0;
+        this.monthsInPort = 0;
+        this.monthsAtSea = 0;
         
         this.popup2 = new GMPopup(this.tv, this);
         this.currentEncounter = null;
@@ -140,6 +149,32 @@ class GameManager{
 
     getRankAndName(){
         return this.rank[this.sub.crew_levels["Kommandant"]] + " " + this.kmdt;
+    }
+
+    /**
+     * Gets current GRT sunk on this patrol
+     * @returns STRING of # of GRT sunk, WITH commas: "7,400"
+     */
+    getPatrolTotalGRT() {
+        let newTotalGRT = 0;
+        for (let i = 0; i < this.shipsSunkOnCurrentPatrol.length; i++) {
+            newTotalGRT += this.shipsSunkOnCurrentPatrol[i].getGRTInt();
+        }
+        var stringReturn = newTotalGRT.toLocaleString();
+        return stringReturn;
+    }
+
+    /**
+     * Gets current GRT sunk for entire career
+     * @returns STRING of # of GRT sunk, WITH commans: "2,700"
+     */
+    getTotalGRT() {
+        let newTotalGRT = 0;
+        for (let i = 0; i < this.shipsSunk.length; i++) {
+            newTotalGRT += this.shipsSunk[i].getGRTInt();
+        }
+        var stringReturn = newTotalGRT.toLocaleString();
+        return stringReturn;
     }
 
     /**

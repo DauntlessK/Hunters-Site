@@ -38,10 +38,10 @@ class PatrolLog{
             this.patrolSummaryHeader = this.patrolSummaryHeader + this.gm.currentOrdersLong;
             //Subheader - GRT Summary
             if (this.gm.shipsSunkOnCurrentPatrol.length == 1) {
-                this.patrolSummaryHeader = this.patrolSummaryHeader + "<br>1 ship sunk for " + this.getTotalGRT() + " GRT <br>";
+                this.patrolSummaryHeader = this.patrolSummaryHeader + "<br>1 ship sunk for " + this.gm.getPatrolTotalGRT() + " GRT <br>";
             }
             else if (this.gm.shipsSunkOnCurrentPatrol.length > 1) {
-                this.patrolSummaryHeader = this.patrolSummaryHeader + "<br>" + this.gm.shipsSunkOnCurrentPatrol.length.toString() +  " ships sunk totaling " + this.getTotalGRT() + " GRT <br>";
+                this.patrolSummaryHeader = this.patrolSummaryHeader + "<br>" + this.gm.shipsSunkOnCurrentPatrol.length.toString() +  " ships sunk totaling " + this.gm.getPatrolTotalGRT() + " GRT <br>";
             }
         }
         else {
@@ -60,7 +60,7 @@ class PatrolLog{
                 this.patrolResult = "Failure"
             }
             this.patrolSunk = this.gm.shipsSunkOnCurrentPatrol;
-            this.patrolGRTSunk = this.getTotalGRT() + "GRT";
+            this.patrolGRTSunk = this.gm.getPatrolTotalGRT() + "GRT";
         }
 
         return this.patrolSummaryHeader;
@@ -127,7 +127,8 @@ class PatrolLog{
                 //sunk any ships
                 var sunkText = "Sunk ";
                 for (let i = 0; i < enc.shipsSunkInEnc.length; i++) {
-                    sunkText = sunkText + enc.shipsSunkInEnc[i].getName() + " (" + enc.shipsSunkInEnc[i].getGRT() + "GRT)";
+                    //TODO fix way GRT is displayed (needs comma)
+                    sunkText = sunkText + enc.shipsSunkInEnc[i].getName() + " (" + enc.shipsSunkInEnc[i].getGRT().toLocaleString() + "GRT)";
                     if (i != enc.shipsSunkInEnc.length - 1) {
                         sunkText = sunkText + ", ";
                     }
@@ -179,21 +180,6 @@ class PatrolLog{
         this.lineEntry = this.lineEntry + "</p>";
 
         this.patrolSummary = this.patrolSummary + lineEntry;
-    }
-
-    /**
-     * Gets current GRT sunk on this patrol
-     * @returns STRING of # of GRT sunk, WITH commas: "7,400"
-     */
-    getTotalGRT() {
-        let newTotalGRT = 0;
-        for (let i = 0; i < this.gm.shipsSunkOnCurrentPatrol.length; i++) {
-            newTotalGRT += this.gm.shipsSunkOnCurrentPatrol[i].getGRTInt();
-        }
-        this.totalGRT = newTotalGRT;
-        var stringReturn = this.totalGRT.toLocaleString();
-        //stringReturn.replace(/^0+/, "");
-        return stringReturn;
     }
 
     //No encounter for transit

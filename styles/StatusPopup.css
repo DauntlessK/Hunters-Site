@@ -74,6 +74,25 @@
     position: absolute;
     left: 542px;
     bottom: 48px;
+    width: 300px;
+}
+
+.Career_Head {
+    position: absolute;
+    left: 70px;
+    top: -5px;
+}
+
+.Career_Stats {
+    position: absolute;
+    left: 300px;
+    top: -5px;
+    width: 275px;
+    font-size: 12.5px;
+}
+
+.Bold {
+    font-weight: bold;
 }
 
 .UboatCrew {

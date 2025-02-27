@@ -46,7 +46,37 @@ class StatusPopup{
 
         let rankNum = this.gm.sub.crew_levels["Kommandant"] + 1;
         let rankImagePath = "images/UI/ranks/Rank" + rankNum.toString() + ".png";
-        console.log(rankImagePath);
+
+        //Make string for pervious commands
+        let previousCommands = ""
+        if (this.gm.pastSubs.length > 0) {
+            previousCommands = "Previous Commands: " + "XYZ";
+        }
+
+        //Add s to patrols for career stats if not 1 patrol
+        let pluralPatrols = "";
+        if (this.gm.patrolNum != 1) {
+            pluralPatrols = "s";
+        }
+
+        //Figure out best patrol GRT, or use this current one if 0
+        let bestPatrol = this.gm.bestPatrolGRT;
+        let currentPatrolGRT = 0;
+        for (let i = 0; i < this.gm.shipsSunkOnCurrentPatrol.length; i++) {
+            currentPatrolGRT += this.gm.shipsSunkOnCurrentPatrol[i].getGRTInt();
+        }
+        if (currentPatrolGRT > bestPatrol) {
+            bestPatrol = currentPatrolGRT;
+        }
+        bestPatrol = bestPatrol.toLocaleString();
+
+        //Get count of capital ships sunk
+        let capShipsSunk = 0;
+        for (let i = 0; i < this.gm.shipsSunk.length; i++) {
+            if (this.gm.shipsSunk[i].getType() == "Capital Ship") {
+                capShipsSunk++;
+            }
+        }
 
         //new div to add
         this.element.innerHTML = (`
@@ -126,8 +156,34 @@ class StatusPopup{
             </div>
 
             <div class="Career">
+                <img src = ${rankImagePath}><br>
+                <div class="Career_Head">
+                    <span class="Bold">${this.gm.getRankAndName()}</span><br>
+                    ${this.gm.getFullUboatID()}<br>
+                    ${previousCommands}
+                    ${this.gm.patrolNum} Patrol${pluralPatrols}<br>
+                    ${this.gm.getTotalGRT()} GRT Sunk
+                </div>
                 <img src = "images/UI/Commander.png" style="max-height: 140px;">
-                <img src = ${rankImagePath}>
+                <div class="Career_Stats">
+                    Ships sunk: ${this.gm.shipsSunk.length} <br>
+                    Capital ships sunk: ${capShipsSunk} <br>
+                    Planes shot down: ${this.gm.planesShotDown} <br> 
+                    ---- <br>
+                    Best patrol: ${bestPatrol} GRT Sunk<br>
+                    Successful patrols: ${this.gm.successfulPatrols} <br>
+                    Unsuccessful patrols: ${this.gm.unsuccessfulPatrols} <br> 
+                    Months at sea: ${this.gm.monthsAtSea} <br>
+                    Months in port: ${this.gm.monthsInPort} <br>
+                    Random events: ${this.gm.randomEvents} <br>
+                    ---- <br>
+                    Times found by planes: ${this.gm.numPlaneEncounters} <br>
+                    Times attacked by planes: ${this.gm.numPlaneAttacks} <br>
+                    Times detected: ${this.gm.numTimesDetected} <br>
+                    Damage done: ${this.gm.damageDone} <br>
+                    Damage taken: ${this.gm.hitsTaken} <br>
+                    Sailors lost: ${this.gm.sailorsLost} <br>
+                </div>
             </div>
 
             <button class="CloseStatus_button" id="close">Close</button>
