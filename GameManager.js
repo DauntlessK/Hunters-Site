@@ -392,6 +392,7 @@ class GameManager{
         var currentEncounterType = this.patrol.getEncounterType(currentBoxName, this.getYear(), this.randomEvent, roll);
         
         console.log("Current Encounter: " + currentEncounterType);
+
         this.currentEncounter = new Encounter(this.tv, this, this.patrol, this.sub, currentEncounterType, currentBoxName, null);
         await until(_ => this.tv.isInEncounter == false);
         console.log("End Encounter");

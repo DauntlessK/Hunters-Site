@@ -156,7 +156,9 @@ class StatusPopup{
             </div>
 
             <div class="Career">
-                <img src = ${rankImagePath}><br>
+                <div class="Commander_Image">
+                    <img src = "images/UI/ranks/CommanderPortrait.png" style="max-height: 140px;">
+                </div>
                 <div class="Career_Head">
                     <span class="Bold">${this.gm.getRankAndName()}</span><br>
                     ${this.gm.getFullUboatID()}<br>
@@ -164,7 +166,12 @@ class StatusPopup{
                     ${this.gm.patrolNum} Patrol${pluralPatrols}<br>
                     ${this.gm.getTotalGRT()} GRT Sunk
                 </div>
-                <img src = "images/UI/Commander.png" style="max-height: 140px;">
+                <div class="Commander_Rank">
+                    <img src = ${rankImagePath}>
+                </div>                
+                <div class="Career_Decorations">
+                    <img src="images/UI/ranks/decorations.png">
+                </div>
                 <div class="Career_Stats">
                     Ships sunk: ${this.gm.shipsSunk.length} <br>
                     Capital ships sunk: ${capShipsSunk} <br>

@@ -73,22 +73,34 @@
 .Career {
     position: absolute;
     left: 542px;
-    bottom: 48px;
-    width: 300px;
+    top: 300px;
+    width: 600px;
 }
 
 .Career_Head {
     position: absolute;
-    left: 70px;
+    left: 100px;
     top: -5px;
 }
 
 .Career_Stats {
     position: absolute;
-    left: 300px;
+    left: 375px;
     top: -5px;
-    width: 275px;
+    width: 235px;
     font-size: 12.5px;
+}
+
+.Career_Decorations {
+    position: absolute;
+    left: 95px;
+    top: 105px;
+}
+
+.Commander_Rank {
+    position: absolute;
+    left: 12px;
+    top: 120px;
 }
 
 .Bold {

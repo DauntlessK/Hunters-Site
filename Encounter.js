@@ -1252,7 +1252,10 @@ class Encounter {
         this.roundTookFlooding = false;
     }
 
-    //Determines if a combat round can be conducted
+    /**
+     * Determines if a combat round can be conducted- based on aborting and loadout
+     * @returns true if the player can engage an enemy ship
+     */
     canAttack(){
         var canFireFore = true;
         var canFireAft = true;
@@ -1268,7 +1271,7 @@ class Encounter {
             canFireDeckGun = false;
         }
 
-        if (canFireFore || canFireAft || canFireDeckGun) {
+        if ((canFireFore || canFireAft || canFireDeckGun) && !this.gm.abortingPatrol) {
             return true;
         }
         else {
