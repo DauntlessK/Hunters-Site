@@ -12,13 +12,15 @@ class Encounter {
         this.aircraftFirstEncounter = true;         //Flag for the very first aircraft attack vs. additional round aircraft attacks
         this.aircraftResult = "";                   //For combat log mainly, result of aircraft (Show down, etc)
         this.shipList = [];
-        this.airCraft = "";
-        this.shipsSunkInEnc = [];    //Changed from shipsSunk... need to record ships sunk throughout this enc space
+        this.shipsSunkInEnc = [];
         this.sub = sub;
         this.encounterMid = false;                  //Flag for when in between following stages / switching scenes
         this.tookDamage = false;
         this.unrepairedDamage = false;
         this.damageTaken = 0;                       //num of hits total on player sub
+        this.missionInterrupts = 0;                 //Flag for when trying to complete mission, a plane shows up. For log book
+        this.missionEncComplete = false;            //Flag for keeping track if the msisiong was completed (separate from patrol successful)
+        this.missionStepResolved = true;
 
         //Encounter "Scoreboard" for results
         this.numHits = 0;
@@ -49,7 +51,7 @@ class Encounter {
             }
         }
 
-        this.aircraftType = "";
+        this.aircraftType = [];             //Array of all aircraft types. Most recent being the highest index
         this.shipListLoaded = true;
 
         this.tv.enterEncounter();
@@ -60,9 +62,9 @@ class Encounter {
         this.gm.setEventResolved(false);
 
         this.attackDepth = "";
-        this.depth = "Surfaced";               //Surfaced, Periscope Depth, or Deep
-        this.range = "";               //Close, Medium, or Long
-        this.rangeNum = 0;             //8, 7, 6
+        this.depth = "Surfaced";                //Surfaced, Periscope Depth, or Deep
+        this.range = "";                        //Close, Medium, or Long
+        this.rangeNum = 0;                      //8, 7, 6
         this.canFireForeAndAft = false;
         this.firedForeAndAft = false;
         this.firedFore = false;
@@ -93,12 +95,15 @@ class Encounter {
         //deal with mission boxes first
         if (this.currentBoxName == "Mission") {
             //loop to continue attempting mission (if at first unsuccessful but CAN succeed)
+            this.gm.setEventResolved(false);
             this.encPop.mission();
+            await until(_ => this.gm.eventResolved == true);
             this.depth = "Surfaced";
 
             let looping = 0;
-            while (looping >= 0) {
-                console.log("Mission attempt!");
+            while (looping >= 0 && starting) {
+                await until(_ => this.missionStepResolved == true);
+                console.log("Mission attempt loop-!" + looping);
                 if (looping > 0) {
                     //get new encounterType (mission attempt)
                     this.encounterType = this.patrol.getEncounterType("Mission", this.gm.getYear(), this.gm.randomEvent, -1);
@@ -107,16 +112,16 @@ class Encounter {
                 //DEAL WITH ABWEHR or MINELAYING ROLL (already rolled - result is encounterType)
                 this.gm.setEventResolved(false);
                 this.missionPopup = new MissionPopup(this.tv, this.gm, this.encounterType, this.gm.currentOrders);
-                await until(_ => this.gm.eventResolved == true);
 
                 //Establish if mission was successful or not
                 //Abwehr Missions
-                this.gm.setEventResolved(false);
                 if (this.gm.currentOrders.includes("Abwehr")) {
                     //Successful delivery
                     if (this.encounterType == "No Encounter" && this.sub.isCrewmanFunctional("Abwehr Agent")) {
                         //Success
+                        console.log("SUCCESS!");
                         this.missionPopup.missionSuccess(this.gm.currentOrders);
+                        this.missionEncComplete = true;
                         await until(_ => this.gm.eventResolved == true);
                         this.gm.missionComplete = true;
                         this.gm.sub.crew_health["Abwehr Agent"] = -1;
@@ -133,6 +138,8 @@ class Encounter {
                     }
                     else {
                         //Aircraft
+                        this.missionInterrupts++;
+                        this.missionStepResolved = false;
                         this.missionPopup.encounterAircraft();
                         await until(_ => this.gm.eventResolved == true);
                         this.aircraftFlow();
@@ -144,7 +151,8 @@ class Encounter {
                 else {
                     if (this.encounterType == "No Encounter") {
                         //Success, at least SOME mines were deployed
-                        if (this.sub.getSystemStatus("Forward Torpedo Doors") == "Operational" || this.sub.getSystemStatus("Forward Torpedo Doors")) {
+                        if (this.sub.getSystemStatus("Forward Torpedo Doors") == "Operational" || this.sub.getSystemStatus("Aft Torpedo Doors") == "Operational") {
+                            this.missionEncComplete = true;
                             this.missionPopup.missionSuccess(this.gm.currentOrders);
                             await until(_ => this.gm.eventResolved == true);
                             this.gm.missionComplete = true;
@@ -162,6 +170,8 @@ class Encounter {
                     }
                     else {
                         //Aircraft
+                        this.missionInterrupts++;
+                        this.missionStepResolved = false;
                         this.missionPopup.encounterAircraft();
                         await until(_ => this.gm.eventResolved == true);
                         this.aircraftFlow();
@@ -569,7 +579,8 @@ class Encounter {
 
         //get aircraft type
         this.getAircraft();
-        let newName = this.aircraftType.replaceAll(" ", "");
+        let numAircraft = this.aircraftType.length - 1;
+        let newName = this.aircraftType[numAircraft].replaceAll(" ", "");
         let path = "images/aircraft/" + newName + ".png";
         this.tv.gameObjects.aircraft.updateSprite(path);
 
@@ -611,7 +622,7 @@ class Encounter {
         let result2 = "";                   //Crew Injury
         let result3 = "";                   //2nd attack if applicable
         let secondAttack = false;
-        this.airPopup = new AircraftPopup(this.tv, this.gm, this.encounterType, this.currentBoxName, this.aircraftType);
+        this.airPopup = new AircraftPopup(this.tv, this.gm, this.encounterType, this.currentBoxName, this.aircraftType[numAircraft]);
 
         console.log("Aircraft Roll: " + result);
         if (result >= 6) {
@@ -620,14 +631,22 @@ class Encounter {
             if (this.aircraftFirstEncounter) {
                 this.aircraftResult = "Submerged to avoid. "
             }
-            this.airPopup.successfulDive();
+            if (this.currentBoxName == "Mission") {
+                //AVOID PLANE POPUP - then move to try again
+                this.gm.setEventResolved(false);
+                this.airPopup.missionTryAgain();
+                await until(_ => this.gm.eventResolved == true);
+            }
+            else {
+                this.airPopup.successfulDive();
+            }
         }
         else if (result >= 2) {
             //1 Attack on E3 + 1 Crew Injury
             this.gm.numPlaneAttacks++;
             this.gm.setEventResolved(false);
             let hitCount = this.escortAndAirAttackRoll(false, false, true);
-            result1 = this.sub.damage(hitCount, "Aircraft", this.aircraftType);
+            result1 = this.sub.damage(hitCount, "Aircraft", this.aircraftType[numAircraft]);
             result2 = this.sub.crewInjury("Aircraft");
             this.airPopup.hit(hitCount, result1, result2, false);
             if (this.aircraftFirstEncounter) {
@@ -640,7 +659,7 @@ class Encounter {
             this.gm.numPlaneAttacks++;
             this.gm.setEventResolved(false);
             let hitCount = this.escortAndAirAttackRoll(false, false, true);
-            result1 = this.sub.damage(hitCount, "Aircraft", this.aircraftType);
+            result1 = this.sub.damage(hitCount, "Aircraft", this.aircraftType[numAircraft]);
             result2 = this.sub.crewInjury("Aircraft");
             secondAttack = true;
             if (hitCount <= 5) {
@@ -668,25 +687,26 @@ class Encounter {
             if (flakResult == "Shot Down") {
                 secondAttack = false;
                 if (this.aircraftFirstEncounter) {
-                    this.aircraftResult =  this.aircraftResult + "Shot down " + this.aircraftType + ". ";
+                    this.aircraftResult =  this.aircraftResult + "Shot down " + this.aircraftType[numAircraft] + ". ";
                 }
             }
             if (flakResult == "Damaged") {
                 if (this.aircraftFirstEncounter) {
-                    this.aircraftResult =  this.aircraftResult + "Flak fire damaged " + this.aircraftType + ". ";
+                    this.aircraftResult =  this.aircraftResult + "Flak fire damaged " + this.aircraftType[numAircraft] + ". ";
                 }
             }
 
             if (secondAttack) {
                 this.gm.numPlaneAttacks++;
                 let hitCount = this.escortAndAirAttackRoll(false, false, true);
-                result3 = this.sub.damage(hitCount, "Aircraft",  this.aircraftType);
+                result3 = this.sub.damage(hitCount, "Aircraft",  this.aircraftType[numAircraft]);
 
                 this.gm.setEventResolved(false);
                 if (hitCount <= 5) {
                     this.airPopup.hit(hitCount, result3, "", false);
                 }
                 else { //catastrophic (game over) damage
+                    console.log("GAME OVER!!");
                     return;
                 }
                 await until(_ => this.gm.eventResolved == true);
@@ -694,9 +714,6 @@ class Encounter {
 
             //New encounter roll on the additional round E1
             if (flakResult != "Shot Down" || flakResult == "None") {
-                //this.tv.uboat.sprite.dive();
-                //sleep(1000);
-                //get new encounterType from patrol sheet
                 this.encounterType = this.patrol.getEncounterType("Additional Round of Combat", this.gm.getYear(), this.gm.randomEvent, -1);
                 console.log("Additional Round: " + this.encounterType);
                 if (this.encounterType == "No Encounter") {
@@ -704,6 +721,7 @@ class Encounter {
                     this.encPop.noAdditionalRound(this.unrepairedDamage);
                     await until(_ => this.gm.eventResolved == true);
                 }
+                //Additional round----
                 else {
                     this.gm.setEventResolved(false);
                     if (this.aircraftFirstEncounter) {
@@ -723,25 +741,30 @@ class Encounter {
                     await until(_ => this.gm.eventResolved == true);
                     this.start(this.encounterType, false);
                     return;
-                }
-                
+                }                
+            }
+            //If on mission box, note that mission will be attempted again before moving on
+            if (this.currentBoxName == "Mission") {
+                this.gm.setEventResolved(false);
+                this.airPopup.missionTryAgain();
+                await until(_ => this.gm.eventResolved == true);
+                this.missionStepResolved = true;
             }
         }
-        this.endEncounter();
-        
+        if (this.currentBoxName != "Mission") {
+            this.endEncounter();
+        }
     }
 
     /**
      * Sets the name of attacking aircraft for encounter
      */
     getAircraft() {
-        //var names = await getDataFromTxt("data/aircraft.txt");
-        //this.aircraftType = names[randomNum(0, 17)];
         let aTypes = ["Lockheed Hudson", "de Havilland Mosquito", "Vickers Wellington", 
             "Lockheed Ventura", "B-25 Mitchell", "Vickers Warwick", "B-18 Bolo", "Avro Anson", "TBF Avenger",
             "F4F Wildcat", "Fairey Swordfish", "Martin PBM Mariner", "Short Sunderland", "PBY Catalina", "Handley Page Halifax",
             "B-17 Flying Fortress", "B-24 Liberator"]
-        this.aircraftType = aTypes[randomNum(0, 16)];
+        this.aircraftType.push(aTypes[randomNum(0, 16)]);
     }
 
     //Clean up after firings
@@ -1640,7 +1663,8 @@ class Encounter {
             default:
                 let cause = "Sunk " + this.gm.getFullDate();
                 if (airAttack) {
-                    cause += " by catastrophic damage from a " + this.aircraftType;
+                    let i = this.aircraftType.length - 1;
+                    cause += " by catastrophic damage from a " + this.aircraftType[i];
                 }
                 else {
                     cause += " by catastrophic damage done by depth charges from the " + this.shipList[0].getName();
