@@ -26,6 +26,29 @@ class AircraftPopup{
     }
 
     /**
+     * Successful dive upon being attacked when trying to complete mission. This has a continue box to try again.
+     */
+    successfulDiveMissionAttempt(){
+
+        //new div to add
+        this.element.innerHTML = (`
+            <p class="PatrolMessage_p">After a chaotic crash dive in shallow waters, we've slipped away. We will return to try and complete the mission again.<br>
+            </p>
+            <button class="AttackPopup_button" id="continue">Continue</button>
+        `)
+
+        this.element.addEventListener("click", ()=> {
+            var action = null;
+            if (event.target.id == "continue"){
+                //close popup
+                this.done(event.target.id);
+            }
+        })
+
+        this.container.appendChild(this.element);
+    }
+
+    /**
      * Popup when an aircraft makes a successful attack that results in damage (and an injury) 
      * @param {string} result 
      * @param {string} result2 

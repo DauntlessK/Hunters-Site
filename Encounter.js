@@ -13,7 +13,7 @@ class Encounter {
         this.aircraftResult = "";                   //For combat log mainly, result of aircraft (Show down, etc)
         this.shipList = [];
         this.airCraft = "";
-        this.shipsSunkInEnc = [];    //Changed from shipsSunk... need to record ships sunk throughout this enc space
+        this.shipsSunkInEnc = [];                   //Changed from shipsSunk... need to record ships sunk throughout this enc space
         this.sub = sub;
         this.encounterMid = false;                  //Flag for when in between following stages / switching scenes
         this.tookDamage = false;
@@ -60,9 +60,9 @@ class Encounter {
         this.gm.setEventResolved(false);
 
         this.attackDepth = "";
-        this.depth = "Surfaced";               //Surfaced, Periscope Depth, or Deep
-        this.range = "";               //Close, Medium, or Long
-        this.rangeNum = 0;             //8, 7, 6
+        this.depth = "Surfaced";                //Surfaced, Periscope Depth, or Deep
+        this.range = "";                        //Close, Medium, or Long
+        this.rangeNum = 0;                      //8, 7, 6
         this.canFireForeAndAft = false;
         this.firedForeAndAft = false;
         this.firedFore = false;
@@ -92,21 +92,23 @@ class Encounter {
         //Getting encounter popup and feeding into next step of encounter
         //deal with mission boxes first
         if (this.currentBoxName == "Mission") {
-            //loop to continue attempting mission (if at first unsuccessful but CAN succeed)
+            let looping = 0;
+
+            while (looping >= 0) {
+                //loop to continue attempting mission (if at first unsuccessful but CAN succeed)
             this.encPop.mission();
             this.depth = "Surfaced";
-
-            let looping = 0;
-            while (looping >= 0) {
                 console.log("Mission attempt!");
+
+                //If not first loop, get new encounter to try again mission
                 if (looping > 0) {
-                    //get new encounterType (mission attempt)
+                    await until(_ => this.encounterMid == false);
                     this.encounterType = this.patrol.getEncounterType("Mission", this.gm.getYear(), this.gm.randomEvent, -1);
                 }
 
                 //DEAL WITH ABWEHR or MINELAYING ROLL (already rolled - result is encounterType)
                 this.gm.setEventResolved(false);
-                this.missionPopup = new MissionPopup(this.tv, this.gm, this.encounterType, this.gm.currentOrders);
+                this.missionPopup = new MissionPopup(this.tv, this.gm, this.encounterType, this.gm.currentOrders);      //constructor only
                 await until(_ => this.gm.eventResolved == true);
 
                 //Establish if mission was successful or not
@@ -611,7 +613,7 @@ class Encounter {
         let result2 = "";                   //Crew Injury
         let result3 = "";                   //2nd attack if applicable
         let secondAttack = false;
-        this.airPopup = new AircraftPopup(this.tv, this.gm, this.encounterType, this.currentBoxName, this.aircraftType);
+        this.airPopup = new AircraftPopup(this.tv, this.gm, this.encounterType, this.currentBoxName, this.aircraftType);        //constructor only
 
         console.log("Aircraft Roll: " + result);
         if (result >= 6) {
@@ -620,7 +622,9 @@ class Encounter {
             if (this.aircraftFirstEncounter) {
                 this.aircraftResult = "Submerged to avoid. "
             }
-            this.airPopup.successfulDive();
+            this.gm.setEventResolved(false);
+            this.airPopup.successfulDiveMissionAttempt();
+            await until(_ => this.gm.eventResolved == true);
         }
         else if (result >= 2) {
             //1 Attack on E3 + 1 Crew Injury
@@ -724,11 +728,12 @@ class Encounter {
                     this.start(this.encounterType, false);
                     return;
                 }
-                
             }
         }
-        this.endEncounter();
-        
+        //End encounter only if not mission. If mission, this should bounce back to mission attempt loop
+        if (this.currentBoxName != "Mission") {
+            this.endEncounter();
+        }
     }
 
     /**
