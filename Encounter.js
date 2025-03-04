@@ -21,6 +21,7 @@ class Encounter {
         this.missionInterrupts = 0;                 //Flag for when trying to complete mission, a plane shows up. For log book
         this.missionEncComplete = false;            //Flag for keeping track if the msisiong was completed (separate from patrol successful)
         this.missionStepResolved = true;
+        this.aircraftCalledInBackup == false        //Flag for after an aircraft leads to another encounter (escort / aircraft)
 
         //Encounter "Scoreboard" for results
         this.numHits = 0;
@@ -102,7 +103,7 @@ class Encounter {
 
             let looping = 0;
             while (looping >= 0 && starting) {
-                await until(_ => this.missionStepResolved == true);
+                //await until(_ => this.missionStepResolved == true);
                 console.log("Mission attempt loop-!" + looping);
                 if (looping > 0) {
                     //get new encounterType (mission attempt)
@@ -143,6 +144,7 @@ class Encounter {
                         this.missionPopup.encounterAircraft();
                         await until(_ => this.gm.eventResolved == true);
                         this.aircraftFlow();
+                        await until(_ => this.gm.missionStepResolved == true);
                         looping++;
                         continue;
                     }
@@ -628,14 +630,16 @@ class Encounter {
         if (result >= 6) {
             //Crash Dive successful, avoids air attack
             console.log("Successful Dive");
+            this.tv.changeScene("Sea", this.timeOfDay, this, false);
             if (this.aircraftFirstEncounter) {
                 this.aircraftResult = "Submerged to avoid. "
             }
             if (this.currentBoxName == "Mission") {
                 //AVOID PLANE POPUP - then move to try again
-                this.gm.setEventResolved(false);
-                this.airPopup.missionTryAgain();
-                await until(_ => this.gm.eventResolved == true);
+                //this.gm.setEventResolved(false);
+                //this.airPopup.missionTryAgain();
+                //await until(_ => this.gm.eventResolved == true);
+                //pass
             }
             else {
                 this.airPopup.successfulDive();
@@ -739,19 +743,21 @@ class Encounter {
                     this.aircraftFirstEncounter = false;
                     this.encPop.additionalRound("aircraft", this.encounterType);
                     await until(_ => this.gm.eventResolved == true);
+                    this.aircraftCalledInBackup = true;
                     this.start(this.encounterType, false);
+                    await until(_ => this.aircraftCalledInBackup == false);
                     return;
                 }                
             }
-            //If on mission box, note that mission will be attempted again before moving on
-            if (this.currentBoxName == "Mission") {
-                this.gm.setEventResolved(false);
-                this.airPopup.missionTryAgain();
-                await until(_ => this.gm.eventResolved == true);
-                this.missionStepResolved = true;
-            }
         }
-        if (this.currentBoxName != "Mission") {
+        //If on mission box, note that mission will be attempted again before moving on
+        if (this.currentBoxName == "Mission") {
+            this.gm.setEventResolved(false);
+            this.airPopup.missionTryAgain();
+            await until(_ => this.gm.eventResolved == true);
+            this.missionStepResolved = true;
+        }
+        else {
             this.endEncounter();
         }
     }
@@ -1596,8 +1602,12 @@ class Encounter {
             this.gm.setEventResolved(true);
         }
 
-        if (this.encounterType == "Escort") {
+        if (this.encounterType == "Escort" && this.currentBoxName != "Mission") {
             this.endEncounter();
+        }
+        else if (this.currentBoxName == "Mission") {
+            //End escort mission encounter to try mission again
+            this.aircraftCalledInBackup = false;
         }
     }
 
