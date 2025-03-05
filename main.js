@@ -1,6 +1,6 @@
 class Main{
   constructor(config){
-      this.version = .698
+      this.version = .723
       this.element = config.element;
       this.canvas = this.element.querySelector(".game-canvas");
       this.ctx = this.canvas.getContext("2d");
@@ -11,6 +11,9 @@ class Main{
       this.kmdtTextField = document.getElementById('Commander');
       this.numField = document.getElementById('SubNum');
       this.button = document.getElementById('StartButton');
+
+      this.windowPause = false;
+      this.previousMs;
   }
 
   gameLoopWork() {
@@ -58,23 +61,25 @@ class Main{
   }
 
   startGameLoop() {
-    let previousMs;
     const step = 1/60;
 
     const stepFn = (timestampMs) => {
-
-      if (previousMs === undefined) {
-        previousMs = timestampMs;
+      if (this.previousMs === undefined || this.windowPause) {
+        this.previousMs = timestampMs;
       }
-      let delta = (timestampMs - previousMs) / 1000;
+      let delta = (timestampMs - this.previousMs) / 1000;
       while (delta >= step) {
-        this.gameLoopWork();
+        if (!this.windowPause) {
+          this.gameLoopWork();
+        }
         delta -= step;
       }
-      previousMs = timestampMs - delta * 1000;
+      this.previousMs = timestampMs - delta * 1000;
 
       //Normal tick
-      requestAnimationFrame(stepFn)
+      if (!this.windowPause) {
+        requestAnimationFrame(stepFn)
+      }
     }
 
     // First kickoff step
@@ -108,5 +113,19 @@ class Main{
     this.button.addEventListener('click', this);
     console.log("The Hunters: German Uboats at War\nArt, Design & Programming By Kyle Breen-Bondie\nBased on the GMT Board Game Designed by Gregory M. Smith");
     console.log("Version: " + this.version);
+
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) {
+        // Pause your JavaScript execution here
+        console.log('Page is hidden. Pausing...');
+        this.windowPause = true;
+        // Example: clearInterval(myInterval); // If you have intervals running
+      } else {
+        // Resume your JavaScript execution here
+        console.log('Page is visible. Resuming...');
+        this.windowPause = false;
+        // Example: myInterval = setInterval(myFunction, 1000);
+      }
+    });
   }
 }

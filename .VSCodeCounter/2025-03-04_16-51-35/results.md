@@ -1,28 +1,28 @@
 # Summary
 
-Date : 2024-07-30 14:20:57
+Date : 2025-03-04 16:51:35
 
 Directory c:\\Users\\kbreenbondie\\OneDrive - Arbor Oakland Group\\Documents\\GitHub\\Hunters_Site
 
-Total : 36 files,  4655 codes, 424 comments, 590 blanks, all 5669 lines
+Total : 49 files,  8367 codes, 1090 comments, 1089 blanks, all 10546 lines
 
 Summary / [Details](details.md) / [Diff Summary](diff.md) / [Diff Details](diff-details.md)
 
 ## Languages
 | language | files | code | comment | blank | total |
 | :--- | ---: | ---: | ---: | ---: | ---: |
-| JavaScript | 29 | 4,201 | 420 | 528 | 5,149 |
-| CSS | 5 | 365 | 1 | 52 | 418 |
-| HTML | 1 | 80 | 3 | 7 | 90 |
+| JavaScript | 42 | 7,719 | 1,083 | 1,005 | 9,807 |
+| CSS | 5 | 541 | 3 | 73 | 617 |
+| HTML | 1 | 98 | 4 | 8 | 110 |
 | Markdown | 1 | 9 | 0 | 3 | 12 |
 
 ## Directories
 | path | files | code | comment | blank | total |
 | :--- | ---: | ---: | ---: | ---: | ---: |
-| . | 36 | 4,655 | 424 | 590 | 5,669 |
-| . (Files) | 16 | 3,041 | 310 | 379 | 3,730 |
-| buttons | 8 | 388 | 50 | 42 | 480 |
-| popups | 8 | 879 | 63 | 122 | 1,064 |
-| styles | 4 | 347 | 1 | 47 | 395 |
+| . | 49 | 8,367 | 1,090 | 1,089 | 10,546 |
+| . (Files) | 21 | 5,561 | 817 | 664 | 7,042 |
+| buttons | 8 | 439 | 57 | 41 | 537 |
+| popups | 16 | 1,844 | 213 | 316 | 2,373 |
+| styles | 4 | 523 | 3 | 68 | 594 |
 
 Summary / [Details](details.md) / [Diff Summary](diff.md) / [Diff Details](diff-details.md)

@@ -81,18 +81,38 @@ class PatrolLog{
         }
         var lineEntry = "<p>Day " + this.currentDay.toString() + "- ";
 
-        if (enc.originalEncounterType == "No Encounter") {
-            if (this.gm.patrol.patrolArray[this.gm.currentBox] == "Transit") {
-                lineEntry = lineEntry + "Uneventful transit.";
-            }
-            else if (this.gm.patrol.patrolArray[this.gm.currentBox] == "Mission") {
-                if (this.gm.currentOrders.includes("Abwehr")) {
+        //Mission log takes precedence- make mission text if on mission spot
+        if (enc.currentBoxName == "Mission") {
+            //Abwehr Agent
+            if (this.gm.currentOrders.includes("Abwehr")) {
+                for(let i = 0; i < enc.missionInterrupts; i++) {
+                    lineEntry = lineEntry + "Attempted unsuccessfully to land Abwehr Agent. Attacked by " + enc.aircraftType[i] + ".";
+                    lineEntry = lineEntry + "<br>Day " + (this.currentDay+i).toString() + "- "
+                }
+                if (this.missionEncComplete) {
                     lineEntry = lineEntry + "Completed mission: Successfully landed Abwehr Agent.";
                 }
                 else {
+                    lineEntry = lineEntry + "Unable to complete assigned mission.";
+                }
+            }
+            //Minelaying
+            else {
+                for(let i = 0; i < enc.missionInterrupts; i++) {
+                    lineEntry = lineEntry + "Attempted unsuccessfully to deploy mines. Attacked by " + enc.aircraftType[i] + ".";
+                    lineEntry = lineEntry + "<br>Day " + (this.currentDay+i).toString() + "- "
+                }
+                if (this.missionEncComplete) {
                     lineEntry = lineEntry + "Completed mission: Successfully deployed mines.";
                 }
-                
+                else {
+                    lineEntry = lineEntry + "Unable to complete minelaying mission."
+                }
+            }
+        }
+        else if (enc.originalEncounterType == "No Encounter") {
+            if (this.gm.patrol.patrolArray[this.gm.currentBox] == "Transit") {
+                lineEntry = lineEntry + "Uneventful transit.";
             }
             else if (this.gm.patrol.patrolArray[this.gm.currentBox] == "Bay of Biscay") {
                 lineEntry = lineEntry + "Crossed Bay of Biscay, no ships or aircraft in sight.";

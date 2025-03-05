@@ -338,9 +338,8 @@ class GameManager{
      */
     async advancePatrol() {
     
-        //close previous box and move to next square --- HERE ALSO UPDATE CURRENT PATROL LOG
+        //close previous box and move to next square
         if (this.currentBox > 0 && this.currentBox != this.patrol.getPatrolLength()) {
-            //this.logBook[this.patrolNum].addLastEncounter(this.currentEncounter);  Moved inside encounter
             this.currentEncounter.closeWindows();
         }
 
