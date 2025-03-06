@@ -37,6 +37,7 @@ class Ship {
     async getShip() {
         var entry = "";     //used for initial name/GRT array
         var newEntry = [];  //used for split array
+        let ranNum = 0;     //used to random ship name
 
         switch (this.type) {
             case "Small Freighter":
@@ -47,10 +48,14 @@ class Ship {
                 //Get freighter name & GRT
                 var names = await getDataFromTxt("data/SmallFreighter.txt");
                 if (this.currentOrders == "North America" || this.currentOrders == "Caribbean") {
-                    entry = names[randomNum(101, 120)];
+                    ranNum = randomNum(101, 120);
+                    console.log(names);
+                    entry = names[ranNum];
                 }
                 else {
-                    entry = names[randomNum(1, 100)];
+                    ranNum = randomNum(1, 100);
+                    console.log(names);
+                    entry = names[ranNum];
                 }
                 newEntry = entry.split("-");
                 this.name = newEntry[0];
@@ -72,10 +77,14 @@ class Ship {
 
                 //Get freighter name & GRT
                 if (this.currentOrders == "North America" || this.currentOrders == "Caribbean") {
-                    entry = names[randomNum(101, 120)];
+                    ranNum = randomNum(101, 120);
+                    console.log(names);
+                    entry = names[ranNum];
                 }
                 else {
-                    entry = names[randomNum(1, 100)];
+                    ranNum = randomNum(1, 100);
+                    console.log(names);
+                    entry = names[ranNum];
                 }
                 newEntry = entry.split("-");
                 this.name = newEntry[0];
@@ -95,10 +104,14 @@ class Ship {
                 //Get name & GRT
                 var names = await getDataFromTxt("data/Escort.txt");
                 if (this.currentOrders == "North America" || this.currentOrders == "Caribbean") {
-                    entry = names[randomNum(670, 700)];
+                    ranNum = randomNum(670, 700);
+                    console.log(names);
+                    entry = names[ranNum];
                 }
                 else {
-                    entry = names[randomNum(1, 669)];
+                    ranNum = randomNum(1, 669);
+                    console.log(names);
+                    entry = names[ranNum];
                 }
                 newEntry = entry.split("#");
                 this.name = newEntry[0];
@@ -111,7 +124,9 @@ class Ship {
 
                 //Get name & GRT
                 var names = await getDataFromTxt("data/CapitalShip.txt");
-                entry = names[randomNum(1, 10)];
+                ranNum = randomNum(1, 10);
+                console.log(names);
+                entry = names[ranNum];
                 newEntry = entry.split("#");
                 this.name = newEntry[0];
                 this.clss = newEntry[1]

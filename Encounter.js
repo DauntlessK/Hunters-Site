@@ -94,7 +94,7 @@ class Encounter {
 
         //Getting encounter popup and feeding into next step of encounter
         //deal with mission boxes first
-        if (this.currentBoxName == "Mission") {
+        if (this.currentBoxName == "Mission" && starting) {
             //loop to continue attempting mission (if at first unsuccessful but CAN succeed)
             this.gm.setEventResolved(false);
             this.encPop.mission();
@@ -144,7 +144,7 @@ class Encounter {
                         this.missionPopup.encounterAircraft();
                         await until(_ => this.gm.eventResolved == true);
                         this.aircraftFlow();
-                        await until(_ => this.gm.missionStepResolved == true);
+                        await until(_ => this.missionStepResolved == true);
                         looping++;
                         continue;
                     }
@@ -630,16 +630,14 @@ class Encounter {
         if (result >= 6) {
             //Crash Dive successful, avoids air attack
             console.log("Successful Dive");
-            this.tv.changeScene("Sea", this.timeOfDay, this, false);
             if (this.aircraftFirstEncounter) {
                 this.aircraftResult = "Submerged to avoid. "
             }
             if (this.currentBoxName == "Mission") {
                 //AVOID PLANE POPUP - then move to try again
-                //this.gm.setEventResolved(false);
-                //this.airPopup.missionTryAgain();
-                //await until(_ => this.gm.eventResolved == true);
-                //pass
+                this.gm.setEventResolved(false);
+                this.airPopup.successfulDiveMissionAttempt();
+                await until(_ => this.gm.eventResolved == true);
             }
             else {
                 this.airPopup.successfulDive();
@@ -752,15 +750,17 @@ class Encounter {
         }
         //If on mission box, note that mission will be attempted again before moving on
         if (this.currentBoxName == "Mission") {
+            this.tv.changeScene("Sea", this.timeOfDay, this, false);
             this.gm.setEventResolved(false);
             this.airPopup.missionTryAgain();
             await until(_ => this.gm.eventResolved == true);
             this.missionStepResolved = true;
+            return;
         }
         else {
             this.endEncounter();
         }
-    }
+    } //---------------------------------END OF AIRCRAFT FLOW---------------------------
 
     /**
      * Sets the name of attacking aircraft for encounter

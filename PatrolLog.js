@@ -86,10 +86,12 @@ class PatrolLog{
             //Abwehr Agent
             if (this.gm.currentOrders.includes("Abwehr")) {
                 for(let i = 0; i < enc.missionInterrupts; i++) {
-                    lineEntry = lineEntry + "Attempted unsuccessfully to land Abwehr Agent. Attacked by " + enc.aircraftType[i] + ".";
-                    lineEntry = lineEntry + "<br>Day " + (this.currentDay+i).toString() + "- "
+                    this.currentDay++;
+                    lineEntry = lineEntry + "Attempted unsuccessfully to land Abwehr Agent. Attacked by " + enc.aircraftType[i] + ". ";
+                    lineEntry = lineEntry + enc.aircraftResult;
+                    lineEntry = lineEntry + "<br>Day " + (this.currentDay).toString() + "- "
                 }
-                if (this.missionEncComplete) {
+                if (enc.missionEncComplete) {
                     lineEntry = lineEntry + "Completed mission: Successfully landed Abwehr Agent.";
                 }
                 else {
@@ -102,7 +104,7 @@ class PatrolLog{
                     lineEntry = lineEntry + "Attempted unsuccessfully to deploy mines. Attacked by " + enc.aircraftType[i] + ".";
                     lineEntry = lineEntry + "<br>Day " + (this.currentDay+i).toString() + "- "
                 }
-                if (this.missionEncComplete) {
+                if (enc.missionEncComplete) {
                     lineEntry = lineEntry + "Completed mission: Successfully deployed mines.";
                 }
                 else {

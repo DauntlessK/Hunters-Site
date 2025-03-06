@@ -340,6 +340,11 @@ class TacticalView{
                     frames: 24,
                 })
                 break;
+            case "Sea":
+                this.upperImage.src = "images/water/deepwater.png";
+                this.bgdFrames = 49;
+                this.gameObjects = null;
+                break;
             case "Ship":
                 this.upperImage.src = "images/water/deepwater.png";
                 this.bgdFrames = 49;

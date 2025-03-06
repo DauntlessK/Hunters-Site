@@ -95,7 +95,7 @@ class AircraftPopup{
         
         //new div to add
         this.element.innerHTML = (`
-            <p class="PatrolMessage_p">We'll have to return later to attempt mission again.<br>
+            <p class="PatrolMessage_p">We are returning to attempt the mission again.<br>
             </p>
             <button class="AttackPopup_button" id="continue">Continue</button>
         `)
