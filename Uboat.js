@@ -714,7 +714,6 @@ class Uboat{
                     }
                     this.flooding_Damage += 1;
                     tookFloodingThisRound = true;
-                    this.gm.currentEncounter.unrepairedDamage = true;
                     break;
                 case "floodingx2":
                     var compartments = ["", "Forward Compartment", "Officer's Quarters", "Control Room", "Galley", "Diesel Engine Compartment", "Aft Compartment"]
@@ -725,7 +724,6 @@ class Uboat{
                     }
                     this.flooding_Damage += 2;
                     tookFloodingThisRound = true;
-                    this.gm.currentEncounter.unrepairedDamage = true;
                     break;
                 case "hull":
                     messageToReturn = messageToReturn + "The hull has taken damage! ";

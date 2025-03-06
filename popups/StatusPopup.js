@@ -45,7 +45,7 @@ class StatusPopup{
         }
 
         let rankNum = this.gm.sub.crew_levels["Kommandant"] + 1;
-        let rankImagePath = "images/UI/ranks/Rank" + rankNum.toString() + ".png";
+        let rankImagePath = "images/ui/ranks/Rank" + rankNum.toString() + ".png";
 
         //Make string for pervious commands
         let previousCommands = ""
@@ -157,7 +157,7 @@ class StatusPopup{
 
             <div class="Career">
                 <div class="Commander_Image">
-                    <img src = "images/UI/ranks/CommanderPortrait.png" style="max-height: 140px;">
+                    <img src = "images/ui/ranks/CommanderPortrait.png" style="max-height: 140px;">
                 </div>
                 <div class="Career_Head">
                     <span class="Bold">${this.gm.getRankAndName()}</span><br>
@@ -170,7 +170,7 @@ class StatusPopup{
                     <img src = ${rankImagePath}>
                 </div>                
                 <div class="Career_Decorations">
-                    <img src="images/UI/ranks/decorations.png">
+                    <img src="images/ui/ranks/Decorations.png">
                 </div>
                 <div class="Career_Stats">
                     Ships sunk: ${this.gm.shipsSunk.length} <br>

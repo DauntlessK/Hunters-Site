@@ -1,7 +1,7 @@
 class Encounter {
     constructor(tv, gm, patrol, sub, encounterType, currentBoxName, existingShips) {
         this.shipListLoaded = false;
-        if (encounterType != "No Encounter" && encounterType != "Mission") { console.log("ALARRRRM!  " + encounterType); }
+        //if (encounterType != "No Encounter" && encounterType != "Mission") { console.log("ALARRRRM!  " + encounterType); }
 
         this.tv = tv;
         this.gm = gm;
@@ -1420,10 +1420,10 @@ class Encounter {
 
         if (this.gm.getYear() >= 1941) {
             if (dudRoll == 1) {
-                return false;
+                return true;
             }
             else {
-                return true;
+                return false;
             }
         }
         else if (this.gm.getYear() == 1940 && this.gm.getMonth() >= 6) {

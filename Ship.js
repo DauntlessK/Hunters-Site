@@ -49,12 +49,10 @@ class Ship {
                 var names = await getDataFromTxt("data/SmallFreighter.txt");
                 if (this.currentOrders == "North America" || this.currentOrders == "Caribbean") {
                     ranNum = randomNum(101, 120);
-                    console.log(names);
                     entry = names[ranNum];
                 }
                 else {
                     ranNum = randomNum(1, 100);
-                    console.log(names);
                     entry = names[ranNum];
                 }
                 newEntry = entry.split("-");
@@ -78,12 +76,10 @@ class Ship {
                 //Get freighter name & GRT
                 if (this.currentOrders == "North America" || this.currentOrders == "Caribbean") {
                     ranNum = randomNum(101, 120);
-                    console.log(names);
                     entry = names[ranNum];
                 }
                 else {
                     ranNum = randomNum(1, 100);
-                    console.log(names);
                     entry = names[ranNum];
                 }
                 newEntry = entry.split("-");
@@ -105,12 +101,10 @@ class Ship {
                 var names = await getDataFromTxt("data/Escort.txt");
                 if (this.currentOrders == "North America" || this.currentOrders == "Caribbean") {
                     ranNum = randomNum(670, 700);
-                    console.log(names);
                     entry = names[ranNum];
                 }
                 else {
                     ranNum = randomNum(1, 669);
-                    console.log(names);
                     entry = names[ranNum];
                 }
                 newEntry = entry.split("#");
@@ -125,7 +119,6 @@ class Ship {
                 //Get name & GRT
                 var names = await getDataFromTxt("data/CapitalShip.txt");
                 ranNum = randomNum(1, 10);
-                console.log(names);
                 entry = names[ranNum];
                 newEntry = entry.split("#");
                 this.name = newEntry[0];

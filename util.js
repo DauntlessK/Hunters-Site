@@ -61,13 +61,14 @@ function getDataFromTxt(fullFilePath) {
     })
     .then((text) => {
       toReturn = text;
-      toReturn = toReturn.split("\r");
+      toReturn = toReturn.split("\n");
       for (let i = 0; i < toReturn.length; i++){
           toReturn[i] = toReturn[i].replace('\n','');
       }
       return toReturn;
     })
     .catch((error) => {
+      console.log("CATCH");
       toReturn = `Error: ${error.message}`;
     });
 }

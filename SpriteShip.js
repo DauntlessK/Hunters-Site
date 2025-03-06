@@ -204,28 +204,28 @@ class SpriteShip extends Sprite {
         ctx.fillText(secondLine, x, y + 10);
 
         //Draw Torpedo Assignment Indicators
-        ctx.font = "30px courier";
+        ctx.font = "50px Arial";
         var numOfG7a = this.encounter.shipList[this.shipNum].G7aINCOMING;
         var stringG7a = "";
         for (let i = 0; i < numOfG7a; i++) {
-            stringG7a = stringG7a + "•"
+            stringG7a = stringG7a + "."
         }
 
         //G7a
         ctx.fillStyle = "blue";
         ctx.textAlign = "left";
-        ctx.fillText(stringG7a, this.x + 10, y + 80);
+        ctx.fillText(stringG7a, this.x + 10, y + 74);
 
         var numOfG7e = this.encounter.shipList[this.shipNum].G7eINCOMING;
         var stringG7e = "";
         for (let i = 0; i < numOfG7e; i++) {
-            stringG7e = stringG7e + "•"
+            stringG7e = stringG7e + "."
         }
 
         //G7e
         ctx.fillStyle = "darkred";
         ctx.textAlign = "right";
-        ctx.fillText(stringG7e, this.x + 190, y + 80);
+        ctx.fillText(stringG7e, this.x + 190, y + 74);
 
         //Draw Deck Gun Assignment Indicator
         ctx.fillStyle = "black";

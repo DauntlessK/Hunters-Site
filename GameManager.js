@@ -344,7 +344,8 @@ class GameManager{
         }
 
         //End patrol if advance was clicked while boat is on the final box
-        if (this.currentBox == this.patrol.getPatrolLength()) {
+        if (this.currentBox == this.patrol.getPatrolLength() && this.extraStep == 0) {
+            this.currentEncounter.closeWindows();
             this.endPatrol();
             return;
         }

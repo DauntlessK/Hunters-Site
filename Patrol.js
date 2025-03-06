@@ -117,26 +117,42 @@ class Patrol{
 
     //Determines full length of a given patrol (number of on station steps + all transit steps)
     getPatrolLength(){
-        switch (this.gm.currentOrders) {
-            case "North America":
-            case  "Caribbean":
-                if (this.gm.sub.getType() == "IXA") {
-                    return this.gm.sub.patrol_length  + 8;
-                }
-                else {
-                    return this.gm.sub.patrol_length - 1 + 8;  // NA patrol has 1 less on station patrol + 2 BoB + EXTRA 4 transits (8 total)
-                }
-                break;
-            case "West African Coast":
-                if (this.gm.sub.getType() == "IXA") {
-                    return this.gm.sub.patrol_length  + 6;
-                }
-                else {
-                    return this.gm.sub.patrol_length  + 5;  // WAC patrol has 1 less on station (like NA) + 2 extra transits (6 total)
-                }
-                break;
-            default:
-                return this.gm.sub.patrol_length + 4;
+        //handle Type VIID differently
+        if (this.gm.sub.getType() == "VIID") {
+            switch (this.gm.currentOrders) {
+                //5 on station cases
+                case "North America":
+                    return this.gm.sub.patrol_length + 8; 
+                case "British Isles":
+                case "Norway":
+                    return this.gm.sub.patrol_length + 4;
+                //6 on station cases
+                case "Atlantic":
+                case "Spanish Coast":
+                case "Arctic":
+                    return this.gm.sub.patrol_length + 1 + 4;
+                default:
+                    console.log("ERROR for type VIID patrol length");
+            }
+        }
+        else {      //All non-VIID subs
+            switch (this.gm.currentOrders) {
+                case "North America":
+                case  "Caribbean":
+                     if (this.gm.sub.getType() == "IXA") {  //IXA patrols are not reduced
+                        return this.gm.sub.patrol_length + 8; 
+                     }
+                     return this.gm.sub.patrol_length - 1 + 8;   // NA patrol has 1 less on station patrol + 2 BoB + EXTRA 4 transits (8 total)
+                case "West African Coast":
+                    if (this.gm.sub.getType() == "IXC" || this.gm.sub.getType() == "IXA") {
+                        return this.gm.sub.patrol_length  + 6;      // IXC Does not have -1 patrol on station in WAC and IXA is not reduced
+                    }
+                    else {
+                        return this.gm.sub.patrol_length - 1  + 6;  // WAC patrol has 1 less on station (like NA) + 2 extra transits (6 total)
+                    }
+                default:
+                    return this.gm.sub.patrol_length + 4;
+            }
         }
     }
 
@@ -529,7 +545,7 @@ class Patrol{
             missionType = "M"
         }
 
-        //Get num of transit boxes
+        //Get num of transit boxes for special (longer) patrol cases
         if (this.gm.currentOrders == "Caribbean" || this.gm.currentOrders.includes("America")) {
             transitBoxes = "4";
         }
