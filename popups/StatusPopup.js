@@ -170,7 +170,24 @@ class StatusPopup{
                     <img src = ${rankImagePath}>
                 </div>                
                 <div class="Career_Decorations">
-                    <img src="images/ui/ranks/Decorations.png">
+                    <div class="knights_cross">
+                        <img src="images/ui/decorations/deco1.png">
+                    </div>
+                    <div class="uboat_front_clasp">
+                        <img src="images/ui/decorations/deco1.png">
+                    </div>
+                    <div class="uboat_war_badge">
+                        <img src="images/ui/decorations/deco1.png">
+                    </div>
+                    <div class="wound_badge">
+                        <img src="images/ui/decorations/deco1.png">
+                    </div>
+                    <div class="german_cross">
+                        <img src="images/ui/decorations/deco1.png">
+                    </div>
+                    <div class="upgrade_badge">
+                        <img src="images/ui/decorations/deco1.png">
+                    </div>
                 </div>
                 <div class="Career_Stats">
                     Ships sunk: ${this.gm.shipsSunk.length} <br>

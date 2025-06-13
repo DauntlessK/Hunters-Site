@@ -74,18 +74,19 @@
     position: absolute;
     left: 542px;
     top: 300px;
-    width: 600px;
+    width: 350px;
 }
 
 .Career_Head {
     position: absolute;
     left: 100px;
     top: -5px;
+    padding: 20px 0;
 }
 
 .Career_Stats {
     position: absolute;
-    left: 375px;
+    left: 340px;
     top: -5px;
     width: 235px;
     font-size: 12.5px;
@@ -95,6 +96,36 @@
     position: absolute;
     left: 95px;
     top: 105px;
+}
+
+.uboat_front_clasp {
+    position: absolute;
+    left: 0px;
+    top: 70px;
+}
+
+.uboat_war_badge {
+    position: absolute;
+    left: 60px;
+    top: 0px;
+}
+
+.wound_badge {
+    position: absolute;
+    left: 60px;
+    top: 70px;
+}
+
+.german_cross {
+    position: absolute;
+    left: 120px;
+    top: 0px;
+}
+
+.upgrade_badge {
+    position: absolute;
+    left: 120px;
+    top: 70px;
 }
 
 .Commander_Rank {

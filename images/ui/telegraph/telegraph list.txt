@@ -1,0 +1,53 @@
+---VIIA:					TELEGRAPH TOTALS: 7,8,9,10,11,12,13,14
+2-3-2
+4-2-4 (NA)					TELEGRAPH COMBOS see below
+
+---VIIB:
+2-4-2
+4-3-4 (NA)
+
+---VIIC:
+2-4-2
+4-3-4 (NA)
+
+---VIID:
+2-6-2
+2-5-2 (BI and NOR)
+4-5-4 (NA)
+
+---IXA
+2-5-2
+3-5-3 (WAC)
+4-5-4 (NA)
+
+---IXB
+2-6-2
+3-5-3 (WAC)
+4-5-4 (NA)
+
+---IXC
+2-7-2
+3-6-3 (WAC)
+4-6-4 (NA)
+
+COMBOS - # of total boxes with # of transit boxes
+7:   7-2
+8:   8-2
+9:   9-2
+10: 10-2
+11: 11-4, 11-3, 11-2
+12: 12-3
+13: 13-4
+14: 14-4
+
+* Total of 10 BASE telegraphs
+   -each with a M and P variant (Mission or patrol)
+   -each with BoB and T variant (Bay of Biscay or Transit only)
+
+40 total telegraphs
+
+*still need:
+11-3
+12-3
+13-4
+14-4

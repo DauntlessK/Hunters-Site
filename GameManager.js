@@ -439,7 +439,7 @@ class GameManager{
             this.currentBox = patrolLength - transitSteps;
         }
 
-        //will need a flag somwhere in here for IX boats whether they burn a second month or not (abort before halfway)
+        //TODO will need a flag somwhere in here for IX boats whether they burn a second month or not (abort before halfway)
 
         this.subEventResolved = false;
         this.popup2.abortPatrolPopup();
