@@ -549,7 +549,7 @@ class Patrol{
         if (this.gm.currentOrders == "Caribbean" || this.gm.currentOrders.includes("America")) {
             transitBoxes = "4";
         }
-        else if (this.gm.currentOrders == "South African Coast") {
+        else if (this.gm.currentOrders == "West African Coast") {
             transitBoxes = "3";
         }
 
