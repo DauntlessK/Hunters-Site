@@ -171,22 +171,22 @@ class StatusPopup{
                 </div>                
                 <div class="Career_Decorations">
                     <div class="knights_cross">
-                        <img src="images/ui/decorations/deco1.png">
+                        <img src="images/ui/decorations/KnightsCross1.png">
                     </div>
                     <div class="uboat_front_clasp">
-                        <img src="images/ui/decorations/deco1.png">
+                        <img src="images/ui/decorations/UboatFrontClasp1.png">
                     </div>
                     <div class="uboat_war_badge">
-                        <img src="images/ui/decorations/deco1.png">
+                        <img src="images/ui/decorations/UboatWarBadge1.png">
                     </div>
                     <div class="wound_badge">
-                        <img src="images/ui/decorations/deco1.png">
+                        <img src="images/ui/decorations/UboatWarBadge1.png">
                     </div>
                     <div class="german_cross">
-                        <img src="images/ui/decorations/deco1.png">
+                        <img src="images/ui/decorations/GermanCross1.png">
                     </div>
                     <div class="upgrade_badge">
-                        <img src="images/ui/decorations/deco1.png">
+                        <img src="images/ui/decorations/UpgradeToken1.png">
                     </div>
                 </div>
                 <div class="Career_Stats">
