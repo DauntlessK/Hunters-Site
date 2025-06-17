@@ -180,7 +180,7 @@ class StatusPopup{
                         <img src="images/ui/decorations/UboatWarBadge1.png">
                     </div>
                     <div class="wound_badge">
-                        <img src="images/ui/decorations/UboatWarBadge1.png">
+                        <img src="images/ui/decorations/WoundBadge1.png">
                     </div>
                     <div class="german_cross">
                         <img src="images/ui/decorations/GermanCross1.png">

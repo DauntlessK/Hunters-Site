@@ -269,7 +269,7 @@ class GameManager{
         switch (this.currentOrders){
             case "British Isles":
             case "Mediterranean":
-            case "Artic":
+            case "Arctic":
             case "Caribbean":
                 this.currentOrdersLong = "Patrol the " + this.currentOrders;
                 break;
@@ -284,7 +284,7 @@ class GameManager{
                 this.currentOrdersLong = "Patrol the Mid-Atlantic";
                 break;
             case "North America":
-                this.currentOrdersLong = "Patrol the NA Station";
+                this.currentOrdersLong = "Patrol off the NA Coast";
                 break;
             case "British Isles (Minelaying)":
                 this.currentOrdersLong = "Minelay off British Isles"
@@ -293,13 +293,13 @@ class GameManager{
                 this.currentOrdersLong = "Deliver Agent to Britain"
                 break;
             case "Atlantic (Wolfpack)":
-                this.currentOrdersLong = "Wolfpack Patrol the Mid-Atlantic";
+                this.currentOrdersLong = "Wolfpack Patrol (Mid-Atlantic)";
                 break;
             case "North America (Abwehr Agent Delivery)":
-                this.currentOrdersLong = "Deliver Agent to USA"
+                this.currentOrdersLong = "Deliver Agent to NA"
                 break;
             default:
-                console.log("Error getting Long orders version.");
+                console.log("Error getting Long orders version for: " + this.currentOrders);
                 break;
         }
     }

@@ -395,6 +395,49 @@ class TacticalView{
                     })
                 }
                 break;
+            case "Two Ships + Escort":
+                this.upperImage.src = "images/water/deepwater.png";
+                this.bgdFrames = 49;
+                this.gameObjects = null;
+                this.shipObjects = {
+                    ship0: new SpriteShip({
+                        tv: this,
+                        gm: this.gm,
+                        x: 740,
+                        y: 50,
+                        src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
+                        shipNum: 0,
+                        width: 201,
+                        height: 158,
+                        frames: 6,
+                        encounter: enc
+                    }),
+                    ship1: new SpriteShip({
+                        tv: this,
+                        gm: this.gm,
+                        x: 500,
+                        y: 10,
+                        src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
+                        shipNum: 1,
+                        width: 201,
+                        height: 158,
+                        frames: 6,
+                        encounter: enc
+                    }),
+                    ship2: new SpriteShip({
+                        tv: this,
+                        gm: this.gm,
+                        x: 240,
+                        y: 10,
+                        src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
+                        shipNum: 1,
+                        width: 201,
+                        height: 158,
+                        frames: 6,
+                        encounter: enc
+                    })
+                }
+                break;
             case "Convoy":
                 this.upperImage.src = "images/water/deepwater.png";
                 this.bgdFrames = 49;

@@ -5,7 +5,7 @@
 ---VIIB:
 2-4-2
 4-3-4 (NA)
-
+						SIZE: 200x200
 ---VIIC:
 2-4-2
 4-3-4 (NA)
@@ -41,13 +41,13 @@ COMBOS - # of total boxes with # of transit boxes
 14: 14-4
 
 * Total of 10 BASE telegraphs
-   -each with a M and P variant (Mission or patrol)
+   -each with a M and P variant (Mission or patrol) INCORRECT: -3 VARIANTS (WAC) DO NOT HAVE MISSIONS
    -each with BoB and T variant (Bay of Biscay or Transit only)
 
 40 total telegraphs
 
 *still need:
-11-3
+11-3 XX
 12-3
 13-4
 14-4

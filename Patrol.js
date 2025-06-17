@@ -119,15 +119,21 @@ class Patrol{
     getPatrolLength(){
         //handle Type VIID differently
         if (this.gm.sub.getType() == "VIID") {
+            console.log("DEBUG: " + this.gm.currentOrders);
             switch (this.gm.currentOrders) {
                 //5 on station cases
                 case "North America":
+                case "North America (Abwehr Agent Delivery)":
+                case "Caribbean":
                     return this.gm.sub.patrol_length + 8; 
                 case "British Isles":
+                case "British Isles (Minelaying)":
+                case "British Isles (Abwehr Agent Delivery)":
                 case "Norway":
                     return this.gm.sub.patrol_length + 4;
                 //6 on station cases
                 case "Atlantic":
+                case "Atlantic (Wolfpack)":
                 case "Spanish Coast":
                 case "Arctic":
                     return this.gm.sub.patrol_length + 1 + 4;

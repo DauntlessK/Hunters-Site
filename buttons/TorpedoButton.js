@@ -85,7 +85,7 @@ class TorpedoButton extends Button{
                 this.changeState("Disabled");
             }
             //Disable if firing deck gun
-            else if (this.gm.sub.isFiringDeckGun > 0 && this.currentState == "Active") {
+            else if (this.gm.sub.isFiringDeckGun > 0 && (this.currentState == "Active" || this.currentState == "Empty")) {
                 this.changeState("Disabled");
             }
             //Re-enable if not firing deck gun and can fire that side of ship

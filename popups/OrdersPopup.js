@@ -48,6 +48,20 @@ class OrdersPopup{
             case "Mediterranean":
                 message = " has been reassigned to the Mediterranean. Immediately upon receipt of this order, proceed through the Gibraltar Strait to join the Mediterranean fleet."
                 break;
+            case "Arctic":
+                message = " has been ordered North. Proceed towards the Arctic to patrol for ships there."
+                break;
+            case "North America":
+                message = " is hereby ordered to patrol off the coast of the United States. You will be provided with resupply as needed for your extended patrol."
+                break;
+            case "Caribbean":
+                message = " is hereby ordered to patrol the Caribbean. You will be provided with resupply as needed for your extended patrol."
+                break;
+            case "North America (Abwehr Agent Delivery)":
+                message = " has been entrusted to safely deliver the onboard Abwehr agent to the enclosed area, then proceed to patrol off the North American coast."
+                break;
+            default:
+                console.log("Error getting message: " + this.gm.currentOrders);
         }
         
 
