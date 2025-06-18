@@ -39,6 +39,8 @@ class StatusPopup{
         //Message to announce starting rank, sub, date, etc
 
         const healthShort = ["OK", "LW", "SW", "KIA"];
+        const crewlevelShort = ["GRN", "TRN", "VET", "ELT"];
+        const officerlevelShort = ["TRN", "EXP"];
         var reload = "Reload";
         if (this.tv.isInEncounter) {
             reload = "";
@@ -106,47 +108,47 @@ class StatusPopup{
             </tr>
             <tr id="Kommandant">
                 <td>KMDT</td>
-                <td>${this.gm.sub.crew_levels["Kommandant"]}</td>
+                <td>-</td>
                 <td>${healthShort[this.gm.sub.crew_health["Kommandant"]]}</td>
             </tr>
             <tr id="WatchOfficer1">
                 <td>WO1</td>
-                <td>${this.gm.sub.crew_levels["Watch Officer 1"]}</td>
+                <td>${officerlevelShort[this.gm.sub.crew_levels["Watch Officer 1"]]}</td>
                 <td>${healthShort[this.gm.sub.crew_health["Watch Officer 1"]]}</td>
             </tr>
             <tr id="WatchOfficer2">
                 <td>WO2</td>
-                <td>${this.gm.sub.crew_levels["Watch Officer 2"]}</td>
+                <td>${officerlevelShort[this.gm.sub.crew_levels["Watch Officer 2"]]}</td>
                 <td>${healthShort[this.gm.sub.crew_health["Watch Officer 2"]]}</td>
             </tr>
             <tr id="Engineer">
                 <td>ENG</td>
-                <td>${this.gm.sub.crew_levels["Engineer"]}</td>
+                <td>${officerlevelShort[this.gm.sub.crew_levels["Engineer"]]}</td>
                 <td>${healthShort[this.gm.sub.crew_health["Engineer"]]}</td>
             </tr>
             <tr id="Doctor">
                 <td>DOC</td>
-                <td>${this.gm.sub.crew_levels["Doctor"]}</td>
+                <td>${officerlevelShort[this.gm.sub.crew_levels["Doctor"]]}</td>
                 <td>${healthShort[this.gm.sub.crew_health["Doctor"]]}</td>
             </tr>
             <tr id="Crew1">
                 <td>CREW 1</td>
-                <td>${this.gm.sub.crew_levels["Crew"]}</td>
+                <td>${crewlevelShort[this.gm.sub.crew_levels["Crew"]]}</td>
                 <td>${healthShort[this.gm.sub.crew_health["Crew 1"]]}</td>
             </tr>
             <tr id="Crew2">
                 <td>CREW 2</td>
-                <td>${this.gm.sub.crew_levels["Crew"]}</td>
+                <td>${crewlevelShort[this.gm.sub.crew_levels["Crew"]]}</td>
                 <td>${healthShort[this.gm.sub.crew_health["Crew 2"]]}</td>
             </tr>
             <tr id="Crew3">
                 <td>CREW 3</td>
-                <td>${this.gm.sub.crew_levels["Crew"]}</td>
+                <td>${crewlevelShort[this.gm.sub.crew_levels["Crew"]]}</td>
                 <td>${healthShort[this.gm.sub.crew_health["Crew 3"]]}</td>
             </tr>
             <tr id="Crew4">
                 <td>CREW 4</td>
-                <td>${this.gm.sub.crew_levels["Crew"]}</td>
+                <td>${crewlevelShort[this.gm.sub.crew_levels["Crew"]]}</td>
                 <td>${healthShort[this.gm.sub.crew_health["Crew 4"]]}</td>
             </tr>
 

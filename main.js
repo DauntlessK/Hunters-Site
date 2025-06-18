@@ -1,6 +1,6 @@
 class Main{
   constructor(config){
-      this.version = .75
+      this.version = .752
       this.element = config.element;
       this.canvas = this.element.querySelector(".game-canvas");
       this.ctx = this.canvas.getContext("2d");

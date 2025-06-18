@@ -130,13 +130,16 @@ class Ship {
                 break;
         }
 
-        //ensure name is unique, if not, call getShip again
-        if (this.shipsSunk.length != 0) {
-            for (let i = 0; i < this.shipsSunk.length; i++) {
-                if (this.shipsSunk[i].name == this.name || this.name == this.otherShip1 || this.name == this.otherShip2 || this.name == this.otherShip3 ) {
-                    this.getShip();
-                }
+        //ensure name is unique among sunk ships, if not, call getShip again
+        for (let i = 0; i < this.shipsSunk.length; i++) {
+            if (this.shipsSunk[i].name == this.name || this.name == this.otherShip1 || this.name == this.otherShip2 || this.name == this.otherShip3 ) {
+                this.getShip();
             }
+        }
+
+        //ensure name is unique among ships in the convoy
+        if (this.name == this.otherShip1 || this.name == this.otherShip2 || this.name == this.otherShip3) {
+                this.getShip();
         }
 
         this.isLoaded = true;

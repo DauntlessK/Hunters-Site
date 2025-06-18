@@ -20,16 +20,16 @@ class GMPopup{
             storyIntroText = "The invasion of Poland has begun... Hostilities with England effective immediately. It is time to prove your mettle and help the war effort in disrupting shipping to the allies."
         }
         else if (year == 1940 && month < 6){
-            storyIntroText = "With Poland defeated, Germany looks to tighten its control of the Atlantic. We must continue to strangle the Allies' supply lines."
+            storyIntroText = "With Poland defeated, Germany looks to tighten its control of the Atlantic. We must continue to strangle the Allies' supply lines to bring them to their knees."
         }
         else if (year == 1940){
             storyIntroText = "With France defeated, Germany's U-Boats have mostly relocated to French ports. Help tip the Battle of the Atlantic, now in full swing, in favor of Germany."
         }
         else if (year == 1941){
-            storyIntroText = "The battle of Britain is over. Germany must be content to force England to capitulate through other means - which is where the U-Boats come in."
+            storyIntroText = "The Battle of Britain is over. Germany must be content to force England to capitulate through other means - which is where the U-Boats come in. Following a productive year last year, we hope to continue our success."
         }
         else {
-            storyIntroText = "The Battle for the Atlantic has begun to swing against Germany. Exercise caution as the allies have learned to hunt U-Boats."
+            storyIntroText = "The Battle for the Atlantic has begun to swing against Germany. Exercise caution as the allies have learned to hunt our U-Boats and allied radar and weaponry have improved."
         }
 
         //new div to add

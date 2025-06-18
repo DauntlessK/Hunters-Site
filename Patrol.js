@@ -119,7 +119,7 @@ class Patrol{
     getPatrolLength(){
         //handle Type VIID differently
         if (this.gm.sub.getType() == "VIID") {
-            console.log("DEBUG: " + this.gm.currentOrders);
+            //console.log("DEBUG: " + this.gm.currentOrders);
             switch (this.gm.currentOrders) {
                 //5 on station cases
                 case "North America":
@@ -150,8 +150,8 @@ class Patrol{
                      }
                      return this.gm.sub.patrol_length - 1 + 8;   // NA patrol has 1 less on station patrol + 2 BoB + EXTRA 4 transits (8 total)
                 case "West African Coast":
-                    if (this.gm.sub.getType() == "IXC" || this.gm.sub.getType() == "IXA") {
-                        return this.gm.sub.patrol_length  + 6;      // IXC Does not have -1 patrol on station in WAC and IXA is not reduced
+                    if (this.gm.sub.getType() == "IXA") {
+                        return this.gm.sub.patrol_length  + 6;      // IXA is not reduced
                     }
                     else {
                         return this.gm.sub.patrol_length - 1  + 6;  // WAC patrol has 1 less on station (like NA) + 2 extra transits (6 total)

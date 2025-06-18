@@ -918,17 +918,29 @@ class Uboat{
             case 3:
                 toReturn = "The First Officer has been " + sevText;
                 person = "Watch Officer 1";
+                //check first if crew member is already KIA
+                if (this.gm.sub.crew_health[person] == 3) {
+                    return "No crew member received injury. (WO1 already KIA) "
+                }
                 this.gm.sub.crew_health[person] += wounds;
                 break;
             case 4:
             case 11:
                 toReturn = "The Engineer has been " + sevText;
                 person = "Engineer";
+                //check first if crew member is already KIA
+                if (this.gm.sub.crew_health[person] == 3) {
+                    return "No crew member received injury. (Engineer already KIA) "
+                }
                 this.gm.sub.crew_health[person] += wounds;
                 break;
             case 5:
                 toReturn = "The Doctor has been " + sevText;
                 person = "Doctor";
+                //check first if crew member is already KIA
+                if (this.gm.sub.crew_health[person] == 3) {
+                    return "No crew member received injury. (Doctor already KIA) "
+                }
                 this.gm.sub.crew_health[person] += wounds;
                 break;
             case 6:
@@ -992,6 +1004,10 @@ class Uboat{
             case 10:
                 toReturn = "The Second Officer has been " + sevText;
                 person = "Watch Officer 2";
+                //check first if crew member is already KIA
+                if (this.gm.sub.crew_health[person] == 3) {
+                    return "No crew member received injury. (WO2 already KIA) "
+                }
                 this.gm.sub.crew_health[person] += wounds;
                 break;
             case 12:
@@ -999,6 +1015,9 @@ class Uboat{
                     toReturn = "The Abwehr Agent has been " + sevText;
                     person = "Abwehr Agent";
                     this.gm.sub.crew_health[person] += wounds;
+                }
+                else if (this.gm.sub.crew_health["Abwehr Agent"] == 3) { //check if crew member is already KIA
+                    return "No crew member received injury. (Agent already KIA) "
                 }
                 else {
                     toReturn = "Our crew narrowly avoided injury! ";
