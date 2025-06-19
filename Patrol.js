@@ -50,7 +50,8 @@ class Patrol{
 
         var pickOrderRoll = d6Roll();
         var unique = this.ordersArray.filter(onlyUnique);
-        var isPicking = false
+        unique = this.validatePatrolOptions(unique);
+        var isPicking = false;
         if (this.gm.adminMode) {pickOrderRoll = 1;}
         //Picking orders
         if ((pickOrderRoll <= this.gm.sub.crew_levels["Kommandant"] && !this.gm.permArcPost && !this.permMedPost) || this.gm.adminMode){  
@@ -59,7 +60,7 @@ class Patrol{
 
             await until(_ => this.gm.eventResolved == true);
 
-            this.validatePatrol();
+            //this.validatePatrol();
             this.buildPatrol();
             this.gm.setCurrentOrdersLong();
         }
@@ -67,7 +68,7 @@ class Patrol{
             const ordersRoll = d6Rollx2();
             this.gm.currentOrders = this.ordersArray[ordersRoll];
 
-            this.validatePatrol();
+            //this.validatePatrol();
             this.buildPatrol();
             this.gm.setCurrentOrdersLong();
 
@@ -76,6 +77,64 @@ class Patrol{
             await until(_ => this.eventResolved == true);
         }
         console.log("Orders: " + this.gm.currentOrders);
+    }
+
+    /**
+     * Takes a unique order list (from the list of available patrol options) and removes what is not relevant
+     * based on permanent assignments and uboat type
+     * @param {array} uniqueOrdersList 
+     * @returns array of ONLY valid orders to choose from
+     */
+    validatePatrolOptions(uniqueOrdersList) {
+        var newUniqueOrdersList = [];
+
+        //deal with permanent stations
+        if (this.gm.permMedPost) {
+            newUniqueOrdersList = "Mediterranean";
+        }
+        else if (this.gm.permArcPost) {
+            newUniqueOrdersList = "Arctic";
+        }
+        else {
+            //loop through each unique option and remove it if applicable
+            for (let i = uniqueOrdersList.length - 1; i >= 0; i--) {      
+                //VIID Restrictions       
+                if (this.gm.sub.getType() == "VIID") {
+                    //Changes BI to BI Minelaying for VIID (any patrol that VIID makes doesn't have the option to HAVE mienlaying, so it's always a swap)
+                    if (uniqueOrdersList[i] == "British Isles") {
+                        uniqueOrdersList[i] == "British Isles (Minelaying)";      
+                    }
+                    //Remove med option for VIID boats
+                    if (uniqueOrdersList[i] == "Mediterranean") {   
+                        uniqueOrdersList.splice(i, i);
+                    }
+                }
+                //IX Restrictions
+                else if (this.gm.sub.getType().includes("IX")) {
+                    //Remove Arctic and Med as options for IX boats (no need to add WAC, which is the substitute for those)
+                    if (uniqueOrdersList[i] == "Mediterranean" || uniqueOrdersList[i] == "Arctic") {   
+                        uniqueOrdersList.splice(i, i);
+                    }
+                }
+                //VII (non D) Restrictions
+                else {
+                    //Remove WAC for VII boats
+                    if (uniqueOrdersList[i] == "West African Coast") {   
+                        uniqueOrdersList.splice(i, i);
+                        //check date- june 1940 and before need to add atlantic onto list
+                        if (this.gm.getYear() < 1940 || (this.gm.getYear() == 1940 && this.getEncounterType.getMonth() <= 5)) {
+                            uniqueOrdersList.push("Atlantic");
+                        }
+                    }
+                    //Remove Carib for VII boats (no need to add Atlantic, which is the substitute for those)
+                    if (uniqueOrdersList[i] == "Caribbean") {   
+                        uniqueOrdersList.splice(i, i);
+                    }
+                }
+            }
+            newUniqueOrdersList = uniqueOrdersList;
+        }
+        return newUniqueOrdersList;
     }
 
     validatePatrol(){
