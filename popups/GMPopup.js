@@ -173,9 +173,8 @@ class GMPopup{
                 ${this.gm.logBook[1].patrolSummaryHeader}<br>
                 ${this.gm.logBook[1].patrolSummary}
             </div>
-            
+            <button class="AttackPopup_button" id="continue">Continue</button>
         `)
-            //<button class="AttackPopup_button" id="continue">Continue</button>
         this.element.addEventListener("click", ()=> {
             if (event.target.id == "continue"){
                 //close popup
@@ -183,9 +182,52 @@ class GMPopup{
             }
         })
 
-        console.log(this.gm.logBook);
-        console.log(this.gm.logBook[0]);
-        console.log(this.gm.logBook[1]);
+        this.container.appendChild(this.element);
+    }
+
+    repairAndRecovery(refitResults, recoveryResults) {
+        //new div to add
+
+        if (refitResults != "" && recoveryResults != "") {
+            this.element.innerHTML = (`
+                <div class = "Refit_Only">
+                <h3 class="HeaderMessage_h3">Refit<br>
+                </h3>
+                <p class ="PatrolMessage_p"> ${this.gm.getFullUboatID()} will undergo a routine refit and will be back out on patrol in 1 month. 
+                </p>
+                </div>
+
+                <button class="AttackPopup_button" id="continue">Continue</button>
+                
+            `)
+        }
+        else {
+            this.element.innerHTML = (`
+                <div class = "Refit">
+                <h3 class="HeaderMessage_h3">Repair & Refit<br>
+                </h3>
+                <p class ="PatrolMessage_p">${refitResults}
+                </p>
+                </div>
+
+
+                <div class = "Recovery">
+                    <h3 class="HeaderMessage_h3">Crew Recovery<br>
+                    </h3>
+                    <p class ="PatrolMessage_p">${recoveryResults}
+                </div>
+
+                <button class="AttackPopup_button" id="continue">Continue</button>
+                
+            `)
+        }
+
+        this.element.addEventListener("click", ()=> {
+            if (event.target.id == "continue"){
+                //close popup
+                this.done();
+            }
+        })
 
         this.container.appendChild(this.element);
     }

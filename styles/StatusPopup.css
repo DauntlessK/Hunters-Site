@@ -59,7 +59,7 @@
 
 .Patrol_Log_After_Patrol {
     position: absolute;
-    right: 30px;
+    right: 120px;
     top: 20px;
     width: 500px;
     height: 242px;
@@ -68,6 +68,27 @@
     overflow-y: scroll;
     border-style: solid;
     border-width: thin;
+}
+
+.Refit {
+    position: absolute;
+    left: 30px;
+    top: 30px;
+    width: 500px;
+}
+
+.Refit_Only {
+    position: absolute;
+    left: 30px;
+    top: 30px;
+    width: 750px;
+}
+
+.Recovery {
+    position: absolute;
+    left: 530px;
+    top: 30px;
+    width: 500px;
 }
 
 .Career {

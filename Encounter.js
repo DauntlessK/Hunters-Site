@@ -822,7 +822,7 @@ class Encounter {
             return;
         }
 
-        let damageString = this.gm.sub.repair();
+        let damageString = this.gm.sub.repair(false);
 
         if (damageString != "") {
             this.gm.setEventResolved(false);

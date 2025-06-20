@@ -68,7 +68,7 @@ class Patrol{
             const ordersRoll = d6Rollx2();
             this.gm.currentOrders = this.ordersArray[ordersRoll];
 
-            //this.validatePatrol();
+            this.validatePatrol();
             this.buildPatrol();
             this.gm.setCurrentOrdersLong();
 
@@ -81,7 +81,7 @@ class Patrol{
 
     /**
      * Takes a unique order list (from the list of available patrol options) and removes what is not relevant
-     * based on permanent assignments and uboat type
+     * based on permanent assignments and uboat type. Only used for when choosing patrols
      * @param {array} uniqueOrdersList 
      * @returns array of ONLY valid orders to choose from
      */
@@ -137,6 +137,9 @@ class Patrol{
         return newUniqueOrdersList;
     }
 
+    /**
+     * Validates a patrol (only used when NOT selecting orders) and changes orders if necessary
+     */
     validatePatrol(){
         //checks if the randomly chosen patrol is valid given the U-boat type, permanent posts, etc
         

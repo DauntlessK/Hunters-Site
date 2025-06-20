@@ -172,7 +172,7 @@ class Uboat{
                             "Fuel Tanks"];
 
         //-------------CREW TRAINING LEVELS / RANKS
-        //levels for individual crew members are 0=normal, 1=trained/expert
+        //levels for individual crew members (officers) are 0=normal, 1=trained/expert
         //levels for kmdt are 0 = Oberleutnant zur See, 1 = Kapitan-leutnant, 2 = Fregatten-kapitan, 3 = Kapitan zur See
         //levels for regular crew are 0 = green, 1 = trained, 2 = Veteran, 3 = Elite
 
@@ -210,6 +210,7 @@ class Uboat{
 
         //Other States-----
         this.depth = 0;   //0=surfaced, 1=attack depth, 2=deep
+        this.monthsNeededForRefit = 0;  //keeps track of how much time is (or was) needed for this current refit while in port, or last refit when at sea
     }
 
     /**
@@ -270,8 +271,29 @@ class Uboat{
         }
     }
 
+    
+    /**
+     * 
+     * @returns number of inoperable (damaged) systems on the uboat
+     */
+    getNumSystemsInop() {
+        var numSystemsInop = 0;
+        for (let i = 0; i < this.systems.length; i++) {
+            if (this.systems[i] >= 1) {
+                numSystemsInop++;
+            }
+        }
+        return numSystemsInop;
+    }
+
+    getHullDamage() {
+        return this.hull_Damage;
+    }
+
+    /**
+     * Called in port to allow user to select torpedoes to load given the spread parameters
+     */
     torpedoResupply(){
-        //Called in port to allow user to select torpedoes to load given the spread parameters
 
         this.forward_G7a = 0;
         this.forward_G7e = 0;
@@ -485,11 +507,6 @@ class Uboat{
             }
         }
         return false;
-    }
-
-    //returns true if the boat has 
-    hasAmmo() {
-
     }
 
     //Adds (or removes) a torpedo from a given tube
@@ -833,7 +850,7 @@ class Uboat{
         }
 
         //check to see if sunk from hull damage
-        if (this.hull_Damage > this.hull_hp) {
+        if (this.hull_Damage >= this.hull_hp) {
             let cause = "Sunk " + this.gm.getFullDate();
             if (attack == "Aircraft") {
                 cause += " - Hull destroyed from air attack by " + attacker;
@@ -849,7 +866,7 @@ class Uboat{
         }
 
         //check for too much flooding (emergency surface / scuttle)
-        if  (this.flooding_Damage > this.flooding_hp) {
+        if  (this.flooding_Damage >= this.flooding_hp) {
             let cause = "Scuttled " + this.gm.getFullDate();
             if (attack == "Aircraft") {
                 cause += " - Forced to scuttle from air attack flooding by " + attacker; 
@@ -1030,9 +1047,11 @@ class Uboat{
     /**
      * Called after an encounter, or between encounters / rounds to attempt to repair all damaged systems
      * Updates all damaged (1) systems to either operable (0) or inoperative (2)
+     * Also called upon for refit (true/false param)
+     * @param {boolean} refitting true if this is a repair from port which repairs all systems to operational (0)
      * @returns string of successful or unsuccessful repair attempts
      */
-    repair() {
+    repair(refitting) {
         this.flooding_Damage = 0;
 
         var messageToReturn = "";
@@ -1053,7 +1072,7 @@ class Uboat{
             if (value == 1) {
                 roll = d6Roll();
                 result = roll + result;
-                console.log("Repair roll for " + key + ". Result: " + result);
+                if (!refitting) {console.log("Repair roll for " + key + ". Result: " + result);}
                 switch (key) {
                     case "Electric Engine #1":
                     case "Electric Engine #2":
@@ -1094,6 +1113,9 @@ class Uboat{
                     default:
                         console.log("Error attempting to repair " + key);
                 }
+            }
+            else if (refitting && value == 2) {
+                this.systems[key] = 0;
             }
         }
 
@@ -1180,5 +1202,120 @@ class Uboat{
         }
 
         return messageToReturn;
+    }
+
+    hospital() {
+        var hospitalResults = "";
+        var numCrewReplaced = 0;
+        var roll = 0;
+
+
+        for (const [key, value] of Object.entries(this.crew_health)) {
+            if (key == "Kommandant") {
+                continue;
+            }
+            if (value == 3) {  //check if KIA first
+                if (key == "Crew 1" || key == "Crew 2" || key == "Crew 3" || key == "Crew 4") {
+                    numCrewReplaced++;
+                }
+                else {
+                    this.crew_levels[key] = 0;
+                    this.crew_health[key] = 0;
+                    hospitalResults += "Our " + key + " was KIA. We have been assigned a new one.";
+                }
+            }
+            else if (value == 2) {
+                roll = d6Roll();
+                if (this.crew_levels["Doctor"] > 0) {
+                    roll -= 1;
+                }
+
+                if (roll <= this.monthsNeededForRefit) {
+                    hospitalResults += "The " + key + " recovered from his serious wounds. ";
+                }
+                else {
+                    hospitalResults += "The " + key + " will not recover from his serious wounds in time. He has been replaced. ";
+                    this.crew_levels[key] = 0;
+                }
+                this.crew_health[key] = 0;
+            }
+            else if (value == 1) {
+                hospitalResults += "The " + key + " recovered from his minor wounds. ";
+            }
+        }
+    
+        if (numCrewReplaced >= 3) {
+            this.crew_levels["Crew"] -= 1;
+            hospitalResults += "So much of crew was replaced "
+        }
+
+        //handle kommandant
+        if (this.crew_health["Kommandant"] == 2) {
+            roll = d6Roll();
+            if (this.crew_levels["Doctor"] > 0) {
+                roll -= 1;
+            }
+
+            //TODO new uboat assignment
+            if (roll > this.monthsNeededForRefit) {
+                this.gm.uboatReassignment = true;
+            }
+            else {
+                hospitalResults += "You recover from your serious wounds. ";
+            }
+        }
+        else if (this.crew_health["Kommandant"] == 1) {
+            hospitalResults += "You recover from your minor wounds. ";
+        }
+        return hospitalResults;
+    }
+
+    /**
+     * Refit and repair of the hull and damaged systems of the U-Boat (for when in port)
+     * @returns string of repair results
+     */
+    refit() {
+        var refitResults = "";
+        this.monthsNeededForRefit = 0;
+
+        if (this.getNumSystemsInop() > 2) {
+            this.monthsNeededForRefit++;
+            refitResults = "All damaged systems have been repaired, costing an additional month of repair work."
+        }
+        else if (this.getNumSystemsInop() > 0) {
+            refitResults = "All damaged systems have been repaired."
+        }
+
+        switch (this.hull_Damage) {
+            case 0:
+                break;
+            case 1:
+            case 2:
+            case 3:
+                this.monthsNeededForRefit += 1;
+                refitResults += "We'll need an additional month to repair the minor damage to the hull."
+                break;
+            case 4:
+            case 5:
+            case 6:
+                refitResults += "We'll need two additional months to repair the damage to the hull."
+                this.monthsNeededForRefit += 2;
+                break;
+            case 7:
+            case 8:
+            case 9:
+                 refitResults += "We'll need an three extra months to repair the major damage to the hull."
+                this.monthsNeededForRefit += 3;
+                break;
+        }
+
+        this.hull_Damage = 0;
+        this.repair(true);
+
+        if (this.monthsNeededForRefit >= 5) {
+            this.gm.uboatReassignment = true;
+        }
+
+        return refitResults;
     }
 }

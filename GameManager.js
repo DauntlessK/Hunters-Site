@@ -34,14 +34,9 @@ class GameManager{
         this.patrolNum = 0;
         this.missionComplete = false;
         this.unsuccessfulPatrolsInARow = 0;
-        this.eligibleForNewUboat = false;
+        this.uboatUpgrade = false;      //If eligible for an upgrade
+        this.uboatReassignment = false; //If required to be reassigned to a new boat (due to SW or too much damage to uboat)
         this.lastPatrolWasUnsuccessful = false;
-        this.randomEvent = false;
-        this.superiorTorpedoes = false;
-        this.halsUndBeinbruch = 0;
-        this.weatherDuty = false;
-        this.severeWeather = false;
-        this.eligibleForNewBoat = false;
         this.abortingPatrol = false;
         this.extraStep = 0;             //is -1 if aborting with diesel inop which forces an extra encounter every box
         this.contFromAbort = false;     //flag used to skip over second encounter roll for the very first time after aborting only 
@@ -55,6 +50,13 @@ class GameManager{
         this.logBook = [];
         this.pastSubs = [];
         this.adminMode = false;
+
+        //------------For Random Event tracking
+        this.randomEvent = false;
+        this.superiorTorpedoes = false;
+        this.halsUndBeinbruch = 0;
+        this.weatherDuty = false;
+        this.severeWeather = false;
 
         //------------Stat keeping
         this.successfulPatrols = 0;
@@ -139,8 +141,23 @@ class GameManager{
         return this.date_year;
     }
 
+    /**
+     * 
+     * @returns month in number format
+     */
     getMonth() {
         return this.date_month;
+    }
+
+    /**
+     * Advances time one month
+     */
+    advanceMonth() {
+        this.date_month += 1;
+        if (this.getMonth() > 11) {
+            this.date_month = 0;
+            this.date_year++;
+        }
     }
 
     getLRankAndName(){
@@ -465,5 +482,25 @@ class GameManager{
         this.eventResolved = false;
         this.popup2.endPatrolPopup();
         await until(_ => this.eventResolved == true);
+
+        //repair / refit sub first
+        var refitResults = this.sub.refit();
+        var hospitalResults = this.sub.hospital();
+
+        //if a new uboat is called for (due to excessive damage or SW on KMDT)
+        if (this.uboatReassignment) {
+            console.log("TODO popup required for reassignment");
+            console.log("TODO reassign to new uboat, create new uboat object");
+        }
+        else {
+            this.popup2.repairAndRecovery(refitResults, hospitalResults);
+        }
+        await until(_ => this.eventResolved == true);
+
+        //Advance time
+        if (this.sub.getType().includes("IX") || this.sub.getType() == "VIID") {
+            this.advanceMonth();
+        }
+        this.advanceMonth();
     }
 }
