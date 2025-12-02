@@ -166,7 +166,7 @@ class StatusPopup{
                     ${this.gm.getFullUboatID()}<br>
                     ${previousCommands}
                     ${this.gm.patrolNum} Patrol${pluralPatrols}<br>
-                    ${this.gm.getTotalGRT()} GRT Sunk
+                    ${this.gm.getTotalGRT("String")} GRT Sunk
                 </div>
                 <div class="Commander_Rank">
                     <img src = ${rankImagePath}>

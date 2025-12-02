@@ -3,6 +3,13 @@ class Patrol{
         this.gm = gm;
         this.tv = tv;
 
+        //Mark Start Month and Year
+        this.startMonth = this.gm.getMonth();
+        this.startYear = this.gm.getYear();
+
+        //Final Patrol Log
+        this.patrolLog = "";
+
         //array of orders options for a given date
         this.ordersArray = null;
 
@@ -31,6 +38,10 @@ class Patrol{
 
         this.WAfricanCoast = false;
         this.NAorders = false;
+    }
+
+    setPatrolLog(finalPatrolLog) {
+        this.patrolLog = finalPatrolLog;
     }
 
     async getPatrol(){

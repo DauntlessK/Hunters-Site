@@ -209,6 +209,7 @@ class Ship {
             this.gm.shipsSunk.push(this);
             this.gm.shipsSunkOnCurrentPatrol.push(this);
             this.enc.shipsSunkInEnc.push(this);
+            this.gm.totalGRTSunk += this.getGRTInt();
             //Update capital ship sunk count if applicable
             if (this.shipList[i].type == "Capital Ship") {
                 this.gm.capitalShipsSunk++;

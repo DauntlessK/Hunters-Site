@@ -16,6 +16,7 @@ class GameManager{
         this.currentOrders = "";
         this.currentOrdersLong = "";
         this.patrol = new Patrol(this.tv, this);
+        this.patrols = []; // Array of all patrol objects for record keeping if needed
         this.patrolling = false;
         this.patrolCount = ["", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth",
                             "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth",
@@ -71,6 +72,7 @@ class GameManager{
         //------------Stat keeping
         this.successfulPatrols = 0;
         this.unsuccessfulPatrols = 0;
+        this.totalGRTSunk = 0;
         this.damageDone = 0;
         this.hitsTaken = 0;
         this.randomEvents = 0;
@@ -99,8 +101,8 @@ class GameManager{
         }
 
         //Create first log
-        var patrol = new PatrolLog(this.tv, this);
-        this.logBook.push(patrol);
+        var patrolLog = new PatrolLog(this.tv, this);
+        this.logBook.push(patrolLog);
 
         //Popup to greet start of game
         if (this.id == 77 && this.kmdt == "kbb") {
@@ -160,7 +162,7 @@ class GameManager{
     }
 
     getMonthString(){
-        return this.month[this.date_month + 1];
+        return this.month[this.date_month];
     }
 
     /**
@@ -196,16 +198,23 @@ class GameManager{
     }
 
     /**
-     * Gets current GRT sunk for entire career
-     * @returns STRING of # of GRT sunk, WITH commans: "2,700"
+     * Gets current GRT sunk for entire career.
+     * Note: Changed from calculating each time.
+     * @returns STRING or INT of # of GRT sunk, WITH commas: "2,700"
      */
-    getTotalGRT() {
-        let newTotalGRT = 0;
-        for (let i = 0; i < this.shipsSunk.length; i++) {
-            newTotalGRT += this.shipsSunk[i].getGRTInt();
+    getTotalGRT(returnType) {
+        //let newTotalGRT = 0;
+        //for (let i = 0; i < this.shipsSunk.length; i++) {
+        //    newTotalGRT += this.shipsSunk[i].getGRTInt();
+        //}
+        if (returnType == "String") {
+            var stringReturn = this.totalGRTSunk.toLocaleString();
+            return stringReturn;
         }
-        var stringReturn = newTotalGRT.toLocaleString();
-        return stringReturn;
+        else {
+            return this.totalGRTSunk;
+        }
+        
     }
 
     /**
@@ -386,6 +395,14 @@ class GameManager{
         this.currentBox = this.currentBox + this.extraStep;
         console.log("Patrol Advance---------- step #" + this.currentBox);
 
+        //Check if type IX_ or VIID and halfway through patrol in order to account for 2 month long patrols
+        if ((this.sub.getType().includes("IX") || this.sub.getType() == "VIID") && this.currentBox >= (this.patrol.getPatrolLength() / 2)){
+            //Check to make sure extra month is not already accounted for
+            if (this.patrol.startMonth == this.getMonth()) {
+                this.advanceMonth();
+            }
+        } 
+
         //if doctor is SW or KIA, see if any other injured crew members die (each patrol box, before encounter)
         if (!this.sub.isCrewmanFunctional("Doctor")){
             //check if any hurt crewmen
@@ -503,8 +520,8 @@ class GameManager{
 
         //if a new uboat is called for (due to excessive damage or SW on KMDT)
         if (this.uboatReassignment) {
-            console.log("TODO popup required for reassignment");
-            console.log("TODO reassign to new uboat, create new uboat object");
+            console.log("TODO: popup required for reassignment");
+            console.log("TODO: reassign to new uboat, create new uboat object");
         }
         else {
             this.popup2.repairAndRecovery(refitResults, hospitalResults);
@@ -512,9 +529,6 @@ class GameManager{
         await until(_ => this.eventResolved == true);
 
         //Advance time
-        if (this.sub.getType().includes("IX") || this.sub.getType() == "VIID") {
-            this.advanceMonth();
-        }
         this.advanceMonth();
     }
 
@@ -555,34 +569,34 @@ class GameManager{
             previous_uboats: this.getPastSubs(),
 
             patrols: this.patrolNum,
-            tonnage_sunk: this.gm.getTotalGRT(),
+            tonnage_sunk: this.gm.getTotalGRT("Int"),
             ships_sunk: this.shipsSunk.length,
             warships_sunk: this.capitalShipsSunk,
             num_planes_shot_down: this.planesShotDown,
 
             survival_status: this.getSurvivalStatus(),
-            end_month: this.getMonth(),
+            end_month: this.getMonth() + 1,
             end_year: this.getYear(),
             game_over_encounter: "N/A",
             game_over_cause: this.gameOverCause,
 
-            knights_cross: game.knightsCross,
-            war_badge: game.uboatWarBadgeLevel,
-            front_clasp: game.uboatFrontClaspLevel,
-            wound_badge: game.woundBadgeLevel,
-            german_cross: game.germanCrossLevel,
+            knights_cross: this.sub.knightsCross,
+            war_badge: this.uboatWarBadgeLevel,
+            front_clasp: this.uboatFrontClaspLevel,
+            wound_badge: this.woundBadgeLevel,
+            german_cross: this.germanCrossLevel,
 
-            times_detected: game.timesDetected,
-            damage_done: game.damageDone,
-            hits_taken: game.hitsTaken,
-            random_events: game.randomEvents,
-            sailors_lost: game.sailorsLost,
-            months_at_sea: game.monthsAtSea,
-            months_in_port: game.monthsInPort,
-            successful_patrols: game.successfulPatrols,
-            unsuccessful_patrols: game.unsuccessfulPatrols,
-            num_plane_encounters: game.numPlaneEncounters,
-            num_plane_attacks: game.numPlaneAttacks
+            times_detected: this.numTimesDetected,
+            damage_done: this.damageDone,
+            hits_taken: this.hitsTaken,
+            random_events: this.randomEvents,
+            sailors_lost: this.sailorsLost,
+            months_at_sea: this.monthsAtSea,
+            months_in_port: this.monthsInPort,
+            successful_patrols: this.successfulPatrols,
+            unsuccessful_patrols: this.unsuccessfulPatrols,
+            num_plane_encounters: this.numPlaneEncounters,
+            num_plane_attacks: this.numPlaneAttacks
         };
 
         // Send to backend
