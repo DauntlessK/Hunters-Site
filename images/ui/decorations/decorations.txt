@@ -12,7 +12,8 @@ Gameplay Impact: none
 
 
 U-Boat Front Clasp
-Awarded: After sinking 3+ ships (not warships) on a single patrol for over 25k tons NOTE: 25k tons TBD
+3 levels: Black(3), Silver(5), Gold(10)
+Awarded: After sinking X amount of ships on a single patrol
 Gameplay Impact: none
 
 

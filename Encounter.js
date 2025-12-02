@@ -1263,7 +1263,7 @@ class Encounter {
                 }
             }
         }
-        //Count sunk ships
+        //Count sunk ships within this encounter
         for (let i = 0; i < this.shipList.length; i++) {
             if (this.shipList[i].sunk) {
                 this.numSunk++;

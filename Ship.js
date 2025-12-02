@@ -197,6 +197,7 @@ class Ship {
     }
 
     //Assigns damage to the ship, then checks for sinking
+    //Ship obj is responsible for updating global sunk ship lists, counts, damage, etc.
     takeDamage(num) {
         this.damage = this.damage + num;
         this.gm.damageDone += num;   //update global damage count
@@ -208,6 +209,10 @@ class Ship {
             this.gm.shipsSunk.push(this);
             this.gm.shipsSunkOnCurrentPatrol.push(this);
             this.enc.shipsSunkInEnc.push(this);
+            //Update capital ship sunk count if applicable
+            if (this.shipList[i].type == "Capital Ship") {
+                this.gm.capitalShipsSunk++;
+            }
         }
     }
     
