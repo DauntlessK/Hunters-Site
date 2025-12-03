@@ -203,6 +203,8 @@ class Ship {
         this.gm.damageDone += num;   //update global damage count
         this.roundDam += num;
         this.roundHits++;
+
+        //Check for sinking
         if (this.damage >= this.hp && !this.sunk) {
             this.sunk = true;
             this.roundSunk = true;
@@ -211,7 +213,7 @@ class Ship {
             this.enc.shipsSunkInEnc.push(this);
             this.gm.totalGRTSunk += this.getGRTInt();
             //Update capital ship sunk count if applicable
-            if (this.shipList[i].type == "Capital Ship") {
+            if (this.getType() == "Capital Ship") {
                 this.gm.capitalShipsSunk++;
             }
         }

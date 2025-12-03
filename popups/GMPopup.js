@@ -188,7 +188,7 @@ class GMPopup{
     repairAndRecovery(refitResults, recoveryResults) {
         //new div to add
 
-        if (refitResults != "" && recoveryResults != "") {
+        if (refitResults == "" && recoveryResults == "") {
             this.element.innerHTML = (`
                 <div class = "Refit_Only">
                 <h3 class="HeaderMessage_h3">Refit<br>

@@ -12,6 +12,8 @@ class GameOverPopup{
 
         this.element.classList.add("TextMessage");
 
+        this.gm.setEventResolved(false);
+        this.tv.pauseGame(true);
         this.enc.closeWindows();
 
         this.gameOver();

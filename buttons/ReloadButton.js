@@ -15,6 +15,7 @@ class ReloadButton extends Button {
             this.gm.newPatrol();
             this.tv.setDeparted(true);
             this.changeState("Disabled");
+            this.gm.monthsAtSea++;
         }
         else if (this.tv.isDeparted && !this.gm.sub.tubesLoadedCheck()) {
             this.tv.reloadMode = false;

@@ -431,7 +431,7 @@ class TacticalView{
                         x: 240,
                         y: 10,
                         src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
-                        shipNum: 1,
+                        shipNum: 2,
                         width: 201,
                         height: 158,
                         frames: 6,
@@ -450,7 +450,7 @@ class TacticalView{
                         x: 500,
                         y: 10,
                         src: "images/ships/CargoShip1.png",  //"images/ships/CargoShip1.png"
-                        shipNum: 1,
+                        shipNum: 0,
                         width: 201,
                         height: 158,
                         frames: 6,

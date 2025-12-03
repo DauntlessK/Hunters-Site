@@ -133,7 +133,7 @@ class Patrol{
                     if (uniqueOrdersList[i] == "West African Coast") {   
                         uniqueOrdersList.splice(i, i);
                         //check date- june 1940 and before need to add atlantic onto list
-                        if (this.gm.getYear() < 1940 || (this.gm.getYear() == 1940 && this.getEncounterType.getMonth() <= 5)) {
+                        if (this.gm.getYear() < 1940 || (this.gm.getYear() == 1940 && this.gm.getMonth() <= 5)) {
                             uniqueOrdersList.push("Atlantic");
                         }
                     }
@@ -238,6 +238,8 @@ class Patrol{
     //Builds array of strings, each item being a step in the patrol. Step 0 is port.
     buildPatrol(){
         
+        //TODO: error when building VIID for NA patrol for missions. Currently does BoB, Transit then mission. Not enough transits
+
         this.tv.mainUI.telegraph.setSrc(this.getTelegraphSrc()); //set telegraph to correct png
 
         this.NAorders = false;

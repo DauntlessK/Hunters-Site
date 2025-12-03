@@ -1,6 +1,7 @@
 class GameManager{
     constructor(tv){
 
+        this.gameInit = true; //Used during startup, up until startGame() finishes
         this.tv = tv;
         this.sub = null;
         this.eventResolved = true;
@@ -15,7 +16,8 @@ class GameManager{
 
         this.currentOrders = "";
         this.currentOrdersLong = "";
-        this.patrol = new Patrol(this.tv, this);
+        //this.patrol = null;
+        this.newPatrol();
         this.patrols = []; // Array of all patrol objects for record keeping if needed
         this.patrolling = false;
         this.patrolCount = ["", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth",
@@ -32,7 +34,6 @@ class GameManager{
         this.permMedPost = false;
         this.permArcPost = false;
         this.francePost = false
-        this.patrolArray = [];
         this.currentBox = 0;
         this.capitalShipsSunk = 0;
         this.shipsSunk = [];
@@ -114,7 +115,8 @@ class GameManager{
         this.getStartingRank();
         this.popup2.startGameText(this.date_month, this.date_year);
         await until(_ => this.eventResolved == true);
-        this.sub.torpedoResupply();        
+        this.sub.torpedoResupply();
+        this.gameInit = false;
     }
 
     /**
@@ -173,6 +175,14 @@ class GameManager{
         if (this.getMonth() > 11) {
             this.date_month = 0;
             this.date_year++;
+        }
+
+        //Update months at sea / in port
+        if (this.patrolling) {
+            this.monthsAtSea++;
+        }
+        else {
+            this.monthsInPort++;
         }
     }
 
@@ -302,7 +312,10 @@ class GameManager{
 
     newPatrol(){
         //gets new patrol, validates orders etc
-        this.patrol.getPatrol();
+        this.patrol = new Patrol(this.tv, this);
+        if (!this.gameInit){
+            this.patrol.getPatrol();
+        }
     }
 
     setCurrentOrdersLong(){
@@ -369,6 +382,7 @@ class GameManager{
         this.patrolNum++;
         var patrol = new PatrolLog(this.tv, this);      
         this.logBook.push(patrol);
+        this.patrols.push(this.patrol);
         this.currentBox = 0;
         this.advancePatrol();
     }

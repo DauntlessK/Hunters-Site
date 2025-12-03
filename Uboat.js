@@ -278,11 +278,13 @@ class Uboat{
      */
     getNumSystemsInop() {
         var numSystemsInop = 0;
-        for (let i = 0; i < this.systems.length; i++) {
-            if (this.systems[i] >= 1) {
+
+        for (const [key, value] of Object.entries(this.systems)) {
+            if (value >= 1) {
                 numSystemsInop++;
             }
         }
+
         return numSystemsInop;
     }
 
@@ -1246,7 +1248,7 @@ class Uboat{
     
         if (numCrewReplaced >= 3) {
             this.crew_levels["Crew"] -= 1;
-            hospitalResults += "So much of crew was replaced "
+            hospitalResults += "So much of crew was replaced we have lost some valuable experience. ";
         }
 
         //handle kommandant
@@ -1267,6 +1269,10 @@ class Uboat{
         else if (this.crew_health["Kommandant"] == 1) {
             hospitalResults += "You recover from your minor wounds. ";
         }
+
+        if (hospitalResults == "") {
+            hospitalResults = "No crew members required hospital treatment.";
+        }
         return hospitalResults;
     }
 
@@ -1280,10 +1286,13 @@ class Uboat{
 
         if (this.getNumSystemsInop() > 2) {
             this.monthsNeededForRefit++;
-            refitResults = "All damaged systems have been repaired, costing an additional month of repair work."
+            refitResults = "All damaged systems have been repaired, costing two months of repair and refit work."
         }
         else if (this.getNumSystemsInop() > 0) {
             refitResults = "All damaged systems have been repaired."
+        }
+        else {
+            refitResults = "Standard refit of one month is required."
         }
 
         switch (this.hull_Damage) {
@@ -1293,18 +1302,18 @@ class Uboat{
             case 2:
             case 3:
                 this.monthsNeededForRefit += 1;
-                refitResults += "We'll need an additional month to repair the minor damage to the hull."
+                refitResults += " We'll need an additional month to repair the minor damage to the hull."
                 break;
             case 4:
             case 5:
             case 6:
-                refitResults += "We'll need two additional months to repair the damage to the hull."
+                refitResults += " We'll need two additional months to repair the damage to the hull."
                 this.monthsNeededForRefit += 2;
                 break;
             case 7:
             case 8:
             case 9:
-                 refitResults += "We'll need an three extra months to repair the major damage to the hull."
+                 refitResults += " We'll need an three extra months to repair the major damage to the hull."
                 this.monthsNeededForRefit += 3;
                 break;
         }

@@ -1470,7 +1470,7 @@ class Encounter {
 
         //Check if in Wolfpack - only checked once if wolfpack. Otherwise stays 0
         if (this.gm.currentOrders.includes("Wolfpack") && wpMod == 0 && this.encounterType == "Convoy") {
-            wolfpackRoll = d6Roll();
+            var wolfpackRoll = d6Roll();
             if (wolfpackRoll <= 5) {
                 wpMod = -1;
             }
