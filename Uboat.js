@@ -1180,6 +1180,15 @@ class Uboat{
         if (!this.gm.abortingPatrol && (this.dieselsInop() == 1 || this.getSystemStatus("Fuel Tanks") == "Inoperative")) {
             this.gm.abortPatrol();
         }
+
+        //Pass time as required then reset months needed for refit
+        if (refitting) {
+            for (let i = 0; i < this.monthsNeededForRefit; i++) {
+                this.gm.advanceMonth();
+            }
+            this.monthsNeededForRefit = 0;
+        }
+
         return messageToReturn;
     }
 
