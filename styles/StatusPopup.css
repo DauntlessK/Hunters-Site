@@ -86,8 +86,15 @@
 
 .Recovery {
     position: absolute;
-    left: 530px;
-    top: 30px;
+    left: 30px;
+    top: 175px;
+    width: 500px;
+}
+
+.Port_Summary {
+    position: absolute;
+    left: 30px;
+    top: 200px;
     width: 500px;
 }
 

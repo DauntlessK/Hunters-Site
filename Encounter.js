@@ -840,7 +840,8 @@ class Encounter {
             this.tv.uboat.surface();
         }
         //Check if ships were sunk during encounter to mark mission complete flag (not applicable to missions)
-        if (!this.gm.missionComplete && this.gm.shipsSunkOnCurrentPatrol.length > 0 && this.gm.currentOrdersLong.includes("Patrol")) {
+        if (!this.gm.missionComplete && this.gm.shipsSunkOnCurrentPatrol.length > 0 && this.gm.currentOrdersLong.includes("Patrol")
+            && this.gm.missionComplete == false) {
             this.gm.missionComplete = true;
         }
 

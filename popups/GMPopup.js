@@ -185,47 +185,37 @@ class GMPopup{
         this.container.appendChild(this.element);
     }
 
-    repairAndRecovery(refitResults, recoveryResults) {
+    repairAndRecovery(totalTime, refitResults, recoveryResults) {
         //new div to add
 
-        if (refitResults == "" && recoveryResults == "") {
-            this.element.innerHTML = (`
-                <div class = "Refit_Only">
-                <h3 class="HeaderMessage_h3">Refit<br>
+        this.element.innerHTML = (`
+            <div class = "Refit">
+            <h3 class="HeaderMessage_h3">Repair & Refit<br>
+            </h3>
+            <p class ="PatrolMessage_p">${refitResults}
+            </p>
+            </div>
+
+
+            <div class = "Recovery">
+                <h3 class="HeaderMessage_h3">Crew Recovery<br>
                 </h3>
-                <p class ="PatrolMessage_p"> ${this.gm.getFullUboatID()} will undergo a routine refit and will be back out on patrol in 1 month. 
-                </p>
-                </div>
+                <p class ="PatrolMessage_p">${recoveryResults}
+            </div>
 
-                <button class="AttackPopup_button" id="continue">Continue</button>
-                
-            `)
-        }
-        else {
-            this.element.innerHTML = (`
-                <div class = "Refit">
-                <h3 class="HeaderMessage_h3">Repair & Refit<br>
-                </h3>
-                <p class ="PatrolMessage_p">${refitResults}
-                </p>
-                </div>
+            <div class = "Port_Summary">
+                <p class ="PatrolMessage_p">${totalTime} spent in port.</p>
+            </div>
 
-
-                <div class = "Recovery">
-                    <h3 class="HeaderMessage_h3">Crew Recovery<br>
-                    </h3>
-                    <p class ="PatrolMessage_p">${recoveryResults}
-                </div>
-
-                <button class="AttackPopup_button" id="continue">Continue</button>
-                
-            `)
-        }
+            <button class="AttackPopup_button" id="continue">Continue</button>
+            
+        `)
 
         this.element.addEventListener("click", ()=> {
             if (event.target.id == "continue"){
                 //close popup
                 this.done();
+                this.gm.sub.torpedoResupply();
             }
         })
 

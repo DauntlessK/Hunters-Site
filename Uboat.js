@@ -305,6 +305,15 @@ class Uboat{
         this.reloads_forward_G7e = 0;
         this.reloads_aft_G7a = 0;
         this.reloads_aft_G7e = 0;
+
+        // Remove any leftover from the tubes
+        for (let i = 1; i <= 6; i++){
+            //need to check for 1-3, otherwise ignore null tubes
+            if (this.tube[i] == 1 || this.tube[i] == 2 || this.tube[i] == 3){
+                this.tube[i] = 0;
+            }
+        }
+
         //this.minesLoadedForward = true
         //this.minesLoadedAft = true
 
@@ -1287,11 +1296,12 @@ class Uboat{
 
     /**
      * Refit and repair of the hull and damaged systems of the U-Boat (for when in port)
+     * Also adjusts the uboat object's time required for repair and refit. Default is the normal 1 month
      * @returns string of repair results
      */
     refit() {
         var refitResults = "";
-        this.monthsNeededForRefit = 0;
+        this.monthsNeededForRefit = 1;
 
         if (this.getNumSystemsInop() > 2) {
             this.monthsNeededForRefit++;
@@ -1301,7 +1311,7 @@ class Uboat{
             refitResults = "All damaged systems have been repaired."
         }
         else {
-            refitResults = "Standard refit of one month is required."
+            refitResults = "A routine refit of one month is required."
         }
 
         switch (this.hull_Damage) {

@@ -23,7 +23,8 @@ class GameManager{
         this.patrolCount = ["", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth",
                             "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth",
                             "seventeenth", "eighteenth", "nineteenth", "twentieth", "twenty-first", "twenty-second",
-                            "twenty-third", "twenty-fourth"];
+                            "twenty-third", "twenty-fourth", "twenty-fifth", "twenty-sixth", "twenty-seventh",
+                            "twenty-eighth", "twenty-ninth", "thirtieth"];
         this.patrolNum = 0;
         this.missionComplete = false;
         this.unsuccessfulPatrolsInARow = 0;
@@ -100,10 +101,6 @@ class GameManager{
             this.tv.mainUI.rank = this.rank[this.sub.crew_levels["Kommandant"]] + " " + this.kmdt;
             this.tv.mainUI.date = this.getFullDate();
         }
-
-        //Create first log
-        var patrolLog = new PatrolLog(this.tv, this);
-        this.logBook.push(patrolLog);
 
         //Popup to greet start of game
         if (this.id == 77 && this.kmdt == "kbb") {
@@ -380,8 +377,15 @@ class GameManager{
     beginPatrol() {
         this.patrolling = true;
         this.patrolNum++;
-        var patrol = new PatrolLog(this.tv, this);      
-        this.logBook.push(patrol);
+
+        var currentLog = new PatrolLog(this.tv, this);      
+        this.logBook.push(currentLog);
+
+        //fill index 0 of logbook so it matches patrol number
+        if (this.logBook.length == 1){
+            this.logBook.push(currentLog);
+        }
+
         this.patrols.push(this.patrol);
         this.currentBox = 0;
         this.advancePatrol();
@@ -532,18 +536,44 @@ class GameManager{
         var refitResults = this.sub.refit();
         var hospitalResults = this.sub.hospital();
 
+        //Update successful / unsuccessful patrol stats
+        if (this.missionComplete) {
+            this.successfulPatrols++;
+            this.unsuccessfulPatrolsInARow = 0;
+            this.lastPatrolWasUnsuccessful = false;
+        }
+        else {
+            this.unsuccessfulPatrolsInARow++;
+            this.lastPatrolWasUnsuccessful = true;
+        }
+
+        //Reset various flags
+        this.abortingPatrol = false;
+        this.missionComplete = false;
+        this.shipsSunkOnCurrentPatrol = [];
+        this.contFromAbort = false;
+        this.extraStep = 0;
+
         //if a new uboat is called for (due to excessive damage or SW on KMDT)
         if (this.uboatReassignment) {
             console.log("TODO: popup required for reassignment");
             console.log("TODO: reassign to new uboat, create new uboat object");
         }
         else {
-            this.popup2.repairAndRecovery(refitResults, hospitalResults);
+            this.popup2.repairAndRecovery(this.sub.monthsNeededForRefit, refitResults, hospitalResults);
         }
+
         await until(_ => this.eventResolved == true);
 
-        //Advance time
-        this.advanceMonth();
+        //Advance time X months based on repair and hospital results
+        for (let i = 0; i < this.sub.monthsNeededForRefit; i++) {
+            this.advanceMonth();
+        }
+
+        this.sub.monthsNeededForRefit = 0; //Reset back to 0 after use
+
+        //Test fetch
+        this.fetch();
     }
 
     // Called from game over popup to update game manager states
@@ -583,7 +613,7 @@ class GameManager{
             previous_uboats: this.getPastSubs(),
 
             patrols: this.patrolNum,
-            tonnage_sunk: this.gm.getTotalGRT("Int"),
+            tonnage_sunk: this.getTotalGRT("Int"),
             ships_sunk: this.shipsSunk.length,
             warships_sunk: this.capitalShipsSunk,
             num_planes_shot_down: this.planesShotDown,
@@ -614,20 +644,25 @@ class GameManager{
         };
 
         // Send to backend
-        fetch('http://hunters.local/api/submit_score.php', {
+        fetch('http://hunters.local/api/submit_game.php', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(gameData)
         })
-        .then(response => response.json())
-        .then(result => {
-            console.log("Submission result:", result);
+        .then(response => response.text())
+        .then(text => {
+            console.log("RAW RESPONSE FROM SERVER:");
+            console.log(text);
+            try {
+                console.log("Parsed JSON:", JSON.parse(text));
+            } catch (err) {
+                console.error("JSON parse error:", err);
+            }
         })
         .catch(error => {
             console.error("Error submitting game data:", error);
         });
 
-            }
+
+    }
 }
