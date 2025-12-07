@@ -170,8 +170,8 @@ class GMPopup{
             </p>
 
             <div class="Patrol_Log_After_Patrol">
-                ${this.gm.logBook[1].patrolSummaryHeader}<br>
-                ${this.gm.logBook[1].patrolSummary}
+                ${this.gm.logBook[this.gm.patrolNum].patrolSummaryHeader}<br>
+                ${this.gm.logBook[this.gm.patrolNum].patrolSummary}
             </div>
             <button class="AttackPopup_button" id="continue">Continue</button>
         `)
@@ -187,6 +187,13 @@ class GMPopup{
 
     repairAndRecovery(totalTime, refitResults, recoveryResults) {
         //new div to add
+
+        if (totalTime == 1) {
+            totalTime = "1 month ";
+        }
+        else {
+            totalTime = String(totalTime) + " months ";
+        }
 
         this.element.innerHTML = (`
             <div class = "Refit">
@@ -216,6 +223,10 @@ class GMPopup{
                 //close popup
                 this.done();
                 this.gm.sub.torpedoResupply();
+                //force update of torpedo buttons
+                for (let i = 1; i < 7; i++) {
+                    this.tv.mainUI.tubeButtonArray[i].getLatestState();
+                }
             }
         })
 

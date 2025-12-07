@@ -133,7 +133,9 @@ class AircraftPopup{
     }
     
     done(id){
+        console.log("AircraftPopup done called");
         if (!this.tv.isPaused) {
+            console.log("AircraftPopup removing element");
             this.element.remove();
             this.gm.setEventResolved(true);
             this.choice = id;

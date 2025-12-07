@@ -12,6 +12,10 @@ class GameOverPopup{
 
         this.element.classList.add("TextMessage");
 
+        //Set game over info in GM
+        this.gm.gameOverCause = cause;
+        this.gm.gameOverEncounter = enc;
+
         this.gm.fetch();
         this.gm.setEventResolved(false);
         this.tv.pauseGame(true);

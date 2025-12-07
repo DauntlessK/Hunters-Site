@@ -38,10 +38,10 @@ class PatrolLog{
             this.patrolSummaryHeader = this.patrolSummaryHeader + this.gm.currentOrdersLong;
             //Subheader - GRT Summary
             if (this.gm.shipsSunkOnCurrentPatrol.length == 1) {
-                this.patrolSummaryHeader = this.patrolSummaryHeader + "<br>1 ship sunk for " + this.gm.getPatrolTotalGRT() + " GRT <br>";
+                this.patrolSummaryHeader = this.patrolSummaryHeader + "<br>1 ship sunk for " + this.gm.getPatrolTotalGRT("String") + " GRT <br>";
             }
             else if (this.gm.shipsSunkOnCurrentPatrol.length > 1) {
-                this.patrolSummaryHeader = this.patrolSummaryHeader + "<br>" + this.gm.shipsSunkOnCurrentPatrol.length.toString() +  " ships sunk totaling " + this.gm.getPatrolTotalGRT() + " GRT <br>";
+                this.patrolSummaryHeader = this.patrolSummaryHeader + "<br>" + this.gm.shipsSunkOnCurrentPatrol.length.toString() +  " ships sunk totaling " + this.gm.getPatrolTotalGRT("String") + " GRT <br>";
             }
         }
         else {
@@ -60,7 +60,7 @@ class PatrolLog{
                 this.patrolResult = "Failure"
             }
             this.patrolSunk = this.gm.shipsSunkOnCurrentPatrol;
-            this.patrolGRTSunk = this.gm.getPatrolTotalGRT() + "GRT";
+            this.patrolGRTSunk = this.gm.getPatrolTotalGRT("String") + "GRT";
         }
 
         return this.patrolSummaryHeader;

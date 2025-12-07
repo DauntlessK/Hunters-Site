@@ -1,13 +1,24 @@
-CREATE TABLE game_plays (
+CREATE TABLE plays (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    play_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    captain_name VARCHAR(50),
+    uboat_number VARCHAR(10),
+    uboat_type VARCHAR(10),
+    ip_address VARCHAR(45),
+    user_agent TEXT
+);
+
+CREATE TABLE final_scores (
+    id INT PRIMARY KEY,   -- FK to plays.id
+
     play_date DATETIME DEFAULT CURRENT_TIMESTAMP,
 
     -- Player Info
     rank VARCHAR(20),
     captain_name VARCHAR(50),
     uboat_number VARCHAR(10),
-    uboat_type VARCHAR(4),   -- Only VII, VIIC, IXC, etc.
-    previous_uboats INT, -- simple count of # of previous uboats commanded
+    uboat_type VARCHAR(10),
+    previous_uboats INT,
 
     -- Career Stats
     patrols INT,
@@ -23,7 +34,7 @@ CREATE TABLE game_plays (
     game_over_encounter VARCHAR(200),
     game_over_cause VARCHAR(200),
 
-    -- Awards (levels stored as INT, 0 = none)
+    -- Awards
     knights_cross TINYINT UNSIGNED DEFAULT 0,
     war_badge TINYINT UNSIGNED DEFAULT 0,
     front_clasp TINYINT UNSIGNED DEFAULT 0,
@@ -43,7 +54,8 @@ CREATE TABLE game_plays (
     num_plane_encounters INT,
     num_plane_attacks INT,
 
-    -- Add more fields as needed
-    ip_address VARCHAR(45),
-    user_agent TEXT
+    CONSTRAINT fk_game_plays_play
+        FOREIGN KEY (id) REFERENCES plays(id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
 );

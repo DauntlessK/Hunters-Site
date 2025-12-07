@@ -294,6 +294,7 @@ class Uboat{
 
     /**
      * Called in port to allow user to select torpedoes to load given the spread parameters
+     * Sets torpedoes to zero and triggers the ResupplyPopup to select torpedoes
      */
     torpedoResupply(){
 
@@ -322,6 +323,9 @@ class Uboat{
         let G7eReservesToStart = aftReserves - G7aReservesToStart;
 
         const subResupply = new ResupplyPopup(this.tv, this.gm, this.G7aStarting, this.G7eStarting, G7aReservesToStart, G7eReservesToStart);
+
+        //Resupply deck gun ammo to full
+        this.deck_gun_ammo = this.deck_gun_cap;
 
         //set loadout to remember for next resupply
         this.lastLoadoutForward_G7a = this.forward_G7a;
@@ -1169,8 +1173,14 @@ class Uboat{
                     this.gm.recovery();
                 }
                 else {
+                    //Crew lost at sea, game over
                     let cause = "Crew lost at sea " + this.gm.getFullDate();
-                    cause += " - Forced to scuttle after damage to both diesel engines by the " + this.gm.currentEncounter.shipList[0].getClassAndName();
+                    if (this.gm.currentEncounter.aircraftType[numAircraft] != null) {
+                        cause += " - Crew lost at sea after scuttling from damage to both diesel engines by aircraft from " + this.gm.currentEncounter.aircraftType[numAircraft];
+                    }
+                    else {
+                        cause += " - Crew lost at sea after scuttling from damage to both diesel engines by the " + this.gm.currentEncounter.shipList[0].getClassAndName();
+                    }
                     console.log("GAME OVER: " + cause);
                     const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
                 }
@@ -1179,7 +1189,12 @@ class Uboat{
                 //TODO need to change scene to empty sea and force uboat to surface
                 this.tv.uboat.surface();
                 let cause = "Scuttled " + this.gm.getFullDate();
-                cause += " - Forced to scuttle after damage to both diesel engines by the " + this.gm.currentEncounter.shipList[0].getClassAndName();
+                if (this.gm.currentEncounter.aircraftType[numAircraft] != null) {
+                    cause += " - Forced to scuttle after damage to both diesel engines by aircraft from " + this.gm.currentEncounter.aircraftType[numAircraft];
+                }
+                else {
+                    cause += " - Forced to scuttle after damage to both diesel engines by the " + this.gm.currentEncounter.shipList[0].getClassAndName();
+                }
                 console.log("GAME OVER: " + cause);
                 const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
             }
@@ -1188,14 +1203,6 @@ class Uboat{
         //If not already aborting patrol and fuel tanks damaged or 1 diesel inop
         if (!this.gm.abortingPatrol && (this.dieselsInop() == 1 || this.getSystemStatus("Fuel Tanks") == "Inoperative")) {
             this.gm.abortPatrol();
-        }
-
-        //Pass time as required then reset months needed for refit
-        if (refitting) {
-            for (let i = 0; i < this.monthsNeededForRefit; i++) {
-                this.gm.advanceMonth();
-            }
-            this.monthsNeededForRefit = 0;
         }
 
         return messageToReturn;
@@ -1261,6 +1268,7 @@ class Uboat{
             }
             else if (value == 1) {
                 hospitalResults += "The " + key + " recovered from his minor wounds. ";
+                this.crew_health[key] = 0;
             }
         }
     

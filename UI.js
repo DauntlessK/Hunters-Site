@@ -227,11 +227,14 @@ class UI{
                     this.fireButton.draw(ctx);
                 }
             }
-
             //To start patrol
-            if (!this.tv.reloadMode && !this.gm.patrolling){
+            else if (!this.tv.reloadMode && !this.gm.patrolling){
+                if (this.beginPatrolButton.getState() == "Disabled") {
+                    this.beginPatrolButton.changeState("Enabled");
+                }
                 this.beginPatrolButton.draw(ctx);
             }
+
             this.floodGauge.draw(ctx);
             this.damageGauge.draw(ctx);
             let shipsInEnc = false;

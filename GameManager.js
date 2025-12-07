@@ -7,6 +7,7 @@ class GameManager{
         this.eventResolved = true;
         this.statusResolved = true;
         this.subEventResolved = true;
+        this.play_id = null;
 
         this.kmdt = "";
         this.id = "";
@@ -87,7 +88,8 @@ class GameManager{
         this.monthsInPort = 0;
         this.monthsAtSea = 0;
         
-        this.popup2 = new GMPopup(this.tv, this);
+        this.gameManagerPopup = new GMPopup(this.tv, this);
+        this.repairAndRecoveryPopup = new RepairAndRecoveryPopup(this.tv, this);
         this.currentEncounter = null;
     }
 
@@ -107,10 +109,27 @@ class GameManager{
             this.adminMode = true;
         }
         if (this.adminMode) { console.log("--ADMIN MODE--"); }
+
+
+        //Submit start to database and get play_id
+        fetch("http://hunters.local/api/start_play.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                captain_name: this.kmdt,
+                uboat_number: this.getFullUboatID(),
+                uboat_type: this.sub.getType()
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            this.play_id = data.play_id;  // store it!
+        });
+
         this.setEventResolved(false);
         this.setDate();
         this.getStartingRank();
-        this.popup2.startGameText(this.date_month, this.date_year);
+        this.gameManagerPopup.startGameText(this.date_month, this.date_year);
         await until(_ => this.eventResolved == true);
         this.sub.torpedoResupply();
         this.gameInit = false;
@@ -176,9 +195,11 @@ class GameManager{
 
         //Update months at sea / in port
         if (this.patrolling) {
+            console.log("At Sea");
             this.monthsAtSea++;
         }
         else {
+            console.log("In Port");
             this.monthsInPort++;
         }
     }
@@ -195,13 +216,18 @@ class GameManager{
      * Gets current GRT sunk on this patrol
      * @returns STRING of # of GRT sunk, WITH commas: "7,400"
      */
-    getPatrolTotalGRT() {
+    getPatrolTotalGRT(returnType) {
         let newTotalGRT = 0;
         for (let i = 0; i < this.shipsSunkOnCurrentPatrol.length; i++) {
             newTotalGRT += this.shipsSunkOnCurrentPatrol[i].getGRTInt();
         }
-        var stringReturn = newTotalGRT.toLocaleString();
-        return stringReturn;
+        if (returnType == "String") {
+            var stringReturn = newTotalGRT.toLocaleString();
+            return stringReturn;
+        }
+        else{
+            return newTotalGRT;
+        }
     }
 
     /**
@@ -366,7 +392,7 @@ class GameManager{
             if (articAssignRoll <= 3) {
                 this.permArcPost = true;
                 this.setEventResolved(false);
-                this.popup2.arcticAssignmentPopup();
+                this.gameManagerPopup.arcticAssignmentPopup();
                 await until(_ => this.eventResolved == true);
             }
         }
@@ -377,6 +403,15 @@ class GameManager{
     beginPatrol() {
         this.patrolling = true;
         this.patrolNum++;
+
+        //Advance month if not first patrol
+        if (this.patrolNum > 1) {
+            this.advanceMonth();
+        }
+        else {
+            //First patrol does not advanceMonth() but still needs to add a month at sea
+            this.monthsAtSea++;
+        }
 
         var currentLog = new PatrolLog(this.tv, this);      
         this.logBook.push(currentLog);
@@ -414,9 +449,12 @@ class GameManager{
         console.log("Patrol Advance---------- step #" + this.currentBox);
 
         //Check if type IX_ or VIID and halfway through patrol in order to account for 2 month long patrols
-        if ((this.sub.getType().includes("IX") || this.sub.getType() == "VIID") && this.currentBox >= (this.patrol.getPatrolLength() / 2)){
+        //Do not account for extra month if aborting patrol
+        if ((this.sub.getType().includes("IX") || this.sub.getType() == "VIID") && this.currentBox >= (this.patrol.getPatrolLength() / 2)
+             && this.abortingPatrol == false) {
             //Check to make sure extra month is not already accounted for
             if (this.patrol.startMonth == this.getMonth()) {
+                console.log("Advancing extra month for IX/VIID half-patrol");
                 this.advanceMonth();
             }
         } 
@@ -427,7 +465,7 @@ class GameManager{
             let vitals = this.sub.checkVitals();
             if (vitals != "") {
                 this.setEventResolved(false);
-                this.popup2.deathKIAPopup(vitals);
+                this.gameManagerPopup.deathKIAPopup(vitals);
                 await until(_ => this.eventResolved == true);
             }
         }
@@ -508,19 +546,24 @@ class GameManager{
         //TODO will need a flag somwhere in here for IX boats whether they burn a second month or not (abort before halfway)
 
         this.subEventResolved = false;
-        this.popup2.abortPatrolPopup();
+        this.gameManagerPopup.abortPatrolPopup();
         await until(_ => this.subEventResolved == true);
     }
 
     async recovery() {
         this.setEventResolved(false);
-        this.popup2.abortTowedBackPopup();
+        this.gameManagerPopup.abortTowedBackPopup();
         await until(_ => this.eventResolved == true);
         this.currentBox = this.patrol.getPatrolLength();
         this.endPatrol();
     }
 
     async endPatrol() {
+        console.log("Ending Patrol");
+
+        //instantiate a new game manager popup to clear
+        this.gameManagerPopup = new GMPopup(this.tv, this);
+
         if (this.currentBox > 0) {
             this.logBook[this.patrolNum].getPatrolHeader();
             this.currentEncounter.closeWindows();            
@@ -528,11 +571,13 @@ class GameManager{
 
         this.tv.changeScene("Port", "Day", null, false);
         this.patrolling = false;
+
+        //Show end of patrol popup
         this.eventResolved = false;
-        this.popup2.endPatrolPopup();
+        this.gameManagerPopup.endPatrolPopup();
         await until(_ => this.eventResolved == true);
 
-        //repair / refit sub first
+        //repair / refit sub
         var refitResults = this.sub.refit();
         var hospitalResults = this.sub.hospital();
 
@@ -543,8 +588,14 @@ class GameManager{
             this.lastPatrolWasUnsuccessful = false;
         }
         else {
+            this.unsuccessfulPatrols++;
             this.unsuccessfulPatrolsInARow++;
             this.lastPatrolWasUnsuccessful = true;
+        }
+
+        //Update if this was most successful patrol
+        if (this.getPatrolTotalGRT("Int") > this.bestPatrolGRT) {
+            this.bestPatrolGRT = this.getPatrolTotalGRT("Int");
         }
 
         //Reset various flags
@@ -560,7 +611,8 @@ class GameManager{
             console.log("TODO: reassign to new uboat, create new uboat object");
         }
         else {
-            this.popup2.repairAndRecovery(this.sub.monthsNeededForRefit, refitResults, hospitalResults);
+            this.eventResolved = false;
+            this.gameManagerPopup.repairAndRecovery(this.sub.monthsNeededForRefit, refitResults, hospitalResults);
         }
 
         await until(_ => this.eventResolved == true);
@@ -571,9 +623,6 @@ class GameManager{
         }
 
         this.sub.monthsNeededForRefit = 0; //Reset back to 0 after use
-
-        //Test fetch
-        this.fetch();
     }
 
     // Called from game over popup to update game manager states
@@ -606,6 +655,7 @@ class GameManager{
 
     fetch() {
         const gameData = {
+            play_id: this.play_id,
             rank: this.rank[this.sub.crew_levels["Kommandant"]],
             captain_name: this.kmdt,
             uboat_number: this.getFullUboatID(),

@@ -61,14 +61,14 @@ class StatusPopup{
             pluralPatrols = "s";
         }
 
-        //Figure out best patrol GRT, or use this current one if 0
-        let bestPatrol = this.gm.bestPatrolGRT;
-        let currentPatrolGRT = 0;
-        for (let i = 0; i < this.gm.shipsSunkOnCurrentPatrol.length; i++) {
-            currentPatrolGRT += this.gm.shipsSunkOnCurrentPatrol[i].getGRTInt();
-        }
-        if (currentPatrolGRT > bestPatrol) {
+        //Show best patrol GRT, or use this current one if greater
+        let bestPatrol = 0;
+        let currentPatrolGRT = this.gm.getPatrolTotalGRT("Int");
+        if (currentPatrolGRT > this.gm.bestPatrolGRT) {
             bestPatrol = currentPatrolGRT;
+        }
+        else {
+            bestPatrol = this.gm.bestPatrolGRT;
         }
         bestPatrol = bestPatrol.toLocaleString();
 

@@ -1732,7 +1732,8 @@ class Encounter {
     closeWindows() {
         this.encPop.done();
         if (this.airPopup != null) {
-            this.airPopup.done();
+            console.log("Enc closing air popup");
+            this.airPopup.done("continue");
         }
         if (this.missionPopup != null) {
             this.missionPopup.done();

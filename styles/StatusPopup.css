@@ -86,15 +86,15 @@
 
 .Recovery {
     position: absolute;
-    left: 30px;
-    top: 175px;
+    left: 530px;
+    top: 30px;
     width: 500px;
 }
 
 .Port_Summary {
     position: absolute;
     left: 30px;
-    top: 200px;
+    top: 175px;
     width: 500px;
 }
 
