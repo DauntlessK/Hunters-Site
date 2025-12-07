@@ -89,7 +89,6 @@ class GameManager{
         this.monthsAtSea = 0;
         
         this.gameManagerPopup = new GMPopup(this.tv, this);
-        this.repairAndRecoveryPopup = new RepairAndRecoveryPopup(this.tv, this);
         this.currentEncounter = null;
     }
 
@@ -341,45 +340,6 @@ class GameManager{
         }
     }
 
-    setCurrentOrdersLong(){
-        switch (this.currentOrders){
-            case "British Isles":
-            case "Mediterranean":
-            case "Arctic":
-            case "Caribbean":
-                this.currentOrdersLong = "Patrol the " + this.currentOrders;
-                break;
-            case "West African Coast":
-            case "Spanish Coast":
-                this.currentOrdersLong = "Patrol off the " + this.currentOrders;
-                break;
-            case "Norway":
-                this.currentOrdersLong = "Patrol off " + this.currentOrders;
-                break;
-            case "Atlantic":
-                this.currentOrdersLong = "Patrol the Mid-Atlantic";
-                break;
-            case "North America":
-                this.currentOrdersLong = "Patrol off the NA Coast";
-                break;
-            case "British Isles (Minelaying)":
-                this.currentOrdersLong = "Minelay off British Isles"
-                break;
-            case "British Isles (Abwehr Agent Delivery)":
-                this.currentOrdersLong = "Deliver Agent to Britain"
-                break;
-            case "Atlantic (Wolfpack)":
-                this.currentOrdersLong = "Wolfpack Patrol (Mid-Atlantic)";
-                break;
-            case "North America (Abwehr Agent Delivery)":
-                this.currentOrdersLong = "Deliver Agent to NA"
-                break;
-            default:
-                console.log("Error getting Long orders version for: " + this.currentOrders);
-                break;
-        }
-    }
-
     async ordersPopup(onlyUnique, isPicking){
         this.setEventResolved(false);
         const ordersPopUp = new OrdersPopup(this.tv, this, onlyUnique, isPicking);
@@ -561,9 +521,6 @@ class GameManager{
     async endPatrol() {
         console.log("Ending Patrol");
 
-        //instantiate a new game manager popup to clear
-        this.gameManagerPopup = new GMPopup(this.tv, this);
-
         if (this.currentBox > 0) {
             this.logBook[this.patrolNum].getPatrolHeader();
             this.currentEncounter.closeWindows();            
@@ -612,7 +569,7 @@ class GameManager{
         }
         else {
             this.eventResolved = false;
-            this.gameManagerPopup.repairAndRecovery(this.sub.monthsNeededForRefit, refitResults, hospitalResults);
+            let randr = new RefitAndRecovery(this.tv, this.gm, this.sub.monthsNeededForRefit, refitResults, hospitalResults);
         }
 
         await until(_ => this.eventResolved == true);

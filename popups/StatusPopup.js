@@ -15,19 +15,18 @@ class StatusPopup{
         //Create the element
         this.element = document.createElement("div");
         this.element.classList.add("StatusMessage");
-
-        /**if (this.gm.patrolling) {
-            this.patrolSummary = this.gm.logBook[this.gm.patrolNum].getPatrolSummary();
+       
+        // if patrolling, show current patrol header and summary. Otherwise,
+        // show a "default" header
+        if (this.gm.patrolling) {
+            this.patrolSummaryHeader = this.gm.logBook[this.gm.patrolNum].getPatrolHeader();
+            this.patrolSummary = this.gm.logBook[this.gm.patrolNum].getPatrolSummary();            
         }
         else {
-            //Header only with departure entry
-            this.patrolSummary = this.gm.getFullUboatID() + " - " + this.gm.getLRankAndName() + "<br>";
-            this.patrolSummary = this.patrolSummary + this.gm.getFullDate() + ", in port";
-            this.patrolSummary = this.patrolSummary + "<p>Reported to boat for immediate departure.</p>" 
-        }*/
-       
-        this.patrolSummaryHeader = this.gm.logBook[this.gm.patrolNum].getPatrolHeader();
-        this.patrolSummary = this.gm.logBook[this.gm.patrolNum].getPatrolSummary();
+            this.patrolSummaryHeader = this.gm.getFullUboatID() + " - " + this.gm.getLRankAndName() + "<br>";
+            this.patrolSummaryHeader += this.gm.getFullDate() + ", in port";
+            this.patrolSummary = "<p>Reported to boat for immediate departure.</p>" 
+        }
 
         //create correct popup based on message
         this.statusWindow();

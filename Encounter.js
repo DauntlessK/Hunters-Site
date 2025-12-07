@@ -10,7 +10,7 @@ class Encounter {
         this.encounterType = encounterType;         //Rolled encounter (no encounter, aircraft, convoy, etc)
         this.originalEncounterType = this.encounterType; //Used to store what was originally rolled, in event of addl' round
         this.aircraftFirstEncounter = true;         //Flag for the very first aircraft attack vs. additional round aircraft attacks
-        this.aircraftResult = "";                   //For combat log mainly, result of aircraft (Show down, etc)
+        this.aircraftResult = "";                   //For combat log mainly, result of aircraft (Shot down, etc)
         this.shipList = [];
         this.shipsSunkInEnc = [];
         this.sub = sub;
@@ -649,7 +649,7 @@ class Encounter {
             this.gm.setEventResolved(false);
             let hitCount = this.escortAndAirAttackRoll(false, false, true);
             result1 = this.sub.damage(hitCount, "Aircraft", this.aircraftType[numAircraft]);
-            result2 = this.sub.crewInjury("Aircraft");
+            result2 = this.sub.crewInjury("Aircraft", this.aircraftType[numAircraft]);
             this.airPopup.hit(hitCount, result1, result2, false);
             if (this.aircraftFirstEncounter) {
                 this.aircraftResult = "Took damage. "
@@ -662,7 +662,7 @@ class Encounter {
             this.gm.setEventResolved(false);
             let hitCount = this.escortAndAirAttackRoll(false, false, true);
             result1 = this.sub.damage(hitCount, "Aircraft", this.aircraftType[numAircraft]);
-            result2 = this.sub.crewInjury("Aircraft");
+            result2 = this.sub.crewInjury("Aircraft", this.aircraftType[numAircraft]);
             secondAttack = true;
             if (hitCount <= 5) {
                 this.airPopup.hit(hitCount, result1, result2, true);
@@ -803,26 +803,25 @@ class Encounter {
         this.wasDetectedAtCloseRange = false;
     }
 
-    /**NOT USED
-     * resetEncounter(followChoice) {
-        if (this.depth != "Surfaced") {
-            this.tv.uboat.sprite.surface();
-        }
-        this.attackFlow();
-    }*/ 
-
     async reloadTubes() {
         this.tv.enterReloadMode();
     }
 
     repairCheck() {
-        console.log("Checking damage");
         if (!this.unrepairedDamage) {
             this.gm.setEventResolved(true);
             return;
         }
 
-        let damageString = this.gm.sub.repair(false);
+        let attacker = "";
+        if (this.airAttack) {
+            let i = this.aircraftType.length - 1;
+            attacker = this.aircraftType[i];
+        }
+        else {
+            attacker = this.shipList[0];
+        }
+        let damageString = this.gm.sub.repair(false, attacker);
 
         if (damageString != "") {
             this.gm.setEventResolved(false);

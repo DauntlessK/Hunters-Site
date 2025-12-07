@@ -73,7 +73,7 @@ class Patrol{
 
             //this.validatePatrol();
             this.buildPatrol();
-            this.gm.setCurrentOrdersLong();
+            this.setCurrentOrdersLong();
         }
         else { //orders passed down from Bdu
             const ordersRoll = d6Rollx2();
@@ -81,7 +81,7 @@ class Patrol{
 
             this.validatePatrol();
             this.buildPatrol();
-            this.gm.setCurrentOrdersLong();
+            this.setCurrentOrdersLong();
 
             this.gm.ordersPopup(unique, isPicking);
 
@@ -638,5 +638,81 @@ class Patrol{
          
         console.log("Telegraph Image: "+ toReturn);
         return toReturn;
+    }
+
+    /**
+     * Sets GM's current orders long string based on the current orders
+     */
+    setCurrentOrdersLong(){
+        switch (this.gm.currentOrders){
+            case "British Isles":
+            case "Mediterranean":
+            case "Arctic":
+            case "Caribbean":
+                this.gm.currentOrdersLong = "Patrol the " + this.gm.currentOrders;
+                break;
+            case "West African Coast":
+            case "Spanish Coast":
+                this.gm.currentOrdersLong = "Patrol off the " + this.gm.currentOrders;
+                break;
+            case "Norway":
+                this.gm.currentOrdersLong = "Patrol off " + this.gm.currentOrders;
+                break;
+            case "Atlantic":
+                this.gm.currentOrdersLong = "Patrol the Mid-Atlantic";
+                break;
+            case "North America":
+                this.gm.currentOrdersLong = "Patrol off the NA Coast";
+                break;
+            case "British Isles (Minelaying)":
+                this.gm.currentOrdersLong = "Minelay off British Isles"
+                break;
+            case "British Isles (Abwehr Agent Delivery)":
+                this.gm.currentOrdersLong = "Deliver Agent to Britain"
+                break;
+            case "Atlantic (Wolfpack)":
+                this.gm.currentOrdersLong = "Wolfpack Patrol (Mid-Atlantic)";
+                break;
+            case "North America (Abwehr Agent Delivery)":
+                this.gm.currentOrdersLong = "Deliver Agent to NA"
+                break;
+            default:
+                console.log("Error getting Long orders version for: " + this.gm.currentOrders);
+                break;
+        }
+    }
+
+    /**
+     * Gets a string for when game over is triggered to be used in the death cause
+     * @returns string with space " while patrolling the Mid-Atlantic."
+     */
+    getCurrentDeathOrdersAndLocation(){
+        switch (this.gm.currentOrders){
+            case "British Isles":
+            case "Mediterranean":
+            case "Arctic":
+            case "Caribbean":
+                return " while patrolling the " + this.gm.currentOrders + ".";
+            case "West African Coast":
+            case "Spanish Coast":
+                return " while patrolling off the " + this.gm.currentOrders + ".";
+            case "Norway":
+                return " while patrolling off " + this.gm.currentOrders + ".";
+            case "Atlantic":
+                return " while patrolling the Mid-Atlantic.";
+            case "North America":
+                return " while patrolling off the NA Coast.";
+            case "British Isles (Minelaying)":
+                return " while minelaying off British Isles."
+            case "British Isles (Abwehr Agent Delivery)":
+                return " while delivering an agent to Britain."
+            case "Atlantic (Wolfpack)":
+                return " while paricipating in a wolfpack patrol.";
+            case "North America (Abwehr Agent Delivery)":
+                return " while delivering an agent to NA."
+            default:
+                console.log("Error getting cause orders and location: " + this.gm.currentOrders);
+                return " while doing something unknown and top secret."
+        }
     }
 }

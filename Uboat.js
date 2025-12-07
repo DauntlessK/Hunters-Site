@@ -695,12 +695,13 @@ class Uboat{
             while (rollingForPressure) {
                 let pressureRoll = d6Rollx2();
                 if (pressureRoll < this.hull_Damage) {
-                    //game over
-                    let cause = "Sunk " + this.gm.getFullDate();
-                    cause += " - Hull catastrophically imploded escaping the " + attacker;
+                    //game over - Hull damage over HP
+                    //let cause = "Sunk " + this.gm.getFullDate();
+                    //cause += " - Hull catastrophically imploded escaping the " + attacker + this.gm.patrols[this.gm.patrolNum].getCurrentDeathOrdersAndLocation();
                 
+                    let cause = "Hull implosion"
                     console.log("GAME OVER: " + cause);
-                    const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
+                    const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause, attacker);
                 }
                 else if (pressureRoll == this.hull_Damage) {
                     this.hull_Damage += 1;
@@ -727,16 +728,16 @@ class Uboat{
                     if (this.gm.halsUndBeinbruch > 0){
                         //deal with hals TODO
                     }
-                    messageToReturn += this.crewInjury(attack);
+                    messageToReturn += this.crewInjury(attack, attacker);
                     break;
                 case "crew injuryx2":
                     messageToReturn = messageToReturn + "Two injuries! ";
                     if (this.gm.halsUndBeinbruch > 0){
                         //deal with hals TODO
                     }
-                    messageToReturn += this.crewInjury(attack);
+                    messageToReturn += this.crewInjury(attack, attacker);
                     messageToReturn += " ";
-                    messageToReturn += this.crewInjury(attack);
+                    messageToReturn += this.crewInjury(attack, attacker);
                     break;
                 case "flooding":
                     var compartments = ["", "forward compartment", "officer's quarters", "control room", "galley", "diesel engine compartment", "aft compartment"]
@@ -866,37 +867,44 @@ class Uboat{
 
         //check to see if sunk from hull damage
         if (this.hull_Damage >= this.hull_hp) {
-            let cause = "Sunk " + this.gm.getFullDate();
+            //let cause = "Sunk " + this.gm.getFullDate();
+            let cause = "";
             if (attack == "Aircraft") {
-                cause += " - Hull destroyed from air attack by " + attacker;
+                //cause += " - Hull destroyed from air attack by " + attacker + this.gm.patrols[this.gm.patrolNum].getCurrentDeathOrdersAndLocation();
+                cause = "Hull destroyed by aircraft";
             }
             else if (attack == "Pressure") {
-                cause += " - Hull crushed by pressure escaping the " + attacker;
+                //cause += " - Hull crushed by pressure escaping the " + attacker + this.gm.patrols[this.gm.patrolNum].getCurrentDeathOrdersAndLocation();
+                cause = "Hull destroyed by pressure";
             }
             else {
-                cause += " - Hull destroyed by depth charges by the " + attacker;
+                //cause += " - Hull destroyed by depth charges by the " + attacker + this.gm.patrols[this.gm.patrolNum].getCurrentDeathOrdersAndLocation();
+                cause = "Hull destroyed by escort";
             }
             console.log("GAME OVER: " + cause);
-            const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
+            const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause, attacker);
         }
 
         //check for too much flooding (emergency surface / scuttle)
         if  (this.flooding_Damage >= this.flooding_hp) {
-            let cause = "Scuttled " + this.gm.getFullDate();
+            //let cause = "Scuttled " + this.gm.getFullDate();
+            let cause = "";
             if (attack == "Aircraft") {
-                cause += " - Forced to scuttle from air attack flooding by " + attacker; 
+                //cause += " - Forced to scuttle from air attack flooding by " + attacker + this.gm.patrols[this.gm.patrolNum].getCurrentDeathOrdersAndLocation(); 
+                cause = "Scuttled due to flooding by aircraft";
             }
             else {
-                cause += " - Forced to surface and scuttle from depth charge damage flooding by the " + attacker;
+                //cause += " - Forced to surface and scuttle from depth charge damage flooding by the " + attacker + this.gm.patrols[this.gm.patrolNum].getCurrentDeathOrdersAndLocation();
+                cause = "Scuttled due to flooding by escort";
             }
             console.log("GAME OVER: " + cause);
-            const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
+            const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause, attacker);
         }
 
         return messageToReturn;
     }
 
-    crewInjury(attack) {
+    crewInjury(attack, attacker) {
         var sevText = "";
         var wounds = 0;
         var toReturn = "";
@@ -940,11 +948,11 @@ class Uboat{
                 this.crew_health["Kommandant"] += wounds;
                 if (this.crew_health["Kommandant"] == 3) {
                     //game over
-                    let cause = "Kommandant killed " + this.gm.getFullDate();
-                    cause += " - KIA by " + attacker;
+                    //let cause = "Kommandant killed in action by " + attacker + this.gm.patrols[this.gm.patrolNum].getCurrentDeathOrdersAndLocation();
+                    let cause = "Kommandant KIA";
 
                     console.log("GAME OVER: " + cause);
-                    const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
+                    const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause, attacker);
                 }
                 break;
             case 3:
@@ -1066,7 +1074,7 @@ class Uboat{
      * @param {boolean} refitting true if this is a repair from port which repairs all systems to operational (0)
      * @returns string of successful or unsuccessful repair attempts
      */
-    repair(refitting) {
+    repair(refitting, attacker) {
         this.flooding_Damage = 0;
 
         var messageToReturn = "";
@@ -1174,29 +1182,35 @@ class Uboat{
                 }
                 else {
                     //Crew lost at sea, game over
-                    let cause = "Crew lost at sea " + this.gm.getFullDate();
+                    //let cause = "Lost at sea " + this.gm.getFullDate();
+                    let cause = "";
                     if (this.gm.currentEncounter.aircraftType[numAircraft] != null) {
-                        cause += " - Crew lost at sea after scuttling from damage to both diesel engines by aircraft from " + this.gm.currentEncounter.aircraftType[numAircraft];
+                        //cause += " - Crew lost at sea after scuttling from damage to both diesel engines by aircraft from " + this.gm.currentEncounter.aircraftType[numAircraft] + this.gm.patrols[this.gm.patrolNum].getCurrentDeathOrdersAndLocation();
+                        cause = "Lost at sea by aircraft";
                     }
                     else {
-                        cause += " - Crew lost at sea after scuttling from damage to both diesel engines by the " + this.gm.currentEncounter.shipList[0].getClassAndName();
+                        //cause += " - Went missing after scuttling from damage to both diesel engines by the " + this.gm.currentEncounter.shipList[0].getClassAndName();
+                        cause = "Lost at sea by escort";
                     }
                     console.log("GAME OVER: " + cause);
-                    const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
+                    const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause, attacker);
                 }
             }
             else {
                 //TODO need to change scene to empty sea and force uboat to surface
                 this.tv.uboat.surface();
-                let cause = "Scuttled " + this.gm.getFullDate();
+                //let cause = "Scuttled " + this.gm.getFullDate();
+                let cause = "";
                 if (this.gm.currentEncounter.aircraftType[numAircraft] != null) {
-                    cause += " - Forced to scuttle after damage to both diesel engines by aircraft from " + this.gm.currentEncounter.aircraftType[numAircraft];
+                    //cause += " - Forced to scuttle after damage to both diesel engines by aircraft from " + this.gm.currentEncounter.aircraftType[numAircraft] + this.gm.patrols[this.gm.patrolNum].getCurrentDeathOrdersAndLocation();
+                    cause = "Scuttled due to diesel engine damage by aircraft"
                 }
                 else {
-                    cause += " - Forced to scuttle after damage to both diesel engines by the " + this.gm.currentEncounter.shipList[0].getClassAndName();
+                    //cause += " - Forced to scuttle after damage to both diesel engines by the " + this.gm.currentEncounter.shipList[0].getClassAndName();
+                    cause = "Scuttled due to diesel engine damage by escort"
                 }
                 console.log("GAME OVER: " + cause);
-                const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause);
+                const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause, attacker);
             }
         }
 
@@ -1346,7 +1360,7 @@ class Uboat{
         }
 
         this.hull_Damage = 0;
-        this.repair(true);
+        this.repair(true, null);
 
         if (this.monthsNeededForRefit >= 5) {
             this.gm.uboatReassignment = true;
