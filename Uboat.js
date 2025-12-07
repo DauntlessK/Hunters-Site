@@ -1184,7 +1184,7 @@ class Uboat{
                     //Crew lost at sea, game over
                     //let cause = "Lost at sea " + this.gm.getFullDate();
                     let cause = "";
-                    if (this.gm.currentEncounter.aircraftType[numAircraft] != null) {
+                    if (this.gm.currentEncounter.aircraftType[this.gm.currentEncounter.numAircraft] != null) {
                         //cause += " - Crew lost at sea after scuttling from damage to both diesel engines by aircraft from " + this.gm.currentEncounter.aircraftType[numAircraft] + this.gm.patrols[this.gm.patrolNum].getCurrentDeathOrdersAndLocation();
                         cause = "Lost at sea by aircraft";
                     }
@@ -1201,7 +1201,7 @@ class Uboat{
                 this.tv.uboat.surface();
                 //let cause = "Scuttled " + this.gm.getFullDate();
                 let cause = "";
-                if (this.gm.currentEncounter.aircraftType[numAircraft] != null) {
+                if (this.airA) {
                     //cause += " - Forced to scuttle after damage to both diesel engines by aircraft from " + this.gm.currentEncounter.aircraftType[numAircraft] + this.gm.patrols[this.gm.patrolNum].getCurrentDeathOrdersAndLocation();
                     cause = "Scuttled due to diesel engine damage by aircraft"
                 }

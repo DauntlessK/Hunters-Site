@@ -14,25 +14,24 @@ class RefitAndRecovery{
         this.element = document.createElement("div");
         this.element.classList.add("TextMessage");
 
-        refitAndRecovery()
-
+        this.refitAndRecovery()
     }
 
     refitAndRecovery() {
         //new div to add
 
-        if (totalTime == 1) {
-            totalTime = "1 month ";
+        if (this.totalTime == 1) {
+            this.totalTime = "1 month ";
         }
         else {
-            totalTime = String(totalTime) + " months ";
+            this.totalTime = String(this.totalTime) + " months ";
         }
 
         this.element.innerHTML = (`
             <div class = "Refit">
             <h3 class="HeaderMessage_h3">Repair & Refit<br>
             </h3>
-            <p class ="PatrolMessage_p">${refitResults}
+            <p class ="PatrolMessage_p">${this.refitResults}
             </p>
             </div>
 
@@ -40,11 +39,11 @@ class RefitAndRecovery{
             <div class = "Recovery">
                 <h3 class="HeaderMessage_h3">Crew Recovery<br>
                 </h3>
-                <p class ="PatrolMessage_p">${recoveryResults}
+                <p class ="PatrolMessage_p">${this.recoveryResults}
             </div>
 
             <div class = "Port_Summary">
-                <p class ="PatrolMessage_p">${totalTime} spent in port.</p>
+                <p class ="PatrolMessage_p">${this.totalTime} spent in port.</p>
             </div>
 
             <button class="AttackPopup_button" id="continue">Continue</button>

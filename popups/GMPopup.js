@@ -54,7 +54,7 @@ class GMPopup{
     arcticAssignmentPopup() {
         //new div to add
         this.element.innerHTML = (`
-            <p class="PatrolMessage_p">${this.gm.getFullUboatID} has been permanently assigned to the arctic.<br>
+            <p class="PatrolMessage_p">${this.gm.getFullUboatID()} has been permanently assigned to the arctic.<br>
             </p>
             <button class="AttackPopup_button" id="continue">Continue</button>
         `)

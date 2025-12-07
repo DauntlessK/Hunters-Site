@@ -569,7 +569,7 @@ class GameManager{
         }
         else {
             this.eventResolved = false;
-            let randr = new RefitAndRecovery(this.tv, this.gm, this.sub.monthsNeededForRefit, refitResults, hospitalResults);
+            let randr = new RefitAndRecovery(this.tv, this, this.sub.monthsNeededForRefit, refitResults, hospitalResults);
         }
 
         await until(_ => this.eventResolved == true);

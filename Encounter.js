@@ -22,6 +22,7 @@ class Encounter {
         this.missionEncComplete = false;            //Flag for keeping track if the msisiong was completed (separate from patrol successful)
         this.missionStepResolved = true;
         this.aircraftCalledInBackup == false        //Flag for after an aircraft leads to another encounter (escort / aircraft)
+        this.numAircraft = null;
 
         //Encounter "Scoreboard" for results
         this.numHits = 0;
@@ -581,8 +582,8 @@ class Encounter {
 
         //get aircraft type
         this.getAircraft();
-        let numAircraft = this.aircraftType.length - 1;
-        let newName = this.aircraftType[numAircraft].replaceAll(" ", "");
+        this.numAircraft = this.aircraftType.length - 1;
+        let newName = this.aircraftType[this.numAircraft].replaceAll(" ", "");
         let path = "images/aircraft/" + newName + ".png";
         this.tv.gameObjects.aircraft.updateSprite(path);
 
@@ -624,7 +625,7 @@ class Encounter {
         let result2 = "";                   //Crew Injury
         let result3 = "";                   //2nd attack if applicable
         let secondAttack = false;
-        this.airPopup = new AircraftPopup(this.tv, this.gm, this.encounterType, this.currentBoxName, this.aircraftType[numAircraft]);
+        this.airPopup = new AircraftPopup(this.tv, this.gm, this.encounterType, this.currentBoxName, this.aircraftType[this.numAircraft]);
 
         console.log("Aircraft Roll: " + result);
         if (result >= 6) {
@@ -648,8 +649,8 @@ class Encounter {
             this.gm.numPlaneAttacks++;
             this.gm.setEventResolved(false);
             let hitCount = this.escortAndAirAttackRoll(false, false, true);
-            result1 = this.sub.damage(hitCount, "Aircraft", this.aircraftType[numAircraft]);
-            result2 = this.sub.crewInjury("Aircraft", this.aircraftType[numAircraft]);
+            result1 = this.sub.damage(hitCount, "Aircraft", this.aircraftType[this.numAircraft]);
+            result2 = this.sub.crewInjury("Aircraft", this.aircraftType[this.numAircraft]);
             this.airPopup.hit(hitCount, result1, result2, false);
             if (this.aircraftFirstEncounter) {
                 this.aircraftResult = "Took damage. "
@@ -661,8 +662,8 @@ class Encounter {
             this.gm.numPlaneAttacks++;
             this.gm.setEventResolved(false);
             let hitCount = this.escortAndAirAttackRoll(false, false, true);
-            result1 = this.sub.damage(hitCount, "Aircraft", this.aircraftType[numAircraft]);
-            result2 = this.sub.crewInjury("Aircraft", this.aircraftType[numAircraft]);
+            result1 = this.sub.damage(hitCount, "Aircraft", this.aircraftType[this.numAircraft]);
+            result2 = this.sub.crewInjury("Aircraft", this.aircraftType[this.numAircraft]);
             secondAttack = true;
             if (hitCount <= 5) {
                 this.airPopup.hit(hitCount, result1, result2, true);
@@ -689,19 +690,19 @@ class Encounter {
             if (flakResult == "Shot Down") {
                 secondAttack = false;
                 if (this.aircraftFirstEncounter) {
-                    this.aircraftResult =  this.aircraftResult + "Shot down " + this.aircraftType[numAircraft] + ". ";
+                    this.aircraftResult =  this.aircraftResult + "Shot down " + this.aircraftType[this.numAircraft] + ". ";
                 }
             }
             if (flakResult == "Damaged") {
                 if (this.aircraftFirstEncounter) {
-                    this.aircraftResult =  this.aircraftResult + "Flak fire damaged " + this.aircraftType[numAircraft] + ". ";
+                    this.aircraftResult =  this.aircraftResult + "Flak fire damaged " + this.aircraftType[this.numAircraft] + ". ";
                 }
             }
 
             if (secondAttack) {
                 this.gm.numPlaneAttacks++;
                 let hitCount = this.escortAndAirAttackRoll(false, false, true);
-                result3 = this.sub.damage(hitCount, "Aircraft",  this.aircraftType[numAircraft]);
+                result3 = this.sub.damage(hitCount, "Aircraft",  this.aircraftType[this.numAircraft]);
 
                 this.gm.setEventResolved(false);
                 if (hitCount <= 5) {

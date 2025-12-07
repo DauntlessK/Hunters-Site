@@ -3,7 +3,7 @@ class OrdersPopup{
         this.tv = tv;
         this.gm = gm;
         this.uniqueOrders = uniqueOrders;
-        this.uniqueOrders.shift();
+        //this.uniqueOrders.shift(); not sure what this is or what it does or where it came from?
 
         this.container = document.querySelector(".game-container");
 
