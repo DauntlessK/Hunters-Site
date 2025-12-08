@@ -187,7 +187,7 @@ class Uboat{
 
         //-------------CREW STATES
         //states are 0 = OK, 1 = LW, 2 = SW, 3 = KIA • -1 indicates not present
-        this.crew_health = {
+        const initialCrew = {
             "Crew 1": 0,
             "Crew 2": 0,
             "Crew 3": 0,
@@ -199,6 +199,17 @@ class Uboat{
             "Kommandant": 0,
             "Abwehr Agent": -1
         };
+
+        // Wrap in a Proxy that logs all writes
+        this.crew_health = new Proxy(initialCrew, {
+            set(target, prop, value) {
+                console.log(`crew_health["${prop}"] changed →`, value);
+                console.trace();  // shows where the change came from
+                target[prop] = value;
+                return true;
+            }
+        });
+
 
         //Knight's Cross decoration level
         //  0 = none
@@ -630,10 +641,10 @@ class Uboat{
 
     //returns true if given crewman is not wounded, LW, or SW
     isCrewmanAlive(crewman) {
-        if (this.gm.sub.crew_health[crewman] < 3) {
+        if (this.crew_health[crewman] < 3) {
             return true;
         }
-        else if (this.gm.sub.crew_health[crewman] >= 3){
+        else if (this.crew_health[crewman] >= 3){
             return false;
         }
         else {
@@ -648,10 +659,10 @@ class Uboat{
      * @returns returns true if given crewman is not wounded, or LW, false if SW or KIA
      */
     isCrewmanFunctional(crewman) {
-        if (this.gm.sub.crew_health[crewman] < 2) {
+        if (this.crew_health[crewman] < 2) {
             return true;
         }
-        else if (this.gm.sub.crew_health[crewman] >= 2){
+        else if (this.crew_health[crewman] >= 2){
             return false;
         }
         else {
@@ -697,7 +708,7 @@ class Uboat{
                 if (pressureRoll < this.hull_Damage) {
                     //game over - Hull damage over HP
                     //let cause = "Sunk " + this.gm.getFullDate();
-                    //cause += " - Hull catastrophically imploded escaping the " + attacker + this.gm.patrols[this.gm.patrolNum].getCurrentDeathOrdersAndLocation();
+                    //cause += " - Hull catastrophically imploded escaping the " + attacker + this.gm.getCurrentPatrol().getCurrentDeathOrdersAndLocation();
                 
                     let cause = "Hull implosion"
                     console.log("GAME OVER: " + cause);
@@ -870,15 +881,15 @@ class Uboat{
             //let cause = "Sunk " + this.gm.getFullDate();
             let cause = "";
             if (attack == "Aircraft") {
-                //cause += " - Hull destroyed from air attack by " + attacker + this.gm.patrols[this.gm.patrolNum].getCurrentDeathOrdersAndLocation();
+                //cause += " - Hull destroyed from air attack by " + attacker + this.gm.getCurrentPatrol().getCurrentDeathOrdersAndLocation();
                 cause = "Hull destroyed by aircraft";
             }
             else if (attack == "Pressure") {
-                //cause += " - Hull crushed by pressure escaping the " + attacker + this.gm.patrols[this.gm.patrolNum].getCurrentDeathOrdersAndLocation();
+                //cause += " - Hull crushed by pressure escaping the " + attacker + this.gm.getCurrentPatrol().getCurrentDeathOrdersAndLocation();
                 cause = "Hull destroyed by pressure";
             }
             else {
-                //cause += " - Hull destroyed by depth charges by the " + attacker + this.gm.patrols[this.gm.patrolNum].getCurrentDeathOrdersAndLocation();
+                //cause += " - Hull destroyed by depth charges by the " + attacker + this.gm.getCurrentPatrol().getCurrentDeathOrdersAndLocation();
                 cause = "Hull destroyed by escort";
             }
             console.log("GAME OVER: " + cause);
@@ -890,11 +901,11 @@ class Uboat{
             //let cause = "Scuttled " + this.gm.getFullDate();
             let cause = "";
             if (attack == "Aircraft") {
-                //cause += " - Forced to scuttle from air attack flooding by " + attacker + this.gm.patrols[this.gm.patrolNum].getCurrentDeathOrdersAndLocation(); 
+                //cause += " - Forced to scuttle from air attack flooding by " + attacker + this.gm.getCurrentPatrol().getCurrentDeathOrdersAndLocation(); 
                 cause = "Scuttled due to flooding by aircraft";
             }
             else {
-                //cause += " - Forced to surface and scuttle from depth charge damage flooding by the " + attacker + this.gm.patrols[this.gm.patrolNum].getCurrentDeathOrdersAndLocation();
+                //cause += " - Forced to surface and scuttle from depth charge damage flooding by the " + attacker + this.gm.getCurrentPatrol().getCurrentDeathOrdersAndLocation();
                 cause = "Scuttled due to flooding by escort";
             }
             console.log("GAME OVER: " + cause);
@@ -917,7 +928,7 @@ class Uboat{
             var crewInjuryRoll = d6Rollx2();
             var severity = d6Roll();
         }
-        if (this.gm.sub.crew_health["Doctor"] <= 1 && this.gm.sub.crew_levels["Doctor"] > 0) {
+        if (this.crew_health["Doctor"] <= 1 && this.crew_levels["Doctor"] > 0) {
             severity -= 1;
         }
         if (severity <= 3) {
@@ -948,7 +959,7 @@ class Uboat{
                 this.crew_health["Kommandant"] += wounds;
                 if (this.crew_health["Kommandant"] == 3) {
                     //game over
-                    //let cause = "Kommandant killed in action by " + attacker + this.gm.patrols[this.gm.patrolNum].getCurrentDeathOrdersAndLocation();
+                    //let cause = "Kommandant killed in action by " + attacker + this.gm.getCurrentPatrol().getCurrentDeathOrdersAndLocation();
                     let cause = "Kommandant KIA";
 
                     console.log("GAME OVER: " + cause);
@@ -959,29 +970,29 @@ class Uboat{
                 toReturn = "The First Officer has been " + sevText;
                 person = "Watch Officer 1";
                 //check first if crew member is already KIA
-                if (this.gm.sub.crew_health[person] == 3) {
+                if (this.crew_health[person] == 3) {
                     return "No crew member received injury. (WO1 already KIA) "
                 }
-                this.gm.sub.crew_health[person] += wounds;
+                this.crew_health[person] += wounds;
                 break;
             case 4:
             case 11:
                 toReturn = "The Engineer has been " + sevText;
                 person = "Engineer";
                 //check first if crew member is already KIA
-                if (this.gm.sub.crew_health[person] == 3) {
+                if (this.crew_health[person] == 3) {
                     return "No crew member received injury. (Engineer already KIA) "
                 }
-                this.gm.sub.crew_health[person] += wounds;
+                this.crew_health[person] += wounds;
                 break;
             case 5:
                 toReturn = "The Doctor has been " + sevText;
                 person = "Doctor";
                 //check first if crew member is already KIA
-                if (this.gm.sub.crew_health[person] == 3) {
+                if (this.crew_health[person] == 3) {
                     return "No crew member received injury. (Doctor already KIA) "
                 }
-                this.gm.sub.crew_health[person] += wounds;
+                this.crew_health[person] += wounds;
                 break;
             case 6:
             case 7:
@@ -989,11 +1000,11 @@ class Uboat{
             case 9:
                 toReturn = "A crew member has been " + sevText;
                 var injuryAllocated = false;
-                for (var key in this.gm.sub.crew_health) {
+                for (var key in this.crew_health) {
                     if (key.includes("Crew")) {
                         //find uninjured crew to allocate first
-                        if (this.gm.sub.crew_health[key] == 0) {
-                            this.gm.sub.crew_health[key] += wounds;
+                        if (this.crew_health[key] == 0) {
+                            this.crew_health[key] += wounds;
                             injuryAllocated = true;
                             break;
                         }
@@ -1005,11 +1016,11 @@ class Uboat{
 
                 //if no crew member is uninjured and injury still unallocated, find a LW crew member and make them SW
                 if (!injuryAllocated) {
-                    for (var key in this.gm.sub.crew_health) {
+                    for (var key in this.crew_health) {
                         if (key.includes("Crew")) { 
                             //find SW crew first
-                            if (this.gm.sub.crew_health[key] == 1) {
-                                this.gm.sub.crew_health += wounds;
+                            if (this.crew_health[key] == 1) {
+                                this.crew_health += wounds;
                                 injuryAllocated = true;
                                 break;
                             }
@@ -1022,11 +1033,11 @@ class Uboat{
 
                 //if no crew member is LW and injury still unallocated, find a SW crew member and make them KIA
                 if (!injuryAllocated) {
-                    for (var key in this.gm.sub.crew_health) {
+                    for (var key in this.crew_health) {
                         if (key.includes("Crew")) { 
                             //find SW crew first
-                            if (this.gm.sub.crew_health[key] == 2) {
-                                this.gm.sub.crew_health += wounds;
+                            if (this.crew_health[key] == 2) {
+                                this.crew_health += wounds;
                                 injuryAllocated = true;
                                 break;
                             }
@@ -1045,18 +1056,18 @@ class Uboat{
                 toReturn = "The Second Officer has been " + sevText;
                 person = "Watch Officer 2";
                 //check first if crew member is already KIA
-                if (this.gm.sub.crew_health[person] == 3) {
+                if (this.crew_health[person] == 3) {
                     return "No crew member received injury. (WO2 already KIA) "
                 }
-                this.gm.sub.crew_health[person] += wounds;
+                this.crew_health[person] += wounds;
                 break;
             case 12:
-                if (this.gm.sub.crew_health["Abwehr Agent"] >= 0) {
+                if (this.crew_health["Abwehr Agent"] >= 0) {
                     toReturn = "The Abwehr Agent has been " + sevText;
                     person = "Abwehr Agent";
-                    this.gm.sub.crew_health[person] += wounds;
+                    this.crew_health[person] += wounds;
                 }
-                else if (this.gm.sub.crew_health["Abwehr Agent"] == 3) { //check if crew member is already KIA
+                else if (this.crew_health["Abwehr Agent"] == 3) { //check if crew member is already KIA
                     return "No crew member received injury. (Agent already KIA) "
                 }
                 else {
@@ -1064,6 +1075,21 @@ class Uboat{
                 }
                 break;
         }
+
+        //loop through crew to ensure no one went above KIA
+        for (var key in this.crew_health) {
+            if (this.crew_health[key] > 3) {
+                this.crew_health[key] = 3;
+                if (key == "Kommandant") {
+                    //game over
+                    let cause = "Kommandant KIA";
+
+                    console.log("GAME OVER: " + cause);
+                    const goPopup = new GameOverPopup(this.tv, this.gm, this.gm.currentEncounter, cause, attacker);
+                }
+            }
+        }
+
         return toReturn;
     }
 
@@ -1185,7 +1211,7 @@ class Uboat{
                     //let cause = "Lost at sea " + this.gm.getFullDate();
                     let cause = "";
                     if (this.gm.currentEncounter.aircraftType[this.gm.currentEncounter.numAircraft] != null) {
-                        //cause += " - Crew lost at sea after scuttling from damage to both diesel engines by aircraft from " + this.gm.currentEncounter.aircraftType[numAircraft] + this.gm.patrols[this.gm.patrolNum].getCurrentDeathOrdersAndLocation();
+                        //cause += " - Crew lost at sea after scuttling from damage to both diesel engines by aircraft from " + this.gm.currentEncounter.aircraftType[numAircraft] + this.gm.getCurrentPatrol().getCurrentDeathOrdersAndLocation();
                         cause = "Lost at sea by aircraft";
                     }
                     else {
@@ -1202,7 +1228,7 @@ class Uboat{
                 //let cause = "Scuttled " + this.gm.getFullDate();
                 let cause = "";
                 if (this.airA) {
-                    //cause += " - Forced to scuttle after damage to both diesel engines by aircraft from " + this.gm.currentEncounter.aircraftType[numAircraft] + this.gm.patrols[this.gm.patrolNum].getCurrentDeathOrdersAndLocation();
+                    //cause += " - Forced to scuttle after damage to both diesel engines by aircraft from " + this.gm.currentEncounter.aircraftType[numAircraft] + this.gm.getCurrentPatrol().getCurrentDeathOrdersAndLocation();
                     cause = "Scuttled due to diesel engine damage by aircraft"
                 }
                 else {
@@ -1245,6 +1271,10 @@ class Uboat{
         return messageToReturn;
     }
 
+    /**
+     * Goes through crew and attempts to heal them based on months needed for refit and roll
+     * @returns String of results of the attempts at healing
+     */
     hospital() {
         var hospitalResults = "";
         var numCrewReplaced = 0;
@@ -1253,8 +1283,9 @@ class Uboat{
 
         for (const [key, value] of Object.entries(this.crew_health)) {
             if (key == "Kommandant") {
-                continue;
-            }
+                    //Handle SW to Kmdt below
+                    continue;
+                }
             if (value == 3) {  //check if KIA first
                 if (key == "Crew 1" || key == "Crew 2" || key == "Crew 3" || key == "Crew 4") {
                     numCrewReplaced++;
@@ -1307,6 +1338,7 @@ class Uboat{
             }
         }
         else if (this.crew_health["Kommandant"] == 1) {
+            this.crew_health["Kommandant"] = 0;
             hospitalResults += "You recover from your minor wounds. ";
         }
 

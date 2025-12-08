@@ -285,7 +285,7 @@ class Encounter {
         if (this.depth == "Periscope Depth" && this.tv.uboat.depth == 0) {
             this.tv.uboat.dive();
         }
-        else if (this.depth == "Surfaced" && this.tv.uboat.depth == 110) {
+        else if (this.depth == "Surfaced" && this.tv.uboat.depth == 110) {  //TODO: is this a possible way this can be bugged? Checking 110 pixels and clicking early?
             this.tv.uboat.surface();
         }
         Object.values(this.tv.shipObjects).forEach(object => {
@@ -1089,7 +1089,7 @@ class Encounter {
                     rollMod += 1;
                 }
                 if (this.sub.crew_health["Kommandant"] > 1) {
-                    if (this.sub.sub.crew_health["Watch Officer"] > 1) {
+                    if (this.sub.crew_health["Watch Officer"] > 1) {
                         rollMod += 2;
                     }    
                     else {
@@ -1460,6 +1460,7 @@ class Encounter {
         var escortMods = 0;
         var canTestDive = false;
 
+        //TODO: show escortMods modifier value somewhere?
         this.gm.setSubEventResolved(false);
         var escortDetectionPopup = new EscortDetectionPopup(this.tv, this.gm, this, closeRangeCheck);
         await until(_ => this.gm.subEventResolved == true);
@@ -1672,16 +1673,18 @@ class Encounter {
             case 12:
                 return 5;
             default:
-                let cause = "Sunk " + this.gm.getFullDate();
+                let cause = "";
+                console.log("GAME OVER: " + "Catastrophic damage");
                 if (airAttack) {
                     let i = this.aircraftType.length - 1;
-                    cause += " by catastrophic damage from a " + this.aircraftType[i];
+                    cause = "Catastrophic damage by Aircraft";
+                    let goPopup = new GameOverPopup(this.tv, this.gm, this, cause, this.aircraftType[i]);
                 }
                 else {
-                    cause += " by catastrophic damage done by depth charges from the " + this.shipList[0].getName();
+                    cause = "Catastrophic damage by Escort";
+                    let goPopup = new GameOverPopup(this.tv, this.gm, this, cause, this.shipList[0]);
                 }
-                console.log("GAME OVER: " + cause);
-                let goPopup = new GameOverPopup(this.tv, this.gm, this, cause);
+                
                 return 6;
         }
     }

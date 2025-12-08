@@ -74,11 +74,11 @@ function monthName($num) {
 function statusColor($status) {
     $status = strtolower($status);
     return match($status) {
-        "alive", "survived" => "#4CAF50",   // green
-        "kia", "killed"     => "#e53935",   // red
-        "captured"          => "#fdd835",   // yellow
-        "missing"           => "#9e9e9e",   // gray
-        default             => "#90caf9"    // fallback blue
+        "alive", "survived"         => "#4CAF50",   // green
+        "kia", "killed"             => "#e53935",   // red
+        "captured", "pow"           => "#fdd835",   // yellow
+        "missing", "mia"            => "#b97106ff",   // orange
+        default                     => "#90caf9"    // fallback blue
     };
 }
 

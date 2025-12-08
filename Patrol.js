@@ -290,9 +290,12 @@ class Patrol{
             else if (x == 5 && this.gm.currentOrders.includes("Abwehr") && this.NAorders){
                 this.patrolArray.push("Mission");
             }
-            else if (x == 5 && this.gm.currentOrders.includes("Minelaying" && this.NAorders)){
-                this.patrolArray.push("Mission");
-            }
+            //else if ((x == 5 || x == this.getPatrolLength() - 4) && this.NAorders){
+            //    this.patrolArray.push("Transit");
+            //}
+            //else if (x == 5 && this.gm.currentOrders.includes("Minelaying" && this.NAorders)){
+            //    this.patrolArray.push("Mission");
+            //}
             else{   //used to replace patrol array spots that have parentheses and should not (so location is only displayed)
                 var otherSpot = this.gm.currentOrders;
                 if (this.gm.currentOrders.includes("Abwehr")){
@@ -707,7 +710,7 @@ class Patrol{
             case "British Isles (Abwehr Agent Delivery)":
                 return " while delivering an agent to Britain."
             case "Atlantic (Wolfpack)":
-                return " while paricipating in a wolfpack patrol.";
+                return " while participating in a wolfpack patrol in the mid-Atlantic.";
             case "North America (Abwehr Agent Delivery)":
                 return " while delivering an agent to NA."
             default:

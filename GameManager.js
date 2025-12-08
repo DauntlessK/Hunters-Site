@@ -19,7 +19,8 @@ class GameManager{
         this.currentOrdersLong = "";
         //this.patrol = null;
         this.newPatrol();
-        this.patrols = []; // Array of all patrol objects for record keeping if needed
+        this.patrols = [];          // Array of all patrol objects for record keeping if needed
+        this.patrols.push(null);    //adds null patrol to skip over zeroth patrol
         this.patrolling = false;
         this.patrolCount = ["", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth",
                             "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth",
@@ -41,10 +42,12 @@ class GameManager{
         this.shipsSunk = [];
         this.shipsSunkOnCurrentPatrol = [];
         this.logBook = [];
+        this.logBook.push(null);    //adds null patrollog to skip over zeroth patrol
         this.pastSubs = [];
         this.adminMode = false;
         this.gameOverEnc = null;        //To be updated when gameover occurs
         this.gameOverCause = "";        //To be updated when gameover occurs
+        this.survivalStatus = "";       //To be updated when gameover occurs
 
         //------------For Awards and Rank (and reassignment/upgrade)
         this.rankLong = ["Oberleutnant zur See", "Kapitan-leutnant", "Korvetten-kapitan", "Fregatten-kapitan", "Kapitan zur See"];
@@ -182,6 +185,10 @@ class GameManager{
         return this.month[this.date_month];
     }
 
+    getCurrentPatrol() {
+        return this.patrols[this.patrolNum];
+    }
+
     /**
      * Advances time one month
      */
@@ -194,12 +201,13 @@ class GameManager{
 
         //Update months at sea / in port
         if (this.patrolling) {
-            console.log("At Sea");
+            console.log("Month At Sea");
             this.monthsAtSea++;
         }
         else {
-            console.log("In Port");
+            console.log("Month In Port");
             this.monthsInPort++;
+            this.isWarOver();       //only triggered (checked) when in port
         }
     }
 
@@ -346,7 +354,7 @@ class GameManager{
         await until(_ => this.eventResolved == true);
 
         //Check for arctic permanent assignments
-        if (this.currentOrders == "Arctic"){
+        if (this.currentOrders == "Arctic" && this.permArcPost == false) {
             let articAssignRoll = d6Roll();
 
             if (articAssignRoll <= 3) {
@@ -375,11 +383,6 @@ class GameManager{
 
         var currentLog = new PatrolLog(this.tv, this);      
         this.logBook.push(currentLog);
-
-        //fill index 0 of logbook so it matches patrol number
-        if (this.logBook.length == 1){
-            this.logBook.push(currentLog);
-        }
 
         this.patrols.push(this.patrol);
         this.currentBox = 0;
@@ -555,12 +558,16 @@ class GameManager{
             this.bestPatrolGRT = this.getPatrolTotalGRT("Int");
         }
 
+        //TODO: Promotion and Award checks here?
+
         //Reset various flags
         this.abortingPatrol = false;
         this.missionComplete = false;
         this.shipsSunkOnCurrentPatrol = [];
         this.contFromAbort = false;
         this.extraStep = 0;
+
+        this.isWarOver();
 
         //if a new uboat is called for (due to excessive damage or SW on KMDT)
         if (this.uboatReassignment) {
@@ -589,6 +596,10 @@ class GameManager{
         //this.tv.changeScene("NoEnc", "Day", null, false); Need gameover screen / art
     }
 
+    /**
+     * Gets past subs commanded by player
+     * @returns string of U-boat #s
+     */
     getPastSubs() {
         var toReturn = "";
         for (let i = 0; i < this.pastSubs.length; i++) {
@@ -600,16 +611,22 @@ class GameManager{
         return toReturn;
     }
 
-    getSurvivalStatus() {
-        //AFTER June 1943 (patrols can begin in June 1943)
+    /**
+     * Checks if patrols can still be conducted.
+     * @returns true if AFTER june 1943 which immediately triggers Game Over popup. False otherwise.
+     */
+    isWarOver() {
         if (this.getYear() >= 1943 && this.getMonth() > 5) {
-            return "Survived War"; //TODO: needs specific survival info
+            let cause = "War is over";
+            let attacker = null;
+            const goPopup = new GameOverPopup(this.tv, this, this.currentEncounter, cause, attacker);
         }
-        else {
-            return "KIA"; // TODO: needs specific survival info (captured etc)
-        }
+        return false;
     }
 
+    /**
+     * Sends final scores and stats to API to log for high scores.
+     */
     fetch() {
         const gameData = {
             play_id: this.play_id,
@@ -625,7 +642,7 @@ class GameManager{
             warships_sunk: this.capitalShipsSunk,
             num_planes_shot_down: this.planesShotDown,
 
-            survival_status: this.getSurvivalStatus(),
+            survival_status: this.survivalStatus,
             end_month: this.getMonth() + 1,
             end_year: this.getYear(),
             game_over_encounter: "N/A",
@@ -669,7 +686,5 @@ class GameManager{
         .catch(error => {
             console.error("Error submitting game data:", error);
         });
-
-
     }
 }
