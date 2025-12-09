@@ -210,11 +210,13 @@ class Ship {
             this.roundSunk = true;
             this.gm.shipsSunk.push(this);
             this.gm.shipsSunkOnCurrentPatrol.push(this);
+            this.gm.shipsSunkSinceLastPromotionCheck++;
             this.enc.shipsSunkInEnc.push(this);
             this.gm.totalGRTSunk += this.getGRTInt();
             //Update capital ship sunk count if applicable
             if (this.getType() == "Capital Ship") {
                 this.gm.capitalShipsSunk++;
+                this.gm.capitalShipsSunkSinceLastKnightsCross++;
             }
         }
     }

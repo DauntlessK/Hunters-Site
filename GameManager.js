@@ -6,6 +6,7 @@ class GameManager{
         this.sub = null;
         this.eventResolved = true;
         this.statusResolved = true;
+        this.awardsResolved = true;
         this.subEventResolved = true;
         this.play_id = null;
 
@@ -17,7 +18,6 @@ class GameManager{
 
         this.currentOrders = "";
         this.currentOrdersLong = "";
-        //this.patrol = null;
         this.newPatrol();
         this.patrols = [];          // Array of all patrol objects for record keeping if needed
         this.patrols.push(null);    //adds null patrol to skip over zeroth patrol
@@ -54,13 +54,16 @@ class GameManager{
         this.rank = ["OLt zS", "KptLt", "KKpt", "FFKpt", "KptzS"];
         this.awardName = ["", "Knight's Cross", "Knight's Cross with Oakleaves", "Knight's Cross with Oakleaves and Swords",
                             "Knight's Cross with Oakleaves, Swords and Diamonds"];
-        this.monthsSinceLastPromotionCheck = 0;     //how many months since last promotion roll
+        //this.monthsSinceLastPromotionCheck = 0;     //how many months since last promotion roll - NOT NEEDED
+        this.gm.numPromotionChecks = 0;
         this.shipsSunkSinceLastPromotionCheck= 0;
         this.knightsCrossSinceLastPromotionCheck = 0;
         this.unsuccessfulPatrolsSinceLastPromotionCheck = 0;
         this.capitalShipsSunkSinceLastKnightsCross = 0;
         this.monthOfLastKnightsCrossAward = -1;
         this.yearOfLastKnightsCrossAward = -1;
+        this.checkedForCrewLevelUp = false;     //Changes to true when it is checked when success patrols hits 3/6/9 etc. 
+                                                //Then flips to false after another successful patrol is made.
         this.uboatWarBadgeLevel = 0;   //0 = none, 1 = War Badge, 2 = War Badge w/ diamonds
         this.uboatFrontClaspLevel = 0; //0 = none, 1 = black, 2 = silver, 3 = gold
         this.woundBadgeLevel = 0;      //0 = none, 1 = black, 2 = silver, 3 = gold
@@ -546,11 +549,15 @@ class GameManager{
             this.successfulPatrols++;
             this.unsuccessfulPatrolsInARow = 0;
             this.lastPatrolWasUnsuccessful = false;
+            if (this.successfulPatrols % 3 == 1) {
+                this.checkedForCrewLevelUp = false;   
+            }
         }
         else {
             this.unsuccessfulPatrols++;
             this.unsuccessfulPatrolsInARow++;
             this.lastPatrolWasUnsuccessful = true;
+            this.unsuccessfulPatrolsSinceLastPromotionCheck++;
         }
 
         //Update if this was most successful patrol
