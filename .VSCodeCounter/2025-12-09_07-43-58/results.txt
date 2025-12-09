@@ -1,0 +1,104 @@
+Date : 2025-12-09 07:43:58
+Directory : c:\Users\Kyle\Documents\GitHub\Hunters_Site
+Total : 66 files,  9885 codes, 1273 comments, 1305 blanks, all 12463 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| JavaScript |         44 |      8,577 |      1,236 |      1,110 |     10,923 |
+| PostCSS    |          5 |        596 |          3 |         83 |        682 |
+| PHP        |          9 |        518 |         25 |         93 |        636 |
+| HTML       |          1 |        105 |          4 |          7 |        116 |
+| MS SQL     |          1 |         48 |          5 |          9 |         62 |
+| XML        |          5 |         32 |          0 |          0 |         32 |
+| Markdown   |          1 |          9 |          0 |          3 |         12 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++--------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                       | files      | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                          |         66 |      9,885 |      1,273 |      1,305 |     12,463 |
+| . (Files)                                                                                  |         23 |      6,421 |        960 |        795 |      8,176 |
+| .idea                                                                                      |          5 |         32 |          0 |          0 |         32 |
+| .idea (Files)                                                                              |          4 |         26 |          0 |          0 |         26 |
+| .idea\inspectionProfiles                                                                   |          1 |          6 |          0 |          0 |          6 |
+| api                                                                                        |          8 |        273 |         17 |         42 |        332 |
+| buttons                                                                                    |          8 |        439 |         57 |         40 |        536 |
+| popups                                                                                     |         18 |      2,142 |        236 |        350 |      2,728 |
+| styles                                                                                     |          4 |        578 |          3 |         78 |        659 |
++--------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++--------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                                   | language   | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\.idea\Hunters_Site.iml                         | XML        |          8 |          0 |          0 |          8 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\.idea\inspectionProfiles\profiles_settings.xml | XML        |          6 |          0 |          0 |          6 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\.idea\misc.xml                                 | XML        |          4 |          0 |          0 |          4 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\.idea\modules.xml                              | XML        |          8 |          0 |          0 |          8 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\.idea\vcs.xml                                  | XML        |          6 |          0 |          0 |          6 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\Encounter.js                                   | JavaScript |      1,420 |        203 |        131 |      1,754 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\GameManager.js                                 | JavaScript |        516 |        107 |         83 |        706 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\GameObject.js                                  | JavaScript |         24 |          0 |          4 |         28 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\Main.js                                        | JavaScript |         96 |         15 |         20 |        131 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\MenuIcon.js                                    | JavaScript |         40 |          4 |          7 |         51 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\Patrol.js                                      | JavaScript |        599 |         76 |         46 |        721 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\PatrolLog.js                                   | JavaScript |        173 |         19 |         19 |        211 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\README.md                                      | Markdown   |          9 |          0 |          3 |         12 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\Ship.js                                        | JavaScript |        184 |         13 |         33 |        230 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\Sprite.js                                      | JavaScript |         79 |         36 |         18 |        133 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\SpriteOLD.js                                   | JavaScript |        374 |         76 |         69 |        519 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\SpriteShip.js                                  | JavaScript |        213 |         61 |         42 |        316 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\SpriteUboat.js                                 | JavaScript |        144 |         37 |         23 |        204 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\SpriteWake.js                                  | JavaScript |        135 |         26 |         25 |        186 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\TacticalView.js                                | JavaScript |        533 |         36 |         48 |        617 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\UI.js                                          | JavaScript |        301 |         28 |         33 |        362 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\Uboat.js                                       | JavaScript |      1,107 |        187 |        109 |      1,403 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\api\create_tables.sql                          | MS SQL     |         48 |          5 |          9 |         62 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\api\db copy.php                                | PHP        |         21 |          5 |          4 |         30 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\api\db.php                                     | PHP        |         14 |          0 |          4 |         18 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\api\get_play.php                               | PHP        |         17 |          0 |          6 |         23 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\api\start_play.php                             | PHP        |         39 |          2 |          7 |         48 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\api\submit_game.php                            | PHP        |        125 |          3 |          9 |        137 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\api\test.php                                   | PHP        |          1 |          0 |          0 |          1 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\api\test_db.php                                | PHP        |          8 |          2 |          3 |         13 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\buttons\BeginPatrolButton.js                   | JavaScript |         14 |          1 |          2 |         17 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\buttons\Button.js                              | JavaScript |         82 |         14 |         14 |        110 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\buttons\ContinuePatrolButton.js                | JavaScript |         13 |          1 |          2 |         16 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\buttons\DeckGunButton.js                       | JavaScript |         91 |          8 |          8 |        107 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\buttons\FireAttackButton.js                    | JavaScript |         11 |          1 |          2 |         14 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\buttons\OpenStatusButton.js                    | JavaScript |         12 |          1 |          2 |         15 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\buttons\ReloadButton.js                        | JavaScript |         20 |          1 |          2 |         23 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\buttons\TorpedoButton.js                       | JavaScript |        196 |         30 |          8 |        234 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\highscores.php                                 | PHP        |        291 |         13 |         60 |        364 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\index.html                                     | HTML       |        105 |          4 |          7 |        116 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\init.js                                        | JavaScript |          6 |          0 |          2 |          8 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\popups\AdminPopup.js                           | JavaScript |         50 |          3 |         12 |         65 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\popups\AircraftPopup.js                        | JavaScript |        108 |         19 |         25 |        152 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\popups\AttackDepthAndRangePopup.js             | JavaScript |         75 |          8 |         13 |         96 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\popups\AwardsPopup.js                          | JavaScript |         86 |          8 |         20 |        114 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\popups\EncounterPopup.js                       | JavaScript |        297 |         53 |         57 |        407 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\popups\EscortDetectionPopup.js                 | JavaScript |        117 |          5 |         19 |        141 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\popups\FollowPopup.js                          | JavaScript |         56 |         11 |         16 |         83 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\popups\FollowTimePopup.js                      | JavaScript |         49 |          4 |         10 |         63 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\popups\GMPopup.js                              | JavaScript |        154 |         17 |         28 |        199 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\popups\GameOverPopup.js                        | JavaScript |        128 |         15 |         15 |        158 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\popups\MissionPopup.js                         | JavaScript |         76 |         16 |         21 |        113 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\popups\OrdersPopup.js                          | JavaScript |        105 |         10 |         17 |        132 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\popups\RefitAndRecoveryPopup.js                | JavaScript |         59 |          4 |         12 |         75 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\popups\ResupplyCustomPopup.js                  | JavaScript |        156 |          8 |         14 |        178 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\popups\ResupplyPopup.js                        | JavaScript |        136 |         16 |         15 |        167 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\popups\RoundFollowUpPopup.js                   | JavaScript |         87 |          7 |         11 |        105 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\popups\RoundResultsPopup.js                    | JavaScript |        142 |          9 |         20 |        171 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\popups\StatusPopup.js                          | JavaScript |        261 |         23 |         25 |        309 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\styles.css                                     | PostCSS    |         18 |          0 |          5 |         23 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\styles\EncounterPopup.css                      | PostCSS    |        148 |          0 |         13 |        161 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\styles\Popup.css                               | PostCSS    |         86 |          0 |         11 |         97 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\styles\StatusPopup.css                         | PostCSS    |        281 |          0 |         41 |        322 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\styles\styles.css                              | PostCSS    |         63 |          3 |         13 |         79 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\test_path.php                                  | PHP        |          2 |          0 |          0 |          2 |
+| c:\Users\Kyle\Documents\GitHub\Hunters_Site\util.js                                        | JavaScript |         52 |         19 |          8 |         79 |
+| Total                                                                                      |            |      9,885 |      1,273 |      1,305 |     12,463 |
++--------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+

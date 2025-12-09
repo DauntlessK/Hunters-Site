@@ -55,7 +55,7 @@ class GameManager{
         this.awardName = ["", "Knight's Cross", "Knight's Cross with Oakleaves", "Knight's Cross with Oakleaves and Swords",
                             "Knight's Cross with Oakleaves, Swords and Diamonds"];
         //this.monthsSinceLastPromotionCheck = 0;     //how many months since last promotion roll - NOT NEEDED
-        this.gm.numPromotionChecks = 0;
+        this.numPromotionChecks = 0;
         this.shipsSunkSinceLastPromotionCheck= 0;
         this.knightsCrossSinceLastPromotionCheck = 0;
         this.unsuccessfulPatrolsSinceLastPromotionCheck = 0;
@@ -117,7 +117,9 @@ class GameManager{
 
 
         //Submit start to database and get play_id
-        fetch("http://hunters.local/api/start_play.php", {
+        //""/Hunters_beta/api/start_play.php""
+        //"http://hunters.local/api/start_play.php"
+        fetch("/Hunters_beta/api/start_play.php", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -635,6 +637,9 @@ class GameManager{
      * Sends final scores and stats to API to log for high scores.
      */
     fetch() {
+        console.log("Submitting game data to backend...");
+        console.trace("FETCH CALLED");
+
         const gameData = {
             play_id: this.play_id,
             rank: this.rank[this.sub.crew_levels["Kommandant"]],
@@ -675,7 +680,9 @@ class GameManager{
         };
 
         // Send to backend
-        fetch('http://hunters.local/api/submit_game.php', {
+        //"/Hunters_beta/api/submit_game.php"
+        //'http://hunters.local/api/submit_game.php'
+        fetch("/Hunters_beta/api/submit_game.php", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(gameData)
@@ -693,5 +700,7 @@ class GameManager{
         .catch(error => {
             console.error("Error submitting game data:", error);
         });
+
+        return;
     }
 }

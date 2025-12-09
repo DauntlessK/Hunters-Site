@@ -16,7 +16,7 @@ class GameOverPopup{
         //Set game over info in GM
         this.gm.gameOverCause = this.getCauseText(cause, attacker);
         this.gm.gameOverEncounter = enc;
-        this.gm.SurvivalStatus = this.getSurvivalStatus();
+        this.gm.survivalStatus = this.getSurvivalStatus();
 
         this.gm.fetch();
         this.gm.setEventResolved(false);
@@ -60,6 +60,8 @@ class GameOverPopup{
 
         this.container.appendChild(this.element);
         this.tv.pauseGame(true);
+
+        return;
     }
     
     done(id){
@@ -91,7 +93,7 @@ class GameOverPopup{
         switch(cause) {
             case "Hull implosion":
                 text = "Sunk " + this.gm.getFullDate();
-                text += "- Hull catastrophically imploded while attempting to escape the " + this.gm.currentEncounter.shipList[0].getClassAndName() + currentDeathOrdersAndLocation;
+                text += "- Hull crushed by pressure while attempting to escape the " + this.gm.currentEncounter.shipList[0].getClassAndName() + currentDeathOrdersAndLocation;
                 return text;
             case "Hull destroyed by aircraft":
                 text = "Sunk " + this.gm.getFullDate();
@@ -99,7 +101,7 @@ class GameOverPopup{
                 return text;
             case "Hull destroyed by pressure":
                 text = "Sunk " + this.gm.getFullDate();
-                text += "- Hull crushed by pressure escaping the " + attacker + currentDeathOrdersAndLocation;
+                text += "- Hull imploded by pressure escaping the " + attacker + currentDeathOrdersAndLocation;
                 return text;
             case "Hull destroyed by escort":
                 text = "Sunk " + this.gm.getFullDate();

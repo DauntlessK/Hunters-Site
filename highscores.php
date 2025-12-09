@@ -73,14 +73,23 @@ function monthName($num) {
 // --- SURVIVAL STATUS COLORING ---
 function statusColor($status) {
     $status = strtolower($status);
-    return match($status) {
-        "alive", "survived"         => "#4CAF50",   // green
-        "kia", "killed"             => "#e53935",   // red
-        "captured", "pow"           => "#fdd835",   // yellow
-        "missing", "mia"            => "#b97106ff",   // orange
-        default                     => "#90caf9"    // fallback blue
-    };
+
+    if ($status === "alive" || $status === "survived") {
+        return "#4CAF50"; // green
+    }
+    if ($status === "kia" || $status === "killed") {
+        return "#e53935"; // red
+    }
+    if ($status === "captured" || $status === "pow") {
+        return "#fdd835"; // yellow
+    }
+    if ($status === "missing" || $status === "mia") {
+        return "#b97106ff"; // orange
+    }
+
+    return "#90caf9"; // fallback blue
 }
+
 
 // --- TRUNCATE TEXT HELPER ---
 function truncateText($text, $maxLen = 30) {
