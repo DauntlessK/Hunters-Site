@@ -95,6 +95,10 @@ class OrdersPopup{
                 `)      
         }
 
+        if (elementsArray[0] == undefined || elementsArray[0] == "" || elementsArray[0] == " " || elementsArray[0] == null){
+            elementsArray.shift();
+        }
+
         //main body text
         this.element.innerHTML = (`
             <h3 class="HeaderMessage_h3">Choose Your Orders

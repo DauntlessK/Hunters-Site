@@ -1,5 +1,13 @@
 class Uboat{
-    constructor(type, tv, gm){
+    /**
+     * Creates new U-boat object of given type
+     * @param {string} type 
+     * @param {TacticalView} tv 
+     * @param {GameManager} gm 
+     * @param {Array} crewLevels Full Crew Levels Dictionary (null if new u-boat)
+     * @param {int} KC Knight's Cross level (0=none, 1=KC, 2=KCO, 3=KCO&S, 4=KCOS&D)
+     */
+    constructor(type, tv, gm, crewLevels, KC){
         this.subClass = type;
         this.tv = tv;
         this.gm = gm;
@@ -176,14 +184,19 @@ class Uboat{
         //levels for kmdt are 0 = Oberleutnant zur See, 1 = Kapitan-leutnant, 2 = Fregatten-kapitan, 3 = Kapitan zur See
         //levels for regular crew are 0 = green, 1 = trained, 2 = Veteran, 3 = Elite
 
-        this.crew_levels = {
-            "Crew": 1,
-            "Watch Officer 1": 0,
-            "Watch Officer 2": 0,
-            "Engineer": 0,
-            "Doctor": 0,
-            "Kommandant": 0
-        };
+        if (crewLevels == null){
+            this.crew_levels = {
+                "Crew": 1,
+                "Watch Officer 1": 0,
+                "Watch Officer 2": 0,
+                "Engineer": 0,
+                "Doctor": 0,
+                "Kommandant": 0
+            };
+        }
+        else {
+            this.crew_levels = crewLevels;
+        }
 
         //-------------CREW STATES
         //states are 0 = OK, 1 = LW, 2 = SW, 3 = KIA • -1 indicates not present
@@ -203,8 +216,8 @@ class Uboat{
         // Wrap in a Proxy that logs all writes
         this.crew_health = new Proxy(initialCrew, {
             set(target, prop, value) {
-                console.log(`crew_health["${prop}"] changed →`, value);
-                console.trace();  // shows where the change came from
+                //console.log(`crew_health["${prop}"] changed to `, value);
+                //console.trace();  // shows where the change came from
                 target[prop] = value;
                 return true;
             }
@@ -217,7 +230,7 @@ class Uboat{
         //  2 = KCO=   Knight's Cross & Oakleaves (Sink 175k GRT OR sink 1 capital ship after being given KC OR sink 75k GRT after being given GC)
         //  3 = KCO&S= Knight's Cross Oakleaves & Swords (Sink 250k GRT, OR sink 1 capital ship after being given KCO, or sink 75k GRT after being given GCO)
         //  4 = KCOS&D=Knight's Cross Oakleaves, Swords and Diamonds (Sink 300k GRT, sink 1 capital ship after being given KCO&S or sink 50k GRT after being given GCO&S
-        this.knightsCross = 0;
+        this.knightsCross = KC;
 
         //Other States-----
         this.depth = 0;   //0=surfaced, 1=attack depth, 2=deep
@@ -458,17 +471,19 @@ class Uboat{
      * Changes all current tubes to mines.
      */
     loadMines() {
-        for (let i = 1; i < 5 + this.aft_tubes; i++){
-            this.tube[i] = 3;
+        if (this.getType() != "VIID"){
+            for (let i = 1; i < 5 + this.aft_tubes; i++){
+                this.tube[i] = 3;
+            }
+            if (this.getType().includes("IX")){
+                this.tube[6] = 3;
+            }
+            //unsure if forward and aft type counts are needed anymore
+            this.forward_G7a = 0;
+            this.forward_G7e = 0;
+            this.aft_G7a = 0;
+            this.aft_G7e = 0;
         }
-        if (this.getType().includes("IX")){
-            this.tube[6] = 3;
-        }
-        //unsure if forward and aft type counts are needed anymore
-        this.forward_G7a = 0;
-        this.forward_G7e = 0;
-        this.aft_G7a = 0;
-        this.aft_G7e = 0;
         
         this.minesLoadedForward = true;
         this.minesLoadedAft = true;
@@ -479,20 +494,26 @@ class Uboat{
      */
     deployMines() {
         // deploy forward mines if doors work
-        if (this.getSystemStatus("Forward Torpedo Doors") == "Operational") {
-            for (let i = 1; i < 5; i++){
-                this.tube[i] = 0;
+        if (this.getType() != "VIID"){
+            if (this.getSystemStatus("Forward Torpedo Doors") == "Operational") {
+                for (let i = 1; i < 5; i++){
+                    this.tube[i] = 0;
+                }
+                this.minesLoadedForward = false;
             }
-            this.minesLoadedForward = false;
+            //deploy aft mines if doors work
+            if (this.getSystemStatus("Aft Torpedo Doors") == "Operational") {
+                this.tube[5] = 0;
+                if (this.getType().includes("IX")){
+                    this.tube[6] = 0;
+                }
+                this.minesLoadedAft = false;
+            }
         }
-        //deploy aft mines if doors work
-        if (this.getSystemStatus("Aft Torpedo Doors") == "Operational") {
-            this.tube[5] = 0;
-            if (this.getType().includes("IX")){
-                this.tube[6] = 0;
-            }
+        else {
+            this.minesLoadedForward = false;
             this.minesLoadedAft = false;
-        }        
+        }
     }
 
     /**
@@ -707,8 +728,6 @@ class Uboat{
                 let pressureRoll = d6Rollx2();
                 if (pressureRoll < this.hull_Damage) {
                     //game over - Hull damage over HP
-                    //let cause = "Sunk " + this.gm.getFullDate();
-                    //cause += " - Hull catastrophically imploded escaping the " + attacker + this.gm.getCurrentPatrol().getCurrentDeathOrdersAndLocation();
                 
                     let cause = "Hull implosion"
                     console.log("GAME OVER: " + cause);
@@ -1020,8 +1039,11 @@ class Uboat{
                         if (key.includes("Crew")) { 
                             //find SW crew first
                             if (this.crew_health[key] == 1) {
-                                this.crew_health += wounds;
+                                this.crew_health[key] += wounds;
                                 injuryAllocated = true;
+                                if (this.crew_health[key] > 3) {
+                                    this.crew_health[key] = 3;
+                                }
                                 break;
                             }
                             else {
@@ -1037,8 +1059,11 @@ class Uboat{
                         if (key.includes("Crew")) { 
                             //find SW crew first
                             if (this.crew_health[key] == 2) {
-                                this.crew_health += wounds;
+                                this.crew_health[key] += wounds;
                                 injuryAllocated = true;
+                                if (this.crew_health[key] > 3) {
+                                    this.crew_health[key] = 3;
+                                }
                                 break;
                             }
                             else {
@@ -1329,13 +1354,17 @@ class Uboat{
                 roll -= 1;
             }
 
-            //TODO new uboat assignment
+            //check if roll exceeds months needed for refit
+            //NOTE: this string completely overrides entire hospital return if Kmdt fails to heal
             if (roll > this.monthsNeededForRefit) {
-                this.gm.uboatReassignment = true;
+                this.monthsNeededForRefit = roll;
+                if (this.monthsNeededForRefit >= 5) {
+                    this.gm.uboatReassignment = true;
+                    hospitalResults = "You will not recover from your serious wounds in time. You have been reassigned to a new U-Boat. ";
+                    hospitalResults += "You will be assigned a new crew as well. ";
+                }
             }
-            else {
-                hospitalResults += "You recover from your serious wounds. ";
-            }
+            hospitalResults += "You recover from your serious wounds. ";
         }
         else if (this.crew_health["Kommandant"] == 1) {
             this.crew_health["Kommandant"] = 0;

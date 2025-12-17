@@ -23,6 +23,7 @@ class Encounter {
         this.missionStepResolved = true;
         this.aircraftCalledInBackup == false        //Flag for after an aircraft leads to another encounter (escort / aircraft)
         this.numAircraft = null;
+        this.leftWithoutEngaging = false;           //Flag for if player chose to ignore encounter
 
         //Encounter "Scoreboard" for results
         this.numHits = 0;
@@ -58,7 +59,6 @@ class Encounter {
 
         this.tv.enterEncounter();
         this.timeOfDay = this.getTimeOfDay(false);
-        //console.log(this.timeOfDay);          //ToD Debug
         this.tv.changeScene(this.encounterType, this.timeOfDay, this, false);
 
         this.gm.setEventResolved(false);
@@ -247,7 +247,6 @@ class Encounter {
             //check if waiting - see if roll to wait is successful
             else if (this.encPop.getChoice() == "wait") {
                 if (waitRoll >= 5) {
-                    console.log("Lost them! - need popup");
                     if (this.timeOfDay == "Night") {
                         this.timeOfDay = "Day";
                         this.tv.changeScene(this.encounterType, this.timeOfDay, null, true);
@@ -271,6 +270,14 @@ class Encounter {
                     }
                 }
             }
+        }
+
+        //check if escorted and day and periscope is damaged... if so, abort
+        if (this.isEscorted() && this.timeOfDay == "Day" && this.sub.getSystemStatus("Periscope") != "Operational") {
+            this.ignored = true;
+            this.depth = "Surfaced";
+            this.endEncounter();
+            return;
         }
 
         //next popup to get depth and range
@@ -861,6 +868,7 @@ class Encounter {
         if (this.gm.sub.tubesLoadedCheck()) {
             this.tv.enterReloadMode();
         }
+
         this.gm.logBook[this.gm.patrolNum].addLastEncounter(this);
         this.tv.finishEncounter();
     }

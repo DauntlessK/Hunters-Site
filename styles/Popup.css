@@ -29,6 +29,43 @@
     outline: 2px solid #000;
 }
 
+.AwardsMessage {
+    position: absolute;
+    left: 50px;
+    right: 50px;
+    top: 50px;
+    height: 590px;
+    max-height: 590px;
+    padding: 15px;
+    font-family: courier;
+    background: var(--menu-background);
+    border-top: 1px solid var (--menu-font-color);
+    border-top: 1px solid var (--menu-border-color);
+    color: var(--menu-font-color);
+    outline: 2px solid #000;
+}
+
+.AwardsMessageHeader {
+    position: absolute;
+    left: 50px;
+    right: 50px;
+    top: 50px;
+    height: 590px;
+    max-height: 590px;
+    padding: 15px;
+    font-family: courier;
+    background: var(--menu-background);
+    border-top: 1px solid var (--menu-font-color);
+    border-top: 1px solid var (--menu-border-color);
+    color: var(--menu-font-color);
+    outline: 2px solid #000;
+    text-align: center;
+}
+
+.Awards_Header{
+    text-align: center;
+}
+
 .TextMessage_p {
     margin: 0;
     margin-top: 10px;
@@ -94,4 +131,91 @@
     position: absolute;
     right: 15px;
     top: 15px;
+}
+
+#award {
+    width: 274px;
+    max-width: 274px;
+    height: 225px;
+    max-height: 225px;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    border: 1px solid #000;
+    padding: 5px;
+}
+
+#awardNEW {
+    width: 272px;
+    max-width: 272px;
+    height: 223px;
+    max-height: 223px;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    border: 2px solid red;
+    padding: 5px;
+}
+
+.Awards_Rank {
+    position: absolute;
+    left: 17px;
+    top: 75px;
+}
+
+.Awards_Experience {
+    position: absolute;
+    left: 304px;
+    top: 75px;
+}
+
+.Awards_Knights {
+    position: absolute;
+    right: 303px;
+    top: 75px;
+}
+
+.Awards_Upgrade {
+    position: absolute;
+    right: 16px;
+    top: 75px;
+}
+
+.Awards_WarBadge {
+    position: absolute;
+    left: 17px;
+    top: 313px;
+}
+
+.Awards_FrontClasp {
+    position: absolute;
+    left: 304px;
+    top: 313px;
+}
+
+.Awards_GermanCross {
+    position: absolute;
+    right: 303px;
+    top: 313px;
+}
+
+.Awards_WoundBadge {
+    position: absolute;
+    right: 16px;
+    top: 313px;
+}
+
+.AwardMessage_p {
+    font-family: courier;
+    text-align: center;
+}
+
+.AwardDetails_p {
+    font-size: 12px;
+    font-family: courier;
+    text-align: center;
+}
+
+.HighlightedAward {
+    border: 3px solid red;
 }

@@ -18,6 +18,8 @@ class GameOverPopup{
         this.gm.gameOverEncounter = enc;
         this.gm.survivalStatus = this.getSurvivalStatus();
 
+        console.log("Game Over Cause: " + this.gm.gameOverCause);
+
         this.gm.fetch();
         this.gm.setEventResolved(false);
         this.tv.pauseGame(true);
@@ -54,7 +56,7 @@ class GameOverPopup{
             <h1 class="HeaderMessage_h1">GAME OVER!</h1>
             <h3 class="HeaderMessage_h3">${this.gm.getFullUboatID()}</h3>
             <h3 class="HeaderMessage_h3">${this.gm.getLRankAndName()}</h3>
-            <p class="TextMessage_p">${this.cause}<br>
+            <p class="TextMessage_p">${this.gm.gameOverCause}<br>
             </p>
         `)
 
@@ -93,54 +95,54 @@ class GameOverPopup{
         switch(cause) {
             case "Hull implosion":
                 text = "Sunk " + this.gm.getFullDate();
-                text += "- Hull crushed by pressure while attempting to escape the " + this.gm.currentEncounter.shipList[0].getClassAndName() + currentDeathOrdersAndLocation;
+                text += ": Hull crushed by pressure while attempting to escape the " + this.gm.currentEncounter.shipList[0].getClassAndName() + currentDeathOrdersAndLocation;
                 return text;
             case "Hull destroyed by aircraft":
                 text = "Sunk " + this.gm.getFullDate();
-                text += "- Hull destroyed from air attack by " + attacker + currentDeathOrdersAndLocation;
+                text += ": Hull destroyed from air attack by " + attacker + currentDeathOrdersAndLocation;
                 return text;
             case "Hull destroyed by pressure":
                 text = "Sunk " + this.gm.getFullDate();
-                text += "- Hull imploded by pressure escaping the " + attacker + currentDeathOrdersAndLocation;
+                text += ": Hull imploded by pressure escaping the " + attacker + currentDeathOrdersAndLocation;
                 return text;
             case "Hull destroyed by escort":
                 text = "Sunk " + this.gm.getFullDate();
-                text += "- Hull destroyed by depth charges by the " + this.gm.currentEncounter.shipList[0].getClassAndName() + currentDeathOrdersAndLocation;
+                text += ": Hull destroyed by depth charges by the " + this.gm.currentEncounter.shipList[0].getClassAndName() + currentDeathOrdersAndLocation;
                 return text;
             case "Scuttled due to flooding by aircraft":
                 text = "Scuttled " + this.gm.getFullDate();
-                text += "- Forced to scuttle from air attack flooding by " + attacker + currentDeathOrdersAndLocation;
+                text += ": Forced to scuttle from air attack flooding by " + attacker + currentDeathOrdersAndLocation;
                 return text;
             case "Scuttled due to flooding by escort":
                 text = "Scuttled " + this.gm.getFullDate();
-                text += "- Forced to surface and scuttle from depth charge damage flooding by the " + this.gm.currentEncounter.shipList[0].getClassAndName() + currentDeathOrdersAndLocation;
+                text += ": Forced to surface and scuttle from depth charge damage flooding by the " + this.gm.currentEncounter.shipList[0].getClassAndName() + currentDeathOrdersAndLocation;
                 return text;
             case "Kommandant KIA":
                 text = "Kommandant killed in action by " + attacker + currentDeathOrdersAndLocation;
                 return text;
             case "Lost at sea by aircraft":
                 text = "Lost at sea " + this.gm.getFullDate();
-                text += "- Went missing after scuttling from damage to both diesel engines by aircraft from " + this.gm.currentEncounter.aircraftType[numAircraft] + currentDeathOrdersAndLocation;
+                text += ": Went missing after scuttling from damage to both diesel engines by aircraft from " + this.gm.currentEncounter.aircraftType[numAircraft] + currentDeathOrdersAndLocation;
                 return text;
             case "Lost at sea by escort":
                 text = "Lost at sea " + this.gm.getFullDate();
-                text += "- Went missing after scuttling from damage to both diesel engines by the " + this.gm.currentEncounter.shipList[0].getClassAndName() + currentDeathOrdersAndLocation;
+                text += ": Went missing after scuttling from damage to both diesel engines by the " + this.gm.currentEncounter.shipList[0].getClassAndName() + currentDeathOrdersAndLocation;
                 return text;
             case "Scuttled due to diesel engine damage by aircraft":
                 text = "Scuttled " + this.gm.getFullDate();
-                text += "- Forced to scuttle after damage to both diesel engines by aircraft from " + this.gm.currentEncounter.aircraftType[numAircraft] + currentDeathOrdersAndLocation;
+                text += ": Forced to scuttle after damage to both diesel engines by aircraft from " + this.gm.currentEncounter.aircraftType[numAircraft] + currentDeathOrdersAndLocation;
                 return text;
             case "Scuttled due to diesel engine damage by escort":
                 text = "Scuttled " + this.gm.getFullDate();
-                text += "- Forced to scuttle after damage to both diesel engines by the " + this.gm.currentEncounter.shipList[0].getClassAndName() + currentDeathOrdersAndLocation;
+                text += ": Forced to scuttle after damage to both diesel engines by the " + this.gm.currentEncounter.shipList[0].getClassAndName() + currentDeathOrdersAndLocation;
                 return text;
             case "Catastrophic damage by Aircraft":
                 text = "Sunk " + this.gm.getFullDate();
-                text += "- Sunk due to catastrophic damage inflicted by " + attacker + currentDeathOrdersAndLocation;
+                text += ": Sunk due to catastrophic damage inflicted by " + attacker + currentDeathOrdersAndLocation;
                 return text;
             case "Catastrophic damage by Escort":
                 text = "Sunk " + this.gm.getFullDate();
-                text += "- Sunk due to catastrophic damage inflicted by depth charges from the " + this.gm.currentEncounter.shipList[0].getClassAndName() + currentDeathOrdersAndLocation;
+                text += ": Sunk due to catastrophic damage inflicted by depth charges from the " + this.gm.currentEncounter.shipList[0].getClassAndName() + currentDeathOrdersAndLocation;
                 return text;
             case "War is over":
                 if (this.gm.getLRankAndName().includes("Kapitan zur See")) {

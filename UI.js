@@ -74,7 +74,7 @@ class UI{
             y: 120,
             width: 100,
             height: 100,
-            frames: 2,
+            frames: 4,
             gm: this.gm,
             tv: this.tv,
         });
@@ -110,6 +110,29 @@ class UI{
             tv: this.tv,
         });
         this.fireButton.changeState("Disabled");  //initial setting for fireButton is disabled
+        //Abort Button
+        this.abortButton = new AbortButton({
+            src: "images/ui/AbortButton.png",
+            x: 955,
+            y: 670,
+            width: 70,
+            height: 50,
+            frames: 4,
+            gm: this.gm,
+            tv: this.tv,
+        });
+        //Ignore Button
+        this.ignoreButton = new IgnoreButton({
+            src: "images/ui/IgnoreButton.png",
+            x: 955,
+            y: 670,
+            width: 70,
+            height: 50,
+            frames: 4,
+            gm: this.gm,
+            tv: this.tv,
+        });
+
 
         //flood gauge
         var fgaugeSrc = "images/ui/FloodGauge" + this.gm.sub.flooding_hp + ".png";
@@ -159,15 +182,21 @@ class UI{
         for (let i = 1; i < 7; i++) {
             this.tubeButtonArray[i].handleEvent(event);
         }
+        if (this.gm.patrolling && !this.tv.reloadMode && !this.tv.isInEncounter && 
+            !this.tv.statusMode && !this.gm.abortingPatrol) {
+            this.abortButton.handleEvent(event);
+        }
         this.reloadButton.handleEvent(event);
         if (!this.gm.patrolling && !this.tv.reloadMode) {
             this.beginPatrolButton.handleEvent(event);
         }
-        this.statusButton.handleEvent(event);
-        if (this.gm.patrolling && !this.tv.isInEncounter && !this.tv.statusMode && !this.tv.reloadMode) {
+        if (this.gm.patrolling && this.gm.gameOverCause == "") {
+            this.statusButton.handleEvent(event);
+        }
+        if (this.gm.patrolling && !this.tv.isInEncounter && !this.tv.statusMode && !this.tv.reloadMode && this.gm.gameOverCause == "") {
             this.continueButton.handleEvent(event);
         }
-        if (this.tv.firingMode) {
+        if (this.tv.firingMode && this.tv.isInEncounter) {
             Object.values(this.tv.shipObjects).forEach(object => {
                 object.handleEvent(event);
               })
@@ -175,6 +204,9 @@ class UI{
         }
         if (this.tv.firingMode && this.gm.sub.isFiring()) {
             this.fireButton.handleEvent(event);
+        }
+        if (this.tv.isInEncounter && this.ignoreButton.getState() != "Disabled") {
+            this.ignoreButton.handleEvent(event);
         }
     }
     
@@ -201,7 +233,17 @@ class UI{
     draw(ctx){
         if (this.uiIsOn()){
             this.drawBgd(ctx);
+
+            //if patrolling, draw status button, otherwise change state to disabled
+            if (this.gm.patrolling && this.statusButton.getState() == "Disabled") {
+                this.statusButton.changeState("Active");
+            }
+            else if (!this.gm.patrolling && this.statusButton.getState() == "Active") {
+                this.statusButton.changeState("Disabled");
+            }
             this.statusButton.draw(ctx);
+
+            //draw tubes
             for (let i = 1; i < 7; i++) {
                 this.tubeButtonArray[i].draw(ctx);
             }
@@ -216,15 +258,31 @@ class UI{
             }
             this.drawHeaderTxt(ctx);
 
+            //check and adjust state of ignore button based on encounter step
+            if (this.tv.isInEncounter) {
+                if (this.tv.firingMode) {
+                    if (this.ignoreButton.getState() == "Disabled") {
+                        this.ignoreButton.changeState("Enabled");
+                    }
+                }
+                else {
+                    if (this.ignoreButton.getState() != "Disabled") {
+                        this.ignoreButton.changeState("Disabled");
+                    }
+                }
+            }
+
             //If Patrolling and not in reload mode
             if (!this.tv.reloadMode && this.gm.patrolling){
                 this.telegraph.draw(ctx);
                 this.deckGunButton.draw(ctx);
                 if (!this.tv.isInEncounter && !this.tv.statusMode) {
                     this.continueButton.draw(ctx);
+                    this.abortButton.draw(ctx);
                 }
                 else {
                     this.fireButton.draw(ctx);
+                    this.ignoreButton.draw(ctx);
                 }
             }
             //To start patrol

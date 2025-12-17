@@ -47,6 +47,9 @@ table{
 
 td{
     padding: 5px;
+    text-align: center;
+    max-width: 320px;
+    width: 320px;
 }
 
 .tooltip_uboat:hover .tooltip {

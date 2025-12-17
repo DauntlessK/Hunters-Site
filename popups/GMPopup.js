@@ -131,6 +131,32 @@ class GMPopup{
         this.container.appendChild(this.element);
     }
 
+    abortPatrolPopup() {
+        //new div to add
+        this.element.innerHTML = (`
+            <h2 class="HeaderMessage_h3">Are you sure?<br>
+            </h3>
+            <p class="PatrolMessage_p">Abort patrol, Herr Kaleun?<br>
+            <button class="AbortPatrolPopup_button" id="abort">Abort Patrol</button>
+            <button class="ContinuePatrolPopup_button" id="continue">Continue Patrol</button>
+            </p>
+            
+        `)
+            //<button class="AttackPopup_button" id="continue">Continue</button>
+        this.element.addEventListener("click", ()=> {
+            if (event.target.id == "abort"){
+                this.gm.abortPatrol();
+                //close popup
+                this.done();
+            } else if (event.target.id == "continue"){
+                //close popup
+                this.done();
+            }
+        })
+
+        this.container.appendChild(this.element);
+    }
+
     abortTowedBackPopup() {
         //new div to add
         this.element.innerHTML = (`

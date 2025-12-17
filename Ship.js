@@ -216,7 +216,12 @@ class Ship {
             //Update capital ship sunk count if applicable
             if (this.getType() == "Capital Ship") {
                 this.gm.capitalShipsSunk++;
-                this.gm.capitalShipsSunkSinceLastKnightsCross++;
+                let capShipName = this.getName();
+                if (capShipName == "HMS Ark Royal" || capShipName == "HMS Barham" ||
+                    capShipName == "HMS Malaya" || capShipName == "HMS Nelson" ||
+                    capShipName == "HMS Royal Oak") {
+                    this.gm.capitalShipsSunkSinceLastKnightsCross++;
+                }
             }
         }
     }

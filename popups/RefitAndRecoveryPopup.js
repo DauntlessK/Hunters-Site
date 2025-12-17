@@ -64,12 +64,6 @@ class RefitAndRecovery{
         this.element.remove();
         this.tv.pauseGame(false);
         this.gm.eventResolved = true;
-
-        this.gm.sub.torpedoResupply();
-        //force update of torpedo buttons
-        for (let i = 1; i < 7; i++) {
-            this.tv.mainUI.tubeButtonArray[i].getLatestState();
-        }
     }
 
 }

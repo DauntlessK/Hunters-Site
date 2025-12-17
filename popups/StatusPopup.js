@@ -45,13 +45,27 @@ class StatusPopup{
             reload = "";
         }
 
-        let rankNum = this.gm.sub.crew_levels["Kommandant"] + 1;
-        let rankImagePath = "images/ui/ranks/Rank" + rankNum.toString() + ".png";
+        //Image path creations
+        let rankImagePath = "images/ui/ranks/Rank" + this.gm.sub.crew_levels["Kommandant"].toString() + ".png";
+        let upgradeTokenNum = 0;
+        if (this.gm.uboatUpgrade) {
+            upgradeTokenNum = 1;
+        }
+        let uboatUpgradeImagePath = "images/ui/decorations/UpgradeToken" + upgradeTokenNum +".png";
+        let knightsCrossImagePath = "images/ui/decorations/KnightsCross" + (this.gm.sub.knightsCross) +".png";
+        let warBadgeImagePath = "images/ui/decorations/UboatWarBadge" + (this.gm.uboatWarBadgeLevel) +".png";
+        let frontClaspImagePath = "images/ui/decorations/UboatFrontClasp" + (this.gm.uboatFrontClaspLevel) +".png";
+        let germanCrossImagePath = "images/ui/decorations/GermanCross" + (this.gm.germanCrossLevel) +".png";
+        let woundBadgeImagePath = "images/ui/decorations/WoundBadge" + (this.gm.woundBadgeLevel) +".png";
 
         //Make string for pervious commands
-        let previousCommands = ""
-        if (this.gm.pastSubs.length > 0) {
-            previousCommands = "Previous Commands: " + "XYZ";
+
+        let previousCommands = "Prev. boats: "
+        for (let i = 0; i < this.gm.pastSubs.length; i++) {
+            if (i > 0) {
+                previousCommands += ", ";
+            }
+            previousCommands += this.gm.pastSubs[i];
         }
 
         //Add s to patrols for career stats if not 1 patrol
@@ -84,21 +98,65 @@ class StatusPopup{
             <img src = "images/ui/Status.png">
             <p class="Type">Type: ${this.gm.sub.getType()}</p>
             <p class="Patrol">Patrol # ${this.gm.patrolNum}</p>
-            <p id="ElectricEngine1">Electric Engine #1</p>
-            <p id="ElectricEngine2">Electric Engine #2</p>
-            <p id="DieselEngine1">Diesel Engine #1</p>
-            <p id="DieselEngine2">Diesel Engine #2</p>
-            <p id="Periscope">Periscope</p>
-            <p id="Radio">Radio</p>
-            <p id="Hydrophones">Hydrophones</p>
-            <p id="Batteries">Batteries</p>
-            <p id="ForwardTorpedoDoors">Forward Torpedo Doors</p>
-            <p id="AftTorpedoDoors">Aft Torpedo Doors</p>
-            <p id="DivePlanes">Dive Planes</p>
-            <p id="FuelTanks">Fuel Tanks</p>
-            <p id="DeckGun">Deck Gun</p>
-            <p id="FlakGun">Flak Gun</p>
-            <p id="Flak37">3.7 Flak</p>
+
+            <p id="ElectricEngine1" class = "tooltip-wrap">Electric Engine #1
+                <span class="tooltip-text">Aircraft & Escort damage is more devestating with 1 electric<br>
+                engine out. If both are out, damage done is even worse.</span></p>
+
+            <p id="ElectricEngine2" class = "tooltip-wrap">Electric Engine #2
+                <span class="tooltip-text">Aircraft & Escort damage is more devestating with 1 electric<br>
+                engine out. If both are out, damage done is even worse.</span></p>
+
+            <p id="DieselEngine1" class = "tooltip-wrap">Diesel Engine #1
+                <span class="tooltip-text">If 1 diesel is out and cannot be repaired, the U-Boat<br>
+                is forced to return to port. If both cannot be repaired,<br>
+                you are forced to scuttle the boat.</span></p>
+
+            <p id="DieselEngine2" class = "tooltip-wrap">Diesel Engine #2
+                <span class="tooltip-text">If 1 diesel is out and cannot be repaired, the U-Boat<br>
+                is forced to return to port. If both cannot be repaired,<br>
+                you are forced to scuttle the boat.</span></p>
+
+            <p id="Periscope" class = "tooltip-wrap">Periscope
+            <span class="tooltip-text">If disabled, U-Boat cannot make submerged attacks.</span></p>
+
+            <p id="Radio" class = "tooltip-wrap">Radio
+            <span class="tooltip-text">If inoperable, crew rescue when needed is much more difficult.</span></p>
+
+            <p id="Hydrophones" class = "tooltip-wrap">Hydrophones
+            <span class="tooltip-text">When disabled, U-Boat cannot properly evade attacks and<br>
+            takes more damage as a result.</span></p>
+
+            <p id="Batteries" class = "tooltip-wrap">Batteries
+            <span class="tooltip-text">When disabled, U-Boat cannot properly evade attacks and<br>
+            takes more damage as a result.</span></p>
+
+            <p id="ForwardTorpedoDoors" class = "tooltip-wrap">Forward Torpedo Doors
+            <span class="tooltip-text">When disabled, U-Boat cannot fire forward<br>
+            torpedoes or release mines.</span></p>
+
+            <p id="AftTorpedoDoors" class = "tooltip-wrap">Aft Torpedo Doors
+            <span class="tooltip-text">When disabled, U-Boat cannot fire aft<br>
+            torpedoes or release mines.</span></p>
+
+            <p id="DivePlanes" class = "tooltip-wrap">Dive Planes
+            <span class="tooltip-text">Danger when disabled: U-Boat takes more damage and<br>
+            is easier to detect, being unable to properly maneuver.</span></p>
+
+            <p id="FuelTanks" class = "tooltip-wrap">Fuel Tanks
+            <span class="tooltip-text">Danger when disabled: U-Boat takes more damage and<br>
+                                        is easier to detect, being unable to properly maneuver.<br>
+                                        If not repaired, U-Boat is foreced to return to port.</span></p>
+
+            <p id="DeckGun" class = "tooltip-wrap">Deck Gun
+                <span class="tooltip-text">Unable to fire the deck gun when disabled.</span></p>
+
+            <p id="FlakGun" class = "tooltip-wrap">Flak Gun</p>
+                <span class="tooltip-text">Unable to fire the flak gun when disabled.</span></p>
+
+            <p id="Flak37" class = "tooltip-wrap">3.7 Flak</p>
+                <span class="tooltip-text">Unable to fire the 3.7 flak gun when disabled.</span></p>
+
             <table class = "UboatCrew">
             <tr>
                 <th>Crew</th>
@@ -163,7 +221,7 @@ class StatusPopup{
                 <div class="Career_Head">
                     <span class="Bold">${this.gm.getRankAndName()}</span><br>
                     ${this.gm.getFullUboatID()}<br>
-                    ${previousCommands}
+                    ${previousCommands}<br>
                     ${this.gm.patrolNum} Patrol${pluralPatrols}<br>
                     ${this.gm.getTotalGRT("String")} GRT Sunk
                 </div>
@@ -172,22 +230,22 @@ class StatusPopup{
                 </div>                
                 <div class="Career_Decorations">
                     <div class="knights_cross">
-                        <img src="images/ui/decorations/KnightsCross1.png">
+                        <img src=${knightsCrossImagePath}>
                     </div>
                     <div class="uboat_front_clasp">
-                        <img src="images/ui/decorations/UboatFrontClasp1.png">
+                        <img src=${frontClaspImagePath}>
                     </div>
                     <div class="uboat_war_badge">
-                        <img src="images/ui/decorations/UboatWarBadge1.png">
+                        <img src=${warBadgeImagePath}>
                     </div>
                     <div class="wound_badge">
-                        <img src="images/ui/decorations/WoundBadge1.png">
+                        <img src=${woundBadgeImagePath}>
                     </div>
                     <div class="german_cross">
-                        <img src="images/ui/decorations/GermanCross1.png">
+                        <img src=${germanCrossImagePath}>
                     </div>
                     <div class="upgrade_badge">
-                        <img src="images/ui/decorations/UpgradeToken1.png">
+                        <img src=${uboatUpgradeImagePath}>
                     </div>
                 </div>
                 <div class="Career_Stats">

@@ -320,6 +320,7 @@ class EncounterPopup{
         else {
             oppositeTime = "Day";
         }
+        
         //NEED OTHER ENCOUNTER ARRAYS
         switch (this.enc) {
             case "Ship":
@@ -360,16 +361,41 @@ class EncounterPopup{
 
         const roll = d3Roll();
 
+        //Deal with waiting when periscope is damaged - only allowed to wait until night - no attack button
+        if (this.gm.sub.getSystemStatus("Periscope") != "Operational" && currTime == "Day" && this.enc.isEscorted()) {
+            this.element.innerHTML = (`
+                <h3 class="HeaderMessage_h3">Alarm!</h3>
+                <p class="PatrolAttackMessage_p">${encounterAttackShipArray[roll]}${bearing}, course ${course[courseNum]}!<br>
+                Orders, Herr Kaleun? <br>
+                </p>
+                <button class="WaitPopup_button" id="wait">Follow Until ${oppositeTime}</button>
+                <button class="PassPopup_button" id="ignore">Ignore</button>
+            `)
+        } else if (this.gm.sub.getSystemStatus("Periscope") != "Operational" && currTime == "Night" && this.enc.isEscorted()) {
+            this.element.innerHTML = (`
+                <h3 class="HeaderMessage_h3">Alarm!</h3>
+                <p class="PatrolAttackMessage_p">${encounterAttackShipArray[roll]}${bearing}, course ${course[courseNum]}!<br>
+                Orders, Herr Kaleun? <br>
+                </p>
+                <button class="AttackPopup_button" id="attack">Attack</button>
+                <button class="PassPopup_button" id="ignore">Ignore</button>
+            `)
+        }
+        //Otherwise engage normally
+        else {
+            this.element.innerHTML = (`
+                <h3 class="HeaderMessage_h3">Alarm!</h3>
+                <p class="PatrolAttackMessage_p">${encounterAttackShipArray[roll]}${bearing}, course ${course[courseNum]}!<br>
+                Orders, Herr Kaleun? <br>
+                </p>
+                <button class="AttackPopup_button" id="attack">Attack</button>
+                <button class="WaitPopup_button" id="wait">Follow Until ${oppositeTime}</button>
+                <button class="PassPopup_button" id="ignore">Ignore</button>
+            `)
+        }
+
         //new div to add
-        this.element.innerHTML = (`
-            <h3 class="HeaderMessage_h3">Alarm!</h3>
-            <p class="PatrolAttackMessage_p">${encounterAttackShipArray[roll]}${bearing}, course ${course[courseNum]}!<br>
-            Orders, Herr Kaleun? <br>
-            </p>
-            <button class="AttackPopup_button" id="attack">Attack</button>
-            <button class="WaitPopup_button" id="wait">Follow Until ${oppositeTime}</button>
-            <button class="PassPopup_button" id="ignore">Ignore</button>
-        `)
+
 
         this.element.addEventListener("click", ()=> {
             var action = null;

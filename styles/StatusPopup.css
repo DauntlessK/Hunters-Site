@@ -320,3 +320,27 @@
     left: 340px;
     top: 48px;
 }
+
+.tooltip-wrap {
+    position: relative;
+    cursor: help;
+}
+
+.tooltip-text {
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #222;
+    color: #eee;
+    padding: 5px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    display: none;
+    font-size: 12px;
+    z-index: 100;
+}
+
+.tooltip-wrap:hover .tooltip-text {
+    display: block;
+}

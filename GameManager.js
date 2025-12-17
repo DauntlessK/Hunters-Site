@@ -36,7 +36,7 @@ class GameManager{
         this.contFromAbort = false;     //flag used to skip over second encounter roll for the very first time after aborting only 
         this.permMedPost = false;
         this.permArcPost = false;
-        this.francePost = false
+        this.francePost = false;
         this.currentBox = 0;
         this.capitalShipsSunk = 0;
         this.shipsSunk = [];
@@ -63,14 +63,17 @@ class GameManager{
         this.monthOfLastKnightsCrossAward = -1;
         this.yearOfLastKnightsCrossAward = -1;
         this.checkedForCrewLevelUp = false;     //Changes to true when it is checked when success patrols hits 3/6/9 etc. 
-                                                //Then flips to false after another successful patrol is made.
+                                                //Then flips to false after another (3+1 or 6+1, etc) successful patrol is made.
         this.uboatWarBadgeLevel = 0;   //0 = none, 1 = War Badge, 2 = War Badge w/ diamonds
         this.uboatFrontClaspLevel = 0; //0 = none, 1 = black, 2 = silver, 3 = gold
         this.woundBadgeLevel = 0;      //0 = none, 1 = black, 2 = silver, 3 = gold
         this.germanCrossLevel = 0;     //0 = none, 1 = black, 2 = silver, 3 = gold
         this.uboatUpgrade = false;      //If eligible for an upgrade
         this.uboatReassignment = false; //If required to be reassigned to a new boat (due to SW or too much damage to uboat)
-        
+        this.uboatUpgradeChoice = false; //If player picked upgrade during awards
+        this.numPatrolsKMDTWounded = 0;
+        this.KMDTWasWoundedThisPatrol = false;
+
         //------------For Random Event tracking
         this.randomEvent = false;
         this.superiorTorpedoes = false;
@@ -87,6 +90,7 @@ class GameManager{
         this.randomEvents = 0;
         this.planesShotDown = 0;
         this.bestPatrolGRT = 0;
+        this.mostShipsSunkOnPatrol = 0;
         this.numTimesDetected = 0;
         this.numPlaneEncounters = 0;    //Num of times plane encounters have been rolled
         this.numPlaneAttacks = 0;
@@ -102,7 +106,7 @@ class GameManager{
         //begins game once player has selected sub from below HTML canvas
         this.kmdt = name;
         this.id = num;
-        this.sub = new Uboat(subType, this.tv, this);
+        this.sub = new Uboat(subType, this.tv, this, null, 0);
         if (this.tv.mainUI != null){
             this.tv.mainUI.subNum = this.getFullUboatID();
             this.tv.mainUI.rank = this.rank[this.sub.crew_levels["Kommandant"]] + " " + this.kmdt;
@@ -206,13 +210,16 @@ class GameManager{
 
         //Update months at sea / in port
         if (this.patrolling) {
-            console.log("Month At Sea");
             this.monthsAtSea++;
         }
         else {
-            console.log("Month In Port");
             this.monthsInPort++;
             this.isWarOver();       //only triggered (checked) when in port
+        }
+
+        //update france post if applicable
+        if (!this.francePost && (this.date_month >= 6 && this.date_year >= 1940)) {
+            this.francePost = true;
         }
     }
 
@@ -345,6 +352,70 @@ class GameManager{
         }
     }
 
+    /**
+     * Gets the latest available U-boat type for upgrade/reassignment
+     * @returns STRING of U-boat type (e.g. "VIIC")
+     */
+    getLatestAvailableUboatType() {
+        if (this.sub.getType().includes("VII")) {
+            if (this.date_month >= 0 && this.date_year == 1942) {
+                return "VIID";
+            }
+            else if (this.date_month >= 9 && this.date_year >= 1940) {
+                return "VIIC";
+            }
+            else {
+                return "VIIB";
+            }
+        }
+        else {
+            if (this.date_month >= 4 && this.date_year >= 1941) {
+                return "IXC";
+            }
+            else if (this.date_month >= 3 && this.date_year >= 1940) {
+                return "IXB";
+            }
+            else {
+                return "IXA";
+            }   
+        }
+    }
+
+    /**
+     * Gets array of newer uboat types available for upgrade. Includes current type.
+     * @returns array of newer uboats the player would be able to select to upgrade to
+     */
+    getNewerUboatTypes() {
+        let newerTypes = [];
+        let currentType = this.sub.getType();
+        latestAvailable = this.getLatestAvailableUboatType();
+
+        if (currentType == latestAvailable) {
+            newerTypes.push(currentType);
+            return newerTypes;
+        }
+        else {
+            if (currentType.includes("VII")) {
+                newerTypes = ["VIIB", "VIIC", "VIID"];
+
+                if (currentType == "VIIC" || currentType == "VIID") {
+                    newerTypes.shift();
+                }
+                if (currentType == "VIID") {
+                    newerTypes.shift();
+                }
+                return newerTypes;
+            }
+            else {
+                newerTypes = ["IXB", "IXC"];
+                if (currentType == "IXC") {
+                    newerTypes.shift();
+                }
+                return newerTypes;
+            }
+        }
+    }
+
     newPatrol(){
         //gets new patrol, validates orders etc
         this.patrol = new Patrol(this.tv, this);
@@ -410,6 +481,9 @@ class GameManager{
             this.endPatrol();
             return;
         }
+        else if (this.extraStep != 1 && this.currentBox > 0) {
+            this.currentEncounter.closeWindows();
+        }
 
         //Advance box
         this.currentBox++;
@@ -460,10 +534,19 @@ class GameManager{
             roll = parseInt(dicePicker.getChoice());
         }
 
-        //get current encounter (IE noEncounter, encounterAttackConvoy)
+        //get current encounter (IE noEncounter, encounterAttackConvoy, Random Event, etc)
         var currentEncounterType = this.patrol.getEncounterType(currentBoxName, this.getYear(), this.randomEvent, roll);
         
         console.log("Current Encounter: " + currentEncounterType);
+
+/*      if (currentEncounterType == "Random Event") {
+            this.randomEvent = true;
+        }
+        else {
+            this.currentEncounter = new Encounter(this.tv, this, this.patrol, this.sub, currentEncounterType, currentBoxName, null);
+            await until(_ => this.tv.isInEncounter == false);
+            console.log("End Encounter");
+        } */
 
         this.currentEncounter = new Encounter(this.tv, this, this.patrol, this.sub, currentEncounterType, currentBoxName, null);
         await until(_ => this.tv.isInEncounter == false);
@@ -484,12 +567,19 @@ class GameManager{
         }
     }
 
+    async abortPatrolPrompt() {
+        this.setEventResolved(false);
+        this.gameManagerPopup.abortPatrolPopup();
+        await until(_ => this.eventResolved == true);
+    }
+
     /**
      * Sets aborting patrol to true and immediately changes currentBox to nearest transit, if not in one already.
      * If at start of patrol (first 1-4 transit boxes), places boat in the corresponding box at the end of the patrol.
      */
     async abortPatrol() {
         this.abortingPatrol = true;
+        this.tv.mainUI.abortButton.changeState("Disabled");
 
         let patrolLength = this.patrol.getPatrolLength();
         let transitSteps = 2;
@@ -537,12 +627,12 @@ class GameManager{
         this.tv.changeScene("Port", "Day", null, false);
         this.patrolling = false;
 
-        //Show end of patrol popup
+        //Show end of patrol popup==================
         this.eventResolved = false;
         this.gameManagerPopup.endPatrolPopup();
         await until(_ => this.eventResolved == true);
 
-        //repair / refit sub
+        //repair / refit sub - establishes monthsNeededForRefit
         var refitResults = this.sub.refit();
         var hospitalResults = this.sub.hospital();
 
@@ -566,8 +656,15 @@ class GameManager{
         if (this.getPatrolTotalGRT("Int") > this.bestPatrolGRT) {
             this.bestPatrolGRT = this.getPatrolTotalGRT("Int");
         }
+        //Update if this was the most ships sunk on a patrol
+        if (this.shipsSunkOnCurrentPatrol.length > this.mostShipsSunkOnPatrol) {
+            this.mostShipsSunkOnPatrol = this.shipsSunkOnCurrentPatrol.length;
+        }
 
-        //TODO: Promotion and Award checks here?
+        //TODO: Promotion and Award checks here?===================
+        this.awardsResolved = false;
+        let awardsPopup = new AwardsPopup(this.tv, this);
+        await until(_ => this.awardsResolved == true);
 
         //Reset various flags
         this.abortingPatrol = false;
@@ -575,20 +672,49 @@ class GameManager{
         this.shipsSunkOnCurrentPatrol = [];
         this.contFromAbort = false;
         this.extraStep = 0;
+        this.KMDTWasWoundedThisPatrol = false;
+        this.tv.mainUI.abortButton.changeState("Active");
 
         this.isWarOver();
 
-        //if a new uboat is called for (due to excessive damage or SW on KMDT)
-        if (this.uboatReassignment) {
-            console.log("TODO: popup required for reassignment");
-            console.log("TODO: reassign to new uboat, create new uboat object");
-        }
-        else {
+        this.eventResolved = false;
+
+        //Either display reassignment/upgrade popup or refit/recovery popup
+        if (this.uboatReassignment || this.uboatUpgradeChoice) {
+
+            //check if reassignment due to SW on KMDT
+            //if not, new uboat reassignment retains crew levels and only 1 month for refit
+            let swReassignment = false;
+            if (hospitalResults.includes("reassigned")) {
+                swReassignment = true;
+            }
+            else {
+                this.sub.monthsNeededForRefit = 1;
+            }
+            
+            //get previous sub object's number then add to previous subs array
+            this.pastSubs.push(this.getFullUboatID());
+
+            //Show reassignment popup========================== 
             this.eventResolved = false;
+            const reassignmentPopup = new ReassignmentPopup(this.tv, this, swReassignment, this.uboatUpgradeChoice, this.uboatUpgrade);
+
+            this.uboatReassignment = false;
+            if (this.uboatUpgradeChoice) {
+                this.uboatUpgradeChoice = false;
+            }
+        } 
+        else {
+            //Refit and Recovery popup=========================
             let randr = new RefitAndRecovery(this.tv, this, this.sub.monthsNeededForRefit, refitResults, hospitalResults);
         }
-
         await until(_ => this.eventResolved == true);
+
+        this.sub.torpedoResupply();
+        //force update of torpedo buttons
+        for (let i = 1; i < 7; i++) {
+            this.tv.mainUI.tubeButtonArray[i].getLatestState();
+        }
 
         //Advance time X months based on repair and hospital results
         for (let i = 0; i < this.sub.monthsNeededForRefit; i++) {
@@ -638,7 +764,6 @@ class GameManager{
      */
     fetch() {
         console.log("Submitting game data to backend...");
-        console.trace("FETCH CALLED");
 
         const gameData = {
             play_id: this.play_id,

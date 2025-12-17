@@ -14,13 +14,13 @@
     <div class="input-container">
       <table id="subSelectTable">
         <tr>
-          <td>
-            <input type="text" id="Commander" placeholder="Enter Commander Name" maxlength="25">
+          <td style = "min-width: 160px;">
+            <input type="text" id="Commander" placeholder="Enter Commander Name" maxlength="25" style="max-width: 200px; width: 200px;">
           </td>
-          <td>
+          <td style = "min-width: 160px;">
             <input type="number" id="SubNum" placeholder="Enter sub #" maxlength="4">
           </td>
-          <td>
+          <td style = "min-width: 160px;">
             <select name="uboat" id="uboat">
               <optgroup label="Start Date: Sept 1939">
                 <option value="VIIA">Type VIIA</option>
@@ -48,8 +48,8 @@
                 • IX were larger boats built for longer and further-reaching patrols.</span>
             </div>
           </td>
-          <td>
-            <input type="button" id="StartButton" value="Start Game">
+          <td style = "min-width: 160px;">
+            <input type="button" id="StartButton" value="Start Game" style="max-width: 200px; width: 200px;">
           </td>
         </tr>
       </table>
@@ -86,6 +86,7 @@
     <script src="popups/FollowPopup.js"></script>
     <script src="popups/FollowTimePopup.js"></script>
     <script src="popups/AdminPopup.js"></script>
+    <script src="popups/ReassignmentPopup.js"></script>
     <script src="popups/GameOverPopup.js"></script>
 
     <!-- Scripts / Sprites -->
@@ -103,6 +104,8 @@
     <script src="buttons/FireAttackButton.js"></script>
     <script src="buttons/OpenStatusButton.js"></script>
     <script src="buttons/ReloadButton.js"></script>
+    <script src="buttons/AbortButton.js"></script>
+    <script src="buttons/IgnoreButton.js"></script>
 
     <script src="GameManager.js"></script>
     <script src="Encounter.js"></script>

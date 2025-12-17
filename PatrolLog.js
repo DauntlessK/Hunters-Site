@@ -142,12 +142,18 @@ class PatrolLog{
             if (enc.shipsSunkInEnc.length == 0 && enc.ignored) {
                 lineEntry = lineEntry + "Did not engage. ";
             }
-            else if (enc.shipsSunkInEnc.length == 0) {
+            else if (enc.shipsSunkInEnc.length == 0 && enc.leftWithoutEngaging == false) {
                 lineEntry = lineEntry + "Unable to sink any targets. ";
+            }
+            else if (enc.shipsSunkInEnc.length == 0 && enc.leftWithoutEngaging) {
+                lineEntry = lineEntry + "Approached but did not engage. ";
             }
             else {
                 //sunk any ships
                 var sunkText = "Sunk ";
+                if (enc.leftWithoutEngaging) {
+                    sunkText = "Broke off after sinking ";
+                }
                 for (let i = 0; i < enc.shipsSunkInEnc.length; i++) {
                     //TODO fix way GRT is displayed (needs comma)
                     sunkText = sunkText + enc.shipsSunkInEnc[i].getName() + " (" + enc.shipsSunkInEnc[i].getGRT().toLocaleString() + "GRT)";

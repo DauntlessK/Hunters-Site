@@ -61,6 +61,7 @@ class Patrol{
 
         var pickOrderRoll = d6Roll();
         var unique = this.ordersArray.filter(onlyUnique);
+        unique.shift(); //remove first blank entry
         unique = this.validatePatrolOptions(unique);
         var isPicking = false;
         if (this.gm.adminMode) {pickOrderRoll = 1;}
@@ -108,12 +109,12 @@ class Patrol{
         }
         else {
             //loop through each unique option and remove it if applicable
-            for (let i = uniqueOrdersList.length - 1; i >= 0; i--) {      
+            for (let i = uniqueOrdersList.length - 1; i >= 1; i--) {    
                 //VIID Restrictions       
                 if (this.gm.sub.getType() == "VIID") {
                     //Changes BI to BI Minelaying for VIID (any patrol that VIID makes doesn't have the option to HAVE mienlaying, so it's always a swap)
                     if (uniqueOrdersList[i] == "British Isles") {
-                        uniqueOrdersList[i] == "British Isles (Minelaying)";      
+                        uniqueOrdersList[i] = "British Isles (Minelaying)";      
                     }
                     //Remove med option for VIID boats
                     if (uniqueOrdersList[i] == "Mediterranean") {   
@@ -243,7 +244,7 @@ class Patrol{
         this.tv.mainUI.telegraph.setSrc(this.getTelegraphSrc()); //set telegraph to correct png
 
         this.NAorders = false;
-        if (this.gm.currentOrders == "North America" || this.gm.currentOrders == "Caribbean"){
+        if (this.gm.currentOrders.includes("North America") || this.gm.currentOrders == "Caribbean"){
             this.NAorders = true
         }
         this.WAfricanCoast = false;
@@ -344,11 +345,6 @@ class Patrol{
         }
 
         console.log("Roll for " + loc + ": " + roll);
-
-        //first check if random event (natural 12)
-        if (roll == 12 && randomEvent == false && loc != "Additional Round of Combat" && loc != "Mission"){
-            console.log("TODO - deal with getting a random event");
-        }
 
         var toReturn = "";
 
@@ -607,6 +603,13 @@ class Patrol{
                 console.log("Error getting loc in patrol for E1 roll.")         
 
         }
+
+        if (roll == 12 && randomEvent == false && loc != "Additional Round of Combat" && loc != "Mission"){
+            console.log("TODO - deal with getting a random event");
+            //toReturn = "Random Event";
+            this.gm.randomEvents++;
+        }
+
         this.gm.adminPause = false;
         return toReturn;
     }

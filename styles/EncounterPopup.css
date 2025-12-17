@@ -70,6 +70,33 @@
     bottom: 15px;
 }
 
+.ContinuePatrolPopup_button {
+    margin: 0;
+    background-color: lightgreen;
+    font-size: 16px;
+    padding: 5px;
+    -webkit-appearance: none;
+    font-family: inherit;
+    cursor: pointer;
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+}
+
+.AbortPatrolPopup_button {
+    margin: 0;
+    background-color: lightcoral;
+    font-size: 16px;
+    padding: 5px;
+    -webkit-appearance: none;
+    font-family: inherit;
+    cursor: pointer;
+    position: absolute;
+    left: 15px;
+    bottom: 15px;
+    max-width: 200px;
+}
+
 .PassPopup_button {
     margin: 0;
     font-size: 16px;

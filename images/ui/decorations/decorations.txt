@@ -7,12 +7,12 @@ Gameplay impact: within rules (check rules for each level)
 
 U-boat War Badge
 2 levels: War Badge, War Badge w/ diamonds
-Awarded: After 2 patrols
+Awarded: After 2 patrols - 5patrols and 15
 Gameplay Impact: none
 
 
 U-Boat Front Clasp
-3 levels: Black(3), Silver(5), Gold(10)
+3 levels: Black(6), Silver(12), Gold(20)
 Awarded: After sinking X amount of ships on a single patrol
 Gameplay Impact: none
 
