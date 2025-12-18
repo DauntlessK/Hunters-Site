@@ -68,7 +68,7 @@ class GameManager{
         this.uboatFrontClaspLevel = 0; //0 = none, 1 = black, 2 = silver, 3 = gold
         this.woundBadgeLevel = 0;      //0 = none, 1 = black, 2 = silver, 3 = gold
         this.germanCrossLevel = 0;     //0 = none, 1 = black, 2 = silver, 3 = gold
-        this.uboatUpgrade = false;      //If eligible for an upgrade
+        this.uboatUpgrade = true;      //If eligible for an upgrade
         this.uboatReassignment = false; //If required to be reassigned to a new boat (due to SW or too much damage to uboat)
         this.uboatUpgradeChoice = false; //If player picked upgrade during awards
         this.numPatrolsKMDTWounded = 0;
@@ -580,7 +580,7 @@ class GameManager{
 
     async abortPatrolPrompt() {
         this.setEventResolved(false);
-        this.gameManagerPopup.abortPatrolPopup();
+        this.gameManagerPopup.voluntaryAbortPatrolPopup();
         await until(_ => this.eventResolved == true);
     }
 

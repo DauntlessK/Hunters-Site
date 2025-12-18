@@ -150,23 +150,20 @@ class ReassignmentPopup{
         }
 
         //roll for random id
-        id = id[Math.floor(Math.random() * id.length)];
-
         //ensure no previous sub matches 
         let ID_not_unique = true;
-        let generatedID = "";
+        let idNum = 0;
+        let idString = "";
         while (ID_not_unique) {
-            generatedID = id[Math.floor(Math.random() * id.length)].toString();
-            console.log("Generated ID: " + generatedID);
-            console.log("Past Subs: " + this.gm.pastSubs);
-            if (this.gm.pastSubs.includes(generatedID)) {
+            idNum = id[Math.floor(Math.random() * id.length)]
+            idString = idNum.toString();
+            if (this.gm.pastSubs.includes(idString)) {
                 continue;
             } else {
                 ID_not_unique = false;
             }
         }
-
-        return id.toString();
+        return idString;
     }
 
     remove() {

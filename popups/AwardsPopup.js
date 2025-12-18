@@ -46,8 +46,6 @@ class AwardsPopup{
         
         //LAST check for promotion possibility- every 12 months minimum
         let promotionText = "Not up for promotion at this time.";
-        console.log((this.gm.monthsAtSea + this.gm.monthsInPort) / 12);
-        console.log(this.gm.numPromotionChecks + 1);
         if ((this.gm.monthsAtSea + this.gm.monthsInPort) / 12 >= this.gm.numPromotionChecks + 1) {
             this.gm.numPromotionChecks++;
             this.showPromotion = true;

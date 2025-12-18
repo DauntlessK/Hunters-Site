@@ -1314,11 +1314,13 @@ class Uboat{
             if (value == 3) {  //check if KIA first
                 if (key == "Crew 1" || key == "Crew 2" || key == "Crew 3" || key == "Crew 4") {
                     numCrewReplaced++;
+                    hospitalResults += key + " was KIA. We have been assigned a new one. ";
+                    this.crew_health[key] = 0;
                 }
                 else {
                     this.crew_levels[key] = 0;
                     this.crew_health[key] = 0;
-                    hospitalResults += "Our " + key + " was KIA. We have been assigned a new one.";
+                    hospitalResults += "Our " + key + " was KIA. We have been assigned a new one. ";
                 }
             }
             else if (value == 2) {

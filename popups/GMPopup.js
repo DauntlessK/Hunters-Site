@@ -70,7 +70,7 @@ class GMPopup{
     }
 
     abortPatrolPopup() {
-        //new div to add  --TODO WILL NEED DISTINCTION BETWEEN FORCED AND VOLUNTARY (NON DAMAGED) ABORT POPUP
+        //new div to add
         this.element.innerHTML = (`
             <h3 class="HeaderMessage_h3">We must abort our patrol!<br>
             </h3>
@@ -131,7 +131,7 @@ class GMPopup{
         this.container.appendChild(this.element);
     }
 
-    abortPatrolPopup() {
+    voluntaryAbortPatrolPopup() {
         //new div to add
         this.element.innerHTML = (`
             <h2 class="HeaderMessage_h3">Are you sure?<br>
