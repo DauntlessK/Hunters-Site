@@ -362,7 +362,8 @@ class EncounterPopup{
         const roll = d3Roll();
 
         //Deal with waiting when periscope is damaged - only allowed to wait until night - no attack button
-        if (this.gm.sub.getSystemStatus("Periscope") != "Operational" && currTime == "Day" && this.enc.isEscorted()) {
+
+        if (this.gm.sub.getSystemStatus("Periscope") != "Operational" && currTime == "Day" && this.shipList[0].getType() == "Escort") {
             this.element.innerHTML = (`
                 <h3 class="HeaderMessage_h3">Alarm!</h3>
                 <p class="PatrolAttackMessage_p">${encounterAttackShipArray[roll]}${bearing}, course ${course[courseNum]}!<br>
@@ -371,7 +372,7 @@ class EncounterPopup{
                 <button class="WaitPopup_button" id="wait">Follow Until ${oppositeTime}</button>
                 <button class="PassPopup_button" id="ignore">Ignore</button>
             `)
-        } else if (this.gm.sub.getSystemStatus("Periscope") != "Operational" && currTime == "Night" && this.enc.isEscorted()) {
+        } else if (this.gm.sub.getSystemStatus("Periscope") != "Operational" && currTime == "Night"  && this.shipList[0].getType() == "Escort") {
             this.element.innerHTML = (`
                 <h3 class="HeaderMessage_h3">Alarm!</h3>
                 <p class="PatrolAttackMessage_p">${encounterAttackShipArray[roll]}${bearing}, course ${course[courseNum]}!<br>

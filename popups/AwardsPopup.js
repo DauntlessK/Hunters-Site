@@ -46,7 +46,8 @@ class AwardsPopup{
         
         //LAST check for promotion possibility- every 12 months minimum
         let promotionText = "Not up for promotion at this time.";
-        if ((this.gm.monthsAtSea + this.gm.monthsInPort) / 12 >= this.gm.numPromotionChecks + 1) {
+        if (((this.gm.monthsAtSea + this.gm.monthsInPort) / 12 >= this.gm.numPromotionChecks + 1) ||
+            this.gm.getMonth() >= 5 && this.gm.getYear() == 1943) { //special check to ensure at least one promotion check in June 1943
             this.gm.numPromotionChecks++;
             this.showPromotion = true;
             promotionText = this.promotionEvalulation();
@@ -303,12 +304,12 @@ class AwardsPopup{
             this.gm.woundBadgeLevel = 1;
             toReturn += "You've been awarded the Wound Badge in Black!";
         }
-        else if (this.gm.KMDTWasWoundedThisPatrol && this.gm.numPatrolsKMDTWounded >= 3 && this.gm.woundBadgeLevel == 1) {
+        else if (this.gm.KMDTWasWoundedThisPatrol && this.gm.numPatrolsKMDTWounded >= 2 && this.gm.woundBadgeLevel == 1) {
             this.showWoundBadge = true;
             this.gm.woundBadgeLevel = 2;
             toReturn += "You've been awarded the Wound Badge in Silver!";
         }
-        else if (this.gm.KMDTWasWoundedThisPatrol && this.gm.numPatrolsKMDTWounded >= 5 && this.gm.woundBadgeLevel == 2) {
+        else if (this.gm.KMDTWasWoundedThisPatrol && this.gm.numPatrolsKMDTWounded >= 3 && this.gm.woundBadgeLevel == 2) {
             this.showWoundBadge = true;
             this.gm.woundBadgeLevel = 3;
             toReturn += "You've been awarded the Wound Badge in Gold!";

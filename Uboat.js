@@ -1145,7 +1145,7 @@ class Uboat{
         for (const [key, value] of Object.entries(this.systems)) {
             if (value == 1) {
                 roll = d6Roll();
-                result = roll + result;
+                result = roll + mods;
                 if (!refitting) {console.log("Repair roll for " + key + ". Result: " + result);}
                 switch (key) {
                     case "Electric Engine #1":
@@ -1267,6 +1267,11 @@ class Uboat{
 
         //If not already aborting patrol and fuel tanks damaged or 1 diesel inop
         if (!this.gm.abortingPatrol && (this.dieselsInop() == 1 || this.getSystemStatus("Fuel Tanks") == "Inoperative")) {
+            //Game over scenario, so ignore repairing
+            if (this.dieselsInop() == 2) {
+                return;
+            }
+
             this.gm.abortPatrol();
         }
 

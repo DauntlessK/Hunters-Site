@@ -64,6 +64,7 @@ $sql = "
         :uboat_number,
         :uboat_type,
         :previous_uboats,
+        :starting_uboat_type,
         :patrols,
         :tonnage_sunk,
         :ships_sunk,

@@ -629,6 +629,16 @@ class Encounter {
         if (this.currentBoxName == "Mission") {
             mods -= 1;
         }
+        if ((this.sub.getCrewLevel("Watch Officer 1") == 1 && this.sub.isCrewmanFunctional("Watch Officer 1")) 
+            && (this.sub.getCrewLevel("Watch Officer 2") == 1 && this.sub.isCrewmanFunctional("Watch Officer 2"))) {
+            mods += 1;
+        } else if ((this.sub.getCrewLevel("Watch Officer 1") == 1 && this.sub.isCrewmanFunctional("Watch Officer 1"))
+            || (this.sub.getCrewLevel("Watch Officer 2") == 1 && this.sub.isCrewmanFunctional("Watch Officer 2"))) {
+            let watchRoll = d6Roll();
+            if (watchRoll >= 4) {
+                mods += 1;
+            }
+        }
 
         //Check results
         let result = mods + a1Roll;         //roll result

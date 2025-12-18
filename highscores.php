@@ -1,6 +1,10 @@
 <?php
 require_once __DIR__ . '/api/db.php';
 
+// --- SEARCH FILTER DEFAULTS ---
+$whereClause = "";
+$params = [];
+
 // --- SETTINGS ---
 $resultsPerPage = 50;
 
@@ -11,17 +15,24 @@ $search = isset($_GET['search']) ? trim($_GET['search']) : "";
 // --- CALCULATE OFFSETS ---
 $offset = ($page - 1) * $resultsPerPage;
 
-// --- SEARCH FILTER ---
-$whereClause = "";
-$params = [];
-
-if ($search !== "") {
-    $whereClause = "WHERE captain_name LIKE :search";
-    $params[':search'] = "%$search%";
-}
+// --- TOTAL COUNT ---
+$countSql = "
+    SELECT COUNT(*)
+    FROM final_scores f
+    JOIN plays p ON p.id = f.id
+    $whereClause
+";
+$countStmt = $pdo->prepare($countSql);
+$countStmt->execute($params);
+$totalResults = $countStmt->fetchColumn();
 
 // --- TOTAL COUNT ---
-$countSql = "SELECT COUNT(*) FROM final_scores $whereClause";
+$countSql = "
+    SELECT COUNT(*)
+    FROM final_scores f
+    JOIN plays p ON p.id = f.id
+    $whereClause
+";
 $countStmt = $pdo->prepare($countSql);
 $countStmt->execute($params);
 $totalResults = $countStmt->fetchColumn();
@@ -29,20 +40,22 @@ $totalResults = $countStmt->fetchColumn();
 // --- MAIN QUERY ---
 $sql = "
     SELECT 
-        gp.id,
-        gp.captain_name,
-        gp.uboat_number,
-        gp.uboat_type,
-        gp.patrols,
-        gp.tonnage_sunk,
-        gp.ships_sunk,
-        gp.end_month,
-        gp.end_year,
-        gp.survival_status,
-        gp.game_over_cause
-    FROM final_scores gp
+        f.id,
+        f.captain_name,
+        f.uboat_number,
+        f.uboat_type,
+        f.patrols,
+        f.tonnage_sunk,
+        f.ships_sunk,
+        f.end_month,
+        f.end_year,
+        f.survival_status,
+        f.game_over_cause,
+        p.is_historical
+    FROM final_scores f
+    JOIN plays p ON p.id = f.id
     $whereClause
-    ORDER BY gp.tonnage_sunk DESC
+    ORDER BY f.tonnage_sunk DESC
     LIMIT :offset, :limit
 ";
 
@@ -290,6 +303,20 @@ input[type="submit"] {
   border-radius:7px;
 }
 
+/* Subtle historical commander styling */
+tr.historical {
+    font-style: italic;
+    color: #c8c8c8;
+}
+
+tr.historical td:first-child::after {
+    content: "†";
+    font-size: 11px;
+    margin-left: 4px;
+    color: #9aa6b2;
+}
+
+
 </style>
 </head>
 
@@ -327,7 +354,9 @@ foreach ($rows as $row):
     $statusColor = statusColor($row['survival_status']);
     $fullCause   = htmlspecialchars($row['game_over_cause']);
 ?>
-<tr onclick="loadDetails(<?= $row['id'] ?>, <?= $rankNumber ?>)" style="cursor:pointer;">
+<tr class="<?= $row['is_historical'] ? 'historical' : '' ?>"
+    onclick="loadDetails(<?= $row['id'] ?>, <?= $rankNumber ?>)"
+    style="cursor:pointer;">
     <td><?= $rankNumber++ ?></td>
     <td><?= htmlspecialchars($row['captain_name']) ?></td>
     <td><?= htmlspecialchars($row['uboat_number']) ?></td>
@@ -547,7 +576,7 @@ function loadDetails(id, leaderboardPos) {
         { k: "U-Boat ID", v: g.uboat_number || "—" },
         { k: "U-Boat Type", v: g.uboat_type || "—" },
         { k: "Starting U-Boat Type", v: g.starting_uboat_type || "—" },
-        { k: "Previous U-Boats", v: fmtInt(g.previous_uboats) }
+        { k: "Previous U-Boats", v: g.previous_uboats || "—" }
         ]);
 
 

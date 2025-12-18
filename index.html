@@ -52,14 +52,32 @@
             <input type="button" id="StartButton" value="Start Game" style="max-width: 200px; width: 200px;">
           </td>
         </tr>
-      </table>
+      </tr>
+    </table>
 
-    </div>
-    <div class = "highscore-button">
+      <table id="bottomTable">
+        <tr>
+          <td> <div class = "highscore-button">
+      <button onclick="window.open('/Hunters_beta/guide/guide.pdf', '_blank')">
+          View Help Guide
+      </button>
+    </div></td>
+          <td>    <div class = "highscore-button">
       <button onclick="window.open('/Hunters_beta/highscores.php', '_blank')">
           View High Scores
       </button>
+    </div></td>
+    <td>    <div class = "highscore-button">
+      <button onclick="window.open('/Hunters_beta/guide/tips.pdf', '_blank')">
+          View Tips & Tricks
+      </button>
+    </div></td>
+        <td>    <span style = "font-size: 12px;">Created by Kyle Breen-Bondie</span>
+    </div></td>
+        </tr>
+      </table>
     </div>
+
 
     <!-- Scripts -->
     <script src="Main.js"></script>
