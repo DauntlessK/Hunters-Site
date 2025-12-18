@@ -54,7 +54,7 @@ class GameManager{
         this.rank = ["OLt zS", "KptLt", "KKpt", "FFKpt", "KptzS"];
         this.awardName = ["", "Knight's Cross", "Knight's Cross with Oakleaves", "Knight's Cross with Oakleaves and Swords",
                             "Knight's Cross with Oakleaves, Swords and Diamonds"];
-        //this.monthsSinceLastPromotionCheck = 0;     //how many months since last promotion roll - NOT NEEDED
+        //this.monthsSinceLastPromotionCheck = 0;     //how many months since last promotion roll
         this.numPromotionChecks = 0;
         this.shipsSunkSinceLastPromotionCheck= 0;
         this.knightsCrossSinceLastPromotionCheck = 0;
@@ -97,6 +97,7 @@ class GameManager{
         this.sailorsLost = 0;
         this.monthsInPort = 0;
         this.monthsAtSea = 0;
+        this.firstUboatType = "";
         
         this.gameManagerPopup = new GMPopup(this.tv, this);
         this.currentEncounter = null;
@@ -112,6 +113,8 @@ class GameManager{
             this.tv.mainUI.rank = this.rank[this.sub.crew_levels["Kommandant"]] + " " + this.kmdt;
             this.tv.mainUI.date = this.getFullDate();
         }
+
+        this.firstUboatType = this.sub.getType();
 
         //Popup to greet start of game
         if (this.id == 77 && this.kmdt == "kbb") {
@@ -485,6 +488,14 @@ class GameManager{
             this.currentEncounter.closeWindows();
         }
 
+        //If too late to abort patrol, disable abort button
+        if ((this.currentOrders.includes("North America") || this.currentOrders.includes("Caribbean")) && this.currentBox >= this.patrol.getPatrolLength() - 4) {
+            this.tv.mainUI.abortButton.changeState("Disabled");
+        }
+        else if (this.currentBox >= this.patrol.getPatrolLength() - 2) {
+            this.tv.mainUI.abortButton.changeState("Disabled");
+        }
+
         //Advance box
         this.currentBox++;
         this.currentBox = this.currentBox + this.extraStep;
@@ -771,6 +782,7 @@ class GameManager{
             captain_name: this.kmdt,
             uboat_number: this.getFullUboatID(),
             uboat_type: this.sub.getType(),
+            starting_uboat_type: this.firstUboatType,
             previous_uboats: this.getPastSubs(),
 
             patrols: this.patrolNum,

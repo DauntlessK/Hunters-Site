@@ -322,6 +322,10 @@ class Encounter {
             this.gm.setEventResolved(false);
             await until(_ => this.gm.eventResolved == true);
 
+            if (this.leftWithoutEngaging) {
+                return;
+            }
+
             //Resolve fired weapons in this round then display results --- leads into escort detection or engaging again or following
             this.gm.setEventResolved(false);
             this.resolveUboatAttack();
@@ -852,6 +856,8 @@ class Encounter {
             this.gm.missionComplete = true;
         }
 
+        //Check for repairs
+        this.gm.sub.flooding_Damage = 0; //reset flooding damage after encounter
         if (this.unrepairedDamage) {
             this.gm.setEventResolved(false);
             this.repairCheck();
