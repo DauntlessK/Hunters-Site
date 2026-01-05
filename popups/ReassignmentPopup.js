@@ -180,6 +180,9 @@ class ReassignmentPopup{
         let previousKC = this.gm.sub.knightsCross;
         let previousCrewLevels = this.gm.sub.crew_levels;
 
+        this.gm.permArcPost = false; //reset permanent arc flag
+        this.gm.permMedPost = false; //reset permanent med flag
+
         let newSub = new Uboat(this.newSubType, this.tv, this.gm, previousCrewLevels, previousKC);
         this.gm.sub = newSub;
         this.gm.id = this.newSubID;

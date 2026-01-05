@@ -238,8 +238,6 @@ class Patrol{
 
     //Builds array of strings, each item being a step in the patrol. Step 0 is port.
     buildPatrol(){
-        
-        //TODO: error when building VIID for NA patrol for missions. Currently does BoB, Transit then mission. Not enough transits
 
         this.tv.mainUI.telegraph.setSrc(this.getTelegraphSrc()); //set telegraph to correct png
 
@@ -257,7 +255,7 @@ class Patrol{
                 this.patrolArray.push("Port");
             }
             else if (x == 1 || x == this.getPatrolLength()){
-                if (this.gm.francePost && !this.gm.permMedPost){
+                if (this.gm.francePost && (this.gm.currentOrders != "Mediterranean") && (this.gm.currentOrders != "Norway") && (this.gm.currentOrders != "Arctic")){
                     this.patrolArray.push("Bay of Biscay");
                 }
                 else{
@@ -311,20 +309,6 @@ class Patrol{
                 this.patrolArray.push(otherSpot);
             }
         }
-        //remove one NA/Caribbean/WAC patrol if applicable
-        //unsure if removal is needed if the patrol lengths are accurate===========
-        /**if (this.gm.currentOrders == "North America"){
-            const index = this.patrolArray.indexOf("North America");
-            if (index > -1) { 
-                this.patrolArray.splice(index, 1);
-            }
-        }
-        if (this.gm.currentOrders == "Caribbean"){
-            const index = this.patrolArray.indexOf("Caribbean");
-            if (index > -1) { 
-                this.patrolArray.splice(index, 1);
-            }
-        }*/
         console.log(this.patrolArray);
     }
 
