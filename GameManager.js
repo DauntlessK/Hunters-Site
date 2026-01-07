@@ -217,7 +217,10 @@ class GameManager{
         }
         else {
             this.monthsInPort++;
-            this.isWarOver();       //only triggered (checked) when in port
+            //only triggered (checked) when in port
+            if (this.isWarOver()) {
+                this.endGame();
+            }
         }
 
         //update france post if applicable
@@ -643,9 +646,12 @@ class GameManager{
         this.gameManagerPopup.endPatrolPopup();
         await until(_ => this.eventResolved == true);
 
-        //repair / refit sub - establishes monthsNeededForRefit
-        var refitResults = this.sub.refit();
-        var hospitalResults = this.sub.hospital();
+        if (!this.isWarOver()) {
+            //repair / refit sub - establishes monthsNeededForRefit
+            var refitResults = this.sub.refit();
+            var hospitalResults = this.sub.hospital();
+        }
+
 
         //Update successful / unsuccessful patrol stats
         if (this.missionComplete) {
@@ -685,8 +691,6 @@ class GameManager{
         this.extraStep = 0;
         this.KMDTWasWoundedThisPatrol = false;
         this.tv.mainUI.abortButton.changeState("Active");
-
-        this.isWarOver();
 
         this.eventResolved = false;
 
@@ -735,6 +739,40 @@ class GameManager{
         this.sub.monthsNeededForRefit = 0; //Reset back to 0 after use
     }
 
+    async endGame() {
+        let cause = "";
+        let attacker = null;
+        let careerTotal = this.getTotalGRT("int");
+
+        if (careerTotal < 99999) {
+            cause = "Discharged from the Kriegsmarine."
+        }
+        else if (careerTotal < 149999) {
+            cause = "Promoted to a mundane desk job."
+        }
+        else if (careerTotal < 199999) {
+            cause = "Promoted to a naval consultant."
+        }
+        else if (careerTotal < 249999) {
+            cause = "Promoted to a naval attache."
+        }
+        else if (careerTotal < 299999) {
+            cause = "Promoted to Training Command."
+        }
+        else if (careerTotal < 349999) {
+            cause = "Promoted to Flotilla Command."
+        }
+        else {
+            cause = "Retired and toured as a war hero." 
+        }
+
+        this.subEventResolvedeventResolved = false;
+        const fpPopup = new FinalPromotionPopup();
+        await until(_ => this.subEventResolved == true);
+
+        const goPopup = new GameOverPopup(this.tv, this, this.currentEncounter, cause, attacker);
+    }
+
     // Called from game over popup to update game manager states
     gameOverTrigger(enc, cause) {
         this.gameOverEnc = enc;
@@ -759,13 +797,11 @@ class GameManager{
 
     /**
      * Checks if patrols can still be conducted.
-     * @returns true if AFTER june 1943 which immediately triggers Game Over popup. False otherwise.
+     * @returns true if AFTER june 1943. False otherwise.
      */
     isWarOver() {
         if (this.getYear() >= 1943 && this.getMonth() > 5) {
-            let cause = "War is over";
-            let attacker = null;
-            const goPopup = new GameOverPopup(this.tv, this, this.currentEncounter, cause, attacker);
+            return true;
         }
         return false;
     }
