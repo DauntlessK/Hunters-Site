@@ -11,11 +11,12 @@
     <div class="game-container">
       <canvas class="game-canvas" width="1280" height="720"></canvas>
     </div>
+    
     <div class="input-container">
       <table id="subSelectTable">
         <tr>
           <td style = "min-width: 160px;">
-            <input type="text" id="Commander" placeholder="Enter Commander Name" maxlength="25" style="max-width: 200px; width: 200px;">
+            <input type="text" id="Commander" placeholder="Enter Commander Name" maxlength="25" style="max-width: 200px; width: 200px;" required>
           </td>
           <td style = "min-width: 160px;">
             <input type="number" id="SubNum" placeholder="Enter sub #" maxlength="4">
@@ -49,7 +50,7 @@
             </div>
           </td>
           <td style = "min-width: 160px;">
-            <input type="button" id="StartButton" value="Start Game" style="max-width: 200px; width: 200px;">
+            <input type="button"  id="StartButton" value="Start Game" style="max-width: 200px; width: 200px;">
           </td>
         </tr>
       </tr>
@@ -105,6 +106,7 @@
     <script src="popups/FollowTimePopup.js"></script>
     <script src="popups/AdminPopup.js"></script>
     <script src="popups/ReassignmentPopup.js"></script>
+    <script src="popups/FinalPromotionPopup.js"></script>
     <script src="popups/GameOverPopup.js"></script>
 
     <!-- Scripts / Sprites -->

@@ -46,8 +46,7 @@ class AwardsPopup{
         
         //LAST check for promotion possibility- every 12 months minimum
         let promotionText = "Not up for promotion at this time.";
-        if (((this.gm.monthsAtSea + this.gm.monthsInPort) / 12 >= this.gm.numPromotionChecks + 1) ||
-            this.gm.getMonth() >= 5 && this.gm.getYear() == 1943) { //special check to ensure at least one promotion check in June 1943
+        if (((this.gm.monthsAtSea + this.gm.monthsInPort) / 12 >= this.gm.numPromotionChecks + 1)) {
             this.gm.numPromotionChecks++;
             this.showPromotion = true;
             promotionText = this.promotionEvalulation();
@@ -127,6 +126,7 @@ class AwardsPopup{
         }
         // Check for 3 unsuccessful patrols in a row for crew level exp decrease
         else if ((this.gm.unsuccessfulPatrolsInARow > 0 && this.gm.unsuccessfulPatrolsInARow % 3 == 0) || this.gm.sub.isCrewKnockedOut()) {
+            this.showCrewLevelUp = true;
             this.gm.sub.crew_levels["Crew"] -= 1;
             if (this.gm.sub.crew_levels["Crew"] < 0) {
                 this.gm.sub.crew_levels["Crew"] = 0;   //ensure doesn't go below green

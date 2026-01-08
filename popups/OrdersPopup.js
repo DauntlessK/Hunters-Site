@@ -46,7 +46,21 @@ class OrdersPopup{
                 message = " has been assigned to a Wolfpack. Proceed to the area enclosed in these orders and maintain contact with the Wolfpack."
                 break;
             case "Mediterranean":
-                message = " has been reassigned to the Mediterranean. Immediately upon receipt of this order, proceed through the Gibraltar Strait to join the Mediterranean fleet."
+                if (this.gm.permMedPost){
+                    let varMessage = d6Roll();
+                    if (varMessage <= 2){
+                        message = " is to patrol the Mediterranean. Proceed to the enclosed area to patrol for enemy shipping."
+                    }
+                    else if (varMessage <=4){
+                        message = " is to patrol the Southwest Mediterranean. Proceed to the enclosed area to interdict enemy shipping."
+                    }
+                    else if (varMessage <=6){
+                        message = " is to patrol the Eastern Mediterranean. Proceed to the enclosed area to disrupt enemy shipping."
+                    }
+                }
+                else {
+                    message = " has been reassigned to the Mediterranean. Immediately upon receipt of this order, proceed through the Gibraltar Strait to join the Mediterranean fleet."
+                }      
                 break;
             case "Arctic":
                 message = " has been ordered North. Proceed towards the Arctic to patrol for ships there."
@@ -84,15 +98,27 @@ class OrdersPopup{
 
     pickOrders(){
         var elementsArray = [];
+        let oneButton = null;
 
         //build html buttons for unique orders in patrol array
-        for (let i = 0; i < this.uniqueOrders.length; i++){
-            elementsArray[i] = document.createElement("button");
-            elementsArray[i].classList.add("Orders_button");
-            elementsArray[i].id = this.uniqueOrders[i];
-            elementsArray[i].innerHTML = (`
-                ${this.uniqueOrders[i]}
-                `)      
+        if (typeof(this.uniqueOrders) == "string"){
+            //one button
+                oneButton = document.createElement("button");
+                oneButton.classList.add("Orders_button");
+                oneButton.id = this.uniqueOrders;
+                oneButton.innerHTML = (`
+                    ${this.uniqueOrders}
+                    `)      
+        }
+        else {
+            for (let i = 0; i < this.uniqueOrders.length; i++){
+                elementsArray[i] = document.createElement("button");
+                elementsArray[i].classList.add("Orders_button");
+                elementsArray[i].id = this.uniqueOrders[i];
+                elementsArray[i].innerHTML = (`
+                    ${this.uniqueOrders[i]}
+                    `)      
+            }
         }
 
         if (elementsArray[0] == undefined || elementsArray[0] == "" || elementsArray[0] == " " || elementsArray[0] == null){
@@ -107,10 +133,16 @@ class OrdersPopup{
         `)
         this.container.appendChild(this.element);
 
-        //add buttons to popup
-        for (let i = 0; i < elementsArray.length; i++){
-            this.element.appendChild(elementsArray[i]);
+        //add button(s) to popup
+        if (oneButton != null){
+            this.element.appendChild(oneButton);
         }
+        else {
+            for (let i = 0; i < elementsArray.length; i++){
+                this.element.appendChild(elementsArray[i]);
+            }
+        }
+
 
         this.element.addEventListener("click", ()=> {
             //determine which button was clicked

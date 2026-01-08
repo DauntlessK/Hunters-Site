@@ -26,7 +26,9 @@ class GameManager{
                             "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth",
                             "seventeenth", "eighteenth", "nineteenth", "twentieth", "twenty-first", "twenty-second",
                             "twenty-third", "twenty-fourth", "twenty-fifth", "twenty-sixth", "twenty-seventh",
-                            "twenty-eighth", "twenty-ninth", "thirtieth"];
+                            "twenty-eighth", "twenty-ninth", "thirtieth", "thirty-first", "thirty-second", "thirty-third",
+                            "thirty-fourth", "thirty-fifth", "thirty-sixth", "thirty-seventh", "thirty-eighth", "thirty-ninth",
+                            "fortieth"];
         this.patrolNum = 0;
         this.missionComplete = false;
         this.unsuccessfulPatrolsInARow = 0;
@@ -142,7 +144,7 @@ class GameManager{
 
         this.setEventResolved(false);
         this.setDate();
-        this.getStartingRank();
+        this.setStartingRank();
         this.gameManagerPopup.startGameText(this.date_month, this.date_year);
         await until(_ => this.eventResolved == true);
         this.sub.torpedoResupply();
@@ -178,7 +180,7 @@ class GameManager{
      * @returns String: Full date in Mon - Year Format (Jan - 1939)
      */
     getFullDate(){
-        return this.month[this.date_month] + " - " + this.date_year;  //TODO: doublecheck if correct month
+        return this.month[this.date_month] + " - " + this.date_year;
     }
 
     getYear(){
@@ -278,7 +280,7 @@ class GameManager{
     /**
      * Determines the starting rank of the player
      */
-    getStartingRank(){
+    setStartingRank(){
         if ((this.sub.getType().includes("IX"))) {
             this.sub.crew_levels["Kommandant"] = 1;
         }
@@ -347,7 +349,7 @@ class GameManager{
                 break;
             case "VIIC":
                 this.date_month = 9;
-                this.date_year = 1940;
+                this.date_year = 1941;
                 this.francePost = true;
                 break;
             case "VIID":
@@ -652,7 +654,6 @@ class GameManager{
             var hospitalResults = this.sub.hospital();
         }
 
-
         //Update successful / unsuccessful patrol stats
         if (this.missionComplete) {
             this.successfulPatrols++;
@@ -678,6 +679,11 @@ class GameManager{
             this.mostShipsSunkOnPatrol = this.shipsSunkOnCurrentPatrol.length;
         }
 
+        //Set permanent Mediterranean post if applicable
+        if (this.currentOrders == "Mediterranean" && this.permMedPost == false) {
+            this.permMedPost = true;
+        }
+
         //Promotion and Award checks here===================
         this.awardsResolved = false;
         let awardsPopup = new AwardsPopup(this.tv, this);
@@ -695,7 +701,7 @@ class GameManager{
         this.eventResolved = false;
 
         //Either display reassignment/upgrade popup or refit/recovery popup
-        if (this.uboatReassignment || this.uboatUpgradeChoice) {
+        if ((this.uboatReassignment || this.uboatUpgradeChoice) && !this.isWarOver()) {
 
             //check if reassignment due to SW on KMDT
             //if not, new uboat reassignment retains crew levels and only 1 month for refit
@@ -719,9 +725,12 @@ class GameManager{
                 this.uboatUpgradeChoice = false;
             }
         } 
-        else {
+        else if (!this.isWarOver()) {
             //Refit and Recovery popup=========================
             let randr = new RefitAndRecovery(this.tv, this, this.sub.monthsNeededForRefit, refitResults, hospitalResults);
+        }
+        else {
+            this.setEventResolved(true);
         }
         await until(_ => this.eventResolved == true);
 
@@ -731,6 +740,9 @@ class GameManager{
             this.tv.mainUI.tubeButtonArray[i].getLatestState();
         }
 
+        if (this.sub.monthsNeededForRefit == 0) {
+            this.sub.monthsNeededForRefit = 1; //Ensure at least 1 month passes for refit/recovery (end game)
+        }
         //Advance time X months based on repair and hospital results
         for (let i = 0; i < this.sub.monthsNeededForRefit; i++) {
             this.advanceMonth();
@@ -766,9 +778,9 @@ class GameManager{
             cause = "Retired and toured as a war hero." 
         }
 
-        this.subEventResolvedeventResolved = false;
-        const fpPopup = new FinalPromotionPopup();
-        await until(_ => this.subEventResolved == true);
+        this.awardsResolved = false;
+        const fpPopup = new FinalPromotionPopup(this.tv, this);
+        await until(_ => this.awardsResolved == true);
 
         const goPopup = new GameOverPopup(this.tv, this, this.currentEncounter, cause, attacker);
     }
@@ -875,5 +887,34 @@ class GameManager{
         });
 
         return;
+    }
+
+    getShipsSunkOrderedByGRT() {
+        let newArray = [];
+
+        if (this.shipsSunk.length == 0) {
+            return newArray;
+        }
+        else if (this.shipsSunk.length == 1) {
+            newArray.push(this.shipsSunk[0]);
+            return newArray;
+        }
+
+        newArray.push(this.shipsSunk[0]);
+        for (let i = 1; i < this.shipsSunk.length; i++) {
+            for (let j = 0; j < newArray.length; j++) {
+                console.log("  Inner loop j=" + j + " Comparing to ship: " + newArray[j].getName() + " GRT: " + newArray[j].getGRTInt());
+                if (this.shipsSunk[i].getGRTInt() > newArray[j].getGRTInt()) {
+                    newArray.splice(j, 0, this.shipsSunk[i]);
+                    break;
+                }
+                else if (j == newArray.length - 1) {
+                    newArray.push(this.shipsSunk[i]);
+                    break;
+                }
+            }
+        }
+
+        return newArray;
     }
 }

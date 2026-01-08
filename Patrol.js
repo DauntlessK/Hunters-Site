@@ -238,7 +238,6 @@ class Patrol{
 
     //Builds array of strings, each item being a step in the patrol. Step 0 is port.
     buildPatrol(){
-
         this.tv.mainUI.telegraph.setSrc(this.getTelegraphSrc()); //set telegraph to correct png
 
         this.NAorders = false;
@@ -254,15 +253,22 @@ class Patrol{
             if (x == 0){
                 this.patrolArray.push("Port");
             }
-            else if (x == 1 || x == this.getPatrolLength()){
-                if (this.gm.francePost && (this.gm.currentOrders != "Mediterranean") && (this.gm.currentOrders != "Norway") && (this.gm.currentOrders != "Arctic")){
+            else if (x == 1 || x == this.getPatrolLength()) {
+                if (x == 1 && !this.gm.permMedPost && this.gm.currentOrders == "Mediterranean") {
+                    //first time being transferred to the med, so box 1 will be BoB, but not the final box
+                    this.patrolArray.push("Bay of Biscay");
+                }
+                else if (x == this.getPatrolLength() && !this.gm.permMedPost && this.gm.currentOrders == "Mediterranean") {
+                    this.patrolArray.push("Transit");
+                }
+                else if (this.gm.francePost && (this.gm.currentOrders != "Mediterranean") && (this.gm.currentOrders != "Norway") && (this.gm.currentOrders != "Arctic")){
                     this.patrolArray.push("Bay of Biscay");
                 }
                 else{
                     this.patrolArray.push("Transit");
                 }
             }
-            else if (x == 2 && !this.gm.permMedPost && this.currentOrders == "Mediterranean"){
+            else if (x == 2 && !this.gm.permMedPost && this.gm.currentOrders == "Mediterranean"){
                 this.patrolArray.push("Gibraltar");
             }
             else if (x == 2 || x == this.getPatrolLength() - 1){
@@ -289,12 +295,6 @@ class Patrol{
             else if (x == 5 && this.gm.currentOrders.includes("Abwehr") && this.NAorders){
                 this.patrolArray.push("Mission");
             }
-            //else if ((x == 5 || x == this.getPatrolLength() - 4) && this.NAorders){
-            //    this.patrolArray.push("Transit");
-            //}
-            //else if (x == 5 && this.gm.currentOrders.includes("Minelaying" && this.NAorders)){
-            //    this.patrolArray.push("Mission");
-            //}
             else{   //used to replace patrol array spots that have parentheses and should not (so location is only displayed)
                 var otherSpot = this.gm.currentOrders;
                 if (this.gm.currentOrders.includes("Abwehr")){
@@ -528,11 +528,36 @@ class Patrol{
                         break;
                 }
                 break;
+            case "Mediterranean":
+                switch (roll) {
+                    case 2:
+                    case 3:
+                    case 11:
+                    case 12:
+                        toReturn = "Aircraft";
+                        break;
+                    case 4:
+                        toReturn = "Capital Ship";
+                        break;
+                    case 7:
+                        toReturn = "Ship";
+                        break;
+                    case 8:
+                        toReturn = "Convoy";
+                        break;
+                    case 10:
+                        toReturn = "Two Ships + Escort";
+                        break;
+                    default:
+                        toReturn = "No Encounter";
+                        break;
+                }
+                break;
             case "Additional Round of Combat":
-            case "Gibraltar Passage":
+            case "Gibraltar":
                 if (year == 1942) { roll = roll - 1;}
                 if (year == 1943) { roll = roll - 2;}
-                if (loc == "Gibraltar Passage") { roll = roll - 2;}
+                if (loc == "Gibraltar") { roll = roll - 2;}
                 //NOTE : Not sure the distinction matters between Gibralter vs addl combat- both return the same enc
                 switch (roll) {
                     case -2:
@@ -601,13 +626,25 @@ class Patrol{
     //creates the string for the correct telegraph png source file based on the patrol / U-boat
     getTelegraphSrc() {
 
+        //If med orders and not per med post (first time to med), use specific telegraphs
+        if (this.gm.currentOrders == "Mediterranean" && !this.gm.permMedPost) {
+            switch (this.gm.sub.getType()) {
+                case "VIIA":
+                    return "images/ui/telegraph/Telegraph7_G.png";
+                case "VIIB":
+                    return "images/ui/telegraph/Telegraph8_G.png";
+                case "VIIC":
+                    return "images/ui/telegraph/Telegraph8_G.png";
+            }
+        }
+
         //Default to transitType (BoB or T), patrol (Patrol or Mission), and transitBoxes (2, 3 or 4)
         var transitType = "T";
         var missionType = "P";
         var transitBoxes = "2";
 
         //Bay of Biscay cases
-        if (this.gm.francePost && (this.gm.currentOrders != "Norway" || this.gm.currentOrders != "Arctic")) { 
+        if (this.gm.francePost && this.gm.currentOrders != "Norway" && this.gm.currentOrders != "Arctic" && this.gm.currentOrders != "Mediterranean") { 
             transitType = "B"   
         }
 

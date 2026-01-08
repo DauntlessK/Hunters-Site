@@ -1,6 +1,6 @@
 class Main{
   constructor(config){
-      this.version = .893;
+      this.version = .900;
       this.element = config.element;
       this.canvas = this.element.querySelector(".game-canvas");
       this.ctx = this.canvas.getContext("2d");
@@ -88,12 +88,20 @@ class Main{
   requestAnimationFrame(stepFn);
 }
 
-
+/**
+ * Handles button click, especially for starting the game with start button
+ */
   handleEvent(){
     if (event.target.id == "StartButton"){
       if (this.numField.value > 9999 || this.numField.value < 1) {
         console.log("Error in U-Boat ID #");
         this.numField.style.backgroundColor = "red";
+        this.numField.focus();
+      }
+      else if (this.kmdtTextField.value.length < 3){
+        console.log("Commander name must be at least 3 characters.");
+        this.kmdtTextField.style.backgroundColor = "red";
+        this.kmdtTextField.focus();
       }
       else{
         var e = document.getElementById("uboat");

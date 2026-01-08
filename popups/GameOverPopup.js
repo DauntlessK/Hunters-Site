@@ -11,7 +11,7 @@ class GameOverPopup{
         //Create the element
         this.element = document.createElement("div");
 
-        this.element.classList.add("TextMessage");
+        this.element.classList.add("StatusMessage");
 
         //Set game over info in GM
         this.gm.gameOverCause = this.getCauseText(cause, attacker);
@@ -51,13 +51,128 @@ class GameOverPopup{
      * Creates HTML popup for game over screen.
      */
     gameOver() {
+        //Image path creations
+        let rankImagePath = "images/ui/ranks/Rank" + this.gm.sub.crew_levels["Kommandant"].toString() + ".png";
+        let upgradeTokenNum = 0;
+        if (this.gm.uboatUpgrade) {
+            upgradeTokenNum = 1;
+        }
+        let uboatUpgradeImagePath = "images/ui/decorations/UpgradeToken" + upgradeTokenNum +".png";
+        let knightsCrossImagePath = "images/ui/decorations/KnightsCross" + (this.gm.sub.knightsCross) +".png";
+        let warBadgeImagePath = "images/ui/decorations/UboatWarBadge" + (this.gm.uboatWarBadgeLevel) +".png";
+        let frontClaspImagePath = "images/ui/decorations/UboatFrontClasp" + (this.gm.uboatFrontClaspLevel) +".png";
+        let germanCrossImagePath = "images/ui/decorations/GermanCross" + (this.gm.germanCrossLevel) +".png";
+        let woundBadgeImagePath = "images/ui/decorations/WoundBadge" + (this.gm.woundBadgeLevel) +".png";
+
+        //Make string for pervious commands
+
+        let previousCommands = "Prev. boats: "
+        for (let i = 0; i < this.gm.pastSubs.length; i++) {
+            if (i > 0) {
+                previousCommands += ", ";
+            }
+            previousCommands += this.gm.pastSubs[i];
+        }
+
+        //Add s to patrols for career stats if not 1 patrol
+        let pluralPatrols = "";
+        if (this.gm.patrolNum != 1) {
+            pluralPatrols = "s";
+        }
+
+        //Show best patrol GRT, or use this current one if greater
+        let bestPatrol = 0;
+        let currentPatrolGRT = this.gm.getPatrolTotalGRT("Int");
+        if (currentPatrolGRT > this.gm.bestPatrolGRT) {
+            bestPatrol = currentPatrolGRT;
+        }
+        else {
+            bestPatrol = this.gm.bestPatrolGRT;
+        }
+        bestPatrol = bestPatrol.toLocaleString();
+
+        //Get count of capital ships sunk
+        let capShipsSunk = 0;
+        let shipsSunkString = "";
+        let orderedShipsSunk = this.gm.getShipsSunkOrderedByGRT();
+        for (let i = 0; i < orderedShipsSunk.length; i++) {
+            if (orderedShipsSunk[i].getType() == "Capital Ship") {
+                capShipsSunk++;
+            }
+            shipsSunkString += orderedShipsSunk[i].getClassAndName() + ", ";
+            shipsSunkString += orderedShipsSunk[i].getGRT() + " GRT<br>";
+        }
+
+
         //new div to add
         this.element.innerHTML = (`
-            <h1 class="HeaderMessage_h1">GAME OVER!</h1>
-            <h3 class="HeaderMessage_h3">${this.gm.getFullUboatID()}</h3>
-            <h3 class="HeaderMessage_h3">${this.gm.getLRankAndName()}</h3>
-            <p class="TextMessage_p">${this.gm.gameOverCause}<br>
-            </p>
+            <div class = "GameOver_Header">
+                <h1 class="HeaderMessage_h1">GAME OVER!</h1>
+                <h3 class="HeaderMessage_h3">${this.gm.getFullUboatID()}</h3>
+                <h3 class="HeaderMessage_h3">${this.gm.getLRankAndName()}</h3>
+                <p class="TextMessage_p">${this.gm.gameOverCause}<br>
+                </p>
+            </div>
+
+            <div class="Patrol_Log">
+                <span class="Bold">Ships Sunk:</span><br>
+                ${shipsSunkString}
+            </div>
+
+            <div class="Career">
+                <div class="Commander_Image">
+                    <img src = "images/ui/ranks/CommanderPortrait.png" style="max-height: 140px;">
+                </div>
+                <div class="Career_Head">
+                    <span class="Bold">${this.gm.getRankAndName()}</span><br>
+                    ${this.gm.getFullUboatID()}<br>
+                    ${previousCommands}<br>
+                    ${this.gm.patrolNum} Patrol${pluralPatrols}<br>
+                    ${this.gm.getTotalGRT("String")} GRT Sunk
+                </div>
+                <div class="Commander_Rank">
+                    <img src = ${rankImagePath}>
+                </div>                
+                <div class="Career_Decorations">
+                    <div class="knights_cross">
+                        <img src=${knightsCrossImagePath}>
+                    </div>
+                    <div class="uboat_front_clasp">
+                        <img src=${frontClaspImagePath}>
+                    </div>
+                    <div class="uboat_war_badge">
+                        <img src=${warBadgeImagePath}>
+                    </div>
+                    <div class="wound_badge">
+                        <img src=${woundBadgeImagePath}>
+                    </div>
+                    <div class="german_cross">
+                        <img src=${germanCrossImagePath}>
+                    </div>
+                    <div class="upgrade_badge">
+                        <img src=${uboatUpgradeImagePath}>
+                    </div>
+                </div>
+                <div class="Career_Stats">
+                    Ships sunk: ${this.gm.shipsSunk.length} <br>
+                    Capital ships sunk: ${capShipsSunk} <br>
+                    Planes shot down: ${this.gm.planesShotDown} <br> 
+                    ---- <br>
+                    Best patrol: ${bestPatrol} GRT Sunk<br>
+                    Successful patrols: ${this.gm.successfulPatrols} <br>
+                    Unsuccessful patrols: ${this.gm.unsuccessfulPatrols} <br> 
+                    Months at sea: ${this.gm.monthsAtSea} <br>
+                    Months in port: ${this.gm.monthsInPort} <br>
+                    Random events: ${this.gm.randomEvents} <br>
+                    ---- <br>
+                    Times found by planes: ${this.gm.numPlaneEncounters} <br>
+                    Times attacked by planes: ${this.gm.numPlaneAttacks} <br>
+                    Times detected: ${this.gm.numTimesDetected} <br>
+                    Damage done: ${this.gm.damageDone} <br>
+                    Damage taken: ${this.gm.hitsTaken} <br>
+                    Sailors lost: ${this.gm.sailorsLost} <br>
+                </div>
+            </div>
         `)
 
         this.container.appendChild(this.element);
@@ -83,11 +198,8 @@ class GameOverPopup{
      * @returns string of the full cause of death
      */
     getCauseText(cause, attacker) {
-        console.log(this.gm);
-        console.log(this.gm.patrols);
-        console.log(this.gm.patrolNum);
+
         let currentPatrol = this.gm.getCurrentPatrol();
-        console.log(currentPatrol);
         let currentDeathOrdersAndLocation = currentPatrol.getCurrentDeathOrdersAndLocation()
 
 
@@ -153,7 +265,7 @@ class GameOverPopup{
                 }
                 return text;
             default:
-                text = "Unknown cause of death: " + cause;
+                text = cause;
                 return text;
         }
     }

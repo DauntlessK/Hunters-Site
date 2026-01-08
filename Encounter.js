@@ -79,6 +79,7 @@ class Encounter {
         this.follow = "";
 
         this.encPop = new EncounterPopup(this.tv, this.gm, this.currentBoxName, this.shipList);
+        this.escortDetectionPopup = null;
         this.airPopup = null;
         this.missionPopup = null;
         this.FTpopup = null;
@@ -1486,9 +1487,9 @@ class Encounter {
 
         //TODO: show escortMods modifier value somewhere?
         this.gm.setSubEventResolved(false);
-        var escortDetectionPopup = new EscortDetectionPopup(this.tv, this.gm, this, closeRangeCheck);
+        this.escortDetectionPopup = new EscortDetectionPopup(this.tv, this.gm, this, closeRangeCheck);
         await until(_ => this.gm.subEventResolved == true);
-        if (escortDetectionPopup.getChoice() == "Dive") {
+        if (this.escortDetectionPopup.getChoice() == "Dive") {
             this.gm.setSubEventResolved(false);
             this.diveDeep();
             await until(_ => this.gm.subEventResolved == true);
@@ -1590,7 +1591,7 @@ class Encounter {
 
         //Show if detected or not popup
         this.gm.setSubEventResolved(false);
-        escortDetectionPopup.escortResults(results, majorDetection);
+        this.escortDetectionPopup.escortResults(results, majorDetection);
         await until(_ => this.gm.subEventResolved == true);
 
         //Show damage results popup
@@ -1616,7 +1617,7 @@ class Encounter {
                 this.damageTaken += hitCount;
             }
             if (hitCount <= 5) {
-                escortDetectionPopup.damageResults(results, majorDetection)
+                this.escortDetectionPopup.damageResults(results, majorDetection)
             }
             await until(_ => this.gm.subEventResolved == true); //should be in above if statement - keep there for now to prevent program from progressing when game is over
 
@@ -1764,6 +1765,9 @@ class Encounter {
         }
         if (this.missionPopup != null) {
             this.missionPopup.done();
+        }
+        if (this.escortDetectionPopup != null) {
+            this.escortDetectionPopup.done();
         }
     }
 
