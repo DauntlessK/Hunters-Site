@@ -349,7 +349,7 @@ class GameManager{
                 break;
             case "VIIC":
                 this.date_month = 9;
-                this.date_year = 1941;
+                this.date_year = 1940;
                 this.francePost = true;
                 break;
             case "VIID":
