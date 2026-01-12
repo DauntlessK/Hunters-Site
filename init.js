@@ -66,11 +66,43 @@
     document.getElementById("fatal-close").onclick = () => overlay.remove();
   }
 
+  function logClientError(errObj) {
+    const DEV =
+      location.hostname === "hunters.local" ||
+      location.hostname === "localhost";
+
+    // Optional: only log in prod (recommended)
+    if (DEV) return;
+
+    const payload = {
+      play_id: window.currentPlayId || null,       // set this when start_play returns
+      env: DEV ? "dev" : "prod",
+      page_url: location.href,
+      user_agent: navigator.userAgent,
+      captain_name: window.currentCaptainName || null,
+      uboat_number: window.currentUboatNumber || null,
+      type: errObj.type || "Error",
+      message: errObj.message || "Unknown error",
+      stack: errObj.stack || null,
+      game_month: window.gm?.month || null,        // adapt to your actual variables
+      game_year: window.gm?.year || null,
+      extra: { source: errObj.source, lineno: errObj.lineno, colno: errObj.colno }
+  };
+
+  fetch("/api/log_error.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  }).catch(() => {}); // never break the game
+}
+
+
   function showFatalError(errObj) {
     if (fatalErrorShown) return;
     fatalErrorShown = true;
 
     console.error("FATAL ERROR:", errObj);
+    logClientError(errObj);
 
     // If you have a pause flag, set it here:
     try {

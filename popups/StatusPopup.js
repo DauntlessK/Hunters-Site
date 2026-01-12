@@ -315,6 +315,11 @@ class StatusPopup{
                 //remove spaces and '#'
                 system = system.replace(/\s/g, "");
                 system = system.replace("#", "");
+                system = system.replace(".", "");
+
+                if (system == "37Flak") {
+                    system = "Flak37";
+                }
 
                 var elementSys = document.getElementById(system);
                 elementSys.style.backgroundColor="red";

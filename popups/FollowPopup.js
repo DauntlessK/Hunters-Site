@@ -69,6 +69,12 @@ class FollowPopup{
     }
     
     done(){
+        var selectedOption = document.querySelector('input[name="options"]:checked');
+
+        if (selectedOption == null) {
+            return;
+        }
+
         if (!this.tv.isPaused) {
             this.option = document.querySelector('input[name="options"]:checked').value;
             this.element.remove();
